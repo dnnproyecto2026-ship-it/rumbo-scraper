@@ -7,8 +7,10 @@ from pathlib import Path
 import httpx
 
 from rumbo_scraper.parsers.utdt import (
-    AUTHORITIES_URL, CAREERS, INSTITUTION_URL, PROFESSOR_PAGES, SOURCE_URL,
-    build_dataset,
+    AUTHORITIES_URL, CAREERS, FIRST_YEAR_URL, HOUSING_URL, INSTITUTION_URL,
+    INTERNATIONAL_URL, ORIENTATION_URL, PROFESSOR_PAGES, SCHOLARSHIPS_URL,
+    SOCIAL_ACTION_URL, SOURCE_URL, SPORTS_URL, STUDENT_CENTER_URL,
+    STUDENT_ORGANIZATIONS_URL, STUDENT_SERVICES_URL, WELLBEING_URL, build_dataset,
     parse_career_detail,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
@@ -33,6 +35,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     detail_pages: dict[str, str] = {}
     plan_pages: dict[str, str] = {}
     professor_pages: dict[str, str] = {}
+    support_pages: dict[str, str] = {}
     with httpx.Client(
         follow_redirects=True,
         timeout=30.0,
@@ -41,6 +44,13 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
         admissions_html = _fetch(client, SOURCE_URL, errors)
         institution_html = _fetch(client, INSTITUTION_URL, errors)
         authorities_html = _fetch(client, AUTHORITIES_URL, errors)
+        for url in (
+            STUDENT_SERVICES_URL, SCHOLARSHIPS_URL, SPORTS_URL,
+            STUDENT_ORGANIZATIONS_URL, FIRST_YEAR_URL, WELLBEING_URL,
+            ORIENTATION_URL, STUDENT_CENTER_URL, SOCIAL_ACTION_URL,
+            HOUSING_URL, INTERNATIONAL_URL,
+        ):
+            support_pages[url] = _fetch(client, url, errors)
         for faculty, url in PROFESSOR_PAGES.items():
             professor_pages[faculty] = _fetch(client, url, errors)
         for config in CAREERS.values():
@@ -52,7 +62,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
 
     dataset = build_dataset(
         admissions_html, institution_html, detail_pages, plan_pages, errors,
-        authorities_html, professor_pages,
+        authorities_html, professor_pages, support_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -75,6 +85,11 @@ def main() -> None:
     print(f"OK: {len(data['posgrados'])} posgrados descubiertos")
     print(f"OK: {len(dataset['directorio_academico']['personas'])} personas académicas")
     print(f"OK: {len(dataset['directorio_academico']['roles_academicos'])} roles académicos")
+    print(f"OK: {len(data['becas'])} becas")
+    print(f"OK: {len(data['servicios_estudiantiles'])} servicios estudiantiles")
+    print(f"OK: {len(data['actividades_extracurriculares'])} actividades extracurriculares")
+    print(f"OK: {len(data['alojamiento'])} opciones de alojamiento")
+    print(f"OK: {len(data['programas_internacionales'])} programas internacionales")
     print(f"Archivo: {args.output}")
     if quality["secciones_vacias"]:
         print("Pendiente por falta de fuente pública: " + ", ".join(quality["secciones_vacias"]))

@@ -5,8 +5,9 @@ import unittest
 from rumbo_scraper.contracts import SECTION_FIELDS
 from rumbo_scraper.parsers.utdt import (
     ACADEMIC_UNITS, CAREERS, build_dataset, parse_career_detail,
-    parse_careers, parse_faculty_authorities, parse_professor_page,
-    parse_study_plan,
+    parse_careers, parse_extracurricular_activities,
+    parse_faculty_authorities, parse_housing, parse_international_programs,
+    parse_professor_page, parse_scholarships, parse_study_plan,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -21,7 +22,7 @@ class UTDTParserTests(unittest.TestCase):
         ) + " Maestría en Economía Doctorado en Historia</html>"
 
     def test_contract_contains_every_excel_section(self) -> None:
-        self.assertEqual(len(SECTION_FIELDS), 15)
+        self.assertEqual(len(SECTION_FIELDS), 20)
         self.assertIn("aranceles", SECTION_FIELDS)
         self.assertIn("posgrados", SECTION_FIELDS)
         self.assertIn("redes_contacto", SECTION_FIELDS)
@@ -85,6 +86,32 @@ class UTDTParserTests(unittest.TestCase):
         """
         rows = parse_professor_page(html, "Derecho", "https://www.utdt.edu/docentes")
         self.assertEqual([row["nombre_completo"] for row in rows], ["Ana María Pérez", "Juan García"])
+
+    def test_extracts_student_life_and_financial_aid(self) -> None:
+        scholarships = parse_scholarships("""
+        BECA INTERIOR Estudiantes a más de 100 km de CABA - 30% del arancel
+        BECA DESTACADOS Desempeño sobresaliente - 25% del arancel
+        BECA PREMIO AL MÉRITO Promedio mayor o igual a 8 - 20% del arancel.
+        INFORMACIÓN DE LA SOLICITUD
+        """)
+        self.assertEqual(len(scholarships), 3)
+        self.assertEqual(scholarships[0]["porcentaje_maximo"], 30)
+        activities = parse_extracurricular_activities(
+            "Ajedrez, Fútbol, Yoga y Taller de Teatro",
+            '<a href="/club">Club de Debate</a>',
+            "Centro de Estudiantes", "Acción Social",
+        )
+        self.assertEqual(
+            {row["nombre_actividad"] for row in activities},
+            {"Ajedrez", "Fútbol", "Yoga", "Taller de Teatro", "Club de Debate", "Centro de Estudiantes", "Acción Social"},
+        )
+        self.assertEqual(len(parse_housing("Residencias universitarias, casas de familia y departamentos")), 3)
+        international = parse_international_programs(
+            "Más de 156 convenios. Intercambio, doble titulación y free movers. "
+            "Las materias aprobadas son reconocidas y se cursa sin abonar matrícula."
+        )
+        self.assertEqual(len(international), 3)
+        self.assertEqual(international[0]["cantidad_convenios"], 156)
 
 
 if __name__ == "__main__":

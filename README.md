@@ -50,7 +50,11 @@ Con el entorno virtual activado, ejecuta:
 python -m rumbo_scraper.spiders.utdt
 ```
 
-El comando consulta páginas oficiales de admisiones, información institucional, carreras y planes de estudio. Genera `data/utdt_completo.json` con las 15 secciones del contrato definido en `carga_carreras.xlsx`.
+El comando consulta páginas oficiales de admisiones, información institucional,
+carreras, planes de estudio y vida universitaria. Genera
+`data/utdt_completo.json` con el contrato original de `carga_carreras.xlsx` más
+becas, servicios estudiantiles, actividades extracurriculares, alojamiento y
+programas internacionales.
 
 Los datos que la web oficial no publica quedan como `null` y se detallan en `control_calidad`. El proceso es de solo lectura y no escribe en Supabase.
 
@@ -82,3 +86,10 @@ omite `turnos_anio` y `aranceles`, ya que la fuente pública no ofrece esos dato
 La base de Supabase debe contar con las tablas `personas` y `roles_academicos`.
 El scraper permite que una persona tenga simultáneamente varios cargos y vínculos
 con facultades, carreras y materias.
+
+## Vida universitaria
+
+Para cargar las secciones ampliadas, Supabase debe contar también con las tablas
+`becas`, `servicios_estudiantiles`, `actividades_extracurriculares`,
+`alojamientos` y `programas_internacionales`. El repositorio no contiene SQL:
+las modificaciones del esquema se administran por separado en Supabase.

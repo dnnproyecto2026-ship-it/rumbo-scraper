@@ -52,6 +52,29 @@ SECTION_FIELDS: dict[str, tuple[str, ...]] = {
     ),
     "autoridades": ("facultad_nombre", "carrera", "cargo", "tipo", "nombre_autoridad"),
     "redes_contacto": ("universidad_nombre", "facultad_nombre", "canal", "usuario_o_direccion"),
+    "becas": (
+        "universidad_nombre", "nombre_beca", "nivel", "tipo_beca",
+        "cobertura_descripcion", "porcentaje_maximo", "requisitos",
+        "proceso_postulacion", "renovacion", "fecha_cierre",
+        "url_postulacion", "contacto", "fuente_url",
+    ),
+    "servicios_estudiantiles": (
+        "universidad_nombre", "sede", "categoria", "nombre_servicio",
+        "descripcion", "contacto", "url", "fuente_url",
+    ),
+    "actividades_extracurriculares": (
+        "universidad_nombre", "sede", "categoria", "nombre_actividad",
+        "descripcion", "contacto", "url", "fuente_url",
+    ),
+    "alojamiento": (
+        "universidad_nombre", "sede", "tipo_apoyo", "tipo_alojamiento",
+        "residencia_propia", "descripcion", "contacto", "url", "fuente_url",
+    ),
+    "programas_internacionales": (
+        "universidad_nombre", "nivel", "tipo_programa", "nombre_programa",
+        "cantidad_convenios", "duracion_maxima", "reconocimiento_academico",
+        "arancel_destino_cubierto", "requisitos", "url", "fuente_url",
+    ),
 }
 
 

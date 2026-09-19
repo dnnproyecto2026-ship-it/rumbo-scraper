@@ -17,7 +17,18 @@ BASE_URL = "https://www.utdt.edu"
 SOURCE_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=359"
 INSTITUTION_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=1006&id_item_menu=140"
 AUTHORITIES_URL = f"{BASE_URL}/autoridades/listado_contenidos.php?id_item_menu=26532"
-STUDENT_SERVICES_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=10891&id_item_menu=21282"
+STUDENT_SERVICES_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=1239&id_item_menu=386"
+SCHOLARSHIPS_URL = f"{BASE_URL}/admisiones/becas/listado_contenidos.php?id_item_menu=423"
+SPORTS_URL = f"{BASE_URL}/deportes"
+STUDENT_ORGANIZATIONS_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=356"
+FIRST_YEAR_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=9731&id_item_menu=19136"
+WELLBEING_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=19142"
+ORIENTATION_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=19139"
+STUDENT_CENTER_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=19157"
+SOCIAL_ACTION_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=4607"
+HOUSING_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=27151&id_item_menu=44632"
+INTERNATIONAL_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=9949&id_item_menu=19550"
+ADMISSIONS_URL = f"{BASE_URL}/admisiones/grado"
 LOCALITY = "Ciudad Autónoma de Buenos Aires — CABA"
 CAMPUS = f"{UNIVERSITY} — Campus Di Tella — {LOCALITY}"
 
@@ -464,7 +475,185 @@ def _postgraduates(html: str) -> list[dict[str, object]]:
     return records
 
 
-def build_dataset(admissions_html: str, institution_html: str, detail_pages: dict[str, str], plan_pages: dict[str, str], errors: list[dict[str, str]] | None = None, authorities_html: str = "", professor_pages: dict[str, str] | None = None) -> dict[str, object]:
+def _content_text(html: str) -> str:
+    return clean_text(_soup(html).get_text(" ", strip=True)) if html else ""
+
+
+def parse_scholarships(html: str) -> list[dict[str, object]]:
+    """Extract the currently published undergraduate scholarship options."""
+    text = _content_text(html)
+    if not text:
+        return []
+    normalized = re.sub(r"(?<=\d)\s+(?=\d\s*%)", "", text)
+    markers = (
+        ("BECA MEJORES PROMEDIOS COLEGIO PÚBLICO", "Mejores Promedios — Colegio Público"),
+        ("BECA MEJORES PROMEDIOS COLEGIO PRIVADO", "Mejores Promedios — Colegio Privado"),
+        ("BECA INTERIOR", "Beca Interior"),
+        ("BECA DESTACADOS", "Beca Destacados"),
+        ("BECA PREMIO AL MÉRITO", "Premio al Mérito"),
+        ("BECA PAE - DI TELLA", "PAE - Di Tella"),
+    )
+    positions = sorted(
+        (normalized.find(marker), marker, name)
+        for marker, name in markers
+        if normalized.find(marker) >= 0
+    )
+    records: list[dict[str, object]] = []
+    for index, (start, marker, name) in enumerate(positions):
+        end = positions[index + 1][0] if index + 1 < len(positions) else normalized.find("INFORMACIÓN DE LA SOLICITUD", start)
+        if end < 0:
+            end = min(len(normalized), start + 1200)
+        description = clean_text(normalized[start + len(marker):end])
+        description = description.split("Indicar aquí", 1)[0].strip()
+        percentages = [
+            int(value)
+            for value in re.findall(r"(\d{1,3})\s*%\s+del arancel", description)
+        ]
+        records.append(blank_record(
+            "becas", universidad_nombre=UNIVERSITY, nombre_beca=name,
+            nivel="Grado", tipo_beca="Arancel",
+            cobertura_descripcion=description[:1000] or None,
+            porcentaje_maximo=max((value for value in percentages if value <= 100), default=None),
+            requisitos=description[:1000] or None,
+            proceso_postulacion=(
+                "Completar admisión, solicitud de beca y documentación; "
+                "las solicitudes por necesidad económica incluyen entrevista virtual."
+            ),
+            renovacion="Renovación anual sujeta a requisitos académicos.",
+            fecha_cierre=None, url_postulacion=SCHOLARSHIPS_URL,
+            contacto="becas@utdt.edu", fuente_url=SCHOLARSHIPS_URL,
+        ))
+    return records
+
+
+def parse_student_services(pages: dict[str, str]) -> list[dict[str, object]]:
+    """Build filterable student services only when an official page confirms them."""
+    combined = " ".join(_content_text(html) for html in pages.values())
+    key = comparison_key(combined)
+    specs = (
+        ("Apoyo académico", "Orientación de Estudios", "orientacion de estudios", "Acompañamiento para hábitos de estudio, organización del tiempo y adaptación a la vida universitaria.", "orientacion@utdt.edu", ORIENTATION_URL),
+        ("Bienestar", "Bienestar y acompañamiento", "sentite bien", "Información de bienestar físico, psicológico y social; Servicios para Estudiantes escucha y orienta cuando un alumno necesita ayuda.", "spe@utdt.edu", WELLBEING_URL),
+        ("Biblioteca", "Biblioteca Di Tella", "biblioteca", "Salas de estudio, asistencia para localizar bibliografía y acceso a bases de datos académicas.", "biblioteca@utdt.edu", f"{BASE_URL}/biblioteca"),
+        ("Acompañamiento", "Experiencia Primer Año", "experiencia primer ano", "Información y orientación para la transición al primer año universitario.", "spe@utdt.edu", FIRST_YEAR_URL),
+        ("Tecnología", "Centro de Cómputos", "centro de computos", "Servicio tecnológico y espacios de cómputos para la comunidad universitaria.", None, f"{BASE_URL}/listado_contenidos.php?id_item_menu=2564"),
+        ("Representación estudiantil", "Centro de Estudiantes", "centro de estudiantes", "Representantes elegidos por los estudiantes y espacio de expresión, debate y actividades solidarias.", None, STUDENT_CENTER_URL),
+        ("Alojamiento", "Oficina de Alojamientos", "oficina de alojamientos", "Orienta y conecta a estudiantes con opciones externas de alojamiento.", "alojamientoba@utdt.edu", HOUSING_URL),
+        ("Internacional", "Programas Internacionales", "programas internacionales", "Intercambio, doble titulación, movilidad y prácticas profesionales en el exterior.", None, INTERNATIONAL_URL),
+    )
+    return [blank_record(
+        "servicios_estudiantiles", universidad_nombre=UNIVERSITY, sede=CAMPUS,
+        categoria=category, nombre_servicio=name, descripcion=description,
+        contacto=contact, url=url, fuente_url=url,
+    ) for category, name, needle, description, contact, url in specs if needle in key]
+
+
+def parse_extracurricular_activities(
+    sports_html: str, organizations_html: str, student_center_html: str,
+    social_action_html: str,
+) -> list[dict[str, object]]:
+    records: list[dict[str, object]] = []
+    sports_text = _content_text(sports_html)
+    sports_key = comparison_key(sports_text)
+    activity_groups = {
+        "Deporte competitivo": ("Ajedrez", "Básquet", "Fútbol", "Golf", "Hockey", "Natación", "Tenis", "Vóley"),
+        "Deporte recreativo": ("Entrenamiento Funcional", "Futsal", "Handball", "Running", "Yoga"),
+        "Cultura": ("Ensamble Vocal", "Taller de Pintura", "Taller de Canto", "Taller de Teatro"),
+    }
+    for category, names in activity_groups.items():
+        for name in names:
+            if comparison_key(name) in sports_key:
+                records.append(blank_record(
+                    "actividades_extracurriculares", universidad_nombre=UNIVERSITY,
+                    sede=CAMPUS, categoria=category, nombre_actividad=name,
+                    descripcion=None, contacto="deportes@utdt.edu",
+                    url=SPORTS_URL, fuente_url=SPORTS_URL,
+                ))
+
+    soup = _soup(organizations_html)
+    excluded = {"Organizaciones Estudiantiles", "Centro de Estudiantes", "Acción Social"}
+    for anchor in soup.find_all("a", href=True):
+        name = clean_text(anchor.get_text(" ", strip=True))
+        name_key = comparison_key(name)
+        if name in excluded or not name or not (
+            name_key.startswith("club ") or name_key in {"agro utdt", "cine ditella", "diplomatia"}
+        ):
+            continue
+        records.append(blank_record(
+            "actividades_extracurriculares", universidad_nombre=UNIVERSITY,
+            sede=CAMPUS, categoria="Club estudiantil", nombre_actividad=name,
+            descripcion=None, contacto="clubes@utdt.edu",
+            url=urljoin(STUDENT_ORGANIZATIONS_URL, anchor["href"]),
+            fuente_url=STUDENT_ORGANIZATIONS_URL,
+        ))
+    if "centro de estudiantes" in comparison_key(_content_text(student_center_html)):
+        records.append(blank_record(
+            "actividades_extracurriculares", universidad_nombre=UNIVERSITY,
+            sede=CAMPUS, categoria="Representación estudiantil",
+            nombre_actividad="Centro de Estudiantes", descripcion=None,
+            contacto=None, url=STUDENT_CENTER_URL, fuente_url=STUDENT_CENTER_URL,
+        ))
+    if _content_text(social_action_html):
+        records.append(blank_record(
+            "actividades_extracurriculares", universidad_nombre=UNIVERSITY,
+            sede=CAMPUS, categoria="Voluntariado",
+            nombre_actividad="Acción Social", descripcion=None,
+            contacto=None, url=SOCIAL_ACTION_URL, fuente_url=SOCIAL_ACTION_URL,
+        ))
+    return records
+
+
+def parse_housing(html: str) -> list[dict[str, object]]:
+    text = _content_text(html)
+    key = comparison_key(text)
+    types = (
+        ("Residencia universitaria", "residencias universitarias"),
+        ("Casa de familia", "casas de familia"),
+        ("Departamento", "departamentos"),
+    )
+    return [blank_record(
+        "alojamiento", universidad_nombre=UNIVERSITY, sede=CAMPUS,
+        tipo_apoyo="Orientación e intermediación", tipo_alojamiento=name,
+        residencia_propia=False,
+        descripcion="La Oficina de Alojamientos comparte opciones externas y actúa como nexo; la contratación se realiza con terceros.",
+        contacto="alojamientoba@utdt.edu / (011) 5169 7294",
+        url=HOUSING_URL, fuente_url=HOUSING_URL,
+    ) for name, needle in types if needle in key]
+
+
+def parse_international_programs(html: str) -> list[dict[str, object]]:
+    text = _content_text(html)
+    key = comparison_key(text)
+    match = re.search(r"mas de\s+(\d+)\s+convenios", key)
+    agreements = int(match.group(1)) if match else None
+    specs = (
+        ("Intercambio", "Intercambio académico", "intercambio", "Hasta un semestre", True, True),
+        ("Doble titulación", "Doble titulación", "doble titulacion", None, None, None),
+        ("Movilidad libre", "Free mover", "free movers", None, None, False),
+        ("Práctica profesional", "Prácticas en el exterior", "practicas profesionales en el exterior", None, None, None),
+        ("Intercambio virtual", "Intercambio idiomático virtual", "intercambio idiomatico virtual", None, None, None),
+    )
+    requirements = (
+        "Ser alumno regular, cumplir las materias y el promedio exigidos, no tener "
+        "sanciones ni deuda y satisfacer los requisitos del destino."
+    )
+    return [blank_record(
+        "programas_internacionales", universidad_nombre=UNIVERSITY,
+        nivel="Grado", tipo_programa=kind, nombre_programa=name,
+        cantidad_convenios=agreements, duracion_maxima=duration,
+        reconocimiento_academico=recognition,
+        arancel_destino_cubierto=tuition,
+        requisitos=requirements, url=INTERNATIONAL_URL,
+        fuente_url=INTERNATIONAL_URL,
+    ) for kind, name, needle, duration, recognition, tuition in specs if needle in key]
+
+
+def build_dataset(
+    admissions_html: str, institution_html: str,
+    detail_pages: dict[str, str], plan_pages: dict[str, str],
+    errors: list[dict[str, str]] | None = None, authorities_html: str = "",
+    professor_pages: dict[str, str] | None = None,
+    support_pages: dict[str, str] | None = None,
+) -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
     found = {item.denominacion_canonica for item in parse_careers(admissions_html)}
     sections: dict[str, list[dict[str, object]]] = {name: [] for name in SECTION_FIELDS}
@@ -528,9 +717,22 @@ def build_dataset(admissions_html: str, institution_html: str, detail_pages: dic
     sections["posgrados"] = _postgraduates(institution_html)
     sections["autoridades"].extend(parse_faculty_authorities(authorities_html))
     sections["redes_contacto"] = contacts
+    support = support_pages or {}
+    sections["becas"] = parse_scholarships(support.get(SCHOLARSHIPS_URL, ""))
+    sections["servicios_estudiantiles"] = parse_student_services(support)
+    sections["actividades_extracurriculares"] = parse_extracurricular_activities(
+        support.get(SPORTS_URL, ""),
+        support.get(STUDENT_ORGANIZATIONS_URL, ""),
+        support.get(STUDENT_CENTER_URL, ""),
+        support.get(SOCIAL_ACTION_URL, ""),
+    )
+    sections["alojamiento"] = parse_housing(support.get(HOUSING_URL, ""))
+    sections["programas_internacionales"] = parse_international_programs(
+        support.get(INTERNATIONAL_URL, "")
+    )
     missing = {section: {field: sum(row[field] in (None, "") for row in records) for field in SECTION_FIELDS[section]} for section, records in sections.items()}
     return {
-        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL], "escritura_supabase": False},
+        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL, *support], "escritura_supabase": False},
         "datos": sections,
         "directorio_academico": build_academic_directory(
             sections["autoridades"], professor_pages or {}
