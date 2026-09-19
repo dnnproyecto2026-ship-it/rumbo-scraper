@@ -79,6 +79,6 @@ omite `turnos_anio` y `aranceles`, ya que la fuente pública no ofrece esos dato
 
 ## Directorio académico
 
-Antes de cargar profesores y roles por primera vez, ejecuta en Supabase SQL Editor
-el archivo `sql/002_directorio_academico.sql`. El modelo permite que una persona
-tenga simultáneamente varios cargos y vínculos con facultades, carreras y materias.
+La base de Supabase debe contar con las tablas `personas` y `roles_academicos`.
+El scraper permite que una persona tenga simultáneamente varios cargos y vínculos
+con facultades, carreras y materias.
