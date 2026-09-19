@@ -7,7 +7,8 @@ from pathlib import Path
 import httpx
 
 from rumbo_scraper.parsers.utdt import (
-    CAREERS, INSTITUTION_URL, SOURCE_URL, build_dataset, parse_career_detail,
+    AUTHORITIES_URL, CAREERS, INSTITUTION_URL, SOURCE_URL, build_dataset,
+    parse_career_detail,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -37,6 +38,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     ) as client:
         admissions_html = _fetch(client, SOURCE_URL, errors)
         institution_html = _fetch(client, INSTITUTION_URL, errors)
+        authorities_html = _fetch(client, AUTHORITIES_URL, errors)
         for config in CAREERS.values():
             html = _fetch(client, config.detail_url, errors)
             detail_pages[config.detail_url] = html
@@ -45,7 +47,8 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
                 plan_pages[str(plan_url)] = _fetch(client, str(plan_url), errors)
 
     dataset = build_dataset(
-        admissions_html, institution_html, detail_pages, plan_pages, errors
+        admissions_html, institution_html, detail_pages, plan_pages, errors,
+        authorities_html,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)

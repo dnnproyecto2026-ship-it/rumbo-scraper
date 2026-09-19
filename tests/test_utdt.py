@@ -5,7 +5,7 @@ import unittest
 from rumbo_scraper.contracts import SECTION_FIELDS
 from rumbo_scraper.parsers.utdt import (
     ACADEMIC_UNITS, CAREERS, build_dataset, parse_career_detail,
-    parse_careers, parse_study_plan,
+    parse_careers, parse_faculty_authorities, parse_study_plan,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -59,6 +59,21 @@ class UTDTParserTests(unittest.TestCase):
         self.assertEqual(set(dataset["datos"]), set(SECTION_FIELDS))
         self.assertEqual(len(dataset["datos"]["carreras"]), 13)
         self.assertIn("turnos_anio", dataset["control_calidad"]["secciones_vacias"])
+
+    def test_extracts_faculty_directors(self) -> None:
+        html = """
+        <h4>Escuela de Derecho</h4>
+        <p><strong>Decano: Alejandro Ejemplo.</strong></p>
+        <h4>Escuela de Gobierno</h4>
+        <p><strong>Decano ejecutivo: Darío Ejemplo.</strong></p>
+        <p><strong>Decana académica: María Ejemplo.</strong></p>
+        <h4>Otra sección</h4>
+        """
+        rows = parse_faculty_authorities(html)
+        self.assertEqual(len(rows), 3)
+        self.assertEqual(rows[0]["cargo"], "Decano")
+        self.assertEqual(rows[0]["nombre_autoridad"], "Alejandro Ejemplo")
+        self.assertTrue(all(row["carrera"] is None for row in rows))
 
 
 if __name__ == "__main__":

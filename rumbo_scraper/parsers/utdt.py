@@ -16,6 +16,7 @@ UNIVERSITY = "Universidad Torcuato Di Tella"
 BASE_URL = "https://www.utdt.edu"
 SOURCE_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=359"
 INSTITUTION_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=1006&id_item_menu=140"
+AUTHORITIES_URL = f"{BASE_URL}/autoridades/listado_contenidos.php?id_item_menu=26532"
 STUDENT_SERVICES_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=10891&id_item_menu=21282"
 LOCALITY = "Ciudad Autónoma de Buenos Aires — CABA"
 CAMPUS = f"{UNIVERSITY} — Campus Di Tella — {LOCALITY}"
@@ -56,6 +57,20 @@ ACADEMIC_UNITS = (
     ("Economía", "Departamento"), ("Estudios Históricos y Sociales", "Departamento"),
     ("Matemática y Estadística", "Departamento"), ("Arte", "Centro"),
 )
+
+AUTHORITY_SECTIONS = {
+    "Escuela de Arquitectura y Estudios Urbanos": "Arquitectura y Estudios Urbanos",
+    "Escuela de Derecho": "Derecho",
+    "Escuela de Diseño": "Diseño",
+    "Escuela de Gobierno": "Gobierno",
+    "Escuela de Ingeniería y Ciencia Aplicada": "Ingeniería y Ciencia Aplicada",
+    "Escuela de Negocios": "Negocios",
+    "Centro de Arte": "Arte",
+    "Departamento de Ciencia Política y Estudios Internacionales": "Ciencia Política y Estudios Internacionales",
+    "Departamento de Economía": "Economía",
+    "Departamento de Estudios Históricos y Sociales": "Estudios Históricos y Sociales",
+    "Departamento de Matemática y Estadística": "Matemática y Estadística",
+}
 
 AREA_KEYWORDS = {
     "Matemática y Estadística": ("matemat", "calculo", "algebra", "estadistic", "econometr"),
@@ -234,6 +249,46 @@ def _faculty_link(config: CareerConfig) -> str:
     return f"{UNIVERSITY} — {config.faculty_type} de {config.faculty}"
 
 
+def parse_faculty_authorities(html: str) -> list[dict[str, object]]:
+    """Extract current school/department leadership from the official page."""
+    soup = _soup(html)
+    unit_types = {name: unit_type for name, unit_type in ACADEMIC_UNITS}
+    records: list[dict[str, object]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for heading in soup.find_all("h4"):
+        section = clean_text(heading.get_text(" ", strip=True))
+        faculty = AUTHORITY_SECTIONS.get(section)
+        if not faculty:
+            continue
+        for node in heading.find_all_next(["h4", "strong"]):
+            if node.name == "h4":
+                break
+            value = clean_text(node.get_text(" ", strip=True)).rstrip(".")
+            if ":" not in value:
+                continue
+            role, name = (clean_text(part) for part in value.split(":", 1))
+            role_key = comparison_key(role)
+            if not (role_key.startswith("decano") or role_key.startswith("decana") or role_key.startswith("director") or role_key.startswith("directora")):
+                continue
+            name = name.rstrip(".")
+            if not name or len(name.split()) < 2:
+                continue
+            identity = (faculty, role, name)
+            if identity in seen:
+                continue
+            seen.add(identity)
+            unit_type = unit_types[faculty]
+            records.append(blank_record(
+                "autoridades",
+                facultad_nombre=f"{UNIVERSITY} — {unit_type} de {faculty}",
+                carrera=None,
+                cargo=role,
+                tipo="Autoridad de unidad académica",
+                nombre_autoridad=name,
+            ))
+    return records
+
+
 def _contact_records(html: str) -> list[dict[str, object]]:
     soup = _soup(html)
     contacts = [("Sitio Web", BASE_URL), ("Email", "admisiones@utdt.edu"), ("WhatsApp", "+54 9 11 5699 6109")]
@@ -266,7 +321,7 @@ def _postgraduates(html: str) -> list[dict[str, object]]:
     return records
 
 
-def build_dataset(admissions_html: str, institution_html: str, detail_pages: dict[str, str], plan_pages: dict[str, str], errors: list[dict[str, str]] | None = None) -> dict[str, object]:
+def build_dataset(admissions_html: str, institution_html: str, detail_pages: dict[str, str], plan_pages: dict[str, str], errors: list[dict[str, str]] | None = None, authorities_html: str = "") -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
     found = {item.denominacion_canonica for item in parse_careers(admissions_html)}
     sections: dict[str, list[dict[str, object]]] = {name: [] for name in SECTION_FIELDS}
@@ -328,10 +383,11 @@ def build_dataset(admissions_html: str, institution_html: str, detail_pages: dic
             sections["autoridades"].append(blank_record("autoridades", facultad_nombre=faculty, carrera=config.short_name, cargo="Director/a de carrera", tipo="Académico", nombre_autoridad=detail["director"]))
 
     sections["posgrados"] = _postgraduates(institution_html)
+    sections["autoridades"].extend(parse_faculty_authorities(authorities_html))
     sections["redes_contacto"] = contacts
     missing = {section: {field: sum(row[field] in (None, "") for row in records) for field in SECTION_FIELDS[section]} for section, records in sections.items()}
     return {
-        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, STUDENT_SERVICES_URL], "escritura_supabase": False},
+        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL], "escritura_supabase": False},
         "datos": sections,
         "control_calidad": {
             "secciones_vacias": [name for name, rows in sections.items() if not rows],
