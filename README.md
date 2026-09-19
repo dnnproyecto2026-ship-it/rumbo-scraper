@@ -76,3 +76,9 @@ python -m rumbo_scraper.database.load_utdt --apply
 
 La carga usa las credenciales locales de `.env`, pero no las imprime. Por ahora
 omite `turnos_anio` y `aranceles`, ya que la fuente pública no ofrece esos datos.
+
+## Directorio académico
+
+Antes de cargar profesores y roles por primera vez, ejecuta en Supabase SQL Editor
+el archivo `sql/002_directorio_academico.sql`. El modelo permite que una persona
+tenga simultáneamente varios cargos y vínculos con facultades, carreras y materias.

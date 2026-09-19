@@ -5,7 +5,8 @@ import unittest
 from rumbo_scraper.contracts import SECTION_FIELDS
 from rumbo_scraper.parsers.utdt import (
     ACADEMIC_UNITS, CAREERS, build_dataset, parse_career_detail,
-    parse_careers, parse_faculty_authorities, parse_study_plan,
+    parse_careers, parse_faculty_authorities, parse_professor_page,
+    parse_study_plan,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -74,6 +75,16 @@ class UTDTParserTests(unittest.TestCase):
         self.assertEqual(rows[0]["cargo"], "Decano")
         self.assertEqual(rows[0]["nombre_autoridad"], "Alejandro Ejemplo")
         self.assertTrue(all(row["carrera"] is None for row in rows))
+
+    def test_extracts_professors_without_confusing_headings(self) -> None:
+        html = """
+        <article id="contenido"><h2>Cuerpo de Profesores</h2>
+        <a href="/perfil/1">Pérez,</a><a href="/perfil/1">Ana María.</a>
+        <strong>Juan García.</strong><strong>Profesores Visitantes:</strong>
+        </article>
+        """
+        rows = parse_professor_page(html, "Derecho", "https://www.utdt.edu/docentes")
+        self.assertEqual([row["nombre_completo"] for row in rows], ["Ana María Pérez", "Juan García"])
 
 
 if __name__ == "__main__":

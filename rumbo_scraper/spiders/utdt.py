@@ -7,7 +7,8 @@ from pathlib import Path
 import httpx
 
 from rumbo_scraper.parsers.utdt import (
-    AUTHORITIES_URL, CAREERS, INSTITUTION_URL, SOURCE_URL, build_dataset,
+    AUTHORITIES_URL, CAREERS, INSTITUTION_URL, PROFESSOR_PAGES, SOURCE_URL,
+    build_dataset,
     parse_career_detail,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
@@ -31,6 +32,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     errors: list[dict[str, str]] = []
     detail_pages: dict[str, str] = {}
     plan_pages: dict[str, str] = {}
+    professor_pages: dict[str, str] = {}
     with httpx.Client(
         follow_redirects=True,
         timeout=30.0,
@@ -39,6 +41,8 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
         admissions_html = _fetch(client, SOURCE_URL, errors)
         institution_html = _fetch(client, INSTITUTION_URL, errors)
         authorities_html = _fetch(client, AUTHORITIES_URL, errors)
+        for faculty, url in PROFESSOR_PAGES.items():
+            professor_pages[faculty] = _fetch(client, url, errors)
         for config in CAREERS.values():
             html = _fetch(client, config.detail_url, errors)
             detail_pages[config.detail_url] = html
@@ -48,7 +52,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
 
     dataset = build_dataset(
         admissions_html, institution_html, detail_pages, plan_pages, errors,
-        authorities_html,
+        authorities_html, professor_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -69,6 +73,8 @@ def main() -> None:
     print(f"OK: {len(data['carreras'])} carreras")
     print(f"OK: {len(data['materias'])} materias")
     print(f"OK: {len(data['posgrados'])} posgrados descubiertos")
+    print(f"OK: {len(dataset['directorio_academico']['personas'])} personas académicas")
+    print(f"OK: {len(dataset['directorio_academico']['roles_academicos'])} roles académicos")
     print(f"Archivo: {args.output}")
     if quality["secciones_vacias"]:
         print("Pendiente por falta de fuente pública: " + ", ".join(quality["secciones_vacias"]))

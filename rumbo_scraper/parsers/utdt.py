@@ -72,6 +72,32 @@ AUTHORITY_SECTIONS = {
     "Departamento de Matemática y Estadística": "Matemática y Estadística",
 }
 
+PROFESSOR_PAGES = {
+    "Arquitectura y Estudios Urbanos": f"{BASE_URL}/ver_contenido.php?id_contenido=24043&id_item_menu=39866",
+    "Derecho": f"{BASE_URL}/listado_contenidos.php?id_item_menu=3789",
+    "Diseño": f"{BASE_URL}/ver_contenido.php?id_contenido=25833&id_item_menu=42551",
+    "Gobierno": f"{BASE_URL}/ver_contenido.php?id_contenido=1817&id_item_menu=3792",
+    "Ingeniería y Ciencia Aplicada": f"{BASE_URL}/ver_contenido.php?id_contenido=26257&id_item_menu=43279",
+    "Negocios": f"{BASE_URL}/ver_contenido.php?id_contenido=1808&id_item_menu=3786",
+    "Ciencia Política y Estudios Internacionales": f"{BASE_URL}/ver_contenido.php?id_contenido=16314&id_item_menu=27135",
+    "Economía": f"{BASE_URL}/ver_contenido.php?id_contenido=1685&id_item_menu=3549",
+    "Estudios Históricos y Sociales": f"{BASE_URL}/listado_contenidos.php?id_item_menu=3798",
+    "Matemática y Estadística": f"{BASE_URL}/listado_contenidos.php?id_item_menu=508",
+}
+
+NAME_REJECT_TERMS = (
+    "profesor", "cuerpo", "departamento", "escuela", "universidad", "miembro",
+    "comite", "staff", "full-time", "part-time", "dedicacion", "institucional",
+    "autoridad", "campus", "ingresante", "unidad", "programa", "director",
+    "decano", "coordin", "investigador", "ordinario", "visitante", "emerito",
+    "honorario", "contacto", "secretaria", "consejo", "evaluacion",
+    "university", "universidad", "school", "foundation", "college", "faculty",
+    "uba", "utdt", "mit", "uca", "unlp", "insead", "ucla", "etsam", "univ",
+    "mba", "master", "magister", "doctor", "phd", "licenciado", "abogado",
+    "contador", "ciencias", "sciences", "arquitectura", "urbanismo", "design",
+    "historia", "teoria", "proyecto arquitectonico", "finanzas",
+)
+
 AREA_KEYWORDS = {
     "Matemática y Estadística": ("matemat", "calculo", "algebra", "estadistic", "econometr"),
     "Programación y Tecnología": ("program", "comput", "datos", "digital", "software", "tecnolog", "inteligencia artificial", "algorit"),
@@ -289,6 +315,123 @@ def parse_faculty_authorities(html: str) -> list[dict[str, object]]:
     return records
 
 
+def _person_name(value: str) -> str | None:
+    value = clean_text(value).strip(" .|")
+    key = comparison_key(value)
+    if not value or ":" in value or any(char.isdigit() for char in value):
+        return None
+    if any(term in key for term in NAME_REJECT_TERMS):
+        return None
+    words = value.replace(",", " ").split()
+    if not 2 <= len(words) <= 7 or len(value) > 90:
+        return None
+    word_pattern = re.compile(r"^[A-ZÁÉÍÓÚÜÑ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ’'.-]*$")
+    particles = {"de", "del", "la", "las", "los", "y", "di"}
+    if not all(word_pattern.match(word) or word.lower() in particles for word in words):
+        return None
+    if "," in value:
+        surname, given = (clean_text(part) for part in value.split(",", 1))
+        value = f"{given} {surname}"
+    return value.rstrip(".")
+
+
+def parse_professor_page(html: str, faculty: str, source_url: str) -> list[dict[str, object]]:
+    """Extract the people explicitly listed on an official faculty roster."""
+    soup = _soup(html)
+    root = soup.find(id="contenido") or soup.find("article") or soup
+    grouped_links: dict[str, str] = {}
+    for anchor in root.find_all("a", href=True):
+        label = clean_text(anchor.get_text(" ", strip=True))
+        if label:
+            href = urljoin(source_url, anchor["href"])
+            grouped_links[href] = clean_text(f"{grouped_links.get(href, '')} {label}")
+    candidates: list[tuple[str, str | None]] = []
+    for href, label in grouped_links.items():
+        name = _person_name(label)
+        if name:
+            candidates.append((name, href))
+    for node in root.find_all(["strong", "h3", "h4"]):
+        if node.find("a"):
+            continue
+        name = _person_name(node.get_text(" ", strip=True))
+        if name:
+            candidates.append((name, None))
+    for line in root.get_text("\n", strip=True).splitlines():
+        match = re.match(r"^([A-ZÁÉÍÓÚÜÑ][^.\n]{2,90},\s*[A-ZÁÉÍÓÚÜÑ][^.\n]{1,60})\.", clean_text(line))
+        if match:
+            name = _person_name(match.group(1))
+            if name:
+                candidates.append((name, None))
+    seen: set[str] = set()
+    records: list[dict[str, object]] = []
+    for name, profile_url in candidates:
+        identity = comparison_key(name)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        records.append({
+            "universidad_nombre": UNIVERSITY,
+            "nombre_completo": name,
+            "email": None,
+            "perfil_url": profile_url,
+            "formacion": None,
+            "biografia": None,
+            "fuente_url": source_url,
+            "facultad_nombre": faculty,
+        })
+    return records
+
+
+def build_academic_directory(
+    authorities: list[dict[str, object]],
+    professor_pages: dict[str, str],
+) -> dict[str, list[dict[str, object]]]:
+    people: dict[str, dict[str, object]] = {}
+    roles: list[dict[str, object]] = []
+    role_keys: set[tuple[object, ...]] = set()
+
+    def add_person(name: str, source_url: str, profile_url: str | None = None) -> None:
+        identity = comparison_key(name)
+        current = people.setdefault(identity, {
+            "universidad_nombre": UNIVERSITY, "nombre_completo": name,
+            "email": None, "perfil_url": profile_url, "formacion": None,
+            "biografia": None, "fuente_url": source_url,
+        })
+        if profile_url and not current["perfil_url"]:
+            current["perfil_url"] = profile_url
+
+    def add_role(**role: object) -> None:
+        key = tuple(role.get(field) for field in (
+            "nombre_completo", "facultad_nombre", "carrera_nombre",
+            "materia_nombre", "cargo",
+        ))
+        if key not in role_keys:
+            role_keys.add(key); roles.append(role)
+
+    for row in authorities:
+        name = str(row["nombre_autoridad"])
+        add_person(name, AUTHORITIES_URL)
+        add_role(
+            nombre_completo=name, facultad_nombre=row["facultad_nombre"],
+            carrera_nombre=row["carrera"], materia_nombre=None,
+            cargo=row["cargo"], tipo_rol=row["tipo"], es_autoridad=True,
+            fuente_url=AUTHORITIES_URL,
+        )
+    unit_types = {name: unit_type for name, unit_type in ACADEMIC_UNITS}
+    for faculty, html in professor_pages.items():
+        source_url = PROFESSOR_PAGES[faculty]
+        faculty_ref = f"{UNIVERSITY} — {unit_types[faculty]} de {faculty}"
+        for person in parse_professor_page(html, faculty, source_url):
+            name = str(person["nombre_completo"])
+            add_person(name, source_url, person.get("perfil_url"))
+            add_role(
+                nombre_completo=name, facultad_nombre=faculty_ref,
+                carrera_nombre=None, materia_nombre=None, cargo="Profesor/a",
+                tipo_rol="Docente", es_autoridad=False, fuente_url=source_url,
+            )
+    return {"personas": list(people.values()), "roles_academicos": roles}
+
+
 def _contact_records(html: str) -> list[dict[str, object]]:
     soup = _soup(html)
     contacts = [("Sitio Web", BASE_URL), ("Email", "admisiones@utdt.edu"), ("WhatsApp", "+54 9 11 5699 6109")]
@@ -321,7 +464,7 @@ def _postgraduates(html: str) -> list[dict[str, object]]:
     return records
 
 
-def build_dataset(admissions_html: str, institution_html: str, detail_pages: dict[str, str], plan_pages: dict[str, str], errors: list[dict[str, str]] | None = None, authorities_html: str = "") -> dict[str, object]:
+def build_dataset(admissions_html: str, institution_html: str, detail_pages: dict[str, str], plan_pages: dict[str, str], errors: list[dict[str, str]] | None = None, authorities_html: str = "", professor_pages: dict[str, str] | None = None) -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
     found = {item.denominacion_canonica for item in parse_careers(admissions_html)}
     sections: dict[str, list[dict[str, object]]] = {name: [] for name in SECTION_FIELDS}
@@ -389,6 +532,9 @@ def build_dataset(admissions_html: str, institution_html: str, detail_pages: dic
     return {
         "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL], "escritura_supabase": False},
         "datos": sections,
+        "directorio_academico": build_academic_directory(
+            sections["autoridades"], professor_pages or {}
+        ),
         "control_calidad": {
             "secciones_vacias": [name for name, rows in sections.items() if not rows],
             "faltantes_por_campo": missing, "errores_descarga": errors or [],

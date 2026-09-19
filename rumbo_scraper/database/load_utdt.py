@@ -259,6 +259,34 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "usuario_o_direccion": row["usuario_o_direccion"],
     } for row in data["redes_contacto"]]
     counts["redes_contacto"] = _insert_chunks(client, "contactos", contacts)
+
+    directory = dataset.get("directorio_academico", {})
+    person_ids: dict[str, str] = {}
+    for row in directory.get("personas", []):
+        payload = {
+            "universidad_id": university_id,
+            "nombre_completo": row["nombre_completo"], "email": row["email"],
+            "perfil_url": row["perfil_url"], "formacion": row["formacion"],
+            "biografia": row["biografia"], "fuente_url": row["fuente_url"],
+            "activa": True,
+        }
+        saved = _upsert_one(client, "personas", payload, "universidad_id,nombre_completo")
+        person_ids[row["nombre_completo"]] = saved["id"]
+    counts["personas"] = len(person_ids)
+    client.table("roles_academicos").delete().eq("universidad_id", university_id).execute()
+    academic_roles = [{
+        "persona_id": person_ids[row["nombre_completo"]],
+        "universidad_id": university_id,
+        "facultad_id": faculty_ids.get(_faculty_name(row["facultad_nombre"])),
+        "carrera_id": career_ids.get(row["carrera_nombre"]),
+        "materia_id": None,
+        "cargo": row["cargo"], "tipo_rol": row["tipo_rol"],
+        "es_autoridad": row["es_autoridad"], "vigente": True,
+        "fuente_url": row["fuente_url"],
+    } for row in directory.get("roles_academicos", [])]
+    counts["roles_academicos"] = _insert_chunks(
+        client, "roles_academicos", academic_roles
+    )
     return counts
 
 
