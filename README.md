@@ -41,3 +41,38 @@ from rumbo_scraper.database import get_supabase_client
 
 supabase = get_supabase_client()
 ```
+
+## Extracción completa: Di Tella
+
+Con el entorno virtual activado, ejecuta:
+
+```bash
+python -m rumbo_scraper.spiders.utdt
+```
+
+El comando consulta páginas oficiales de admisiones, información institucional, carreras y planes de estudio. Genera `data/utdt_completo.json` con las 15 secciones del contrato definido en `carga_carreras.xlsx`.
+
+Los datos que la web oficial no publica quedan como `null` y se detallan en `control_calidad`. El proceso es de solo lectura y no escribe en Supabase.
+
+Para ejecutar las pruebas locales:
+
+```bash
+python -m unittest discover -v
+```
+
+## Carga en Supabase
+
+Primero valida el archivo y muestra qué se cargaría, sin conectarse ni escribir:
+
+```bash
+python -m rumbo_scraper.database.load_utdt
+```
+
+Cuando el resumen sea correcto, la carga real se ejecuta explícitamente con:
+
+```bash
+python -m rumbo_scraper.database.load_utdt --apply
+```
+
+La carga usa las credenciales locales de `.env`, pero no las imprime. Por ahora
+omite `turnos_anio` y `aranceles`, ya que la fuente pública no ofrece esos datos.
