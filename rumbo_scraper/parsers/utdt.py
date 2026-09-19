@@ -3,6 +3,7 @@
 from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import json
 import re
 from urllib.parse import urljoin
 
@@ -28,6 +29,7 @@ STUDENT_CENTER_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=19157"
 SOCIAL_ACTION_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=4607"
 HOUSING_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=27151&id_item_menu=44632"
 INTERNATIONAL_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=9949&id_item_menu=19550"
+INTERNATIONAL_MAP_URL = f"{BASE_URL}/map_international"
 ADMISSIONS_URL = f"{BASE_URL}/admisiones/grado"
 LOCALITY = "Ciudad Autónoma de Buenos Aires — CABA"
 CAMPUS = f"{UNIVERSITY} — Campus Di Tella — {LOCALITY}"
@@ -412,6 +414,10 @@ def build_academic_directory(
             current["perfil_url"] = profile_url
 
     def add_role(**role: object) -> None:
+        name = str(role["nombre_completo"])
+        identity = comparison_key(name)
+        if identity in people:
+            role["nombre_completo"] = people[identity]["nombre_completo"]
         key = tuple(role.get(field) for field in (
             "nombre_completo", "facultad_nombre", "carrera_nombre",
             "materia_nombre", "cargo",
@@ -647,6 +653,47 @@ def parse_international_programs(html: str) -> list[dict[str, object]]:
     ) for kind, name, needle, duration, recognition, tuition in specs if needle in key]
 
 
+def parse_exchange_agreements(html: str) -> list[dict[str, object]]:
+    """Extract destination universities and eligible programs from the public map."""
+    match = re.search(
+        r"var\s+dataMapa\s*=\s*(\{.*?\});\s*var\s+dataProgramas",
+        html,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return []
+    destinations = json.loads(match.group(1))
+    records: list[dict[str, object]] = []
+    seen: set[tuple[str, str]] = set()
+    for destination in destinations.values():
+        info = BeautifulSoup(str(destination.get("info") or ""), "html.parser")
+        programs = [clean_text(item.get_text(" ", strip=True)) for item in info.find_all("li")]
+        if not programs:
+            programs = [
+                clean_text(value)
+                for value in re.split(r",\s{1,}", str(destination.get("programas") or ""))
+            ]
+        university = clean_text(str(destination.get("universidad") or ""))
+        observations = clean_text(info.get_text(" ", strip=True)) or None
+        for program in programs:
+            if not university or not program:
+                continue
+            identity = (comparison_key(university), comparison_key(program))
+            if identity in seen:
+                continue
+            seen.add(identity)
+            records.append(blank_record(
+                "convenios_intercambio", universidad_nombre=UNIVERSITY,
+                programa_origen=program, universidad_destino=university,
+                ciudad=clean_text(str(destination.get("ciudad") or "")) or None,
+                pais=clean_text(str(destination.get("pais") or "")) or None,
+                latitud=float(destination["lat"]) if destination.get("lat") else None,
+                longitud=float(destination["lng"]) if destination.get("lng") else None,
+                observaciones=observations, fuente_url=INTERNATIONAL_MAP_URL,
+            ))
+    return records
+
+
 def build_dataset(
     admissions_html: str, institution_html: str,
     detail_pages: dict[str, str], plan_pages: dict[str, str],
@@ -687,7 +734,7 @@ def build_dataset(
             "carreras", universidad_nombre=UNIVERSITY, facultad_nombre=faculty,
             nombre_carrera=config.short_name, denominacion_canonica=config.canonical_name,
             nivel="Grado", titulo_otorgado=plan.get("titulo_otorgado"),
-            tiene_titulo_intermedio=None, duracion_anios=duration, es_art_43=None,
+            tiene_titulo_intermedio=None, duracion_anios=duration,
             descripcion_breve=detail.get("descripcion_breve"), cantidad_materias_total=len(subjects) or None,
         ))
         sections["ofertas"].append(blank_record(
@@ -729,6 +776,9 @@ def build_dataset(
     sections["alojamiento"] = parse_housing(support.get(HOUSING_URL, ""))
     sections["programas_internacionales"] = parse_international_programs(
         support.get(INTERNATIONAL_URL, "")
+    )
+    sections["convenios_intercambio"] = parse_exchange_agreements(
+        support.get(INTERNATIONAL_MAP_URL, "")
     )
     missing = {section: {field: sum(row[field] in (None, "") for row in records) for field in SECTION_FIELDS[section]} for section, records in sections.items()}
     return {

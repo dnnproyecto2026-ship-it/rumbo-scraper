@@ -53,8 +53,8 @@ python -m rumbo_scraper.spiders.utdt
 El comando consulta páginas oficiales de admisiones, información institucional,
 carreras, planes de estudio y vida universitaria. Genera
 `data/utdt_completo.json` con el contrato original de `carga_carreras.xlsx` más
-becas, servicios estudiantiles, actividades extracurriculares, alojamiento y
-programas internacionales.
+becas, servicios estudiantiles, actividades extracurriculares, alojamiento,
+programas internacionales y universidades de intercambio por carrera.
 
 Los datos que la web oficial no publica quedan como `null` y se detallan en `control_calidad`. El proceso es de solo lectura y no escribe en Supabase.
 
@@ -91,5 +91,5 @@ con facultades, carreras y materias.
 
 Para cargar las secciones ampliadas, Supabase debe contar también con las tablas
 `becas`, `servicios_estudiantiles`, `actividades_extracurriculares`,
-`alojamientos` y `programas_internacionales`. El repositorio no contiene SQL:
+`alojamientos`, `programas_internacionales` y `convenios_intercambio`. El repositorio no contiene SQL:
 las modificaciones del esquema se administran por separado en Supabase.

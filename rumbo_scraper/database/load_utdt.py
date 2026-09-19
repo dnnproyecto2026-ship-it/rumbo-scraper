@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.validators.utdt import validate_dataset
 
 
@@ -71,6 +72,12 @@ def _faculty_name(reference: object) -> str | None:
         if marker in text:
             return text.split(marker, 1)[1]
     return text
+
+
+def _program_name_key(value: object) -> str:
+    text = str(value or "")
+    text = text.split("(", 1)[0].strip()
+    return comparison_key(text)
 
 
 def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[str, int]:
@@ -141,7 +148,6 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "titulo_otorgado": row["titulo_otorgado"],
             "tiene_titulo_intermedio": _boolean(row["tiene_titulo_intermedio"]),
             "duracion_anios": row["duracion_anios"],
-            "es_art_43": _boolean(row["es_art_43"]),
             "descripcion_breve": row["descripcion_breve"],
             "cantidad_materias_total": row["cantidad_materias_total"],
         }
@@ -262,7 +268,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
     for table in (
         "becas", "servicios_estudiantiles", "actividades_extracurriculares",
-        "alojamientos", "programas_internacionales",
+        "alojamientos", "programas_internacionales", "convenios_intercambio",
     ):
         client.table(table).delete().eq("universidad_id", university_id).execute()
 
@@ -326,6 +332,24 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         client, "programas_internacionales", international
     )
 
+    career_lookup: dict[str, str] = {}
+    for row in data["carreras"]:
+        career_id = career_ids[row["nombre_carrera"]]
+        career_lookup[_program_name_key(row["nombre_carrera"])] = career_id
+        career_lookup[_program_name_key(row["denominacion_canonica"])] = career_id
+    exchange_agreements = [{
+        "universidad_id": university_id,
+        "carrera_id": career_lookup.get(_program_name_key(row["programa_origen"])),
+        "programa_origen": row["programa_origen"],
+        "universidad_destino": row["universidad_destino"],
+        "ciudad": row["ciudad"], "pais": row["pais"],
+        "latitud": row["latitud"], "longitud": row["longitud"],
+        "observaciones": row["observaciones"], "fuente_url": row["fuente_url"],
+    } for row in data["convenios_intercambio"]]
+    counts["convenios_intercambio"] = _insert_chunks(
+        client, "convenios_intercambio", exchange_agreements
+    )
+
     directory = dataset.get("directorio_academico", {})
     person_ids: dict[str, str] = {}
     for row in directory.get("personas", []):
@@ -337,11 +361,11 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "activa": True,
         }
         saved = _upsert_one(client, "personas", payload, "universidad_id,nombre_completo")
-        person_ids[row["nombre_completo"]] = saved["id"]
+        person_ids[comparison_key(row["nombre_completo"])] = saved["id"]
     counts["personas"] = len(person_ids)
     client.table("roles_academicos").delete().eq("universidad_id", university_id).execute()
     academic_roles = [{
-        "persona_id": person_ids[row["nombre_completo"]],
+        "persona_id": person_ids[comparison_key(row["nombre_completo"])],
         "universidad_id": university_id,
         "facultad_id": faculty_ids.get(_faculty_name(row["facultad_nombre"])),
         "carrera_id": career_ids.get(row["carrera_nombre"]),

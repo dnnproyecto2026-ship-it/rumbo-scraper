@@ -5,7 +5,9 @@ import unittest
 from rumbo_scraper.contracts import SECTION_FIELDS
 from rumbo_scraper.parsers.utdt import (
     ACADEMIC_UNITS, CAREERS, build_dataset, parse_career_detail,
+    build_academic_directory,
     parse_careers, parse_extracurricular_activities,
+    parse_exchange_agreements,
     parse_faculty_authorities, parse_housing, parse_international_programs,
     parse_professor_page, parse_scholarships, parse_study_plan,
 )
@@ -22,7 +24,7 @@ class UTDTParserTests(unittest.TestCase):
         ) + " Maestría en Economía Doctorado en Historia</html>"
 
     def test_contract_contains_every_excel_section(self) -> None:
-        self.assertEqual(len(SECTION_FIELDS), 20)
+        self.assertEqual(len(SECTION_FIELDS), 21)
         self.assertIn("aranceles", SECTION_FIELDS)
         self.assertIn("posgrados", SECTION_FIELDS)
         self.assertIn("redes_contacto", SECTION_FIELDS)
@@ -87,6 +89,22 @@ class UTDTParserTests(unittest.TestCase):
         rows = parse_professor_page(html, "Derecho", "https://www.utdt.edu/docentes")
         self.assertEqual([row["nombre_completo"] for row in rows], ["Ana María Pérez", "Juan García"])
 
+    def test_academic_roles_use_the_canonical_person_name(self) -> None:
+        directory = build_academic_directory(
+            [{
+                "nombre_autoridad": "Andrés de la Cruz",
+                "facultad_nombre": "Universidad — Escuela de Negocios",
+                "carrera": "Tecnología Digital",
+                "cargo": "Director/a de carrera",
+                "tipo": "Académico",
+            }],
+            {"Negocios": "<article id='contenido'><strong>Andrés De la Cruz.</strong></article>"},
+        )
+        names = {row["nombre_completo"] for row in directory["personas"]}
+        role_names = {row["nombre_completo"] for row in directory["roles_academicos"]}
+        self.assertEqual(names, {"Andrés de la Cruz"})
+        self.assertEqual(role_names, names)
+
     def test_extracts_student_life_and_financial_aid(self) -> None:
         scholarships = parse_scholarships("""
         BECA INTERIOR Estudiantes a más de 100 km de CABA - 30% del arancel
@@ -112,6 +130,22 @@ class UTDTParserTests(unittest.TestCase):
         )
         self.assertEqual(len(international), 3)
         self.assertEqual(international[0]["cantidad_convenios"], 156)
+
+    def test_extracts_exchange_destinations_by_program(self) -> None:
+        html = '''<script>
+        var dataMapa = {"destino": {
+          "universidad": "Universidad Ejemplo - Madrid, España",
+          "programas": "Arquitectura, Licenciatura en Tecnología Digital",
+          "info": "<strong>Carreras:</strong><ul><li>Arquitectura</li><li>Licenciatura en Tecnología Digital (4to año)</li></ul>",
+          "pais": "España", "ciudad": "Madrid, España",
+          "lat": "40.4", "lng": "-3.7"
+        }};
+        var dataProgramas = [];
+        </script>'''
+        rows = parse_exchange_agreements(html)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]["universidad_destino"], "Universidad Ejemplo - Madrid, España")
+        self.assertEqual(rows[1]["programa_origen"], "Licenciatura en Tecnología Digital (4to año)")
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ SECTION_FIELDS: dict[str, tuple[str, ...]] = {
     "carreras": (
         "universidad_nombre", "facultad_nombre", "nombre_carrera",
         "denominacion_canonica", "nivel", "titulo_otorgado",
-        "tiene_titulo_intermedio", "duracion_anios", "es_art_43",
+        "tiene_titulo_intermedio", "duracion_anios",
         "descripcion_breve", "cantidad_materias_total",
     ),
     "ofertas": (
@@ -74,6 +74,10 @@ SECTION_FIELDS: dict[str, tuple[str, ...]] = {
         "universidad_nombre", "nivel", "tipo_programa", "nombre_programa",
         "cantidad_convenios", "duracion_maxima", "reconocimiento_academico",
         "arancel_destino_cubierto", "requisitos", "url", "fuente_url",
+    ),
+    "convenios_intercambio": (
+        "universidad_nombre", "programa_origen", "universidad_destino",
+        "ciudad", "pais", "latitud", "longitud", "observaciones", "fuente_url",
     ),
 }
 

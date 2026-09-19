@@ -8,7 +8,7 @@ import httpx
 
 from rumbo_scraper.parsers.utdt import (
     AUTHORITIES_URL, CAREERS, FIRST_YEAR_URL, HOUSING_URL, INSTITUTION_URL,
-    INTERNATIONAL_URL, ORIENTATION_URL, PROFESSOR_PAGES, SCHOLARSHIPS_URL,
+    INTERNATIONAL_MAP_URL, INTERNATIONAL_URL, ORIENTATION_URL, PROFESSOR_PAGES, SCHOLARSHIPS_URL,
     SOCIAL_ACTION_URL, SOURCE_URL, SPORTS_URL, STUDENT_CENTER_URL,
     STUDENT_ORGANIZATIONS_URL, STUDENT_SERVICES_URL, WELLBEING_URL, build_dataset,
     parse_career_detail,
@@ -48,7 +48,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
             STUDENT_SERVICES_URL, SCHOLARSHIPS_URL, SPORTS_URL,
             STUDENT_ORGANIZATIONS_URL, FIRST_YEAR_URL, WELLBEING_URL,
             ORIENTATION_URL, STUDENT_CENTER_URL, SOCIAL_ACTION_URL,
-            HOUSING_URL, INTERNATIONAL_URL,
+            HOUSING_URL, INTERNATIONAL_URL, INTERNATIONAL_MAP_URL,
         ):
             support_pages[url] = _fetch(client, url, errors)
         for faculty, url in PROFESSOR_PAGES.items():
@@ -90,6 +90,7 @@ def main() -> None:
     print(f"OK: {len(data['actividades_extracurriculares'])} actividades extracurriculares")
     print(f"OK: {len(data['alojamiento'])} opciones de alojamiento")
     print(f"OK: {len(data['programas_internacionales'])} programas internacionales")
+    print(f"OK: {len(data['convenios_intercambio'])} convenios de intercambio por programa")
     print(f"Archivo: {args.output}")
     if quality["secciones_vacias"]:
         print("Pendiente por falta de fuente pública: " + ", ".join(quality["secciones_vacias"]))
