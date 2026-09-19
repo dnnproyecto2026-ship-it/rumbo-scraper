@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 
+from rumbo_scraper.normalizers.url import normalize_supabase_url
 
 load_dotenv()
 
@@ -14,7 +15,7 @@ load_dotenv()
 class Settings:
     """Runtime configuration for the scraper."""
 
-    supabase_url: str = os.getenv("SUPABASE_URL", "").strip()
+    supabase_url: str = normalize_supabase_url(os.getenv("SUPABASE_URL", ""))
     supabase_service_role_key: str = (
         os.getenv("SUPABASE_SECRET_KEY", "")
         or os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
@@ -36,6 +37,10 @@ class Settings:
             raise RuntimeError(
                 "SUPABASE_URL inválida. Debe tener el formato "
                 "https://TU_PROJECT_REF.supabase.co"
+            )
+        if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
+            raise RuntimeError(
+                "SUPABASE_URL debe ser la URL base del proyecto, sin rutas adicionales."
             )
 
 
