@@ -21,9 +21,6 @@ RULES = (
     ("ciclos_ingreso", "fecha_apertura_inscripcion", "alta", "Calendario de Admisiones"),
     ("ciclos_ingreso", "fecha_cierre_inscripcion", "alta", "Calendario de Admisiones"),
     ("ciclos_ingreso", "estado", "alta", "Calendario de Admisiones"),
-    ("materias", "descripcion_breve", "alta", "Catálogo semestral de cursos"),
-    ("materias", "turno", "media", "Derivar de los horarios del catálogo"),
-    ("materias", "carga_horaria_semanal", "media", "Calcular con horarios por comisión"),
     ("actividades", "obligatoria", "media", "Plan oficial de la carrera"),
     ("actividades", "carga_horaria_total", "baja", "Plan o reglamento académico"),
     ("actividades", "descripcion_breve", "baja", "Página o plan oficial"),
@@ -33,9 +30,6 @@ RULES = (
     ("posgrados", "modalidad", "alta", "Página individual del posgrado"),
     ("posgrados", "duracion_meses", "alta", "Página individual del posgrado"),
     ("posgrados", "descripcion_breve", "alta", "Página individual del posgrado"),
-    ("personas", "formacion", "baja", "Perfil académico público, cuando exista"),
-    ("personas", "biografia", "baja", "Perfil académico público, cuando exista"),
-    ("roles_academicos", "materia_id", "alta", "Catálogo semestral; preferir docentes_comision"),
     ("convenios_intercambio", "pais", "alta", "Normalizar ciudad/destino del mapa de intercambio"),
 )
 
@@ -88,6 +82,44 @@ def build_report(client: Any) -> dict[str, Any]:
                     "prioridad": priority,
                     "motivo": "Campo vacío",
                     "accion_recomendada": f"Completar desde: {source}",
+                })
+
+    # The semester catalogue stores descriptions, teachers and schedules in its own
+    # normalized tables. The actionable gap is a missing plan-to-catalogue link,
+    # not a NULL in the legacy materias columns.
+    plan_subjects = _all_rows(client, "materias", "id")
+    links = _all_rows(client, "materias_catalogo_vinculos", "materia_id")
+    linked_subjects = {row["materia_id"] for row in links}
+    for subject in plan_subjects:
+        if subject["id"] not in linked_subjects:
+            issues.append({
+                "clave": f"materias:{subject['id']}:vinculo_catalogo",
+                "universidad_id": university_id,
+                "entidad_tipo": "materias",
+                "entidad_id": subject["id"],
+                "campo": "vinculo_catalogo",
+                "prioridad": "alta",
+                "motivo": "Materia del plan sin coincidencia exacta en el catálogo semestral",
+                "accion_recomendada": "Revisar nombre/código y vincular manualmente o con matching supervisado",
+            })
+
+    # Academic enrichment is only actionable when UTDT actually publishes a
+    # profile URL. Catalogue-only teachers must not become thousands of false alarms.
+    people = _all_rows(client, "personas", "id,perfil_url,formacion,biografia")
+    for person in people:
+        if not person.get("perfil_url"):
+            continue
+        for field in ("formacion", "biografia"):
+            if _empty(person.get(field)):
+                issues.append({
+                    "clave": f"personas:{person['id']}:{field}",
+                    "universidad_id": university_id,
+                    "entidad_tipo": "personas",
+                    "entidad_id": person["id"],
+                    "campo": field,
+                    "prioridad": "baja",
+                    "motivo": "Perfil público disponible pero campo todavía vacío",
+                    "accion_recomendada": "Completar desde el perfil académico público",
                 })
     for table, priority, source in EMPTY_TABLES:
         rows = _all_rows(client, table, "id")
