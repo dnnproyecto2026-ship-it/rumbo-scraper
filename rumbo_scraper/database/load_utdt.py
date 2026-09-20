@@ -87,6 +87,44 @@ def _upsert_chunks(
     return saved
 
 
+def _subject_identity(row: dict[str, Any]) -> tuple[str, str, str]:
+    """Stable identity that preserves a plan subject's database ID across loads."""
+    parent = row.get("carrera_id") or f"posgrado:{row.get('posgrado_id') or ''}"
+    year = "" if row.get("anio_cursada") is None else str(row["anio_cursada"])
+    return str(parent), comparison_key(row.get("nombre_materia")), year
+
+
+def _sync_subjects(
+    client: Any, university_id: str, rows: list[dict[str, Any]]
+) -> int:
+    """Update matching subjects in place so catalogue links remain valid."""
+    existing = _data(
+        client.table("materias")
+        .select("id,carrera_id,posgrado_id,nombre_materia,anio_cursada")
+        .eq("universidad_id", university_id).execute()
+    )
+    available: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    for row in existing:
+        available.setdefault(_subject_identity(row), []).append(row)
+
+    kept_ids: set[str] = set()
+    for row in rows:
+        matches = available.get(_subject_identity(row), [])
+        if matches:
+            current = matches.pop(0)
+            kept_ids.add(current["id"])
+            client.table("materias").update(row).eq("id", current["id"]).execute()
+        else:
+            inserted = _data(client.table("materias").insert(row).execute())
+            if inserted and inserted[0].get("id"):
+                kept_ids.add(inserted[0]["id"])
+
+    for row in existing:
+        if row["id"] not in kept_ids:
+            client.table("materias").delete().eq("id", row["id"]).execute()
+    return len(rows)
+
+
 def _faculty_name(reference: object) -> str | None:
     if not reference:
         return None
@@ -259,9 +297,9 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         posgrad_ids[row["nombre_programa"]] = saved["id"]
     counts["posgrados"] = len(posgrad_ids)
 
-    # These tables lack natural unique constraints in the current schema.
-    # Replace only this university's rows so repeated imports stay idempotent.
-    for table in ("materias", "actividades", "contactos"):
+    # These detail tables lack natural unique constraints in the current schema.
+    # Subjects are synchronized separately to preserve catalogue relationships.
+    for table in ("actividades", "contactos"):
         client.table(table).delete().eq("universidad_id", university_id).execute()
     if faculty_ids:
         client.table("autoridades").delete().in_("facultad_id", list(faculty_ids.values())).execute()
@@ -278,7 +316,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "regimen": row["regimen"],
         "carga_horaria_semanal": row["carga_horaria_semanal"],
     } for row in data["materias"]]
-    counts["materias"] = _insert_chunks(client, "materias", subjects)
+    counts["materias"] = _sync_subjects(client, university_id, subjects)
 
     activities = [{
         "universidad_id": university_id,

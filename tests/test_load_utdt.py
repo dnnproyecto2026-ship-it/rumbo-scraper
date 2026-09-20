@@ -5,7 +5,9 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from rumbo_scraper.database.load_utdt import _boolean, load_file, preview
+from rumbo_scraper.database.load_utdt import (
+    _boolean, _subject_identity, load_file, preview,
+)
 
 
 class LoadUTDTTests(unittest.TestCase):
@@ -25,6 +27,17 @@ class LoadUTDTTests(unittest.TestCase):
         self.assertEqual(counts["carreras"], 13)
         self.assertNotIn("turnos_anio", counts)
         self.assertNotIn("aranceles", counts)
+
+    def test_subject_identity_is_stable_for_cosmetic_name_changes(self) -> None:
+        first = {
+            "carrera_id": "career-1", "posgrado_id": None,
+            "nombre_materia": "Introducción a la Economía", "anio_cursada": 1,
+        }
+        second = {
+            "carrera_id": "career-1", "posgrado_id": None,
+            "nombre_materia": "  INTRODUCCION A LA ECONOMIA ", "anio_cursada": 1,
+        }
+        self.assertEqual(_subject_identity(first), _subject_identity(second))
 
 
 if __name__ == "__main__":
