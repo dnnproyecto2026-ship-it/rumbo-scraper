@@ -93,3 +93,46 @@ Para cargar las secciones ampliadas, Supabase debe contar también con las tabla
 `becas`, `servicios_estudiantiles`, `actividades_extracurriculares`,
 `alojamientos`, `programas_internacionales` y `convenios_intercambio`. El repositorio no contiene SQL:
 las modificaciones del esquema se administran por separado en Supabase.
+
+## Catálogo semestral de materias
+
+El catálogo público de UTDT incluye comisiones, docentes, días, horarios,
+contenidos y condiciones de aprobación. Como la página está renderizada con
+Looker Studio, la extracción utiliza un navegador automático.
+
+La primera vez, instala el navegador de Playwright:
+
+```bash
+python -m playwright install chromium
+```
+
+Extrae el período indicado sin escribir en Supabase:
+
+```bash
+python -m rumbo_scraper.spiders.utdt_catalog --year 2026 --semester 2
+python -m rumbo_scraper.database.load_utdt_catalog
+```
+
+Después de crear las tablas requeridas en Supabase, carga el resultado:
+
+```bash
+python -m rumbo_scraper.database.load_utdt_catalog --apply
+```
+
+El esquema SQL no se guarda en este repositorio.
+
+## Datos pendientes
+
+La auditoría genera un archivo con cada campo importante que sigue vacío y la
+fuente recomendada para completarlo:
+
+```bash
+python -m rumbo_scraper.database.audit_completeness
+```
+
+Si existe la tabla `pendientes_datos`, se puede sincronizar el tablero de
+pendientes con:
+
+```bash
+python -m rumbo_scraper.database.audit_completeness --apply
+```

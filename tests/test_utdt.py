@@ -137,7 +137,7 @@ class UTDTParserTests(unittest.TestCase):
           "universidad": "Universidad Ejemplo - Madrid, España",
           "programas": "Arquitectura, Licenciatura en Tecnología Digital",
           "info": "<strong>Carreras:</strong><ul><li>Arquitectura</li><li>Licenciatura en Tecnología Digital (4to año)</li></ul>",
-          "pais": "España", "ciudad": "Madrid, España",
+          "pais": "", "ciudad": "Madrid, España",
           "lat": "40.4", "lng": "-3.7"
         }};
         var dataProgramas = [];
@@ -145,6 +145,7 @@ class UTDTParserTests(unittest.TestCase):
         rows = parse_exchange_agreements(html)
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["universidad_destino"], "Universidad Ejemplo - Madrid, España")
+        self.assertEqual(rows[0]["pais"], "España")
         self.assertEqual(rows[1]["programa_origen"], "Licenciatura en Tecnología Digital (4to año)")
 
 

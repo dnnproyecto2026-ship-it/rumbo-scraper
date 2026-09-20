@@ -674,6 +674,10 @@ def parse_exchange_agreements(html: str) -> list[dict[str, object]]:
                 for value in re.split(r",\s{1,}", str(destination.get("programas") or ""))
             ]
         university = clean_text(str(destination.get("universidad") or ""))
+        city = clean_text(str(destination.get("ciudad") or "")) or None
+        country = clean_text(str(destination.get("pais") or "")) or None
+        if not country and city and "," in city:
+            country = clean_text(city.rsplit(",", 1)[1]) or None
         observations = clean_text(info.get_text(" ", strip=True)) or None
         for program in programs:
             if not university or not program:
@@ -685,8 +689,7 @@ def parse_exchange_agreements(html: str) -> list[dict[str, object]]:
             records.append(blank_record(
                 "convenios_intercambio", universidad_nombre=UNIVERSITY,
                 programa_origen=program, universidad_destino=university,
-                ciudad=clean_text(str(destination.get("ciudad") or "")) or None,
-                pais=clean_text(str(destination.get("pais") or "")) or None,
+                ciudad=city, pais=country,
                 latitud=float(destination["lat"]) if destination.get("lat") else None,
                 longitud=float(destination["lng"]) if destination.get("lng") else None,
                 observaciones=observations, fuente_url=INTERNATIONAL_MAP_URL,

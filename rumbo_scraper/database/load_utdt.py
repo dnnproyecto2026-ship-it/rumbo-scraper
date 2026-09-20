@@ -77,7 +77,15 @@ def _faculty_name(reference: object) -> str | None:
 def _program_name_key(value: object) -> str:
     text = str(value or "")
     text = text.split("(", 1)[0].strip()
-    return comparison_key(text)
+    key = comparison_key(text)
+    aliases = {
+        "licenciatura en administracion en empresas": "licenciatura en administracion de empresas",
+        "licenciatura en adminstracion de empresas": "licenciatura en administracion de empresas",
+        "licenciatura economia empresarial": "licenciatura en economia empresarial",
+        "licenciatura en ciencia politica": "licenciatura en ciencia politica y gobierno",
+        "licenciatura de ciencia politica y gobierno": "licenciatura en ciencia politica y gobierno",
+    }
+    return aliases.get(key, key)
 
 
 def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[str, int]:
@@ -337,9 +345,13 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         career_id = career_ids[row["nombre_carrera"]]
         career_lookup[_program_name_key(row["nombre_carrera"])] = career_id
         career_lookup[_program_name_key(row["denominacion_canonica"])] = career_id
+    posgrad_lookup = {
+        _program_name_key(name): posgrad_id for name, posgrad_id in posgrad_ids.items()
+    }
     exchange_agreements = [{
         "universidad_id": university_id,
         "carrera_id": career_lookup.get(_program_name_key(row["programa_origen"])),
+        "posgrado_id": posgrad_lookup.get(_program_name_key(row["programa_origen"])),
         "programa_origen": row["programa_origen"],
         "universidad_destino": row["universidad_destino"],
         "ciudad": row["ciudad"], "pais": row["pais"],
