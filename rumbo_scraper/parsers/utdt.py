@@ -185,6 +185,21 @@ def parse_careers(html: str, source_url: str = SOURCE_URL) -> list[UTDTCareer]:
     ) for config in configs]
 
 
+def parse_admissions_summary(html: str) -> dict[str, str | None]:
+    """Read only admission facts explicitly published on the current degree page."""
+    soup = _soup(html)
+    key = comparison_key(clean_text(soup.get_text(" ", strip=True)))
+    has_direct = "admision por ingreso directo" in key
+    has_course = "curso de ingreso" in key
+    application_open = any(
+        "solicitud de admision" in comparison_key(anchor.get_text(" ", strip=True))
+        and "/admisiones/grado" in str(anchor.get("href", ""))
+        for anchor in soup.find_all("a", href=True)
+    )
+    regime = "Ingreso directo o curso de ingreso" if has_direct and has_course else None
+    return {"regimen_ingreso": regime, "estado": "Abierta" if application_open else None}
+
+
 def _labeled_value(soup: BeautifulSoup, label: str) -> str | None:
     wanted = comparison_key(label)
     for node in soup.find_all(["h2", "h3", "h4", "h5", "h6", "strong", "b"]):
@@ -934,6 +949,7 @@ def build_dataset(
             sections["facultades"].append(blank_record("facultades", universidad_nombre=UNIVERSITY, nombre_facultad=name, tipo_unidad=unit_type, sede=CAMPUS))
     cycle_match = re.search(r"marzo\s+(20\d{2})", comparison_key(_soup(admissions_html).get_text(" ", strip=True)))
     cycle_year = int(cycle_match.group(1)) if cycle_match else None
+    admissions = parse_admissions_summary(admissions_html)
 
     for config in CAREERS.values():
         if config.canonical_name not in found:
@@ -952,7 +968,8 @@ def build_dataset(
         sections["ofertas"].append(blank_record(
             "ofertas", universidad_nombre=UNIVERSITY, facultad_nombre=faculty,
             carrera_nombre=config.short_name, sede=CAMPUS, modalidad=detail.get("modalidad"),
-            regimen_ingreso=None, coneau_resolucion=None, coneau_vigencia_hasta=None,
+            regimen_ingreso=admissions["regimen_ingreso"], coneau_resolucion=None,
+            coneau_vigencia_hasta=None,
             tiene_pasantias=detail.get("tiene_pasantias"), tiene_bolsa_trabajo=detail.get("tiene_bolsa_trabajo"),
             url_oficial=config.detail_url,
         ))
@@ -961,7 +978,7 @@ def build_dataset(
                 "ofertas_ciclo", universidad_nombre=UNIVERSITY, carrera_nombre=config.short_name,
                 sede=CAMPUS, ciclo_anio=cycle_year, ciclo_nombre=f"Ingreso {cycle_year}",
                 cupo_ingresantes=None, fecha_apertura_inscripcion=None,
-                fecha_cierre_inscripcion=None, estado=None,
+                fecha_cierre_inscripcion=None, estado=admissions["estado"],
             ))
         sections["materias"].extend(subjects)
         for area, count in sorted(Counter(str(row["area_tematica"]) for row in subjects).items()):

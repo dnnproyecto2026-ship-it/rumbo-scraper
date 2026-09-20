@@ -9,6 +9,7 @@ from rumbo_scraper.parsers.utdt import (
     parse_careers, parse_extracurricular_activities,
     parse_exchange_agreements,
     discover_postgraduates, parse_postgraduates,
+    parse_admissions_summary,
     parse_faculty_authorities, parse_housing, parse_international_programs,
     parse_professor_page, parse_scholarships, parse_study_plan,
 )
@@ -34,6 +35,16 @@ class UTDTParserTests(unittest.TestCase):
         careers = parse_careers(self.admissions)
         self.assertEqual(len(careers), 13)
         self.assertEqual(len({item.denominacion_canonica for item in careers}), 13)
+
+    def test_extracts_current_admission_regime_and_open_state(self) -> None:
+        html = """
+        <h2>Admisión por ingreso directo</h2><p>También podés realizar el curso de ingreso.</p>
+        <a href="/admisiones/grado">Completá la solicitud de admisión</a>
+        """
+        self.assertEqual(parse_admissions_summary(html), {
+            "regimen_ingreso": "Ingreso directo o curso de ingreso",
+            "estado": "Abierta",
+        })
 
     def test_discovers_and_splits_current_postgraduates(self) -> None:
         index = """
