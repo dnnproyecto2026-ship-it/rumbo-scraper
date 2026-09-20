@@ -10,8 +10,9 @@ from rumbo_scraper.parsers.utdt import (
     AUTHORITIES_URL, CAREERS, FIRST_YEAR_URL, HOUSING_URL, INSTITUTION_URL,
     INTERNATIONAL_MAP_URL, INTERNATIONAL_URL, ORIENTATION_URL, PROFESSOR_PAGES, SCHOLARSHIPS_URL,
     SOCIAL_ACTION_URL, SOURCE_URL, SPORTS_URL, STUDENT_CENTER_URL,
-    STUDENT_ORGANIZATIONS_URL, STUDENT_SERVICES_URL, WELLBEING_URL, build_dataset,
-    parse_career_detail,
+    STUDENT_ORGANIZATIONS_URL, STUDENT_SERVICES_URL, WELLBEING_URL,
+    POSTGRADUATES_URL, build_dataset, postgraduate_configs,
+    discover_postgraduate_supplement_urls, parse_career_detail,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -36,6 +37,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     plan_pages: dict[str, str] = {}
     professor_pages: dict[str, str] = {}
     support_pages: dict[str, str] = {}
+    postgraduate_pages: dict[str, str] = {}
     with httpx.Client(
         follow_redirects=True,
         timeout=30.0,
@@ -43,6 +45,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     ) as client:
         admissions_html = _fetch(client, SOURCE_URL, errors)
         institution_html = _fetch(client, INSTITUTION_URL, errors)
+        postgraduate_index_html = _fetch(client, POSTGRADUATES_URL, errors)
         authorities_html = _fetch(client, AUTHORITIES_URL, errors)
         for url in (
             STUDENT_SERVICES_URL, SCHOLARSHIPS_URL, SPORTS_URL,
@@ -59,10 +62,20 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
             plan_url = parse_career_detail(html, config).get("plan_url") if html else None
             if plan_url and str(plan_url) not in plan_pages:
                 plan_pages[str(plan_url)] = _fetch(client, str(plan_url), errors)
+        for config in postgraduate_configs(postgraduate_index_html):
+            if config.detail_url in postgraduate_pages:
+                continue
+            detail_html = _fetch(client, config.detail_url, errors)
+            supplements = [
+                _fetch(client, url, errors)
+                for url in discover_postgraduate_supplement_urls(detail_html, config.detail_url)
+            ]
+            postgraduate_pages[config.detail_url] = "\n".join([detail_html, *supplements])
 
     dataset = build_dataset(
         admissions_html, institution_html, detail_pages, plan_pages, errors,
         authorities_html, professor_pages, support_pages,
+        postgraduate_index_html, postgraduate_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)

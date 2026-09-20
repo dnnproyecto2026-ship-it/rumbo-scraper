@@ -8,6 +8,7 @@ from rumbo_scraper.parsers.utdt import (
     build_academic_directory,
     parse_careers, parse_extracurricular_activities,
     parse_exchange_agreements,
+    discover_postgraduates, parse_postgraduates,
     parse_faculty_authorities, parse_housing, parse_international_programs,
     parse_professor_page, parse_scholarships, parse_study_plan,
 )
@@ -33,6 +34,29 @@ class UTDTParserTests(unittest.TestCase):
         careers = parse_careers(self.admissions)
         self.assertEqual(len(careers), 13)
         self.assertEqual(len({item.denominacion_canonica for item in careers}), 13)
+
+    def test_discovers_and_splits_current_postgraduates(self) -> None:
+        index = """
+        <div class="programas-body"><h3 class="tit-escuela">Derecho</h3>
+          <div class="card"><h3>Maestría y Especialización en Derecho Penal</h3>
+            <a href="/penal">Ver más</a></div>
+        </div>
+        """
+        configs = discover_postgraduates(index)
+        self.assertEqual([row.name for row in configs], [
+            "Maestría en Derecho Penal", "Especialización en Derecho Penal",
+        ])
+        rows = [row for row in parse_postgraduates(index, {
+            "https://www.utdt.edu/penal": """
+                <main><p>Una propuesta académica extensa que brinda herramientas avanzadas para profesionales del derecho y el sistema penal contemporáneo.</p>
+                <p>Duración: 24 meses. Modalidad: híbrida. La Maestría concluye con una tesis.</p>
+                <h3>Requisitos</h3><p>Contar con título universitario de grado.</p></main>
+            """,
+        }) if "Derecho Penal" in row["nombre_programa"]]
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]["duracion_meses"], 24)
+        self.assertEqual(rows[0]["modalidad"], "Híbrida")
+        self.assertEqual(rows[0]["url_oficial"], "https://www.utdt.edu/penal")
 
     def test_parses_detail_and_study_plan(self) -> None:
         config = CAREERS["abogacia"]

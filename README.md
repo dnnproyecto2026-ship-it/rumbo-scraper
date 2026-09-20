@@ -54,7 +54,10 @@ El comando consulta páginas oficiales de admisiones, información institucional
 carreras, planes de estudio y vida universitaria. Genera
 `data/utdt_completo.json` con el contrato original de `carga_carreras.xlsx` más
 becas, servicios estudiantiles, actividades extracurriculares, alojamiento,
-programas internacionales y universidades de intercambio por carrera.
+programas internacionales y universidades de intercambio por carrera. También
+recorre el índice vigente de posgrados y sus páginas de modalidad, plan y
+admisión para guardar la unidad académica, URL oficial, descripción, duración,
+modalidad, trabajo final y requisitos cuando están publicados.
 
 Los datos que la web oficial no publica quedan como `null` y se detallan en `control_calidad`. El proceso es de solo lectura y no escribe en Supabase.
 

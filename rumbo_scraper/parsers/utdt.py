@@ -30,6 +30,7 @@ SOCIAL_ACTION_URL = f"{BASE_URL}/listado_contenidos.php?id_item_menu=4607"
 HOUSING_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=27151&id_item_menu=44632"
 INTERNATIONAL_URL = f"{BASE_URL}/ver_contenido.php?id_contenido=9949&id_item_menu=19550"
 INTERNATIONAL_MAP_URL = f"{BASE_URL}/map_international"
+POSTGRADUATES_URL = f"{BASE_URL}/posgrados"
 ADMISSIONS_URL = f"{BASE_URL}/admisiones/grado"
 LOCALITY = "Ciudad Autónoma de Buenos Aires — CABA"
 CAMPUS = f"{UNIVERSITY} — Campus Di Tella — {LOCALITY}"
@@ -42,6 +43,23 @@ class CareerConfig:
     faculty: str
     faculty_type: str
     detail_url: str
+
+
+@dataclass(frozen=True)
+class PostgraduateConfig:
+    name: str
+    kind: str
+    faculty: str | None
+    detail_url: str
+
+
+ADDITIONAL_POSTGRADUATES = (
+    PostgraduateConfig(
+        "Doctorado en Ciencia Aplicada y Tecnología", "Doctorado",
+        f"{UNIVERSITY} — Escuela de Ingeniería y Ciencia Aplicada",
+        f"{BASE_URL}/ver_contenido.php?id_contenido=26225&id_item_menu=43243",
+    ),
+)
 
 
 CAREERS: dict[str, CareerConfig] = {
@@ -186,7 +204,7 @@ def _years(value: str | None) -> float | None:
 
 def _modality(value: str | None) -> str | None:
     key = comparison_key(value or "")
-    if "hibrid" in key:
+    if "hibrid" in key or ("virtual" in key and "presencial" in key) or ("online" in key and "presencial" in key):
         return "Híbrida"
     if "virtual" in key and "presencial" not in key:
         return "Virtual"
@@ -203,7 +221,9 @@ def _description(soup: BeautifulSoup) -> str | None:
             return value[:1000]
     for paragraph in soup.find_all("p"):
         value = clean_text(paragraph.get_text(" ", strip=True))
-        if 120 <= len(value) <= 1000 and "cookies" not in comparison_key(value):
+        key = comparison_key(value)
+        if (120 <= len(value) <= 1000 and "cookies" not in key
+                and "horario de atencion" not in key and "@utdt.edu" not in key):
             return value
     return None
 
@@ -460,25 +480,201 @@ def _contact_records(html: str) -> list[dict[str, object]]:
     return [blank_record("redes_contacto", universidad_nombre=UNIVERSITY, facultad_nombre=None, canal=channel, usuario_o_direccion=value) for channel, value in contacts]
 
 
-def _postgraduates(html: str) -> list[dict[str, object]]:
-    soup = _soup(html)
-    records: list[dict[str, object]] = []
+POSTGRADUATE_UNIT_ALIASES = {
+    "politicas publicas": "Gobierno",
+    "educacion": "Gobierno",
+}
+
+
+def _repair_mojibake(value: str) -> str:
+    """Repair the few UTF-8 labels embedded in UTDT's Latin-1 index page."""
+    value = clean_text(value)
+    if "Ã" not in value and "Â" not in value:
+        return value
+    try:
+        return value.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return value
+
+
+def _academic_unit_ref(name: str | None) -> str | None:
+    if not name:
+        return None
+    repaired = _repair_mojibake(name)
+    name = POSTGRADUATE_UNIT_ALIASES.get(comparison_key(repaired), repaired)
+    unit_type = next((kind for unit, kind in ACADEMIC_UNITS if unit == name), None)
+    return f"{UNIVERSITY} — {unit_type} de {name}" if unit_type else None
+
+
+def _split_postgraduate_title(name: str) -> list[tuple[str, str]]:
+    key = comparison_key(name)
+    if "derecho penal" in key and "especializacion" in key and "maestria" in key:
+        return [("Maestría en Derecho Penal", "Maestría"), ("Especialización en Derecho Penal", "Especialización")]
+    if "politicas publicas" in key and "especializacion" in key and "maestria" in key:
+        return [("Maestría en Políticas Públicas", "Maestría"), ("Especialización en Políticas Públicas", "Especialización")]
+    if key.startswith("mba"):
+        return [("MBA (Maestría en Dirección de Empresas)", "Maestría")]
+    if key == "executive mba":
+        return [("Executive MBA", "Maestría")]
+    if key.startswith("master in management"):
+        return [(name, "Maestría")]
+    kind = next((label for label in ("Maestría", "Doctorado", "Especialización") if comparison_key(label) in key), None)
+    return [(name, kind)] if kind else []
+
+
+def discover_postgraduates(index_html: str) -> list[PostgraduateConfig]:
+    """Discover the current degree programs from UTDT's postgraduate index."""
+    soup = _soup(index_html)
+    records: list[PostgraduateConfig] = []
     seen: set[str] = set()
-    for anchor in soup.find_all("a", href=True):
-        name = clean_text(anchor.get_text(" ", strip=True)); key = comparison_key(name)
-        if not name or name in seen or not any(word in key for word in ("maestria", "doctorado", "especializacion")):
-            continue
-        seen.add(name)
-        kind = next((label for label in ("Maestría", "Doctorado", "Especialización") if comparison_key(label) in key), None)
-        records.append(blank_record(
-            "posgrados", universidad_nombre=UNIVERSITY, facultad_nombre=None,
-            nombre_programa=name, tipo_posgrado=kind, titulo_otorgado=None,
-            sede=CAMPUS, modalidad=None, duracion_meses=None,
-            requiere_tesis_trabajo_final=None, requisito_titulo_previo=None,
-            cohorte_inicio=None, costo_total_programa=None, moneda=None,
-            descripcion_breve=None,
-        ))
+    for group in soup.select(".programas-body"):
+        heading = group.select_one(".tit-escuela")
+        unit = _repair_mojibake(heading.get_text(" ", strip=True)) if heading else None
+        faculty = _academic_unit_ref(unit)
+        for card in group.select(".card"):
+            title = card.find("h3")
+            anchor = card.find("a", href=True)
+            if not title or not anchor:
+                continue
+            raw_name = _repair_mojibake(title.get_text(" ", strip=True))
+            detail_url = urljoin(POSTGRADUATES_URL, str(anchor["href"]))
+            for name, kind in _split_postgraduate_title(raw_name):
+                identity = comparison_key(name)
+                if identity in seen:
+                    continue
+                seen.add(identity)
+                records.append(PostgraduateConfig(name, kind, faculty, detail_url))
     return records
+
+
+def postgraduate_configs(index_html: str) -> list[PostgraduateConfig]:
+    """Return indexed programs plus active official programs listed institutionally."""
+    records = discover_postgraduates(index_html)
+    seen = {comparison_key(row.name) for row in records}
+    records.extend(
+        config for config in ADDITIONAL_POSTGRADUATES
+        if comparison_key(config.name) not in seen
+    )
+    return records
+
+
+def discover_postgraduate_supplement_urls(html: str, base_url: str) -> list[str]:
+    """Find official detail tabs that contain format, admission and study-plan data."""
+    soup = _soup(html)
+    wanted = ("modalidad", "formato", "admision", "plan de estudios")
+    urls: list[str] = []
+    for anchor in soup.select("main a[href]"):
+        label = comparison_key(anchor.get_text(" ", strip=True))
+        if not any(term in label for term in wanted):
+            continue
+        url = urljoin(base_url, str(anchor["href"]))
+        if not url.startswith(("http://", "https://")):
+            continue
+        if url != base_url and url not in urls:
+            urls.append(url)
+    return urls[:4]
+
+
+def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
+    key = comparison_key(text)
+    if config.name == "Especialización en Políticas Públicas":
+        match = re.search(r"especializacion\s*:?\s*(\d+)\s*trimestres", key)
+        return int(match.group(1)) * 3 if match else None
+    patterns = (
+        (r"duracion\s*:?\s*(\d+(?:[,.]\d+)?)\s*meses", "meses"),
+        (r"duracion(?:\s+total)?\s*(?:de|:)?\s*(\d+(?:[,.]\d+)?)\s*anos", "anos"),
+        (r"(?:dura|se extiende por)\s*(\d+(?:[,.]\d+)?)\s*(anos|meses)", None),
+    )
+    for pattern, fixed_unit in patterns:
+        match = re.search(pattern, key)
+        if not match:
+            continue
+        value = float(match.group(1).replace(",", "."))
+        unit = fixed_unit or match.group(2)
+        return round(value * 12) if unit.startswith("ano") else round(value)
+    word_years = {"un": 1, "uno": 1, "dos": 2, "tres": 3, "cuatro": 4}
+    match = re.search(
+        r"(?:dura|duracion\s*:?|plazo de|periodo de)\s*(un|uno|dos|tres|cuatro)\s*anos",
+        key,
+    )
+    return word_years[match.group(1)] * 12 if match else None
+
+
+def _postgraduate_modality(text: str) -> str | None:
+    key = comparison_key(text)
+    patterns = (
+        r"modalidad de cursada es\s+([^.]{2,80})",
+        r"modalidad\s*:\s*([^.]{2,80})",
+        r"formato\s*:\s*([^.]{2,80})",
+        r"formato\s+(hibrid[oa])",
+        r"cursada\s+((?:presencial|virtual|online)[^.]{0,60})",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, key)
+        if match:
+            value = _modality(match.group(1))
+            if value:
+                return value
+    if re.search(r"\bhibrid[oa]\s+(?:combina|elegi|con)", key):
+        return "Híbrida"
+    return None
+
+
+def _cohort_start(text: str) -> str | None:
+    months = {"enero": 1, "febrero": 2, "marzo": 3, "abril": 4, "mayo": 5, "junio": 6,
+              "julio": 7, "agosto": 8, "septiembre": 9, "octubre": 10, "noviembre": 11, "diciembre": 12}
+    match = re.search(r"inicio\s*:?\s*(" + "|".join(months) + r")\s+(20\d{2})", comparison_key(text))
+    return f"{match.group(2)}-{months[match.group(1)]:02d}-01" if match else None
+
+
+def _admission_requirement(soup: BeautifulSoup) -> str | None:
+    prerequisite_terms = (
+        "titulo universitario", "titulo de grado", "ser graduado",
+        "contar con una maestria", "poseer una maestria", "titulo equivalente",
+    )
+    for node in soup.find_all(["p", "li"]):
+        value = clean_text(node.get_text(" ", strip=True))
+        key = comparison_key(value)
+        if (25 <= len(value) <= 1200 and any(term in key for term in prerequisite_terms)
+                and "@utdt.edu" not in key):
+            return value[:1200]
+    text = clean_text(soup.get_text(" ", strip=True))
+    match = re.search(r"REQUISITOS\s*[✔•:-]?\s*(.{20,500})", text, re.I)
+    if match:
+        value = re.split(r"\b(?:PERFIL|ADMISI[ÓO]N|DOCUMENTACI[ÓO]N|BECAS|CONTACTO)\b", match.group(1))[0]
+        if any(term in comparison_key(value) for term in prerequisite_terms):
+            return clean_text(value)[:1200]
+    return None
+
+
+def parse_postgraduate_detail(config: PostgraduateConfig, html: str) -> dict[str, object]:
+    soup = _soup(html)
+    main = soup.select_one("main") or soup
+    text = clean_text(main.get_text(" ", strip=True))
+    key = comparison_key(text)
+    thesis = True if re.search(r"\b(tesis|trabajo final)\b", key) else None
+    if config.kind == "Especialización":
+        thesis = True if re.search(
+            r"especializacion.{0,180}(?:tesis|trabajo final)|(?:tesis|trabajo final).{0,180}especializacion",
+            key,
+        ) else None
+    return blank_record(
+        "posgrados", universidad_nombre=UNIVERSITY,
+        facultad_nombre=config.faculty, nombre_programa=config.name,
+        tipo_posgrado=config.kind, titulo_otorgado=None, sede=CAMPUS,
+        modalidad=_postgraduate_modality(text),
+        duracion_meses=_duration_months(text, config),
+        requiere_tesis_trabajo_final=thesis,
+        requisito_titulo_previo=_admission_requirement(soup),
+        cohorte_inicio=_cohort_start(text), costo_total_programa=None,
+        moneda=None, descripcion_breve=_description(main),
+        url_oficial=config.detail_url,
+    )
+
+
+def parse_postgraduates(index_html: str, pages: dict[str, str]) -> list[dict[str, object]]:
+    return [parse_postgraduate_detail(config, pages.get(config.detail_url, ""))
+            for config in postgraduate_configs(index_html)]
 
 
 def _content_text(html: str) -> str:
@@ -703,6 +899,8 @@ def build_dataset(
     errors: list[dict[str, str]] | None = None, authorities_html: str = "",
     professor_pages: dict[str, str] | None = None,
     support_pages: dict[str, str] | None = None,
+    postgraduate_index_html: str = "",
+    postgraduate_pages: dict[str, str] | None = None,
 ) -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
     found = {item.denominacion_canonica for item in parse_careers(admissions_html)}
@@ -764,7 +962,9 @@ def build_dataset(
         if detail.get("director"):
             sections["autoridades"].append(blank_record("autoridades", facultad_nombre=faculty, carrera=config.short_name, cargo="Director/a de carrera", tipo="Académico", nombre_autoridad=detail["director"]))
 
-    sections["posgrados"] = _postgraduates(institution_html)
+    sections["posgrados"] = parse_postgraduates(
+        postgraduate_index_html, postgraduate_pages or {}
+    )
     sections["autoridades"].extend(parse_faculty_authorities(authorities_html))
     sections["redes_contacto"] = contacts
     support = support_pages or {}
@@ -785,7 +985,7 @@ def build_dataset(
     )
     missing = {section: {field: sum(row[field] in (None, "") for row in records) for field in SECTION_FIELDS[section]} for section, records in sections.items()}
     return {
-        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL, *support], "escritura_supabase": False},
+        "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL, POSTGRADUATES_URL, *support], "escritura_supabase": False},
         "datos": sections,
         "directorio_academico": build_academic_directory(
             sections["autoridades"], professor_pages or {}
@@ -796,7 +996,7 @@ def build_dataset(
             "advertencias": [
                 "Los valores nulos indican información no publicada; no se inventan datos.",
                 "Turnos y aranceles quedan vacíos hasta encontrar una fuente oficial verificable.",
-                "Los posgrados descubiertos requieren otra pasada por sus páginas de detalle.",
+                "Los valores de posgrado provienen del índice y las páginas oficiales de cada programa.",
             ],
         },
     }

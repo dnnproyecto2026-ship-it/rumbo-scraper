@@ -13,6 +13,12 @@ from rumbo_scraper.validators.utdt import validate_dataset
 
 DEFAULT_INPUT = Path("data/utdt_completo.json")
 SKIPPED_SECTIONS = ("turnos_anio", "aranceles")
+LEGACY_POSTGRADUATE_NAMES = {
+    "Maestría y": "Maestría en Ciencia Política",
+    "Maestría y Doctorado en Estudios Internacionales": "Maestría en Estudios Internacionales",
+    "Maestría y Especialización en Derecho Penal": "Maestría en Derecho Penal",
+    "MBA | Executive MBA (Maestría en Dirección de Empresas": "MBA (Maestría en Dirección de Empresas)",
+}
 
 
 def _boolean(value: object) -> bool | None:
@@ -30,6 +36,10 @@ def _boolean(value: object) -> bool | None:
 
 def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
     dataset = json.loads(path.read_text(encoding="utf-8"))
+    # Backward-compatible with exports created before postgraduate URLs were
+    # added to the contract. A fresh scrape always supplies this value.
+    for row in dataset.get("datos", {}).get("posgrados", []):
+        row.setdefault("url_oficial", None)
     validate_dataset(dataset)
     return dataset
 
@@ -216,6 +226,17 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     counts["areas_tematicas"] = len(area_ids)
 
     posgrad_ids: dict[str, str] = {}
+    existing_posgrads = _data(
+        client.table("posgrados").select("id,nombre_programa")
+        .eq("universidad_id", university_id).execute()
+    )
+    existing_names = {row["nombre_programa"] for row in existing_posgrads}
+    for old_name, new_name in LEGACY_POSTGRADUATE_NAMES.items():
+        if old_name in existing_names and new_name not in existing_names:
+            client.table("posgrados").update({"nombre_programa": new_name}) \
+                .eq("universidad_id", university_id).eq("nombre_programa", old_name).execute()
+            existing_names.remove(old_name)
+            existing_names.add(new_name)
     for row in data["posgrados"]:
         payload = {
             "universidad_id": university_id,
@@ -232,6 +253,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "costo_total_programa": row["costo_total_programa"],
             "moneda": row["moneda"],
             "descripcion_breve": row["descripcion_breve"],
+            "url_oficial": row["url_oficial"],
         }
         saved = _upsert_one(client, "posgrados", payload, "universidad_id,nombre_programa")
         posgrad_ids[row["nombre_programa"]] = saved["id"]

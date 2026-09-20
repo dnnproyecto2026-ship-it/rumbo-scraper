@@ -44,7 +44,7 @@ SECTION_FIELDS: dict[str, tuple[str, ...]] = {
         "tipo_posgrado", "titulo_otorgado", "sede", "modalidad",
         "duracion_meses", "requiere_tesis_trabajo_final",
         "requisito_titulo_previo", "cohorte_inicio", "costo_total_programa",
-        "moneda", "descripcion_breve",
+        "moneda", "descripcion_breve", "url_oficial",
     ),
     "actividades": (
         "universidad_nombre", "carrera_o_programa", "tipo_actividad",
