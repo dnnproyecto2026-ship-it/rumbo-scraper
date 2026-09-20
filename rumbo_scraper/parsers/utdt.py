@@ -271,10 +271,21 @@ def parse_study_plan(html: str, career_name: str) -> dict[str, object]:
     lines = [clean_text(x) for x in soup.get_text("\n", strip=True).splitlines() if clean_text(x)]
     title = None
     duration = None
-    for line in lines:
+    full_text = _repair_mojibake(clean_text(soup.get_text(" ", strip=True)))
+    title_match = re.search(
+        r"T[ií]tulo\s*:\s*(.{2,350}?)(?=\s+(?:Duraci[oó]n|Dedicaci[oó]n|Opciones|Dictamen|El presente|Para completar|1\.\s*(?:er|o)|Primer año)|$)",
+        full_text,
+        re.I,
+    )
+    if title_match:
+        title = clean_text(title_match.group(1)).strip(" .")
+    for index, line in enumerate(lines):
         title_match = re.match(r"t[ií]tulo\s*:\s*(.+)", line, re.I)
         if title_match and not title:
-            title = clean_text(title_match.group(1))
+            title = clean_text(title_match.group(1)).strip(" .")
+        if (not title and comparison_key(line).rstrip(":") == "titulo"
+                and index + 1 < len(lines)):
+            title = _repair_mojibake(lines[index + 1]).strip(" .")
         if comparison_key(line).startswith("duracion:") and duration is None:
             duration = _years(line)
     subjects: list[dict[str, object]] = []
@@ -943,6 +954,7 @@ def build_dataset(
             carrera_nombre=config.short_name, sede=CAMPUS, modalidad=detail.get("modalidad"),
             regimen_ingreso=None, coneau_resolucion=None, coneau_vigencia_hasta=None,
             tiene_pasantias=detail.get("tiene_pasantias"), tiene_bolsa_trabajo=detail.get("tiene_bolsa_trabajo"),
+            url_oficial=config.detail_url,
         ))
         if cycle_year:
             sections["ofertas_ciclo"].append(blank_record(

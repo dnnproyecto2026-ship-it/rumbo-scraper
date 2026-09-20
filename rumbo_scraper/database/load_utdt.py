@@ -40,6 +40,8 @@ def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
     # added to the contract. A fresh scrape always supplies this value.
     for row in dataset.get("datos", {}).get("posgrados", []):
         row.setdefault("url_oficial", None)
+    for row in dataset.get("datos", {}).get("ofertas", []):
+        row.setdefault("url_oficial", None)
     validate_dataset(dataset)
     return dataset
 
@@ -235,6 +237,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "coneau_vigencia_hasta": row["coneau_vigencia_hasta"],
             "tiene_pasantias": _boolean(row["tiene_pasantias"]),
             "tiene_bolsa_trabajo": _boolean(row["tiene_bolsa_trabajo"]),
+            "url_oficial": row["url_oficial"],
             "activa": True,
         }
         saved = _upsert_one(

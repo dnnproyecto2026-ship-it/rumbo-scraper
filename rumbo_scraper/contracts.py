@@ -19,6 +19,7 @@ SECTION_FIELDS: dict[str, tuple[str, ...]] = {
         "universidad_nombre", "facultad_nombre", "carrera_nombre", "sede",
         "modalidad", "regimen_ingreso", "coneau_resolucion",
         "coneau_vigencia_hasta", "tiene_pasantias", "tiene_bolsa_trabajo",
+        "url_oficial",
     ),
     "turnos_anio": ("universidad_nombre", "carrera_nombre", "sede", "anio_carrera", "turno"),
     "ofertas_ciclo": (

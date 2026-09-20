@@ -71,7 +71,7 @@ class UTDTParserTests(unittest.TestCase):
         self.assertEqual(detail["modalidad"], "Presencial")
         self.assertEqual(detail["plan_url"], "https://www.utdt.edu/plan")
         plan = parse_study_plan(
-            "<p>Título: Abogado</p><p>Duración: 5 años</p><h3>1</h3><h4>1.º semestre</h4><ul><li>Derecho Constitucional I</li></ul>",
+            "<p><strong>Título:</strong> Abogado</p><p>Duración: 5 años</p><h3>1</h3><h4>1.º semestre</h4><ul><li>Derecho Constitucional I</li></ul>",
             "Abogacía",
         )
         self.assertEqual(plan["titulo_otorgado"], "Abogado")
