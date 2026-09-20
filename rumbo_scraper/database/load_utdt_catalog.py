@@ -56,6 +56,15 @@ def _subject_name_key(value: str) -> str:
     return comparison_key(re.sub(r"\s*\*+\s*$", "", value))
 
 
+def _equivalent_subject_key(value: str) -> str:
+    """Normalize only wording differences that preserve the exact subject meaning."""
+    key = _subject_name_key(value)
+    key = re.sub(r"^seminario\s*:\s*", "", key)
+    key = key.replace("segunda parte", "parte ii").replace("primera parte", "parte i")
+    key = re.sub(r"\s*\(proyecto final\)\s*$", "", key)
+    return key.replace(" en la argentina", " en argentina")
+
+
 def _commission_key(code: object, section: object) -> tuple[str, str]:
     return clean_text(str(code or "")), clean_text(str(section or "")) or "0"
 
@@ -125,8 +134,12 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     course_ids = {row["codigo"]: row["id"] for row in saved_courses}
 
     catalog_by_name: dict[str, list[str]] = {}
+    catalog_by_equivalent_name: dict[str, list[str]] = {}
     for code, name in names_by_code.items():
         catalog_by_name.setdefault(_subject_name_key(name), []).append(course_ids[code])
+        catalog_by_equivalent_name.setdefault(
+            _equivalent_subject_key(name), []
+        ).append(course_ids[code])
     plan_subjects = _data(
         client.table("materias").select("id,nombre_materia")
         .eq("universidad_id", university_id).execute()
@@ -134,10 +147,18 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     subject_links: list[dict[str, Any]] = []
     for subject in plan_subjects:
         matches = catalog_by_name.get(_subject_name_key(subject["nombre_materia"]), [])
+        method = "nombre_exacto"
+        confidence = 1
+        if len(matches) != 1:
+            matches = catalog_by_equivalent_name.get(
+                _equivalent_subject_key(subject["nombre_materia"]), []
+            )
+            method = "nombre_equivalente"
+            confidence = 0.99
         if len(matches) == 1:
             subject_links.append({
                 "materia_id": subject["id"], "materia_catalogo_id": matches[0],
-                "metodo": "nombre_exacto", "confianza": 1,
+                "metodo": method, "confianza": confidence,
             })
     for chunk in _chunks(subject_links):
         _data(client.table("materias_catalogo_vinculos").upsert(

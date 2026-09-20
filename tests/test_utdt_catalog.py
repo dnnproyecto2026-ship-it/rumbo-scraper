@@ -2,7 +2,9 @@
 
 import unittest
 
-from rumbo_scraper.database.load_utdt_catalog import _subject_name_key, preview
+from rumbo_scraper.database.load_utdt_catalog import (
+    _equivalent_subject_key, _subject_name_key, preview,
+)
 from rumbo_scraper.parsers.utdt_catalog import (
     parse_detail_row,
     parse_schedule_row,
@@ -11,6 +13,20 @@ from rumbo_scraper.parsers.utdt_catalog import (
 
 
 class UTDTCatalogTests(unittest.TestCase):
+    def test_safe_equivalent_subject_names(self) -> None:
+        self.assertEqual(
+            _equivalent_subject_key("Tesis Proyectual - Segunda parte"),
+            _equivalent_subject_key("Tesis Proyectual - Parte II"),
+        )
+        self.assertEqual(
+            _equivalent_subject_key("Seminario: Mediación y Arbitraje"),
+            _equivalent_subject_key("Mediación y Arbitraje"),
+        )
+        self.assertNotEqual(
+            _equivalent_subject_key("Proyecto I"),
+            _equivalent_subject_key("Proyecto II"),
+        )
+
     def test_parses_schedule_with_parentheses_in_name(self) -> None:
         row = parse_schedule_row([
             "Imagen y Artificio (IA) (5993)", "1", "Teórica-Práctica",
