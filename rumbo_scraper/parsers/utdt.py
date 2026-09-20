@@ -509,6 +509,7 @@ def _contact_records(html: str) -> list[dict[str, object]]:
 POSTGRADUATE_UNIT_ALIASES = {
     "politicas publicas": "Gobierno",
     "educacion": "Gobierno",
+    "periodismo": "Estudios Históricos y Sociales",
 }
 
 
@@ -587,7 +588,7 @@ def postgraduate_configs(index_html: str) -> list[PostgraduateConfig]:
 def discover_postgraduate_supplement_urls(html: str, base_url: str) -> list[str]:
     """Find official detail tabs that contain format, admission and study-plan data."""
     soup = _soup(html)
-    wanted = ("modalidad", "formato", "admision", "plan de estudios")
+    wanted = ("modalidad", "formato", "admision", "plan de estudio")
     urls: list[str] = []
     for anchor in soup.select("main a[href]"):
         label = comparison_key(anchor.get_text(" ", strip=True))
@@ -598,18 +599,36 @@ def discover_postgraduate_supplement_urls(html: str, base_url: str) -> list[str]
             continue
         if url != base_url and url not in urls:
             urls.append(url)
-    return urls[:4]
+    return urls[:8]
 
 
 def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
     key = comparison_key(text)
+    if config.name == "Maestría en Economía Aplicada" and re.search(
+        r"2\s*anos.{0,80}(?:o|/)\s*1\s*ano", key
+    ):
+        return None
     if config.name == "Especialización en Políticas Públicas":
         match = re.search(r"especializacion\s*:?\s*(\d+)\s*trimestres", key)
         return int(match.group(1)) * 3 if match else None
+    if config.name in {
+        "Especialización en Políticas Educativas",
+        "Especialización en Administración de la Educación",
+    }:
+        return 18 if re.search(r"especializacion\s*:?\s*1\s*ano y medio", key) else None
+    if config.name in {
+        "Maestría en Políticas Educativas",
+        "Maestría en Administración de la Educación",
+    }:
+        return 24 if re.search(r"maestria\s*:?\s*2\s*anos", key) else None
+    if config.name == "Especialización en Derecho Penal":
+        return 12 if re.search(r"especializacion.{0,500}tres cuatrimestres", key) else None
+    if config.name == "Maestría en Derecho Penal":
+        return 20 if re.search(r"duracion.{0,80}cinco cuatrimestres", key) else None
     patterns = (
         (r"duracion\s*:?\s*(\d+(?:[,.]\d+)?)\s*meses", "meses"),
-        (r"duracion(?:\s+total)?\s*(?:de|:)?\s*(\d+(?:[,.]\d+)?)\s*anos", "anos"),
-        (r"(?:dura|se extiende por)\s*(\d+(?:[,.]\d+)?)\s*(anos|meses)", None),
+        (r"duracion(?:\s+total)?\s*(?:de|:)?\s*(\d+(?:[,.]\d+)?)\s*anos?", "anos"),
+        (r"(?:dura|se extiende por)\s*(\d+(?:[,.]\d+)?)\s*(anos?|meses)", None),
     )
     for pattern, fixed_unit in patterns:
         match = re.search(pattern, key)
@@ -620,7 +639,7 @@ def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
         return round(value * 12) if unit.startswith("ano") else round(value)
     word_years = {"un": 1, "uno": 1, "dos": 2, "tres": 3, "cuatro": 4}
     match = re.search(
-        r"(?:dura|duracion\s*:?|plazo de|periodo de)\s*(un|uno|dos|tres|cuatro)\s*anos",
+        r"(?:dura|duracion\s*:?|plazo de|periodo de)\s*(un|uno|dos|tres|cuatro)\s*anos?",
         key,
     )
     return word_years[match.group(1)] * 12 if match else None
@@ -630,6 +649,7 @@ def _postgraduate_modality(text: str) -> str | None:
     key = comparison_key(text)
     patterns = (
         r"modalidad de cursada es\s+([^.]{2,80})",
+        r"modalidad de cursada\s*:?\s*([^.]{2,120})",
         r"modalidad\s*:\s*([^.]{2,80})",
         r"formato\s*:\s*([^.]{2,80})",
         r"formato\s+(hibrid[oa])",
@@ -642,6 +662,8 @@ def _postgraduate_modality(text: str) -> str | None:
             if value:
                 return value
     if re.search(r"\bhibrid[oa]\s+(?:combina|elegi|con)", key):
+        return "Híbrida"
+    if "cursada combina clases presenciales y virtuales" in key:
         return "Híbrida"
     return None
 
@@ -676,7 +698,7 @@ def _admission_requirement(soup: BeautifulSoup) -> str | None:
 def parse_postgraduate_detail(config: PostgraduateConfig, html: str) -> dict[str, object]:
     soup = _soup(html)
     main = soup.select_one("main") or soup
-    text = clean_text(main.get_text(" ", strip=True))
+    text = clean_text(soup.get_text(" ", strip=True))
     key = comparison_key(text)
     thesis = True if re.search(r"\b(tesis|trabajo final)\b", key) else None
     if config.kind == "Especialización":

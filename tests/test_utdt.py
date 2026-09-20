@@ -59,13 +59,16 @@ class UTDTParserTests(unittest.TestCase):
         ])
         rows = [row for row in parse_postgraduates(index, {
             "https://www.utdt.edu/penal": """
-                <main><p>Una propuesta académica extensa que brinda herramientas avanzadas para profesionales del derecho y el sistema penal contemporáneo.</p>
-                <p>Duración: 24 meses. Modalidad: híbrida. La Maestría concluye con una tesis.</p>
+                <main><p>Una propuesta académica extensa que brinda herramientas avanzadas para profesionales del derecho y el sistema penal contemporáneo.</p></main>
+                <main><p>La Especialización se dicta durante tres cuatrimestres.</p>
+                <p>La duración aproximada total de la Maestría es de cinco cuatrimestres.</p>
+                <p>Formato: híbrido. La Maestría concluye con una tesis.</p>
                 <h3>Requisitos</h3><p>Contar con título universitario de grado.</p></main>
             """,
         }) if "Derecho Penal" in row["nombre_programa"]]
         self.assertEqual(len(rows), 2)
-        self.assertEqual(rows[0]["duracion_meses"], 24)
+        self.assertEqual(rows[0]["duracion_meses"], 20)
+        self.assertEqual(rows[1]["duracion_meses"], 12)
         self.assertEqual(rows[0]["modalidad"], "Híbrida")
         self.assertEqual(rows[0]["url_oficial"], "https://www.utdt.edu/penal")
 
