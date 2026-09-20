@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
@@ -48,6 +49,11 @@ def _teacher_name(value: str) -> str:
     if len(parts) == 2:
         return f"{parts[1]} {parts[0]}"
     return clean_text(value)
+
+
+def _subject_name_key(value: str) -> str:
+    """Normalize harmless plan annotations without confusing numbered subjects."""
+    return comparison_key(re.sub(r"\s*\*+\s*$", "", value))
 
 
 def _commission_key(code: object, section: object) -> tuple[str, str]:
@@ -120,14 +126,14 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
     catalog_by_name: dict[str, list[str]] = {}
     for code, name in names_by_code.items():
-        catalog_by_name.setdefault(comparison_key(name), []).append(course_ids[code])
+        catalog_by_name.setdefault(_subject_name_key(name), []).append(course_ids[code])
     plan_subjects = _data(
         client.table("materias").select("id,nombre_materia")
         .eq("universidad_id", university_id).execute()
     )
     subject_links: list[dict[str, Any]] = []
     for subject in plan_subjects:
-        matches = catalog_by_name.get(comparison_key(subject["nombre_materia"]), [])
+        matches = catalog_by_name.get(_subject_name_key(subject["nombre_materia"]), [])
         if len(matches) == 1:
             subject_links.append({
                 "materia_id": subject["id"], "materia_catalogo_id": matches[0],

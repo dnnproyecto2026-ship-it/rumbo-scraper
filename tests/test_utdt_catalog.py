@@ -2,7 +2,7 @@
 
 import unittest
 
-from rumbo_scraper.database.load_utdt_catalog import preview
+from rumbo_scraper.database.load_utdt_catalog import _subject_name_key, preview
 from rumbo_scraper.parsers.utdt_catalog import (
     parse_detail_row,
     parse_schedule_row,
@@ -53,6 +53,13 @@ class UTDTCatalogTests(unittest.TestCase):
         self.assertEqual(counts["comisiones_materia"], 1)
         self.assertEqual(counts["horarios_comision"], 1)
         self.assertEqual(counts["docentes"], 1)
+
+    def test_plan_asterisks_do_not_prevent_exact_matching(self) -> None:
+        self.assertEqual(
+            _subject_name_key("Introducción a la Ciencia Política **"),
+            _subject_name_key("Introducción a la Ciencia Política"),
+        )
+        self.assertNotEqual(_subject_name_key("Derecho I"), _subject_name_key("Derecho II"))
 
 
 if __name__ == "__main__":
