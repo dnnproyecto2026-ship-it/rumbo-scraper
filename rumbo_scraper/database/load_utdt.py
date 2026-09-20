@@ -64,6 +64,19 @@ def _insert_chunks(client: Any, table: str, rows: list[dict[str, Any]], size: in
     return len(rows)
 
 
+def _upsert_chunks(
+    client: Any, table: str, rows: list[dict[str, Any]], conflict: str, size: int = 100
+) -> list[dict[str, Any]]:
+    saved: list[dict[str, Any]] = []
+    for start in range(0, len(rows), size):
+        saved.extend(_data(
+            client.table(table).upsert(
+                rows[start:start + size], on_conflict=conflict
+            ).execute()
+        ))
+    return saved
+
+
 def _faculty_name(reference: object) -> str | None:
     if not reference:
         return None
@@ -363,17 +376,22 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     )
 
     directory = dataset.get("directorio_academico", {})
-    person_ids: dict[str, str] = {}
-    for row in directory.get("personas", []):
-        payload = {
+    person_payloads = [
+        {
             "universidad_id": university_id,
             "nombre_completo": row["nombre_completo"], "email": row["email"],
             "perfil_url": row["perfil_url"], "formacion": row["formacion"],
             "biografia": row["biografia"], "fuente_url": row["fuente_url"],
             "activa": True,
         }
-        saved = _upsert_one(client, "personas", payload, "universidad_id,nombre_completo")
-        person_ids[comparison_key(row["nombre_completo"])] = saved["id"]
+        for row in directory.get("personas", [])
+    ]
+    saved_people = _upsert_chunks(
+        client, "personas", person_payloads, "universidad_id,nombre_completo"
+    )
+    person_ids = {
+        comparison_key(row["nombre_completo"]): row["id"] for row in saved_people
+    }
     counts["personas"] = len(person_ids)
     client.table("roles_academicos").delete().eq("universidad_id", university_id).execute()
     academic_roles = [{

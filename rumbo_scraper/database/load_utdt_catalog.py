@@ -28,6 +28,17 @@ def _upsert_one(client: Any, table: str, row: dict[str, Any], conflict: str) -> 
     return rows[0]
 
 
+def _upsert_chunks(
+    client: Any, table: str, rows: list[dict[str, Any]], conflict: str, size: int = 100
+) -> list[dict[str, Any]]:
+    saved: list[dict[str, Any]] = []
+    for chunk in _chunks(rows, size):
+        saved.extend(_data(client.table(table).upsert(
+            chunk, on_conflict=conflict
+        ).execute()))
+    return saved
+
+
 def _chunks(values: list[Any], size: int = 100) -> list[list[Any]]:
     return [values[index:index + size] for index in range(0, len(values), size)]
 
@@ -97,15 +108,15 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         if code:
             names_by_code.setdefault(code, clean_text(str(row.get("nombre_materia") or code)))
 
-    course_ids: dict[str, str] = {}
-    for code, name in names_by_code.items():
-        saved = _upsert_one(
-            client, "materias_catalogo",
-            {"universidad_id": university_id, "codigo": code, "nombre": name,
-             "fuente_url": source_url, "activa": True},
-            "universidad_id,codigo",
-        )
-        course_ids[code] = saved["id"]
+    course_payloads = [
+        {"universidad_id": university_id, "codigo": code, "nombre": name,
+         "fuente_url": source_url, "activa": True}
+        for code, name in names_by_code.items()
+    ]
+    saved_courses = _upsert_chunks(
+        client, "materias_catalogo", course_payloads, "universidad_id,codigo"
+    )
+    course_ids = {row["codigo"]: row["id"] for row in saved_courses}
 
     catalog_by_name: dict[str, list[str]] = {}
     for code, name in names_by_code.items():
@@ -154,19 +165,25 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         _commission_key(row.get("codigo_materia"), row.get("seccion"))
         for row in all_rows if row.get("codigo_materia")
     }
-    commission_ids: dict[tuple[str, str], str] = {}
+    commission_payloads: list[dict[str, Any]] = []
     for code, section in sorted(commission_keys):
         detail = details.get((code, section), {})
-        saved = _upsert_one(
-            client, "comisiones_materia",
+        commission_payloads.append(
             {"materia_catalogo_id": course_ids[code], "anio": period["anio"],
              "semestre": period["semestre"], "seccion": section,
              "contenido": detail.get("contenido"),
              "condiciones_aprobacion": detail.get("condiciones_aprobacion"),
-             "programa_url": detail.get("programa_url"), "fuente_url": source_url},
-            "materia_catalogo_id,anio,semestre,seccion",
+             "programa_url": detail.get("programa_url"), "fuente_url": source_url}
         )
-        commission_ids[(code, section)] = saved["id"]
+    saved_commissions = _upsert_chunks(
+        client, "comisiones_materia", commission_payloads,
+        "materia_catalogo_id,anio,semestre,seccion",
+    )
+    code_by_course_id = {course_id: code for code, course_id in course_ids.items()}
+    commission_ids = {
+        (code_by_course_id[row["materia_catalogo_id"]], str(row["seccion"])): row["id"]
+        for row in saved_commissions
+    }
 
     schedules: dict[tuple[Any, ...], dict[str, Any]] = {}
     teacher_assignments: set[tuple[str, str, str | None]] = set()
@@ -194,20 +211,31 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         .eq("universidad_id", university_id).execute()
     )
     person_ids = {comparison_key(row["nombre_completo"]): row["id"] for row in people}
+    missing_people: dict[str, str] = {}
+    for _, source_name, _ in teacher_assignments:
+        canonical = _teacher_name(source_name)
+        key = comparison_key(canonical)
+        if key not in person_ids:
+            missing_people[key] = canonical
+    new_people_payloads = [
+        {"universidad_id": university_id, "nombre_completo": canonical,
+         "fuente_url": source_url, "activa": True}
+        for canonical in missing_people.values()
+    ]
+    if new_people_payloads:
+        saved_people = _upsert_chunks(
+            client, "personas", new_people_payloads, "universidad_id,nombre_completo"
+        )
+        person_ids.update({
+            comparison_key(row["nombre_completo"]): row["id"] for row in saved_people
+        })
+
     teacher_rows: list[dict[str, Any]] = []
     for commission_id, source_name, class_type in sorted(
         teacher_assignments, key=lambda item: (item[0], item[1], item[2] or "")
     ):
         canonical = _teacher_name(source_name)
         key = comparison_key(canonical)
-        if key not in person_ids:
-            saved = _upsert_one(
-                client, "personas",
-                {"universidad_id": university_id, "nombre_completo": canonical,
-                 "fuente_url": source_url, "activa": True},
-                "universidad_id,nombre_completo",
-            )
-            person_ids[key] = saved["id"]
         teacher_rows.append({
             "comision_id": commission_id, "persona_id": person_ids[key],
             "nombre_docente_fuente": source_name, "tipo_clase": class_type,
