@@ -8,7 +8,8 @@ from rumbo_scraper.parsers.utdt import (
     build_academic_directory,
     parse_careers, parse_extracurricular_activities,
     parse_exchange_agreements,
-    discover_postgraduates, parse_postgraduates,
+    discover_postgraduates, parse_postgraduates, parse_postgraduate_detail,
+    parse_postgraduate_subjects, PostgraduateConfig,
     parse_admissions_summary,
     parse_faculty_authorities, parse_housing, parse_international_programs,
     parse_professor_page, parse_scholarships, parse_study_plan,
@@ -72,6 +73,54 @@ class UTDTParserTests(unittest.TestCase):
         self.assertEqual(rows[1]["duracion_meses"], 12)
         self.assertEqual(rows[0]["modalidad"], "Híbrida")
         self.assertEqual(rows[0]["url_oficial"], "https://www.utdt.edu/penal")
+
+    def test_enriches_postgraduate_title_format_and_curriculum(self) -> None:
+        config = PostgraduateConfig(
+            "Doctorado en Derecho", "Doctorado", "Derecho", "https://example.edu/doctorado"
+        )
+        pages = ["""
+            <main id="contenido"><h2>Plan de estudios</h2>
+            <p>Duración: 4 años. Modalidad blended.</p>
+            <p>1) Metodología de la Investigación Jurídica</p>
+            <p>Título a obtener: Doctor/a en Derecho</p></main>
+        """]
+        detail = parse_postgraduate_detail(config, pages)
+        self.assertEqual(detail["titulo_otorgado"], "Doctor/a en Derecho")
+        self.assertEqual(detail["modalidad"], "Híbrida")
+        self.assertEqual(detail["duracion_meses"], 48)
+        index = """
+            <div class="programas-body"><h3 class="tit-escuela">Derecho</h3>
+            <div class="card"><h3>Doctorado en Derecho</h3>
+            <a href="https://example.edu/doctorado">Ver más</a></div></div>
+        """
+        subjects = parse_postgraduate_subjects(
+            index, {"https://example.edu/doctorado": pages}
+        )
+        self.assertEqual(
+            [row["nombre_materia"] for row in subjects],
+            ["Metodología de la Investigación Jurídica"],
+        )
+
+    def test_postgraduate_curriculum_ignores_navigation_and_people(self) -> None:
+        index = """
+            <div class="programas-body"><h3 class="tit-escuela">Derecho</h3>
+            <div class="card"><h3>Doctorado en Derecho</h3>
+            <a href="https://example.edu/doctorado">Ver más</a></div></div>
+        """
+        pages = ["""
+            <main id="contenido"><h2>Plan de estudios</h2>
+            <ul class="navigation"><li>Admisión</li><li>Profesores</li></ul>
+            <p>1) Metodología de la Investigación Jurídica</p>
+            <p>La profesora Ana Ejemplo dirige el programa desde 2026.</p>
+            <h2>Noticias</h2><ul><li>Reunión informativa 2026</li></ul></main>
+        """]
+        subjects = parse_postgraduate_subjects(
+            index, {"https://example.edu/doctorado": pages}
+        )
+        self.assertEqual(
+            [row["nombre_materia"] for row in subjects],
+            ["Metodología de la Investigación Jurídica"],
+        )
 
     def test_parses_detail_and_study_plan(self) -> None:
         config = CAREERS["abogacia"]

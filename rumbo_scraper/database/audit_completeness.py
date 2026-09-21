@@ -27,9 +27,12 @@ RULES = (
     ("actividades_extracurriculares", "descripcion", "baja", "Página pública de cada actividad"),
     ("posgrados", "url_oficial", "alta", "Página individual del posgrado"),
     ("posgrados", "facultad_id", "alta", "Página individual del posgrado"),
+    ("posgrados", "titulo_otorgado", "alta", "Plan o resolución oficial del posgrado"),
     ("posgrados", "modalidad", "alta", "Página individual del posgrado"),
     ("posgrados", "duracion_meses", "alta", "Página individual del posgrado"),
     ("posgrados", "descripcion_breve", "alta", "Página individual del posgrado"),
+    ("posgrados", "requiere_tesis_trabajo_final", "media", "Plan o reglamento oficial del posgrado"),
+    ("posgrados", "requisito_titulo_previo", "media", "Página de admisión del posgrado"),
     ("convenios_intercambio", "pais", "alta", "Normalizar ciudad/destino del mapa de intercambio"),
 )
 

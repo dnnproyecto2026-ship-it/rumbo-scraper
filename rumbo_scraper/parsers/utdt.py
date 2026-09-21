@@ -684,18 +684,26 @@ def postgraduate_configs(index_html: str) -> list[PostgraduateConfig]:
 def discover_postgraduate_supplement_urls(html: str, base_url: str) -> list[str]:
     """Find official detail tabs that contain format, admission and study-plan data."""
     soup = _soup(html)
-    wanted = ("modalidad", "formato", "admision", "plan de estudio")
+    # Several UTDT templates render the program navigation outside #contenido.
+    # Search the whole document, but ignore same-page modal/anchor links.
+    root = soup
+    wanted = (
+        "modalidad", "formato", "admision", "plan de estudio", "estructura",
+        "materias", "por que estudiar",
+    )
     urls: list[str] = []
-    for anchor in soup.select("main a[href]"):
+    for anchor in root.select("a[href]"):
         label = comparison_key(anchor.get_text(" ", strip=True))
         if not any(term in label for term in wanted):
             continue
         url = urljoin(base_url, str(anchor["href"]))
+        if url.split("#", 1)[0] == base_url.split("#", 1)[0]:
+            continue
         if not url.startswith(("http://", "https://")):
             continue
         if url != base_url and url not in urls:
             urls.append(url)
-    return urls[:8]
+    return urls[:12]
 
 
 def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
@@ -725,6 +733,9 @@ def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
         (r"duracion\s*:?\s*(\d+(?:[,.]\d+)?)\s*meses", "meses"),
         (r"duracion(?:\s+total)?\s*(?:de|:)?\s*(\d+(?:[,.]\d+)?)\s*anos?", "anos"),
         (r"(?:dura|se extiende por)\s*(\d+(?:[,.]\d+)?)\s*(anos?|meses)", None),
+        (r"duracion\s*:?\s*(\d+)\s*semestres", "semestres"),
+        (r"duracion\s*:?\s*(\d+)\s*cuatrimestres", "cuatrimestres"),
+        (r"duracion\s*:?\s*(\d+)\s*trimestres", "trimestres"),
     )
     for pattern, fixed_unit in patterns:
         match = re.search(pattern, key)
@@ -732,7 +743,8 @@ def _duration_months(text: str, config: PostgraduateConfig) -> int | None:
             continue
         value = float(match.group(1).replace(",", "."))
         unit = fixed_unit or match.group(2)
-        return round(value * 12) if unit.startswith("ano") else round(value)
+        multipliers = {"anos": 12, "semestres": 6, "cuatrimestres": 4, "trimestres": 3}
+        return round(value * multipliers.get(unit, 1))
     word_years = {"un": 1, "uno": 1, "dos": 2, "tres": 3, "cuatro": 4}
     match = re.search(
         r"(?:dura|duracion\s*:?|plazo de|periodo de)\s*(un|uno|dos|tres|cuatro)\s*anos?",
@@ -760,6 +772,8 @@ def _postgraduate_modality(text: str) -> str | None:
     if re.search(r"\bhibrid[oa]\s+(?:combina|elegi|con)", key):
         return "Híbrida"
     if "cursada combina clases presenciales y virtuales" in key:
+        return "Híbrida"
+    if "blended" in key and any(term in key for term in ("modalidad", "formato", "cursado")):
         return "Híbrida"
     return None
 
@@ -791,9 +805,148 @@ def _admission_requirement(soup: BeautifulSoup) -> str | None:
     return None
 
 
-def parse_postgraduate_detail(config: PostgraduateConfig, html: str) -> dict[str, object]:
-    soup = _soup(html)
-    main = soup.select_one("main") or soup
+def _postgraduate_title(pages: list[str]) -> str | None:
+    for html in pages:
+        soup = _soup(html)
+        for node in soup.find_all(["p", "li", "h3", "h4", "strong"]):
+            value = clean_text(node.get_text(" ", strip=True))
+            match = re.match(
+                r"t[ií]tulo\s+(?:a\s+obtener|otorgado)\s*:\s*(.{3,180})",
+                value, re.I,
+            )
+            if match:
+                return clean_text(match.group(1)).rstrip(" .")
+    return None
+
+
+def _postgraduate_description(pages: list[str]) -> str | None:
+    rejected = (
+        "whatsapp", "presento el manuscrito", "reunion informativa",
+        "como la inteligencia artificial", "junto a las herramientas",
+        "desde admisiones compartimos", "horario de atencion",
+        "carta referencista", "documentacion a presentar",
+        "objetivo del proceso de admision", "comite de admisiones",
+        "graduados y graduadas", "galardon", "profesores de la utdt",
+    )
+    candidates: list[tuple[int, str]] = []
+    # Descriptions must come from the program's own landing page. Supplementary
+    # tabs sometimes contain navigation to other programs and produced valid-
+    # looking but incorrect descriptions.
+    for page_index, html in enumerate(pages[:1]):
+        soup = _soup(html)
+        root = soup.find(id="contenido") or soup.find("main") or soup
+        for paragraph in root.find_all("p"):
+            value = clean_text(paragraph.get_text(" ", strip=True))
+            key = comparison_key(value)
+            if not 120 <= len(value) <= 1200 or any(term in key for term in rejected):
+                continue
+            if value.startswith(("“", '"')) or "@utdt.edu" in key:
+                continue
+            score = (100 if page_index == 0 else 0) + min(len(value), 500)
+            if any(term in key for term in ("maestria", "doctorado", "especializacion", "programa")):
+                score += 100
+            candidates.append((score, value))
+    return max(candidates, default=(0, None), key=lambda item: item[0])[1]
+
+
+def _postgraduate_subjects(
+    config: PostgraduateConfig, pages: list[str]
+) -> list[dict[str, object]]:
+    """Extract conservative curriculum names from explicit official plan sections."""
+    rejected = (
+        "admision", "beca", "contacto", "formato", "modalidad", "duracion",
+        "titulo", "conaeu", "director", "profesor", "campus", "whatsapp",
+        "plan de estudio", "materias optativas", "estructura del programa",
+        "primer semestre", "segundo semestre", "tercer semestre", "cuarto semestre",
+        "primer trimestre", "segundo trimestre", "tercer trimestre",
+        "primer ano", "segundo ano", "ciclo general", "ciclo especifico",
+        "trabajo final", "tesis", "ver materias", "requisitos", "calendario",
+        "inscripcion", "documentacion", "reunion informativa", "noticias",
+    )
+    candidates: list[str] = []
+
+    def add(value: object) -> None:
+        text = clean_text(str(value or "")).strip("»•- 0123456789).")
+        key = comparison_key(text)
+        if not 3 <= len(text) <= 110 or any(term in key for term in rejected):
+            return
+        if text.count(" ") < 1 or text.endswith((".", ":")) or re.search(r"\b20\d{2}\b", text):
+            return
+        if len(text.split()) > 12:
+            return
+        candidates.append(text)
+
+    for html in pages:
+        soup = _soup(html)
+        root = soup.find(id="contenido") or soup.find("main") or soup
+        root_key = comparison_key(clean_text(root.get_text(" ", strip=True)))
+        if not any(term in root_key for term in ("plan de estudio", "materias", "asignaturas")):
+            continue
+        # Tables are accepted only when the table itself is explicitly a
+        # curriculum table. This excludes news, faculty and thesis lists.
+        for table in root.find_all("table"):
+            table_key = comparison_key(clean_text(table.get_text(" ", strip=True)))
+            if any(term in table_key for term in ("materia", "curso", "orientacion", "trimestre", "semestre")):
+                for anchor in table.find_all("a"):
+                    add(anchor.get_text(" ", strip=True))
+        # Some plans publish numbered courses as plain paragraphs.
+        for paragraph in root.find_all("p"):
+            value = clean_text(paragraph.get_text(" ", strip=True))
+            if re.match(r"^\s*\d{1,2}\s*[.)-]\s*\S", value):
+                add(re.sub(r"^\s*\d{1,2}\s*[.)-]\s*", "", value))
+        # Lists are accepted only when immediately introduced by an explicit
+        # study-plan heading. General site lists contain navigation and people.
+        for heading in root.find_all(["h1", "h2", "h3", "h4"]):
+            heading_key = comparison_key(heading.get_text(" ", strip=True))
+            if not any(term in heading_key for term in ("plan de estudios", "materias", "asignaturas")):
+                continue
+            sibling = heading.find_next_sibling()
+            while sibling and sibling.name not in {"h1", "h2"}:
+                if sibling.name in {"ul", "ol"}:
+                    for item in sibling.find_all("li", recursive=False):
+                        add(item.get_text(" ", strip=True))
+                sibling = sibling.find_next_sibling()
+        for marker in root.find_all(["strong", "h3"]):
+            marker_key = comparison_key(marker.get_text(" ", strip=True))
+            if not re.search(r"(?:semestre|trimestre|materias (?:practicas|teoricas))", marker_key):
+                continue
+            container = marker.parent
+            if not container:
+                continue
+            lines = [clean_text(line) for line in container.get_text("\n", strip=True).splitlines()]
+            marker_text = clean_text(marker.get_text(" ", strip=True))
+            try:
+                start = lines.index(marker_text) + 1
+            except ValueError:
+                start = 1
+            for line in lines[start:]:
+                line_key = comparison_key(line)
+                if re.search(r"^(?:primer|segundo|tercer|cuarto|[1-4]).*(?:semestre|trimestre)$", line_key):
+                    break
+                add(line)
+
+    seen: set[str] = set()
+    records: list[dict[str, object]] = []
+    for name in candidates:
+        identity = comparison_key(name)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        records.append(blank_record(
+            "materias", universidad_nombre=UNIVERSITY,
+            carrera_o_programa=config.name, nombre_materia=name,
+            anio_cursada=None, turno=None, area_tematica=classify_area(name),
+            descripcion_breve=None, regimen=None, carga_horaria_semanal=None,
+        ))
+    return records
+
+
+def parse_postgraduate_detail(
+    config: PostgraduateConfig, html: str | list[str]
+) -> dict[str, object]:
+    pages = [html] if isinstance(html, str) else html
+    pages = [page for page in pages if page]
+    soup = _soup("\n".join(pages))
     text = clean_text(soup.get_text(" ", strip=True))
     key = comparison_key(text)
     thesis = True if re.search(r"\b(tesis|trabajo final)\b", key) else None
@@ -805,20 +958,33 @@ def parse_postgraduate_detail(config: PostgraduateConfig, html: str) -> dict[str
     return blank_record(
         "posgrados", universidad_nombre=UNIVERSITY,
         facultad_nombre=config.faculty, nombre_programa=config.name,
-        tipo_posgrado=config.kind, titulo_otorgado=None, sede=CAMPUS,
+        tipo_posgrado=config.kind, titulo_otorgado=_postgraduate_title(pages), sede=CAMPUS,
         modalidad=_postgraduate_modality(text),
         duracion_meses=_duration_months(text, config),
         requiere_tesis_trabajo_final=thesis,
         requisito_titulo_previo=_admission_requirement(soup),
         cohorte_inicio=_cohort_start(text), costo_total_programa=None,
-        moneda=None, descripcion_breve=_description(main),
+        moneda=None, descripcion_breve=_postgraduate_description(pages),
         url_oficial=config.detail_url,
     )
 
 
-def parse_postgraduates(index_html: str, pages: dict[str, str]) -> list[dict[str, object]]:
+def parse_postgraduates(
+    index_html: str, pages: dict[str, str | list[str]]
+) -> list[dict[str, object]]:
     return [parse_postgraduate_detail(config, pages.get(config.detail_url, ""))
             for config in postgraduate_configs(index_html)]
+
+
+def parse_postgraduate_subjects(
+    index_html: str, pages: dict[str, str | list[str]]
+) -> list[dict[str, object]]:
+    records: list[dict[str, object]] = []
+    for config in postgraduate_configs(index_html):
+        value = pages.get(config.detail_url, "")
+        html_pages = [value] if isinstance(value, str) else value
+        records.extend(_postgraduate_subjects(config, html_pages))
+    return records
 
 
 def _content_text(html: str) -> str:
@@ -1044,7 +1210,7 @@ def build_dataset(
     professor_pages: dict[str, str] | None = None,
     support_pages: dict[str, str] | None = None,
     postgraduate_index_html: str = "",
-    postgraduate_pages: dict[str, str] | None = None,
+    postgraduate_pages: dict[str, str | list[str]] | None = None,
     profile_pages: dict[str, str] | None = None,
 ) -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
@@ -1113,6 +1279,9 @@ def build_dataset(
     sections["posgrados"] = parse_postgraduates(
         postgraduate_index_html, postgraduate_pages or {}
     )
+    sections["materias"].extend(parse_postgraduate_subjects(
+        postgraduate_index_html, postgraduate_pages or {}
+    ))
     sections["autoridades"].extend(parse_faculty_authorities(authorities_html))
     sections["redes_contacto"] = contacts
     support = support_pages or {}

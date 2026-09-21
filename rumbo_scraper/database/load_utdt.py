@@ -99,7 +99,7 @@ def _subject_identity(row: dict[str, Any]) -> tuple[str, str, str]:
 def _sync_subjects(
     client: Any, university_id: str, rows: list[dict[str, Any]]
 ) -> int:
-    """Update matching subjects in place so catalogue links remain valid."""
+    """Synchronize subjects in batches while preserving catalogue-linked IDs."""
     existing = _data(
         client.table("materias")
         .select("id,carrera_id,posgrado_id,nombre_materia,anio_cursada")
@@ -110,20 +110,26 @@ def _sync_subjects(
         available.setdefault(_subject_identity(row), []).append(row)
 
     kept_ids: set[str] = set()
+    updates: list[dict[str, Any]] = []
+    inserts: list[dict[str, Any]] = []
     for row in rows:
         matches = available.get(_subject_identity(row), [])
         if matches:
             current = matches.pop(0)
             kept_ids.add(current["id"])
-            client.table("materias").update(row).eq("id", current["id"]).execute()
+            updates.append({"id": current["id"], **row})
         else:
-            inserted = _data(client.table("materias").insert(row).execute())
-            if inserted and inserted[0].get("id"):
-                kept_ids.add(inserted[0]["id"])
+            inserts.append(row)
 
-    for row in existing:
-        if row["id"] not in kept_ids:
-            client.table("materias").delete().eq("id", row["id"]).execute()
+    # Hundreds of one-row HTTP requests caused timeouts once postgraduate
+    # curricula were added. Chunked writes keep the same stable IDs and make a
+    # full rerun idempotent after an interrupted load.
+    _upsert_chunks(client, "materias", updates, "id")
+    _insert_chunks(client, "materias", inserts)
+
+    stale_ids = [row["id"] for row in existing if row["id"] not in kept_ids]
+    for start in range(0, len(stale_ids), 100):
+        client.table("materias").delete().in_("id", stale_ids[start:start + 100]).execute()
     return len(rows)
 
 

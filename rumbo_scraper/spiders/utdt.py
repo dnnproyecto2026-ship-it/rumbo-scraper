@@ -50,7 +50,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     plan_pages: dict[str, str] = {}
     professor_pages: dict[str, str] = {}
     support_pages: dict[str, str] = {}
-    postgraduate_pages: dict[str, str] = {}
+    postgraduate_pages: dict[str, list[str]] = {}
     profile_pages: dict[str, str] = {}
     with httpx.Client(
         follow_redirects=True,
@@ -84,15 +84,26 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
             plan_url = parse_career_detail(html, config).get("plan_url") if html else None
             if plan_url and str(plan_url) not in plan_pages:
                 plan_pages[str(plan_url)] = _fetch(client, str(plan_url), errors)
-        for config in postgraduate_configs(postgraduate_index_html):
-            if config.detail_url in postgraduate_pages:
-                continue
-            detail_html = _fetch(client, config.detail_url, errors)
-            supplements = [
-                _fetch(client, url, errors)
-                for url in discover_postgraduate_supplement_urls(detail_html, config.detail_url)
+        postgraduate_details = {
+            config.detail_url for config in postgraduate_configs(postgraduate_index_html)
+        }
+        detail_html_by_url = _fetch_many(client, postgraduate_details, errors)
+        supplement_urls_by_detail = {
+            url: discover_postgraduate_supplement_urls(html, url)
+            for url, html in detail_html_by_url.items()
+        }
+        all_supplement_urls = {
+            supplement_url
+            for urls in supplement_urls_by_detail.values()
+            for supplement_url in urls
+        }
+        supplement_html_by_url = _fetch_many(client, all_supplement_urls, errors)
+        for detail_url, detail_html in detail_html_by_url.items():
+            postgraduate_pages[detail_url] = [
+                detail_html,
+                *(supplement_html_by_url[url]
+                  for url in supplement_urls_by_detail[detail_url]),
             ]
-            postgraduate_pages[config.detail_url] = "\n".join([detail_html, *supplements])
 
     dataset = build_dataset(
         admissions_html, institution_html, detail_pages, plan_pages, errors,
