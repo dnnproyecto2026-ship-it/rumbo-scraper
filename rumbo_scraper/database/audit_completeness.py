@@ -98,9 +98,9 @@ def build_report(client: Any) -> dict[str, Any]:
                 "entidad_tipo": "materias",
                 "entidad_id": subject["id"],
                 "campo": "vinculo_catalogo",
-                "prioridad": "alta",
-                "motivo": "Materia del plan sin coincidencia exacta en el catálogo semestral",
-                "accion_recomendada": "Revisar nombre/código y vincular manualmente o con matching supervisado",
+                "prioridad": "baja",
+                "motivo": "Materia del plan no ofrecida o sin coincidencia inequívoca en el catálogo del período",
+                "accion_recomendada": "Reintentar con catálogos de otros semestres; revisar manualmente sólo si sigue sin aparecer",
             })
 
     # Academic enrichment is only actionable when UTDT actually publishes a
@@ -155,15 +155,18 @@ def apply_report(client: Any, report: dict[str, Any]) -> None:
         client.table("pendientes_datos").select("id,clave")
         .eq("universidad_id", university_id).eq("estado", "pendiente").execute()
     )
-    for row in existing:
-        if row["clave"] not in current_keys:
-            client.table("pendientes_datos").update({
-                "estado": "resuelto", "resuelto_at": datetime.now(UTC).isoformat()
-            }).eq("id", row["id"]).execute()
-    for issue in report["pendientes"]:
+    resolved_ids = [row["id"] for row in existing if row["clave"] not in current_keys]
+    for start in range(0, len(resolved_ids), 100):
+        client.table("pendientes_datos").update({
+            "estado": "resuelto", "resuelto_at": datetime.now(UTC).isoformat()
+        }).in_("id", resolved_ids[start:start + 100]).execute()
+    payloads = [
+        {**issue, "estado": "pendiente", "ultima_deteccion_at": report["generado_at"]}
+        for issue in report["pendientes"]
+    ]
+    for start in range(0, len(payloads), 100):
         client.table("pendientes_datos").upsert(
-            {**issue, "estado": "pendiente", "ultima_deteccion_at": report["generado_at"]},
-            on_conflict="clave",
+            payloads[start:start + 100], on_conflict="clave"
         ).execute()
 
 

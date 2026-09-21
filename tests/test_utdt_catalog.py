@@ -5,7 +5,7 @@ import unittest
 from zoneinfo import ZoneInfo
 
 from rumbo_scraper.database.load_utdt_catalog import (
-    _equivalent_subject_key, _subject_name_key, preview,
+    _equivalent_subject_key, _shift_for_time, _subject_name_key, preview,
 )
 from rumbo_scraper.parsers.utdt_catalog import (
     parse_detail_row,
@@ -16,6 +16,12 @@ from rumbo_scraper.spiders.utdt_catalog import current_period
 
 
 class UTDTCatalogTests(unittest.TestCase):
+    def test_classifies_published_schedule_shifts(self) -> None:
+        self.assertEqual(_shift_for_time("09:00"), "Mañana")
+        self.assertEqual(_shift_for_time("15:30"), "Tarde")
+        self.assertEqual(_shift_for_time("18:00"), "Noche")
+        self.assertIsNone(_shift_for_time(None))
+
     def test_current_period_uses_argentine_calendar(self) -> None:
         timezone = ZoneInfo("America/Argentina/Buenos_Aires")
         self.assertEqual(current_period(datetime(2026, 3, 1, tzinfo=timezone)), (2026, 1))

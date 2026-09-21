@@ -69,6 +69,19 @@ def _commission_key(code: object, section: object) -> tuple[str, str]:
     return clean_text(str(code or "")), clean_text(str(section or "")) or "0"
 
 
+def _shift_for_time(value: object) -> str | None:
+    """Classify a published class start time into the database shift enum."""
+    match = re.fullmatch(r"(\d{1,2}):(\d{2})", clean_text(str(value or "")))
+    if not match:
+        return None
+    minutes = int(match.group(1)) * 60 + int(match.group(2))
+    if minutes < 13 * 60:
+        return "Mañana"
+    if minutes < 18 * 60:
+        return "Tarde"
+    return "Noche"
+
+
 def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
     dataset = json.loads(path.read_text(encoding="utf-8"))
     if not dataset.get("horarios") and not dataset.get("detalles"):
@@ -141,7 +154,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             _equivalent_subject_key(name), []
         ).append(course_ids[code])
     plan_subjects = _data(
-        client.table("materias").select("id,nombre_materia")
+        client.table("materias").select("id,carrera_id,nombre_materia,anio_cursada")
         .eq("universidad_id", university_id).execute()
     )
     subject_links: list[dict[str, Any]] = []
@@ -164,6 +177,20 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         _data(client.table("materias_catalogo_vinculos").upsert(
             chunk, on_conflict="materia_id,materia_catalogo_id"
         ).execute())
+
+    offers = _data(
+        client.table("ofertas_academicas").select("id,carrera_id")
+        .in_("carrera_id", list({
+            row["carrera_id"] for row in plan_subjects if row.get("carrera_id")
+        })).execute()
+    )
+    offer_by_career = {row["carrera_id"]: row["id"] for row in offers}
+    subject_by_id = {row["id"]: row for row in plan_subjects}
+    subjects_by_catalog: dict[str, list[dict[str, Any]]] = {}
+    for link in subject_links:
+        subjects_by_catalog.setdefault(link["materia_catalogo_id"], []).append(
+            subject_by_id[link["materia_id"]]
+        )
 
     existing_commissions: list[str] = []
     for course_id_chunk in _chunks(list(course_ids.values())):
@@ -233,6 +260,28 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     for chunk in _chunks(list(schedules.values())):
         _data(client.table("horarios_comision").insert(chunk).execute())
 
+    shifts: set[tuple[str, int, str]] = set()
+    for row in dataset.get("horarios", []):
+        code = clean_text(str(row.get("codigo_materia") or ""))
+        catalog_id = course_ids.get(code)
+        shift = _shift_for_time(row.get("hora_inicio"))
+        if not catalog_id or not shift:
+            continue
+        for subject in subjects_by_catalog.get(catalog_id, []):
+            offer_id = offer_by_career.get(subject.get("carrera_id"))
+            year = subject.get("anio_cursada")
+            if offer_id and isinstance(year, int):
+                shifts.add((offer_id, year, shift))
+    offer_ids = list(offer_by_career.values())
+    for chunk in _chunks(offer_ids):
+        client.table("turnos_anio").delete().in_("oferta_id", chunk).execute()
+    shift_rows = [
+        {"oferta_id": offer_id, "anio_carrera": year, "turno": shift}
+        for offer_id, year, shift in sorted(shifts)
+    ]
+    for chunk in _chunks(shift_rows):
+        _data(client.table("turnos_anio").insert(chunk).execute())
+
     people = _data(
         client.table("personas").select("id,nombre_completo")
         .eq("universidad_id", university_id).execute()
@@ -276,6 +325,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "comisiones_materia": len(commission_ids),
         "horarios_comision": len(schedules),
         "docentes_comision": len(teacher_rows),
+        "turnos_anio": len(shift_rows),
     }
 
 

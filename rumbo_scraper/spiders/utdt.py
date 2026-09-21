@@ -1,8 +1,10 @@
 """Crawl official UTDT pages and build the full Excel-aligned preview."""
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx
 
@@ -13,6 +15,7 @@ from rumbo_scraper.parsers.utdt import (
     STUDENT_ORGANIZATIONS_URL, STUDENT_SERVICES_URL, WELLBEING_URL,
     POSTGRADUATES_URL, build_dataset, postgraduate_configs,
     discover_postgraduate_supplement_urls, parse_career_detail,
+    parse_professor_page,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -31,6 +34,16 @@ def _fetch(client: httpx.Client, url: str, errors: list[dict[str, str]]) -> str:
         return ""
 
 
+def _fetch_many(
+    client: httpx.Client, urls: set[str], errors: list[dict[str, str]]
+) -> dict[str, str]:
+    """Fetch independent profile pages concurrently while preserving URL keys."""
+    ordered = sorted(urls)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        pages = executor.map(lambda url: _fetch(client, url, errors), ordered)
+        return dict(zip(ordered, pages, strict=True))
+
+
 def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     errors: list[dict[str, str]] = []
     detail_pages: dict[str, str] = {}
@@ -38,6 +51,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
     professor_pages: dict[str, str] = {}
     support_pages: dict[str, str] = {}
     postgraduate_pages: dict[str, str] = {}
+    profile_pages: dict[str, str] = {}
     with httpx.Client(
         follow_redirects=True,
         timeout=30.0,
@@ -56,6 +70,14 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
             support_pages[url] = _fetch(client, url, errors)
         for faculty, url in PROFESSOR_PAGES.items():
             professor_pages[faculty] = _fetch(client, url, errors)
+        profile_urls = {
+            str(row["perfil_url"])
+            for faculty, html in professor_pages.items()
+            for row in parse_professor_page(html, faculty, PROFESSOR_PAGES[faculty])
+            if row.get("perfil_url")
+            and (urlparse(str(row["perfil_url"])).hostname or "").endswith("utdt.edu")
+        }
+        profile_pages.update(_fetch_many(client, profile_urls, errors))
         for config in CAREERS.values():
             html = _fetch(client, config.detail_url, errors)
             detail_pages[config.detail_url] = html
@@ -76,6 +98,7 @@ def run(output: Path = DEFAULT_OUTPUT) -> dict[str, object]:
         admissions_html, institution_html, detail_pages, plan_pages, errors,
         authorities_html, professor_pages, support_pages,
         postgraduate_index_html, postgraduate_pages,
+        profile_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)

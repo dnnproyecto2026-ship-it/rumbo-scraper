@@ -81,14 +81,17 @@ Cuando el resumen sea correcto, la carga real se ejecuta explícitamente con:
 python -m rumbo_scraper.database.load_utdt --apply
 ```
 
-La carga usa las credenciales locales de `.env`, pero no las imprime. Por ahora
-omite `turnos_anio` y `aranceles`, ya que la fuente pública no ofrece esos datos.
+La carga usa las credenciales locales de `.env`, pero no las imprime. Esta carga
+omite `turnos_anio` y `aranceles`: los turnos se derivan después desde los horarios
+del catálogo semestral y los aranceles permanecen vacíos mientras no exista una
+fuente oficial vigente.
 
 ## Directorio académico
 
 La base de Supabase debe contar con las tablas `personas` y `roles_academicos`.
 El scraper permite que una persona tenga simultáneamente varios cargos y vínculos
-con facultades, carreras y materias.
+con facultades, carreras y materias. Cuando existe un perfil oficial de UTDT,
+también completa correo, formación y biografía publicados.
 
 ## Vida universitaria
 
@@ -127,6 +130,9 @@ Después de crear las tablas requeridas en Supabase, carga el resultado:
 ```bash
 python -m rumbo_scraper.database.load_utdt_catalog --apply
 ```
+
+Esta carga también deriva los turnos por carrera y año (mañana, tarde o noche)
+a partir de los horarios efectivamente publicados.
 
 El esquema SQL no se guarda en este repositorio.
 

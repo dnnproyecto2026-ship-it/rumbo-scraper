@@ -12,6 +12,7 @@ from rumbo_scraper.parsers.utdt import (
     parse_admissions_summary,
     parse_faculty_authorities, parse_housing, parse_international_programs,
     parse_professor_page, parse_scholarships, parse_study_plan,
+    parse_person_profile,
 )
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -90,6 +91,39 @@ class UTDTParserTests(unittest.TestCase):
         )
         self.assertEqual(plan["titulo_otorgado"], "Abogado")
         self.assertEqual(len(plan["materias"]), 1)
+
+    def test_study_plan_accepts_named_years_and_stops_before_variants(self) -> None:
+        plan = parse_study_plan("""
+            <h2>Primer año</h2><h4>Primer semestre</h4>
+            <article><div class="padded afcbe0"><p>Matemática I</p></div></article>
+            <h2>Segundo año</h2><h4>Segundo semestre</h4>
+            <article><div class="padded afcbe0"><p>Economía II</p></div></article>
+            <h4>Plan con Campo Menor</h4>
+            <h2>Primer año</h2><li>Matemática I</li>
+        """, "Administración de Empresas")
+        self.assertEqual(
+            [row["nombre_materia"] for row in plan["materias"]],
+            ["Matemática I", "Economía II"],
+        )
+
+    def test_study_plan_ignores_contact_form_options(self) -> None:
+        plan = parse_study_plan("""
+            <h2>1</h2><li>Laboratorio de Diseño I</li>
+            <h3>Para recibir más información por e-mail</h3>
+            <li>Abogacía</li><li>Arquitectura</li>
+        """, "Diseño")
+        self.assertEqual(len(plan["materias"]), 1)
+
+    def test_extracts_public_person_profile(self) -> None:
+        profile = parse_person_profile("""
+            <article id="contenido"><h1>Ana Ejemplo</h1>
+            <p>Ph.D. en Economía, Universidad Ejemplo.</p>
+            <p>Ana Ejemplo es profesora e investigadora especializada en economía aplicada y publicó numerosos trabajos académicos internacionales.</p>
+            <p>Email: ana@example.edu</p></article>
+        """, "Ana Ejemplo")
+        self.assertEqual(profile["email"], "ana@example.edu")
+        self.assertIn("Ph.D.", profile["formacion"])
+        self.assertIn("investigadora", profile["biografia"])
 
     def test_builds_and_validates_all_sections(self) -> None:
         detail_pages = {

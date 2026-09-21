@@ -306,16 +306,63 @@ def parse_study_plan(html: str, career_name: str) -> dict[str, object]:
     subjects: list[dict[str, object]] = []
     current_year: int | None = None
     semester: int | None = None
-    for node in soup.find_all(["h2", "h3", "h4", "h5", "h6", "li"]):
+    year_names = {
+        "primer ano": 1, "primero ano": 1, "segundo ano": 2,
+        "tercer ano": 3, "tercero ano": 3, "cuarto ano": 4,
+        "quinto ano": 5, "sexto ano": 6,
+    }
+    plan_started = False
+    for node in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6", "li", "p"]):
         value = clean_text(node.get_text(" ", strip=True))
         key = comparison_key(value)
+        if current_year is not None and key.startswith("para mas informacion"):
+            break
+        if current_year is not None and node.name != "li" and key.startswith("orientaciones"):
+            break
+        if current_year is not None and node.name == "li" and key == "abogacia":
+            following = {
+                comparison_key(item.get_text(" ", strip=True))
+                for item in node.find_all_next("li", limit=6)
+            }
+            if len(following.intersection(CAREER_ALIASES)) >= 4:
+                break
         year_match = re.fullmatch(r"([1-6])", key)
-        if node.name != "li" and year_match:
-            current_year = int(year_match.group(1)); semester = None; continue
+        year = int(year_match.group(1)) if year_match else year_names.get(key)
+        if node.name not in {"li", "p"} and year is not None:
+            # Business plans publish the general plan followed by many complete
+            # field-minor variants. Keep the first complete curriculum instead
+            # of multiplying the same subjects once per variant.
+            if year == 1 and plan_started and current_year and current_year > 1:
+                break
+            current_year = year
+            plan_started = True
+            semester = None
+            continue
+        if node.name not in {"li", "p"} and current_year is not None and any(
+            marker in key for marker in (
+                "para recibir mas informacion", "otras vias de contacto",
+                "unidades academicas",
+            )
+        ):
+            break
         semester_match = re.search(r"([12]).*semestre", key)
-        if node.name != "li" and semester_match:
-            semester = int(semester_match.group(1)); continue
-        if node.name != "li" or current_year is None or not (2 <= len(value) <= 120):
+        if not semester_match:
+            semester_match = re.search(r"(primer|segundo).*semestre", key)
+        if node.name not in {"li", "p"} and semester_match:
+            semester = (
+                int(semester_match.group(1))
+                if semester_match.group(1).isdigit()
+                else {"primer": 1, "segundo": 2}[semester_match.group(1)]
+            )
+            continue
+        parent_classes = node.parent.get("class", []) if node.parent else []
+        is_colored_plan_cell = (
+            node.name == "p"
+            and "padded" in parent_classes
+            and any(re.fullmatch(r"[0-9a-fA-F]{6}", name) for name in parent_classes)
+        )
+        is_subject_node = node.name == "li" or is_colored_plan_cell
+        if not is_subject_node or current_year is None or not (2 <= len(value) <= 120):
             continue
         if any(term in key for term in ("contacto", "whatsapp", "universidad", "ver mas", "inscripcion")):
             continue
@@ -328,6 +375,44 @@ def parse_study_plan(html: str, career_name: str) -> dict[str, object]:
             carga_horaria_semanal=None,
         ))
     return {"titulo_otorgado": title, "duracion_anios": duration, "materias": subjects}
+
+
+def parse_person_profile(html: str, person_name: str) -> dict[str, str | None]:
+    """Extract conservative public profile details without inventing credentials."""
+    soup = _soup(html)
+    root = soup.find(id="contenido") or soup.find("article") or soup.find("main") or soup.body or soup
+    text = clean_text(root.get_text(" ", strip=True))
+    email_match = re.search(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", text)
+
+    formation_parts: list[str] = []
+    degree_terms = (
+        "doctor", "ph.d", "phd", "mba", "master", "magister", "maestr",
+        "licenciad", "abogad", "arquitect", "ingenier",
+    )
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        value = clean_text(sentence)
+        key = comparison_key(value)
+        if any(term in key for term in degree_terms) and len(value) <= 350:
+            formation_parts.append(value)
+        if len(formation_parts) == 2:
+            break
+
+    paragraphs: list[str] = []
+    for paragraph in root.find_all("p"):
+        value = clean_text(paragraph.get_text(" ", strip=True))
+        key = comparison_key(value)
+        if len(value) < 80 or comparison_key(person_name) == key:
+            continue
+        if any(marker in key for marker in ("horario de atencion", "otras vias de contacto")):
+            continue
+        paragraphs.append(value)
+    biography = clean_text(" ".join(paragraphs))[:4000] or None
+
+    return {
+        "email": email_match.group(0) if email_match else None,
+        "formacion": clean_text(" ".join(formation_parts))[:1000] or None,
+        "biografia": biography,
+    }
 
 
 def _faculty_link(config: CareerConfig) -> str:
@@ -444,6 +529,7 @@ def parse_professor_page(html: str, faculty: str, source_url: str) -> list[dict[
 def build_academic_directory(
     authorities: list[dict[str, object]],
     professor_pages: dict[str, str],
+    profile_pages: dict[str, str] | None = None,
 ) -> dict[str, list[dict[str, object]]]:
     people: dict[str, dict[str, object]] = {}
     roles: list[dict[str, object]] = []
@@ -492,6 +578,16 @@ def build_academic_directory(
                 carrera_nombre=None, materia_nombre=None, cargo="Profesor/a",
                 tipo_rol="Docente", es_autoridad=False, fuente_url=source_url,
             )
+    profiles = profile_pages or {}
+    for person in people.values():
+        profile_url = person.get("perfil_url")
+        profile_html = profiles.get(str(profile_url), "") if profile_url else ""
+        if not profile_html:
+            continue
+        details = parse_person_profile(profile_html, str(person["nombre_completo"]))
+        for field, value in details.items():
+            if value:
+                person[field] = value
     return {"personas": list(people.values()), "roles_academicos": roles}
 
 
@@ -949,6 +1045,7 @@ def build_dataset(
     support_pages: dict[str, str] | None = None,
     postgraduate_index_html: str = "",
     postgraduate_pages: dict[str, str] | None = None,
+    profile_pages: dict[str, str] | None = None,
 ) -> dict[str, object]:
     """Build all Excel sections from official pages without inventing values."""
     found = {item.denominacion_canonica for item in parse_careers(admissions_html)}
@@ -1039,7 +1136,7 @@ def build_dataset(
         "metadata": {"universidad": UNIVERSITY, "scraped_at": datetime.now(timezone.utc).isoformat(), "fuentes": [SOURCE_URL, INSTITUTION_URL, AUTHORITIES_URL, STUDENT_SERVICES_URL, POSTGRADUATES_URL, *support], "escritura_supabase": False},
         "datos": sections,
         "directorio_academico": build_academic_directory(
-            sections["autoridades"], professor_pages or {}
+            sections["autoridades"], professor_pages or {}, profile_pages
         ),
         "control_calidad": {
             "secciones_vacias": [name for name, rows in sections.items() if not rows],
