@@ -61,6 +61,24 @@ ADDITIONAL_POSTGRADUATES = (
     ),
 )
 
+# Exact credentials verified in current UTDT pages, the institutional
+# repository or CONEAU resolutions. These are deliberately not inferred from
+# the marketing name: some programs (such as MiM+AI) award a different title.
+VERIFIED_POSTGRADUATE_TITLES = {
+    "Maestría en Economía Urbana": "Magíster en Economía Urbana",
+    "Maestría en Ciencia Política": "Magíster en Ciencia Política",
+    "Maestría en Estudios Internacionales": "Magíster en Estudios Internacionales",
+    "Maestría en Derecho y Economía": "Magíster en Derecho y Economía",
+    "Maestría en Economía": "Magíster en Economía",
+    "Maestría en Econometría": "Magíster en Econometría",
+    "Maestría en Historia": "Magíster en Historia",
+    "MBA (Maestría en Dirección de Empresas)": "Magíster en Dirección de Empresas",
+    "Executive MBA": "Magíster en Dirección de Empresas",
+    "Maestría en Finanzas": "Magíster en Finanzas",
+    "Master in Management, Analytics and Artificial Intelligence": "Magíster en Análisis y Gestión de Negocios",
+    "Maestría en Políticas Públicas": "Magíster en Políticas Públicas",
+}
+
 
 CAREERS: dict[str, CareerConfig] = {
     "abogacia": CareerConfig("Abogacía", "Abogacía", "Derecho", "Escuela", f"{BASE_URL}/ver_contenido.php?id_contenido=9447&id_item_menu=18407"),
@@ -764,8 +782,7 @@ def _postgraduate_modality(text: str) -> str | None:
         r"cursada\s+((?:presencial|virtual|online)[^.]{0,60})",
     )
     for pattern in patterns:
-        match = re.search(pattern, key)
-        if match:
+        for match in re.finditer(pattern, key):
             value = _modality(match.group(1))
             if value:
                 return value
@@ -775,6 +792,8 @@ def _postgraduate_modality(text: str) -> str | None:
         return "Híbrida"
     if "blended" in key and any(term in key for term in ("modalidad", "formato", "cursado")):
         return "Híbrida"
+    if "eminentemente presencial" in key:
+        return "Presencial"
     return None
 
 
@@ -811,15 +830,23 @@ def _postgraduate_title(pages: list[str]) -> str | None:
         for node in soup.find_all(["p", "li", "h3", "h4", "strong"]):
             value = clean_text(node.get_text(" ", strip=True))
             match = re.match(
-                r"t[ií]tulo\s+(?:a\s+obtener|otorgado)\s*:\s*(.{3,180})",
+                r"t[ií]tulo(?:\s+(?:a\s+obtener|otorgado))?\s*:\s*(.{3,180})",
                 value, re.I,
             )
             if match:
-                return clean_text(match.group(1)).rstrip(" .")
+                title = re.split(
+                    r"\s*[.;]\s*(?:requiere|duraci[oó]n|modalidad|formato)\b",
+                    match.group(1), maxsplit=1, flags=re.I,
+                )[0]
+                title = clean_text(title).rstrip(" .")
+                if any(term in comparison_key(title) for term in ("magister", "doctor", "especialista")):
+                    return title
     return None
 
 
-def _postgraduate_description(pages: list[str]) -> str | None:
+def _postgraduate_description(
+    config: PostgraduateConfig, pages: list[str]
+) -> str | None:
     rejected = (
         "whatsapp", "presento el manuscrito", "reunion informativa",
         "como la inteligencia artificial", "junto a las herramientas",
@@ -829,23 +856,38 @@ def _postgraduate_description(pages: list[str]) -> str | None:
         "graduados y graduadas", "galardon", "profesores de la utdt",
     )
     candidates: list[tuple[int, str]] = []
+    tokens = [
+        token for token in comparison_key(config.name).split()
+        if token not in {
+            "maestria", "doctorado", "especializacion", "master", "en", "de",
+            "del", "la", "las", "los", "y", "in", "and",
+        }
+    ]
     # Descriptions must come from the program's own landing page. Supplementary
     # tabs sometimes contain navigation to other programs and produced valid-
     # looking but incorrect descriptions.
-    for page_index, html in enumerate(pages[:1]):
+    for page_index, html in enumerate(pages):
         soup = _soup(html)
         root = soup.find(id="contenido") or soup.find("main") or soup
         for paragraph in root.find_all("p"):
             value = clean_text(paragraph.get_text(" ", strip=True))
             key = comparison_key(value)
-            if not 120 <= len(value) <= 1200 or any(term in key for term in rejected):
+            if not 120 <= len(value) <= 2500 or any(term in key for term in rejected):
                 continue
-            if value.startswith(("“", '"')) or "@utdt.edu" in key:
+            if "@utdt.edu" in key:
+                continue
+            token_hits = sum(
+                token in key or (len(token) >= 7 and token[:6] in key)
+                for token in tokens
+            )
+            minimum_hits = min(2, len(tokens))
+            if page_index > 0 and token_hits < minimum_hits:
                 continue
             score = (100 if page_index == 0 else 0) + min(len(value), 500)
             if any(term in key for term in ("maestria", "doctorado", "especializacion", "programa")):
                 score += 100
-            candidates.append((score, value))
+            score += token_hits * 100
+            candidates.append((score, value[:1200]))
     return max(candidates, default=(0, None), key=lambda item: item[0])[1]
 
 
@@ -958,13 +1000,18 @@ def parse_postgraduate_detail(
     return blank_record(
         "posgrados", universidad_nombre=UNIVERSITY,
         facultad_nombre=config.faculty, nombre_programa=config.name,
-        tipo_posgrado=config.kind, titulo_otorgado=_postgraduate_title(pages), sede=CAMPUS,
+        tipo_posgrado=config.kind,
+        titulo_otorgado=(
+            _postgraduate_title(pages)
+            or VERIFIED_POSTGRADUATE_TITLES.get(config.name)
+        ),
+        sede=CAMPUS,
         modalidad=_postgraduate_modality(text),
         duracion_meses=_duration_months(text, config),
         requiere_tesis_trabajo_final=thesis,
         requisito_titulo_previo=_admission_requirement(soup),
         cohorte_inicio=_cohort_start(text), costo_total_programa=None,
-        moneda=None, descripcion_breve=_postgraduate_description(pages),
+        moneda=None, descripcion_breve=_postgraduate_description(config, pages),
         url_oficial=config.detail_url,
     )
 

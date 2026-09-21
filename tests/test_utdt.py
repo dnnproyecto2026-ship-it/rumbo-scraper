@@ -122,6 +122,46 @@ class UTDTParserTests(unittest.TestCase):
             ["Metodología de la Investigación Jurídica"],
         )
 
+    def test_postgraduate_uses_relevant_supplement_description(self) -> None:
+        config = PostgraduateConfig(
+            "Maestría en Finanzas", "Maestría", "Negocios", "https://example.edu/finanzas"
+        )
+        pages = [
+            "<main><p>Contacto: admisiones@utdt.edu</p></main>",
+            """<main><p>La Maestría en Finanzas brinda una formación rigurosa en mercados,
+            inversiones y finanzas corporativas para profesionales que buscan profundizar
+            sus herramientas analíticas y de decisión.</p></main>""",
+            """<main><p>Este programa de arquitectura estudia el paisaje contemporáneo y
+            sus transformaciones mediante talleres interdisciplinarios de proyecto.</p></main>""",
+        ]
+        row = parse_postgraduate_detail(config, pages)
+        self.assertIn("formación rigurosa", row["descripcion_breve"])
+        self.assertNotIn("arquitectura", row["descripcion_breve"])
+
+        architecture = PostgraduateConfig(
+            "Maestría en Historia y Crítica de la Arquitectura", "Maestría",
+            "Arquitectura", "https://example.edu/historia-arquitectura",
+        )
+        architecture_row = parse_postgraduate_detail(architecture, [
+            "<main><p>Contacto institucional.</p></main>",
+            """<main><p>Este programa de preservación del patrimonio arquitectónico
+            forma especialistas en conservación de bienes culturales y edificios.</p></main>""",
+            """<main><p>La Maestría en Historia y Crítica de la Arquitectura desarrolla
+            herramientas para comprender y valorar la arquitectura en su contexto
+            histórico, urbano y cultural mediante investigación rigurosa.</p></main>""",
+        ])
+        self.assertIn("contexto histórico", architecture_row["descripcion_breve"])
+        self.assertNotIn("preservación", architecture_row["descripcion_breve"])
+
+    def test_postgraduate_accepts_plain_official_title_label(self) -> None:
+        config = PostgraduateConfig(
+            "Maestría en Derecho Tributario", "Maestría", "Derecho", "https://example.edu/tributario"
+        )
+        row = parse_postgraduate_detail(config, [
+            "<main><p>Título: Magíster en Derecho Tributario. Requiere título de Abogado.</p></main>"
+        ])
+        self.assertEqual(row["titulo_otorgado"], "Magíster en Derecho Tributario")
+
     def test_parses_detail_and_study_plan(self) -> None:
         config = CAREERS["abogacia"]
         detail_html = """
