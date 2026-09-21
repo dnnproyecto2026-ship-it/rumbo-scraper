@@ -1,6 +1,8 @@
 """Tests for UTDT course catalogue parsing and preview."""
 
+from datetime import datetime
 import unittest
+from zoneinfo import ZoneInfo
 
 from rumbo_scraper.database.load_utdt_catalog import (
     _equivalent_subject_key, _subject_name_key, preview,
@@ -10,9 +12,15 @@ from rumbo_scraper.parsers.utdt_catalog import (
     parse_schedule_row,
     split_teachers,
 )
+from rumbo_scraper.spiders.utdt_catalog import current_period
 
 
 class UTDTCatalogTests(unittest.TestCase):
+    def test_current_period_uses_argentine_calendar(self) -> None:
+        timezone = ZoneInfo("America/Argentina/Buenos_Aires")
+        self.assertEqual(current_period(datetime(2026, 3, 1, tzinfo=timezone)), (2026, 1))
+        self.assertEqual(current_period(datetime(2026, 9, 21, tzinfo=timezone)), (2026, 2))
+
     def test_safe_equivalent_subject_names(self) -> None:
         self.assertEqual(
             _equivalent_subject_key("Tesis Proyectual - Segunda parte"),

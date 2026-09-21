@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import re
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from rumbo_scraper.parsers.utdt_catalog import parse_detail_row, parse_schedule_row
 
@@ -15,6 +16,13 @@ from rumbo_scraper.parsers.utdt_catalog import parse_detail_row, parse_schedule_
 REPORT_URL = "https://datastudio.google.com/reporting/30c8c711-0f14-462a-a825-fb5fe501bc1d/page/hAzCD"
 DEFAULT_OUTPUT = Path("data/utdt_catalogo_cursos.json")
 TABLE_SELECTOR = '[aria-label="Pulsa Intro o Espacio para mostrar el encabezado del gráfico"].simple-table'
+ARGENTINA_TIMEZONE = ZoneInfo("America/Argentina/Buenos_Aires")
+
+
+def current_period(now: datetime | None = None) -> tuple[int, int]:
+    """Return the current Argentine academic year and semester."""
+    local_now = datetime.now(ARGENTINA_TIMEZONE) if now is None else now.astimezone(ARGENTINA_TIMEZONE)
+    return local_now.year, 1 if local_now.month <= 6 else 2
 
 
 def _table_with_headers(page: Any, expected: list[str]) -> Any:
@@ -121,15 +129,17 @@ def scrape_catalog(year: int, semester: int, report_url: str = REPORT_URL) -> di
 
 
 def main() -> None:
+    default_year, default_semester = current_period()
     parser = argparse.ArgumentParser(description="Extrae el catálogo semestral de cursos de UTDT")
-    parser.add_argument("--year", type=int, required=True)
-    parser.add_argument("--semester", type=int, choices=(1, 2), required=True)
+    parser.add_argument("--year", type=int, default=default_year)
+    parser.add_argument("--semester", type=int, choices=(1, 2), default=default_semester)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--url", default=REPORT_URL)
     args = parser.parse_args()
     dataset = scrape_catalog(args.year, args.semester, args.url)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Período: {args.year}, semestre {args.semester}")
     print(f"OK: {dataset['control_calidad']['filas_horarios']} filas de horarios")
     print(f"OK: {dataset['control_calidad']['filas_detalles']} filas de contenidos")
     print(f"Archivo: {args.output}")

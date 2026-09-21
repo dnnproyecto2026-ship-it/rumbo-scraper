@@ -109,11 +109,17 @@ La primera vez, instala el navegador de Playwright:
 python -m playwright install chromium
 ```
 
-Extrae el período indicado sin escribir en Supabase:
+Extrae automáticamente el año y semestre actuales en Argentina, sin escribir en Supabase:
+
+```bash
+python -m rumbo_scraper.spiders.utdt_catalog
+python -m rumbo_scraper.database.load_utdt_catalog
+```
+
+Para consultar un período específico, se pueden indicar ambos valores manualmente:
 
 ```bash
 python -m rumbo_scraper.spiders.utdt_catalog --year 2026 --semester 2
-python -m rumbo_scraper.database.load_utdt_catalog
 ```
 
 Después de crear las tablas requeridas en Supabase, carga el resultado:
