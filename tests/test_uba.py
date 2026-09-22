@@ -4,7 +4,9 @@ import unittest
 
 from rumbo_scraper.parsers.uba import (
     BASE_URL, CABA, UNIVERSITY, build_dataset, discover_faculties, faculty_name,
-    parse_address, parse_authorities, parse_campuses, parse_careers, parse_links,
+    POSTGRADUATE_SOURCES, POSTGRADUATES_NOT_READ, STRATEGIES, build_postgraduates,
+    chrome_lines, parse_address, parse_authorities, parse_campuses, parse_careers,
+    parse_links, read_postgraduates,
 )
 from rumbo_scraper.validators.uba import validate_dataset
 
@@ -204,3 +206,100 @@ class DatasetTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+MAESTRIAS_LISTA = """
+<h2>Maestrías</h2>
+<ul>
+  <li><a href="/p/1">Automatización Industrial</a></li>
+  <li><a href="/p/2">Ciencias de la Ingeniería</a></li>
+  <li><a href="/p/3">Maestría en Explotación de Datos</a></li>
+  <li><a href="/p/4">Inscripción y requisitos</a></li>
+</ul>
+<h2>Otras Maestrías</h2>
+"""
+
+ESPECIALIZACIONES_TITULOS = """
+<h3>Carrera de Especialización en Biotecnología</h3>
+<p>Texto.</p>
+<h3>Carrera de Especialización en Bromatología</h3>
+<p>Texto.</p>
+<h3>Especializaciones</h3>
+"""
+
+DIPLOMATURAS_PARRAFOS = """
+<h2>Diplomaturas</h2>
+<p>Requiere admisión previa antes de inscribirse.</p>
+<p>Internet de las Cosas</p>
+<p>Ciencia de Datos Aplicada</p>
+<p>Contactarse con info@fi.uba.ar</p>
+"""
+
+
+class PostgraduateTests(unittest.TestCase):
+    def test_a_list_lends_its_kind_to_the_bare_names(self) -> None:
+        rows = read_postgraduates(MAESTRIAS_LISTA, "lista", "Maestría")
+        self.assertEqual([row["nombre"] for row in rows], [
+            "Maestría en Automatización Industrial",
+            "Maestría en Ciencias de la Ingeniería",
+            "Maestría en Explotación de Datos",
+        ])
+        self.assertTrue(all(row["tipo"] == "Maestría" for row in rows))
+
+    def test_a_name_that_states_its_kind_keeps_it(self) -> None:
+        # The faculty files it under one heading and the name says another; the
+        # name is the one the university gave the programme.
+        rows = read_postgraduates(
+            '<h2>Carreras de Especialización</h2><ul>'
+            '<li><a href="/a">Maestría en Biotecnología</a></li>'
+            '<li><a href="/b">Especialización en Farmacia Clínica</a></li></ul>',
+            "lista", "Especialización",
+        )
+        self.assertEqual([(r["tipo"], r["nombre"]) for r in rows], [
+            ("Maestría", "Maestría en Biotecnología"),
+            ("Especialización", "Especialización en Farmacia Clínica"),
+        ])
+
+    def test_a_page_where_each_programme_is_a_heading_is_read(self) -> None:
+        rows = read_postgraduates(ESPECIALIZACIONES_TITULOS, "titulos",
+                                  "Especialización")
+        self.assertEqual([row["nombre"] for row in rows], [
+            "Carrera de Especialización en Biotecnología",
+            "Carrera de Especialización en Bromatología",
+        ])
+
+    def test_the_plural_of_a_kind_opens_a_section_and_is_not_a_programme(self) -> None:
+        names = {row["nombre"] for row in
+                 read_postgraduates(MAESTRIAS_LISTA, "lista", "Maestría")}
+        self.assertNotIn("Maestría en Otras Maestrías", names)
+        self.assertNotIn("Maestría en Inscripción y requisitos", names)
+
+    def test_a_page_written_as_plain_text_uses_the_repeated_lines_as_furniture(self) -> None:
+        chrome = chrome_lines({"a": DIPLOMATURAS_PARRAFOS, "b": DIPLOMATURAS_PARRAFOS})
+        self.assertEqual(read_postgraduates(DIPLOMATURAS_PARRAFOS, "parrafos",
+                                            "Diplomatura", chrome), [])
+        rows = read_postgraduates(DIPLOMATURAS_PARRAFOS, "parrafos", "Diplomatura")
+        self.assertEqual([row["nombre"] for row in rows], [
+            "Diplomatura en Internet de las Cosas",
+            "Diplomatura en Ciencia de Datos Aplicada",
+        ])
+
+    def test_an_unknown_strategy_is_an_error_and_not_an_empty_list(self) -> None:
+        with self.assertRaises(ValueError):
+            read_postgraduates(MAESTRIAS_LISTA, "adivinar", "Maestría")
+
+    def test_an_index_that_publishes_nothing_is_reported(self) -> None:
+        faculty, url, kind, _ = POSTGRADUATE_SOURCES[0]
+        rows, _, empty = build_postgraduates({url: "<p>Nada</p>"})
+        self.assertEqual(rows, [])
+        self.assertEqual(empty[0]["motivo"], "el índice no publicó ningún programa")
+
+    def test_every_source_declares_a_strategy_the_reader_knows(self) -> None:
+        self.assertTrue(all(strategy in STRATEGIES
+                            for _, _, _, strategy in POSTGRADUATE_SOURCES))
+
+    def test_the_faculties_that_are_not_read_are_declared(self) -> None:
+        # Eight of the thirteen publish their offer in a form this reader does
+        # not cover, and silence would look the same as an empty catalogue.
+        self.assertEqual(len(POSTGRADUATES_NOT_READ), 8)
+        self.assertTrue(all(reason for reason in POSTGRADUATES_NOT_READ.values()))

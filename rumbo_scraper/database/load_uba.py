@@ -14,8 +14,11 @@ from rumbo_scraper.validators.uba import validate_dataset
 DEFAULT_INPUT = Path("data/uba_completo.json")
 CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
-    "ofertas", "autoridades", "redes_contacto",
+    "ofertas", "posgrados", "autoridades", "redes_contacto",
 )
+# tipo_posgrado is an enum of degrees; a "Programa de Actualización" is not one
+# of them and the column is NOT NULL, so those rows stay out of the database.
+LOADABLE_KINDS = frozenset({"Doctorado", "Maestría", "Especialización", "Diplomatura"})
 
 
 def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
@@ -34,6 +37,10 @@ def preview(dataset: dict[str, Any]) -> dict[str, int]:
     counts["autoridades_sin_facultad"] = sum(
         1 for row in data["autoridades"] if not row["facultad_nombre"]
     )
+    loadable = [row for row in data["posgrados"]
+                if row["tipo_posgrado"] in LOADABLE_KINDS]
+    counts["posgrados"] = len(loadable)
+    counts["posgrados_sin_tipo_del_esquema"] = len(data["posgrados"]) - len(loadable)
     return counts
 
 
@@ -110,6 +117,26 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "url_oficial": row["url_oficial"], "activa": True,
         }, "carrera_id,sede_id,modalidad")
     counts["ofertas"] = len(offers)
+
+    programmes = [row for row in data["posgrados"]
+                  if row["tipo_posgrado"] in LOADABLE_KINDS]
+    for row in programmes:
+        _upsert_one(client, "posgrados", {
+            "universidad_id": university_id,
+            "facultad_id": faculty_ids.get(str(row["facultad_nombre"])),
+            "nombre_programa": row["nombre_programa"],
+            "tipo_posgrado": row["tipo_posgrado"],
+            "titulo_otorgado": row["titulo_otorgado"], "sede_id": None,
+            "modalidad": row["modalidad"], "duracion_meses": row["duracion_meses"],
+            "requiere_tesis_trabajo_final": _boolean(row["requiere_tesis_trabajo_final"]),
+            "requisito_titulo_previo": row["requisito_titulo_previo"],
+            "cohorte_inicio": row["cohorte_inicio"],
+            "costo_total_programa": row["costo_total_programa"],
+            "moneda": row["moneda"], "descripcion_breve": row["descripcion_breve"],
+            "url_oficial": row["url_oficial"],
+        }, "universidad_id,nombre_programa")
+    counts["posgrados"] = len(programmes)
+    counts["posgrados_sin_tipo_del_esquema"] = len(data["posgrados"]) - len(programmes)
 
     client.table("contactos").delete().eq("universidad_id", university_id).execute()
     if faculty_ids:

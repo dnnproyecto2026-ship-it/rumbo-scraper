@@ -10,7 +10,8 @@ from typing import Any
 import httpx
 
 from rumbo_scraper.parsers.uba import (
-    AUTHORITIES_URL, FACULTIES_URL, build_dataset, discover_faculties,
+    AUTHORITIES_URL, FACULTIES_URL, POSTGRADUATE_URLS, build_dataset,
+    discover_faculties,
 )
 from rumbo_scraper.validators.uba import validate_dataset
 
@@ -37,10 +38,13 @@ def run(output: Path = DEFAULT_OUTPUT, limit: int | None = None) -> dict[str, An
             faculties = faculties[:limit]
         pages = {ref.url: _get(client, ref.url, errors) for ref in faculties}
         authorities = _get(client, AUTHORITIES_URL, errors)
+        # The postgraduate offer is published by each faculty on its own site.
+        programmes = {url: _get(client, url, errors) for url in POSTGRADUATE_URLS}
 
     dataset = build_dataset(
         faculties, {url: html for url, html in pages.items() if html},
         authorities, errors,
+        {url: html for url, html in programmes.items() if html},
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -62,11 +66,15 @@ def main() -> None:
     print(f"OK: {len(data['facultades'])} facultades")
     print(f"OK: {len(data['carreras'])} carreras")
     print(f"OK: {len(data['sedes'])} sedes")
+    print(f"OK: {len(data['posgrados'])} posgrados")
     print(f"OK: {len(data['autoridades'])} autoridades del Rectorado")
     print(f"OK: {len(data['redes_contacto'])} canales de contacto")
     print(f"Archivo: {args.output}")
     print(f"Carreras sin sede publicada: {quality['carreras_sin_sede_publicada']} "
           f"| facultades excluidas: {len(quality['facultades_excluidas'])}")
+    print(f"Facultades con posgrados sin leer: "
+          f"{len(quality['posgrados_por_facultad_sin_leer'])} "
+          f"| índices vacíos: {len(quality['indices_de_posgrado_vacios'])}")
 
 
 if __name__ == "__main__":

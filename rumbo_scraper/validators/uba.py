@@ -23,11 +23,22 @@ def validate_dataset(dataset: dict[str, object]) -> None:
     if any(row["universidad_nombre"] != UNIVERSITY for row in sections["carreras"]):
         raise ValueError("Hay nombres de universidad no normalizados.")
 
+    programmes = [row["nombre_programa"] for row in sections["posgrados"]]
+    if len(programmes) != len(set(programmes)):
+        repeated = sorted({p for p in programmes if programmes.count(p) > 1})
+        raise ValueError(f"Hay posgrados duplicados en la UBA: {repeated[:3]}")
+
     faculties = {row["nombre_facultad"] for row in sections["facultades"]}
     stray = {row["facultad_nombre"] for row in sections["carreras"]
              if row["facultad_nombre"] not in faculties}
     if stray:
         raise ValueError(f"Carreras de facultades desconocidas: {sorted(stray)[:3]}")
+    orphan_programmes = {row["facultad_nombre"] for row in sections["posgrados"]
+                         if row["facultad_nombre"] not in faculties}
+    if orphan_programmes:
+        raise ValueError(
+            f"Posgrados de facultades desconocidas: {sorted(orphan_programmes)[:3]}"
+        )
     # A career is offered where its own faculty is; an offer naming a campus
     # the catalogue never published would be an invented one.
     campuses = {row["nombre_sede"] for row in sections["sedes"]}

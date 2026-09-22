@@ -321,6 +321,26 @@ Las autoridades que publica el sitio son las del Rectorado, no las de una
 facultad, y `autoridades.facultad_id` es NOT NULL, así que quedan en el
 artefacto y fuera de la base.
 
+### Posgrados de la UBA
+
+La UBA declara más de 660 posgrados y no publica ninguno de forma central: cada
+facultad publica el suyo, en su propio sitio y en una de tres formas. El lector
+tiene una estrategia por forma y cada fuente declara en cuál está escrita, así
+que una página que cambia de forma falla a la vista en vez de devolver una lista
+más corta:
+
+| Estrategia | Forma de la página | Facultades |
+|---|---|---|
+| `lista` | un encabezado con el tipo y abajo los nombres | Agronomía, Filosofía y Letras, Ingeniería |
+| `titulos` | cada programa es un encabezado propio | Exactas |
+| `parrafos` | los nombres son texto suelto; se descuentan las líneas que la facultad repite en sus otras páginas | FADU, Filosofía y Letras |
+
+Un nombre que ya dice su tipo lo conserva; una página que lista nombres pelados
+les presta el tipo que anuncia, igual que el catálogo de la UTN. Las ocho
+facultades que publican su oferta de una forma que este lector todavía no cubre
+están declaradas una por una en `posgrados_por_facultad_sin_leer`, con lo que se
+interpone en cada caso.
+
 ## Bitácora de cobertura
 
 ```bash
