@@ -22,6 +22,24 @@ SOURCE_URL = f"{BASE_URL}/estudia-en-udesa"
 CAMPUSES_URL = "https://exed.udesa.edu.ar/sedes/"
 POSTGRADUATE_INDEX_URL = f"{BASE_URL}/posgrados"
 FACULTY_DIRECTORY_URL = f"{BASE_URL}/cuerpo-docente"
+# One entry per official page that publishes student-life content, with the
+# contract section it feeds and the category the page itself represents. The
+# category comes from the source, never from reading the text.
+CONTENT_SOURCES: tuple[tuple[str, str, str], ...] = (
+    ("becas", "/becas-doctorales", "Beca doctoral"),
+    ("becas", "/becas-programas-internacionales", "Beca internacional"),
+    ("servicios_estudiantiles", "/biblioteca", "Biblioteca"),
+    ("servicios_estudiantiles", "/orientacion-al-alumno", "Orientación al alumno"),
+    ("servicios_estudiantiles", "/desarrollo-profesional", "Desarrollo profesional"),
+    ("servicios_estudiantiles", "/oficina-de-alumnos-de-grado", "Administración académica"),
+    ("servicios_estudiantiles", "/oficina-de-alumnos-de-posgrado", "Administración académica"),
+    ("servicios_estudiantiles", "/combi", "Transporte"),
+    ("actividades_extracurriculares", "/deportes", "Deportes"),
+    ("actividades_extracurriculares", "/student-life", "Vida estudiantil"),
+    ("alojamiento", "/dormis", "Residencia"),
+)
+CONTENT_URLS = tuple(f"{BASE_URL}{path}" for _, path, _ in CONTENT_SOURCES)
+
 AUTHORITY_URLS = (
     f"{BASE_URL}/conduccion-academica",
     f"{BASE_URL}/consejo-superior",
@@ -503,6 +521,135 @@ _POSITION_UNIT = re.compile(
 )
 
 
+def parse_content_blocks(page: dict[str, Any], source_url: str) -> list[dict[str, Any]]:
+    """Read the titled blocks of a content page.
+
+    The student-life pages are built from a small set of modules that all carry
+    the same three fields: a label, an HTML body and an optional link. Reading
+    that vocabulary works across pages instead of needing one parser per page.
+    """
+    blocks: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for section in page.get("sections") or []:
+        candidates: list[dict[str, Any]] = [section]
+        for key in ("cards", "cardIcon", "items"):
+            entries = section.get(key)
+            if isinstance(entries, list):
+                candidates.extend(entry for entry in entries if isinstance(entry, dict))
+        for entry in candidates:
+            if entry.get("persons"):
+                continue
+            title = _plain(entry.get("label")) or _plain(entry.get("title"))
+            body = _plain(entry.get("body")) or _plain(entry.get("summary"))
+            link = entry.get("mediaLink") or {}
+            url = str(link.get("linkUri") or "").strip()
+            if not title or not body:
+                continue
+            key = comparison_key(title)
+            if key in seen:
+                continue
+            seen.add(key)
+            blocks.append({
+                "titulo": title,
+                "descripcion": body,
+                "url": urljoin(source_url, url) if url else None,
+                "fuente_url": source_url,
+            })
+    return blocks
+
+
+# A heading is short and does not close a sentence; anything longer is prose.
+HEADING_MAX_CHARS = 80
+
+
+def _module_text(section: dict[str, Any]) -> tuple[str | None, str | None]:
+    return _plain(section.get("label")) or _plain(section.get("title")), _plain(section.get("body"))
+
+
+def parse_headed_blocks(page: dict[str, Any], source_url: str) -> list[dict[str, Any]]:
+    """Read pages that publish a heading followed by its paragraphs.
+
+    The residences page names each building in its own module and describes it
+    in the ones that follow, so the blocks only exist as a sequence.
+    """
+    blocks: list[dict[str, Any]] = []
+    heading: str | None = None
+    paragraphs: list[str] = []
+
+    def flush() -> None:
+        if heading and paragraphs:
+            blocks.append({
+                "titulo": heading,
+                "descripcion": clean_text(" ".join(paragraphs)),
+                "url": None,
+                "fuente_url": source_url,
+            })
+
+    for section in page.get("sections") or []:
+        label, body = _module_text(section)
+        if label and body:
+            continue  # already covered by the label/body pairs
+        text = label or body
+        if not text:
+            continue
+        is_heading = len(text) <= HEADING_MAX_CHARS and not text.rstrip().endswith(".")
+        if is_heading:
+            flush()
+            heading, paragraphs = text, []
+        elif heading:
+            paragraphs.append(text)
+    flush()
+    return blocks
+
+
+def build_content_rows(
+    section: str, category: str, blocks: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Turn published blocks into rows of the contract section they belong to.
+
+    Only what the page states is kept. A scholarship's coverage, deadline or
+    application process is not published as a labelled field, so those columns
+    stay null rather than being read out of the prose.
+    """
+    rows: list[dict[str, Any]] = []
+    for block in blocks:
+        if section == "becas":
+            rows.append(blank_record(
+                "becas", universidad_nombre=UNIVERSITY, nombre_beca=block["titulo"],
+                nivel="Posgrado" if "doctoral" in comparison_key(category) else None,
+                tipo_beca=category, cobertura_descripcion=block["descripcion"],
+                porcentaje_maximo=None, requisitos=None, proceso_postulacion=None,
+                renovacion=None, fecha_cierre=None, url_postulacion=block["url"],
+                contacto=None, fuente_url=block["fuente_url"],
+            ))
+        elif section == "servicios_estudiantiles":
+            rows.append(blank_record(
+                "servicios_estudiantiles", universidad_nombre=UNIVERSITY, sede=None,
+                categoria=category, nombre_servicio=block["titulo"],
+                descripcion=block["descripcion"], contacto=None, url=block["url"],
+                fuente_url=block["fuente_url"],
+            ))
+        elif section == "actividades_extracurriculares":
+            rows.append(blank_record(
+                "actividades_extracurriculares", universidad_nombre=UNIVERSITY, sede=None,
+                categoria=category, nombre_actividad=block["titulo"],
+                descripcion=block["descripcion"], contacto=None, url=block["url"],
+                fuente_url=block["fuente_url"],
+            ))
+        elif section == "alojamiento":
+            rows.append(blank_record(
+                "alojamiento", universidad_nombre=UNIVERSITY, sede=None,
+                # The contract has no name column here, so the designation the
+                # page publishes ("Jacarandá") is kept as the accommodation type.
+                tipo_apoyo=category, tipo_alojamiento=block["titulo"],
+                # The pages describe the buildings without stating who owns or
+                # runs them, so ownership is not asserted.
+                residencia_propia=None, descripcion=block["descripcion"],
+                contacto=None, url=block["url"], fuente_url=block["fuente_url"],
+            ))
+    return rows
+
+
 def _person_sections(page: dict[str, Any]) -> list[tuple[str | None, list[dict[str, Any]]]]:
     """Return every published group of people with the label above it."""
     groups: list[tuple[str | None, list[dict[str, Any]]]] = []
@@ -713,6 +860,7 @@ def build_dataset(
     postgraduate_plan_pages: dict[str, dict[str, Any]] | None = None,
     directory_page: dict[str, Any] | None = None,
     authority_pages: dict[str, dict[str, Any]] | None = None,
+    content_pages: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
     data["universidades"] = [blank_record(
@@ -846,6 +994,16 @@ def build_dataset(
         facultad_nombre=faculty_by_career[career], carrera_nombre=career,
         area_tematica=area, cantidad_materias=count,
     ) for (career, area), count in sorted(counts.items())]
+
+    content_pages = content_pages or {}
+    for section_name, path, category in CONTENT_SOURCES:
+        page = content_pages.get(f"{BASE_URL}{path}")
+        if not page:
+            continue
+        source_url = f"{BASE_URL}{path}"
+        blocks = parse_content_blocks(page, source_url)
+        blocks.extend(parse_headed_blocks(page, source_url))
+        data[section_name].extend(build_content_rows(section_name, category, blocks))
 
     # Units and programmes are the vocabulary the directory tags people with.
     unit_names: dict[str, str] = {}
