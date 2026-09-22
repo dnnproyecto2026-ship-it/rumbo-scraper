@@ -352,6 +352,129 @@ def parse_study_plan(
     return subjects, resources
 
 
+# The postgraduate plan is prose, not the table the undergraduate pages use.
+# Each list item is a subject, but many carry the lecturer, the meeting
+# frequency or a footnote appended to the name. These rules cut only what the
+# source marks explicitly, so nothing is guessed about where a name ends.
+_ATTRIBUTION = re.compile(
+    r"\s*[,\-–/;]\s*(?:a\s+cargo\s+de|prof(?:esor|esora)?\b|dr(?:a)?\.|lic\.|"
+    r"mg\.|mag\.|ing\.|arq\.|phd\b|cpn\b).*$",
+    re.I,
+)
+_TEACHER_SENTENCE = re.compile(r"\s*\.\s*(?:docentes?|profesores?|a\s+cargo\s+de)\s*:.*$", re.I)
+_SCHEDULE = re.compile(
+    r"\s*\.\s*(?:quincenal|mensual|semanal|bimestral|anual|intensiv[oa])\b.*$", re.I
+)
+_MEETINGS = re.compile(r"\s*\.\s*\d+\s*(?:encuentros?|clases?|horas?)\b.*$", re.I)
+_PARENTHETICAL_TEACHER = re.compile(r"\s*\((?:coordinad|dictad|a\s+cargo)[^)]*\)", re.I)
+# "Literaturas Comparadas / Luz Horne, PhD." puts the credential after the
+# name instead of before it, so the separator alone does not reveal it.
+_TRAILING_CREDENTIAL = re.compile(
+    r"\s*[,\-–/;]\s*[^,;/]{2,60},\s*(?:phd|mba|m\.?a\.?|dr(?:a)?|lic|mg|mag)\.?\s*\.?\s*$",
+    re.I,
+)
+# Some entries append the frequency without punctuation: "... en Educación
+# Quincenal". A frequency word standing alone at the end is never part of a
+# subject name.
+_TRAILING_FREQUENCY = re.compile(
+    r"\s+(?:quincenal|mensual|semanal|bimestral|intensiv[oa])\s*\.?\s*$", re.I
+)
+# Some entries append the course description to the name: "Seminario de
+# Investigación I (marzo a mayo): Discusión temática. Su objetivo es que el
+# estudiante...". A subject name is never two sentences, so only the first one
+# is kept -- unless the period belongs to an abbreviation.
+_ABBREVIATIONS = ("lic", "dr", "dra", "ing", "arq", "mg", "mag", "prof", "ph", "vs", "ej")
+_SENTENCE_TAIL = re.compile(r"(?<=[a-záéíóúñ)\"])\.\s+\S.*$")
+# Entries linking a file carry its weight: "Estructura Social Argentina (231.8 KB)".
+_FILE_SIZE = re.compile(r"\s*\(\s*\d+(?:[.,]\d+)?\s*[KMG]B\s*\)\s*$", re.I)
+_FOOTNOTE = re.compile(r"\s*\(\*+\)\s*$|\s*\*+\s*$")
+
+_STAGE_YEARS = {
+    "primer": 1, "primero": 1, "1": 1, "1o": 1, "1er": 1,
+    "segundo": 2, "2": 2, "2o": 2, "2do": 2,
+    "tercer": 3, "tercero": 3, "3": 3, "3o": 3, "3er": 3,
+    "cuarto": 4, "4": 4, "4o": 4, "4to": 4,
+    "quinto": 5, "5": 5, "5o": 5, "5to": 5,
+}
+# "cuatrimestre" contains "trimestre", so the longer token is tested first.
+_STAGE_REGIMES = (
+    ("cuatrimestre", "Cuatrimestral"),
+    ("trimestre", "Trimestral"),
+    ("semestre", "Semestral"),
+)
+
+
+def clean_subject_name(raw: str) -> str | None:
+    """Strip the lecturer and scheduling details the source appends to a name."""
+    text = clean_text(raw)
+    for pattern in (_PARENTHETICAL_TEACHER, _TEACHER_SENTENCE, _SCHEDULE,
+                    _MEETINGS, _TRAILING_CREDENTIAL, _ATTRIBUTION,
+                    _TRAILING_FREQUENCY, _FILE_SIZE):
+        text = pattern.sub("", text)
+    match = _SENTENCE_TAIL.search(text)
+    if match:
+        head = text[:match.start()]
+        last_word = comparison_key(head.rsplit(" ", 1)[-1])
+        if last_word not in _ABBREVIATIONS and len(head.strip()) >= 10:
+            text = head
+    text = _FOOTNOTE.sub("", text).strip().rstrip(".").strip()
+    if len(text) < 3:
+        return None
+    # Subject names are published capitalised. A lowercase opening marks a
+    # sentence of instructions -- "la entrega de la prepropuesta de tesis" --
+    # not a subject.
+    if not text[0].isupper():
+        return None
+    return text
+
+
+def stage_year(label: str | None) -> int | None:
+    """Read the year only from a stage that names one."""
+    key = comparison_key(label)
+    match = re.match(r"([a-z0-9]+)(?:er|o|do|to|ro|º|°)?\s+ano\b", key)
+    return _STAGE_YEARS.get(match.group(1)) if match else None
+
+
+def stage_regime(label: str | None) -> str | None:
+    key = comparison_key(label)
+    for token, regime in _STAGE_REGIMES:
+        if token in key:
+            return regime
+    return None
+
+
+def parse_postgraduate_plan(
+    page: dict[str, Any], programme: str, source_url: str, excluded_names: frozenset[str] = frozenset()
+) -> list[dict[str, Any]]:
+    """Read the subjects a postgraduate plan lists, one row per list item."""
+    subjects: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for stage in (page.get("graduateSyllabus") or {}).get("stages") or []:
+        label = _plain(stage.get("label"))
+        year, regime = stage_year(label), stage_regime(label)
+        soup = BeautifulSoup(str(stage.get("body") or ""), "html.parser")
+        for item in soup.find_all("li"):
+            # A few entries collapse a bullet list into a single item.
+            for fragment in str(item.get_text(" ", strip=True)).split("•"):
+                name = clean_subject_name(fragment)
+                # A plan may cross-list another programme by name; that is a
+                # pointer to a different degree, not a subject of this one.
+                if not name or comparison_key(name) in excluded_names:
+                    continue
+                identity = (comparison_key(name), str(year))
+                if identity in seen:
+                    continue
+                seen.add(identity)
+                subjects.append(blank_record(
+                    "materias", universidad_nombre=UNIVERSITY,
+                    carrera_o_programa=programme, nombre_materia=name,
+                    anio_cursada=year, turno=None, area_tematica=None,
+                    descripcion_breve=None, regimen=regime,
+                    carga_horaria_semanal=None,
+                ))
+    return subjects
+
+
 def parse_campuses(html: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Extract addresses from UdeSA's official campuses page."""
     soup = BeautifulSoup(html, "html.parser")
@@ -414,6 +537,7 @@ def build_dataset(
     errors: list[dict[str, str]] | None = None,
     postgraduate_refs: tuple[PostgraduateRef, ...] = (),
     postgraduate_pages: dict[str, tuple[dict[str, Any], str]] | None = None,
+    postgraduate_plan_pages: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
     data["universidades"] = [blank_record(
@@ -470,6 +594,8 @@ def build_dataset(
             })
 
     postgraduate_pages = postgraduate_pages or {}
+    postgraduate_plan_pages = postgraduate_plan_pages or {}
+    programme_names = frozenset(comparison_key(ref.name) for ref in postgraduate_refs)
     postgraduate_details: list[dict[str, Any]] = []
     postgraduate_units: set[tuple[str, str]] = set()
     excluded: list[dict[str, str]] = []
@@ -511,9 +637,11 @@ def build_dataset(
                 "url": detail["image_url"], "fuente_url": detail["url"],
             })
         if detail["plan_url"]:
-            # The postgraduate plan is prose, not a table: it mixes subjects
-            # with lecturers and instructions. Linking it keeps the evidence
-            # without turning paragraphs into invented "materias" rows.
+            plan_page = postgraduate_plan_pages.get(detail["plan_url"])
+            if plan_page:
+                data["materias"].extend(parse_postgraduate_plan(
+                    plan_page, ref.name, detail["plan_url"], programme_names
+                ))
             resources.append({
                 "entidad_tipo": "posgrado", "entidad_nombre": ref.name,
                 "tipo_recurso": "enlace", "titulo": f"Plan de estudios de {ref.name}",

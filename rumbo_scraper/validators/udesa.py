@@ -51,9 +51,17 @@ def validate_dataset(dataset: dict[str, object]) -> None:
         raise ValueError("Hay carreras duplicadas en UdeSA.")
     if any(row["universidad_nombre"] != UNIVERSITY for row in careers):
         raise ValueError("Hay nombres de universidad no normalizados.")
-    valid_careers = set(names)
-    if any(row["carrera_o_programa"] not in valid_careers for row in sections["materias"]):
-        raise ValueError("Una materia referencia una carrera inexistente.")
+    # carrera_o_programa is polymorphic: a subject hangs from a degree or from
+    # a postgraduate programme.
+    valid_parents = set(names) | {row["nombre_programa"] for row in sections["posgrados"]}
+    orphans = {
+        row["carrera_o_programa"] for row in sections["materias"]
+        if row["carrera_o_programa"] not in valid_parents
+    }
+    if orphans:
+        raise ValueError(
+            f"Hay materias sin carrera ni posgrado que las contenga: {sorted(orphans)[:3]}"
+        )
     validate_postgraduates(dataset, sections)
     validate_contract_urls(sections, DOMAIN)
     for index, resource in enumerate(dataset.get("recursos_publicos", [])):

@@ -2144,9 +2144,18 @@ Esto es diseño futuro. Las migraciones SQL pertenecen al repositorio/flujo de b
 >
 > - El descubrimiento no necesita enumerar rutas a mano: el índice publica una
 >   `EntityList` de entidades `Graduate` con nombre, URL y departamento.
-> - No se extraen `materias` de posgrado. El plan es prosa HTML que mezcla
->   materias con docentes e instrucciones; convertirla en filas sería inferir.
->   El plan queda enlazado como recurso.
+> - Se extraen `materias` de posgrado desde `graduateSyllabus.stages[].body`:
+>   612 filas en 27 de los 41 programas. El plan es prosa HTML, así que el
+>   nombre se limpia con reglas explícitas que cortan sólo lo que la fuente
+>   marca (atribución docente, frecuencia de cursada, tamaño de archivo,
+>   descripción anexada) y se descartan las instrucciones. Los 14 programas sin
+>   filas no publican plan o no publican lista.
+> - **Límite conocido:** unas 30 filas de la Diplomatura DETE son enunciados de
+>   competencias ("La capacidad de construir estrategias...") publicados dentro
+>   de los "Ejes de trabajo", no nombres de materia. No se filtran porque toda
+>   regla por forma probada también eliminaba materias reales como "La prueba de
+>   los delitos sexuales". Separarlas requiere decidir qué etiquetas de stage no
+>   son listas de materias.
 > - `titulo_otorgado`, `requisito_titulo_previo` y `requiere_tesis_trabajo_final`
 >   quedan nulos: no aparecen en ningún campo estructurado de las páginas.
 > - Apareció una novena unidad académica, Departamento de Matemática y Ciencias,

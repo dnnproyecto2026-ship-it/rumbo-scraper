@@ -14,7 +14,8 @@ from playwright.async_api import Browser, async_playwright
 
 from rumbo_scraper.parsers.udesa import (
     BASE_URL, CAMPUSES_URL, CAREERS, POSTGRADUATE_INDEX_URL, SOURCE_URL,
-    build_dataset, discover_plan_url, discover_postgraduates,
+    build_dataset, discover_graduate_plan_url, discover_plan_url,
+    discover_postgraduates,
 )
 from rumbo_scraper.validators.udesa import validate_dataset
 
@@ -81,6 +82,23 @@ async def _run(output: Path) -> dict[str, Any]:
             if result is not None
         }
 
+        postgraduate_plan_urls = sorted({
+            plan_url
+            for page, final_url in postgraduate_pages.values()
+            if (plan_url := discover_graduate_plan_url(page, final_url))
+        })
+        postgraduate_plan_results = await asyncio.gather(*(
+            _fetch_next_data(browser, url, errors, semaphore)
+            for url in postgraduate_plan_urls
+        ))
+        postgraduate_plan_pages = {
+            requested: result[0]
+            for requested, result in zip(
+                postgraduate_plan_urls, postgraduate_plan_results, strict=True
+            )
+            if result is not None
+        }
+
         landing_result = await landing_task
         career_pages = {
             requested: result
@@ -106,7 +124,7 @@ async def _run(output: Path) -> dict[str, Any]:
     landing_page = landing_result[0] if landing_result else {}
     dataset = build_dataset(
         landing_page, career_pages, plan_pages, campuses_html, errors,
-        postgraduate_refs, postgraduate_pages,
+        postgraduate_refs, postgraduate_pages, postgraduate_plan_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -130,7 +148,12 @@ def main() -> None:
     data = dataset["datos"]
     quality = dataset["control_calidad"]
     print(f"OK: {len(data['carreras'])} carreras")
-    print(f"OK: {len(data['materias'])} materias de planes de estudio")
+    postgraduate_names = {row["nombre_programa"] for row in data["posgrados"]}
+    postgraduate_subjects = sum(
+        1 for row in data["materias"] if row["carrera_o_programa"] in postgraduate_names
+    )
+    print(f"OK: {len(data['materias'])} materias de planes de estudio "
+          f"({postgraduate_subjects} de posgrado)")
     print(f"OK: {len(data['facultades'])} unidades académicas")
     print(f"OK: {len(data['posgrados'])} posgrados de "
           f"{quality['posgrados_descubiertos']} descubiertos en el índice oficial")

@@ -146,10 +146,12 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         postgraduate_ids[row["nombre_programa"]] = saved["id"]
     counts["posgrados"] = len(postgraduate_ids)
 
+    # carrera_o_programa is polymorphic: the parent is a degree or a
+    # postgraduate programme, never both.
     subjects = [{
         "universidad_id": university_id,
-        "carrera_id": career_ids[row["carrera_o_programa"]],
-        "posgrado_id": None,
+        "carrera_id": career_ids.get(row["carrera_o_programa"]),
+        "posgrado_id": postgraduate_ids.get(row["carrera_o_programa"]),
         "nombre_materia": row["nombre_materia"],
         "anio_cursada": row["anio_cursada"], "turno": row["turno"],
         "area_tematica_id": area_ids.get(row["area_tematica"]),

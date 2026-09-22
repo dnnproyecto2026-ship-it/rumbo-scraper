@@ -7,8 +7,9 @@ generated from the parser's own constants, so a wrong reading fails here.
 import unittest
 
 from rumbo_scraper.parsers.udesa import (
-    PostgraduateRef, UNIVERSITY, build_dataset, discover_graduate_plan_url,
-    discover_postgraduates, duration_months, parse_postgraduate_detail,
+    PostgraduateRef, UNIVERSITY, build_dataset, clean_subject_name,
+    discover_graduate_plan_url, discover_postgraduates, duration_months,
+    parse_postgraduate_detail, parse_postgraduate_plan,
     postgraduate_campus, postgraduate_kind, postgraduate_modality,
     split_academic_unit,
 )
@@ -230,3 +231,101 @@ class BuildAndValidateTests(unittest.TestCase):
                    "datos": {"posgrados": []}}
         with self.assertRaises(ValueError):
             validate_postgraduates(dataset, dataset["datos"])
+
+
+class SubjectNameTests(unittest.TestCase):
+    def test_keeps_a_plain_subject_untouched(self) -> None:
+        for name in ("Big Data y Políticas Públicas", "Fintec", "Data Management",
+                     "Innovación (semana intensiva)", "La prueba de los delitos sexuales",
+                     "Los seguros y la Empresa"):
+            self.assertEqual(clean_subject_name(name), name)
+
+    def test_cuts_the_lecturer_however_it_is_attached(self) -> None:
+        cases = {
+            "Economía de las Organizaciones - Prof. Christian Ruzzier": "Economía de las Organizaciones",
+            "Artes visuales e Instituciones / Dra. Lía Munilla Lacasa.": "Artes visuales e Instituciones",
+            "Teoría Cultural / Valentín Díaz, PhD.": "Teoría Cultural",
+            "Redacción académica II. Docente: Lucía Natale.": "Redacción académica II",
+            "Seminario Permanente de Investigación (coordinado por Mercedes Di Virgilio)":
+                "Seminario Permanente de Investigación",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(clean_subject_name(raw), expected)
+
+    def test_cuts_the_scheduling_detail(self) -> None:
+        self.assertEqual(
+            clean_subject_name("Redacción Académica I. Quincenal. 4 encuentros de 3 horas cada uno."),
+            "Redacción Académica I",
+        )
+        self.assertEqual(
+            clean_subject_name("Seminario de Construcción de Teoría en Educación Quincenal"),
+            "Seminario de Construcción de Teoría en Educación",
+        )
+
+    def test_cuts_an_appended_description_but_respects_abbreviations(self) -> None:
+        self.assertEqual(
+            clean_subject_name("Seminario de Investigación I: Discusión temática. Su objetivo es avanzar."),
+            "Seminario de Investigación I: Discusión temática",
+        )
+        self.assertEqual(clean_subject_name("Lic. en Gestión y su práctica"), "Lic. en Gestión y su práctica")
+
+    def test_strips_footnote_markers_and_file_sizes(self) -> None:
+        self.assertEqual(clean_subject_name("Movilidad urbana.*"), "Movilidad urbana")
+        self.assertEqual(clean_subject_name("Estructura Social Argentina (231.8 KB)"),
+                         "Estructura Social Argentina")
+
+    def test_rejects_an_instruction_instead_of_storing_it(self) -> None:
+        for text in ("la entrega de la prepropuesta de tesis.",
+                     "el cursado de 2 seminarios electivos, de 40 horas cada uno.",
+                     "un primer informe de avance de tesis.", "", "   ", "IA"):
+            self.assertIsNone(clean_subject_name(text))
+
+
+class PlanParsingTests(unittest.TestCase):
+    def _page(self, stages: list[dict]) -> dict:
+        return {"graduateSyllabus": {"title": "Conocé el Plan de estudios", "stages": stages}}
+
+    def test_reads_one_row_per_list_item_with_the_stage_year(self) -> None:
+        page = self._page([{"label": "Primer año", "body":
+                            "<ul><li>Microeconomía Avanzada, Prof. Lucía Quesada</li>"
+                            "<li>Econometría Avanzada</li></ul>"}])
+        rows = parse_postgraduate_plan(page, "Maestría en Economía", "https://udesa.edu.ar/p")
+        self.assertEqual([r["nombre_materia"] for r in rows],
+                         ["Microeconomía Avanzada", "Econometría Avanzada"])
+        self.assertEqual({r["anio_cursada"] for r in rows}, {1})
+        self.assertEqual({r["carrera_o_programa"] for r in rows}, {"Maestría en Economía"})
+
+    def test_reads_the_regime_from_a_period_stage(self) -> None:
+        page = self._page([{"label": "Segundo cuatrimestre", "body": "<ul><li>Movilidad urbana</li></ul>"}])
+        rows = parse_postgraduate_plan(page, "Diplomatura", "https://udesa.edu.ar/p")
+        self.assertEqual(rows[0]["regimen"], "Cuatrimestral")
+        self.assertIsNone(rows[0]["anio_cursada"])
+
+    def test_a_stage_without_a_period_leaves_both_null(self) -> None:
+        page = self._page([{"label": "LIDERAZGO", "body": "<ul><li>Negociación y Creación de Valor</li></ul>"}])
+        rows = parse_postgraduate_plan(page, "MBA", "https://udesa.edu.ar/p")
+        self.assertIsNone(rows[0]["anio_cursada"])
+        self.assertIsNone(rows[0]["regimen"])
+
+    def test_splits_a_bullet_list_collapsed_into_one_item(self) -> None:
+        page = self._page([{"label": "Electivas", "body":
+                            "<ul><li>Juicio por jurados •Teoría del delito</li></ul>"}])
+        rows = parse_postgraduate_plan(page, "Maestría", "https://udesa.edu.ar/p")
+        self.assertEqual([r["nombre_materia"] for r in rows], ["Juicio por jurados", "Teoría del delito"])
+
+    def test_does_not_repeat_the_same_subject_in_the_same_year(self) -> None:
+        page = self._page([{"label": "Primer año", "body":
+                            "<ul><li>Econometría</li><li>ECONOMETRÍA</li></ul>"}])
+        self.assertEqual(len(parse_postgraduate_plan(page, "Maestría", "https://udesa.edu.ar/p")), 1)
+
+    def test_ignores_a_cross_listed_programme_name(self) -> None:
+        page = self._page([{"label": "Seminarios", "body":
+                            "<ul><li>Doctorado en Historia</li><li>Historiografía</li></ul>"}])
+        rows = parse_postgraduate_plan(
+            page, "Maestría en Investigación Histórica", "https://udesa.edu.ar/p",
+            frozenset({"doctorado en historia"}),
+        )
+        self.assertEqual([r["nombre_materia"] for r in rows], ["Historiografía"])
+
+    def test_a_page_without_a_plan_yields_nothing(self) -> None:
+        self.assertEqual(parse_postgraduate_plan({}, "Maestría", "https://udesa.edu.ar/p"), [])
