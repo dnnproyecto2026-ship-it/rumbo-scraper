@@ -76,3 +76,30 @@ class LatestManifestTests(unittest.TestCase):
             path, payload = latest_manifest(base)
             self.assertEqual(path.name, "20260202T000000Z.json")
             self.assertEqual(list(payload["artefactos"]), ["b"])
+
+
+class ContentHashTests(unittest.TestCase):
+    def test_a_new_timestamp_does_not_change_the_content_hash(self) -> None:
+        from rumbo_scraper.manifest import content_hash
+        first = {"metadata": {"scraped_at": "2026-09-21T00:00:00"}, "datos": {"carreras": [1]}}
+        second = {"metadata": {"scraped_at": "2026-09-22T23:59:59"}, "datos": {"carreras": [1]}}
+        self.assertEqual(content_hash(first), content_hash(second))
+
+    def test_key_order_does_not_change_the_content_hash(self) -> None:
+        from rumbo_scraper.manifest import content_hash
+        self.assertEqual(content_hash({"a": 1, "b": 2}), content_hash({"b": 2, "a": 1}))
+
+    def test_a_changed_value_does_change_the_content_hash(self) -> None:
+        from rumbo_scraper.manifest import content_hash
+        first = {"datos": {"carreras": [{"nombre": "Abogacía"}]}}
+        second = {"datos": {"carreras": [{"nombre": "Derecho"}]}}
+        self.assertNotEqual(content_hash(first), content_hash(second))
+
+    def test_compare_reports_content_drift_when_counts_hold(self) -> None:
+        before = {"artefactos": {"u.json": {"contenido_sha256": "a" * 64,
+                                            "conteos": {"datos.materias": 829}}}}
+        after = {"artefactos": {"u.json": {"contenido_sha256": "b" * 64,
+                                           "conteos": {"datos.materias": 829}}}}
+        changes = compare(before, after)
+        self.assertEqual(len(changes), 1)
+        self.assertEqual(changes[0]["seccion"], "contenido")

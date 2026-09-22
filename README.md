@@ -188,6 +188,11 @@ copiar ningún dato extraído:
 python -m rumbo_scraper.manifest
 ```
 
+Cada corrida estampa su propia hora, así que el hash del archivo cambia siempre
+y no dice nada. Por eso el manifiesto guarda además un hash de contenido que
+ignora los campos volátiles: si los conteos se mantienen pero ese hash cambia,
+algo del dato se movió y conviene mirarlo.
+
 Por defecto sólo muestra la vista previa y la compara contra el último baseline
 de `manifests/`. Para guardar la corrida actual como nuevo baseline:
 

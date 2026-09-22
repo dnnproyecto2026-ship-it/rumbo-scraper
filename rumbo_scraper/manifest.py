@@ -19,6 +19,11 @@ from pathlib import Path
 DATA_DIR = Path("data")
 MANIFEST_DIR = Path("manifests")
 
+# Every run stamps the moment it happened, so the raw file hash always changes
+# and says nothing about the data. These keys are dropped before hashing the
+# content, which lets a real drift stand out from an ordinary re-run.
+VOLATILE_KEYS = frozenset({"scraped_at", "extraido_en", "extraido_at", "generado_at"})
+
 
 def _git_commit() -> str | None:
     try:
@@ -43,6 +48,23 @@ def count_collections(payload: object, prefix: str = "") -> dict[str, int]:
     return counts
 
 
+def strip_volatile(payload: object) -> object:
+    """Return the document without the fields that change on every run."""
+    if isinstance(payload, dict):
+        return {key: strip_volatile(value) for key, value in payload.items()
+                if key not in VOLATILE_KEYS}
+    if isinstance(payload, list):
+        return [strip_volatile(item) for item in payload]
+    return payload
+
+
+def content_hash(payload: object) -> str:
+    """Hash the data itself, ignoring timestamps and key ordering."""
+    canonical = json.dumps(strip_volatile(payload), sort_keys=True,
+                           separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def describe_artifact(path: Path) -> dict[str, object]:
     raw = path.read_bytes()
     entry: dict[str, object] = {
@@ -57,6 +79,7 @@ def describe_artifact(path: Path) -> dict[str, object]:
     except json.JSONDecodeError as error:
         entry["error"] = f"JSON inválido: {error}"
         return entry
+    entry["contenido_sha256"] = content_hash(payload)
     entry["conteos"] = count_collections(payload)
     for field in ("extraido_en", "extraido_at", "generado_at", "periodo"):
         value = payload.get(field) if isinstance(payload, dict) else None
@@ -100,6 +123,12 @@ def compare(previous: dict[str, object], current: dict[str, object]) -> list[dic
             changes.append({"artefacto": name, "seccion": "*", "antes": None, "ahora": None,
                             "detalle": "artefacto nuevo"})
             continue
+        old_content = before[name].get("contenido_sha256")
+        new_content = after[name].get("contenido_sha256")
+        if old_content and new_content and old_content != new_content:
+            changes.append({"artefacto": name, "seccion": "contenido", "antes": old_content[:12],
+                            "ahora": new_content[:12],
+                            "detalle": "el contenido cambió (los conteos pueden no moverse)"})
         for section in sorted(set(old_counts) | set(new_counts)):
             old = old_counts.get(section)
             new = new_counts.get(section)
@@ -132,7 +161,7 @@ def main() -> int:
         return 1
 
     for name, entry in current["artefactos"].items():
-        print(f"\n{name}  {entry['bytes']:,} bytes  sha256:{entry['sha256'][:12]}")
+        print(f"\n{name}  {entry['bytes']:,} bytes  contenido:{entry.get('contenido_sha256', '?')[:12]}")
         if "error" in entry:
             print(f"  {entry['error']}")
             continue
