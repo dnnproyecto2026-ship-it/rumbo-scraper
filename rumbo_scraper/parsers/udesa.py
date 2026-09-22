@@ -389,6 +389,13 @@ _SENTENCE_TAIL = re.compile(r"(?<=[a-záéíóúñ)\"])\.\s+\S.*$")
 _FILE_SIZE = re.compile(r"\s*\(\s*\d+(?:[.,]\d+)?\s*[KMG]B\s*\)\s*$", re.I)
 _FOOTNOTE = re.compile(r"\s*\(\*+\)\s*$|\s*\*+\s*$")
 
+# A plan stage can hold two kinds of list, and the paragraph above each one
+# says which: "Se abordarán temáticas tales como:" introduces content, while
+# "se trabajará en el desarrollo de habilidades de liderazgo directivo:"
+# introduces competencies the graduate is expected to acquire. Competencies are
+# not subjects, so the list they introduce is skipped whole.
+_COMPETENCY_INTRO = re.compile(r"habilidades|competencias|perfil del egresad", re.I)
+
 _STAGE_YEARS = {
     "primer": 1, "primero": 1, "1": 1, "1o": 1, "1er": 1,
     "segundo": 2, "2": 2, "2o": 2, "2do": 2,
@@ -453,7 +460,13 @@ def parse_postgraduate_plan(
         label = _plain(stage.get("label"))
         year, regime = stage_year(label), stage_regime(label)
         soup = BeautifulSoup(str(stage.get("body") or ""), "html.parser")
-        for item in soup.find_all("li"):
+        items = []
+        for group in soup.find_all(["ul", "ol"]):
+            intro = group.find_previous(["p", "h2", "h3", "h4"])
+            if intro and _COMPETENCY_INTRO.search(intro.get_text(" ", strip=True)):
+                continue
+            items.extend(group.find_all("li"))
+        for item in items:
             # A few entries collapse a bullet list into a single item.
             for fragment in str(item.get_text(" ", strip=True)).split("•"):
                 name = clean_subject_name(fragment)

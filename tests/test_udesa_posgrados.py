@@ -329,3 +329,50 @@ class PlanParsingTests(unittest.TestCase):
 
     def test_a_page_without_a_plan_yields_nothing(self) -> None:
         self.assertEqual(parse_postgraduate_plan({}, "Maestría", "https://udesa.edu.ar/p"), [])
+
+
+class CompetencyExclusionTests(unittest.TestCase):
+    """The paragraph above each list declares what the list holds."""
+
+    def _stage(self, body: str) -> dict:
+        return {"graduateSyllabus": {"stages": [{"label": "Eje de trabajo 1", "body": body}]}}
+
+    def test_keeps_the_content_list_and_drops_the_competency_list(self) -> None:
+        page = self._stage(
+            "<p>Se abordarán temáticas tales como:</p>"
+            "<ul><li>Enseñanza y aprendizaje en la cultura digital</li></ul>"
+            "<p>Junto con el abordaje de estas temáticas, se trabajará en el desarrollo"
+            " de habilidades de liderazgo directivo:</p>"
+            "<ul><li>La capacidad de problematizar la propia experiencia escolar</li></ul>"
+        )
+        rows = parse_postgraduate_plan(page, "DETE", "https://udesa.edu.ar/p")
+        self.assertEqual([r["nombre_materia"] for r in rows],
+                         ["Enseñanza y aprendizaje en la cultura digital"])
+
+    def test_recognises_the_other_published_wordings(self) -> None:
+        for intro in ("Se espera que el egresado desarrolle las siguientes competencias:",
+                      "Perfil del egresado:",
+                      "Se trabajará en el desarrollo de habilidades:"):
+            page = self._stage(f"<p>{intro}</p><ul><li>La capacidad de liderar equipos</li></ul>")
+            self.assertEqual(parse_postgraduate_plan(page, "DETE", "https://udesa.edu.ar/p"), [])
+
+    def test_a_list_without_an_introduction_is_kept(self) -> None:
+        page = self._stage("<ul><li>Microeconomía Avanzada</li></ul>")
+        rows = parse_postgraduate_plan(page, "Maestría", "https://udesa.edu.ar/p")
+        self.assertEqual([r["nombre_materia"] for r in rows], ["Microeconomía Avanzada"])
+
+    def test_an_ordinary_introduction_does_not_exclude_its_list(self) -> None:
+        for intro in ("Materias obligatorias:", "a. Cursado de cuatro seminarios:",
+                      "1º cuatrimestre:", "Se abordarán los siguientes ejes temáticos:"):
+            page = self._stage(f"<p>{intro}</p><ul><li>Política Educativa</li></ul>")
+            rows = parse_postgraduate_plan(page, "Maestría", "https://udesa.edu.ar/p")
+            self.assertEqual([r["nombre_materia"] for r in rows], ["Política Educativa"], intro)
+
+    def test_the_description_of_a_subject_is_never_stored(self) -> None:
+        page = self._stage(
+            "<ul><li>Seminario de Investigación I: Discusión temática."
+            " Su objetivo es que el estudiante avance en su tesis.</li></ul>"
+        )
+        rows = parse_postgraduate_plan(page, "Maestría", "https://udesa.edu.ar/p")
+        self.assertEqual(rows[0]["nombre_materia"], "Seminario de Investigación I: Discusión temática")
+        self.assertIsNone(rows[0]["descripcion_breve"])
