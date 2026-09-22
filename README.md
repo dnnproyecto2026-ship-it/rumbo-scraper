@@ -207,12 +207,21 @@ materias se guardan sin año y el motivo queda en
 
 ## Datos pendientes
 
-La auditoría genera un archivo con cada campo importante que sigue vacío y la
-fuente recomendada para completarlo:
+La auditoría genera, por universidad, un archivo con cada campo importante que
+sigue vacío y la fuente recomendada para completarlo:
 
 ```bash
-python -m rumbo_scraper.database.audit_completeness
+python -m rumbo_scraper.database.audit_completeness --todas
 ```
+
+Sin `--todas` audita una sola, con `--universidad "Universidad Austral"`.
+
+El informe separa dos cosas que en la base se parecen y no son lo mismo: un
+campo vacío que puede completarse desde una página pública, y un campo vacío
+porque la universidad no lo publica. Lo segundo lo declara cada adapter en su
+propio artefacto —`control_calidad.secciones_sin_fuente_publica` y
+`materias_sin_anio`— y se reporta aparte en `no_publicado`, para que el backlog
+sea la lista de trabajo que realmente se puede hacer.
 
 Si existe la tabla `pendientes_datos`, se puede sincronizar el tablero de
 pendientes con:
