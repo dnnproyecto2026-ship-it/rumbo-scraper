@@ -176,3 +176,40 @@ pendientes con:
 ```bash
 python -m rumbo_scraper.database.audit_completeness --apply
 ```
+
+## Manifiesto y baseline entre corridas
+
+Los archivos de `data/` no se versionan, así que los conteos de una corrida sólo
+se pueden interpretar comparándolos con los de la anterior. El manifiesto guarda
+la forma de cada artefacto —hash, tamaño y cantidad de filas por sección— sin
+copiar ningún dato extraído:
+
+```bash
+python -m rumbo_scraper.manifest
+```
+
+Por defecto sólo muestra la vista previa y la compara contra el último baseline
+de `manifests/`. Para guardar la corrida actual como nuevo baseline:
+
+```bash
+python -m rumbo_scraper.manifest --write
+```
+
+Con `--max-drop` la comparación deja de ser informativa y pasa a fallar cuando
+una sección se desploma, lo que permite frenar una publicación degradada:
+
+```bash
+python -m rumbo_scraper.manifest --max-drop 0.2
+```
+
+Devuelve `2` si alguna sección cae más que el umbral. Conviene ejecutarlo entre
+el spider y el loader, antes de cualquier `--apply`.
+
+## Validación de fuentes
+
+Toda URL publicada en el contrato debe pertenecer al dominio oficial de la
+universidad y usar HTTPS. La comprobación exige que el host sea el dominio o un
+subdominio suyo: `utdt.edu.otro-sitio.com` y `https://cualquiera.com/?ref=utdt.edu`
+se rechazan, porque de lo contrario un enlace ajeno podría quedar guardado como
+evidencia oficial. Un campo vacío sigue siendo válido: significa que la fuente no
+lo publica.

@@ -1,9 +1,11 @@
 """Validation rules for the UdeSA deterministic scrape."""
 
-from urllib.parse import urlparse
-
 from rumbo_scraper.contracts import SECTION_FIELDS
+from rumbo_scraper.normalizers.url import assert_official_url
 from rumbo_scraper.parsers.udesa import CAREERS, UNIVERSITY
+from rumbo_scraper.validators import validate_contract_urls
+
+DOMAIN = "udesa.edu.ar"
 
 
 def validate_dataset(dataset: dict[str, object]) -> None:
@@ -25,7 +27,6 @@ def validate_dataset(dataset: dict[str, object]) -> None:
     valid_careers = set(names)
     if any(row["carrera_o_programa"] not in valid_careers for row in sections["materias"]):
         raise ValueError("Una materia referencia una carrera inexistente.")
-    for resource in dataset.get("recursos_publicos", []):
-        host = urlparse(str(resource.get("url") or "")).hostname or ""
-        if not host.endswith("udesa.edu.ar"):
-            raise ValueError(f"Recurso fuera del dominio oficial: {resource.get('url')}")
+    validate_contract_urls(sections, DOMAIN)
+    for index, resource in enumerate(dataset.get("recursos_publicos", [])):
+        assert_official_url(resource.get("url"), DOMAIN, f"recursos_publicos[{index}].url")

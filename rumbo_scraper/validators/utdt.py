@@ -1,7 +1,11 @@
 """Validation rules for UTDT scrape results."""
 
 from rumbo_scraper.contracts import SECTION_FIELDS
+from rumbo_scraper.normalizers.url import assert_official_url
 from rumbo_scraper.parsers.utdt import UTDTCareer, UNIVERSITY
+from rumbo_scraper.validators import validate_contract_urls
+
+DOMAIN = "utdt.edu"
 
 
 def validate_careers(careers: list[UTDTCareer]) -> None:
@@ -10,8 +14,8 @@ def validate_careers(careers: list[UTDTCareer]) -> None:
     names = [career.denominacion_canonica for career in careers]
     if len(names) != len(set(names)):
         raise ValueError("The UTDT result contains duplicate careers.")
-    if any("utdt.edu" not in career.fuente_url for career in careers):
-        raise ValueError("Every UTDT record must reference an official utdt.edu source.")
+    for career in careers:
+        assert_official_url(career.fuente_url, DOMAIN, f"carrera {career.nombre_carrera}")
 
 
 def validate_dataset(dataset: dict[str, object]) -> None:
@@ -33,3 +37,4 @@ def validate_dataset(dataset: dict[str, object]) -> None:
     career_names = {row["nombre_carrera"] for row in careers}
     if any(row["carrera_nombre"] not in career_names for row in sections["ofertas"]):
         raise ValueError("An offer references an unknown career.")
+    validate_contract_urls(sections, DOMAIN)
