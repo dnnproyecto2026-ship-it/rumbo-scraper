@@ -205,6 +205,24 @@ Los planes son cuadros en PDF cuyo texto extraído no conserva el orden visual
 materias se guardan sin año y el motivo queda en
 `control_calidad.materias_sin_anio`.
 
+## Extracción completa: UMSA
+
+```bash
+python -m rumbo_scraper.spiders.umsa
+python -m rumbo_scraper.database.load_umsa
+python -m rumbo_scraper.database.load_umsa --apply
+```
+
+UMSA publica su catálogo por la API REST de WordPress en dos tipos de contenido:
+`carrera`, que la universidad clasifica como grado o posgrado, y `oferta`, que
+reúne todo lo más corto. De las ofertas sólo una diplomatura es un posgrado del
+contrato; cursos, talleres, seminarios, programas y certificaciones quedan
+afuera con su motivo.
+
+Los planes son una tabla por ciclo, con el año nombrado en palabras en grado
+("PRIMER AÑO") y entre paréntesis en posgrado ("(1 AÑO)"), y una segunda columna
+con el régimen de cursada.
+
 ## Datos pendientes
 
 La auditoría genera, por universidad, un archivo con cada campo importante que
