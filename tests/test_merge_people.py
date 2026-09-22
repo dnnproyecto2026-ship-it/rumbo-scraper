@@ -26,6 +26,10 @@ class _FakeQuery:
         self.filters[column] = value
         return self
 
+    def order(self, column: str) -> "_FakeQuery":
+        self.ordered_by = column
+        return self
+
     def range(self, start: int, end: int) -> "_FakeQuery":
         self.start, self.end = start, end
         return self

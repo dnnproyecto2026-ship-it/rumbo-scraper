@@ -2199,8 +2199,27 @@ Esto es diseño futuro. Las migraciones SQL pertenecen al repositorio/flujo de b
 >   del año"), no hay ciclo discreto equivalente al "marzo 2027" de UTDT.
 > - `aranceles` y `turnos_anio`: sin fuente pública, igual que en UTDT.
 >
-> **Próximo paso ahora:** reconciliar `personas` de UTDT reejecutando el
-> catálogo con la lectura paginada, y auditoría parametrizada por universidad.
+> **`personas` de UTDT reconciliada el 22-09-2026: 1475 → 1466.** Las nueve
+> filas sin explicación de la sección 1 eran la misma persona escrita dos veces.
+> `personas` es única por el nombre exacto y los loaders identifican con
+> `comparison_key`, que ignora acentos, así que un loader que no veía la fila
+> existente insertaba a la persona con la grafía de su propia fuente. Los nueve
+> pares eran una fila de utdt.edu y una del catálogo Looker.
+>
+> La fila que sobrevive se elige por la calidad de la evidencia, no por la
+> grafía: `Juan Carlos Rodriguez` sin acento es el que publica la universidad y
+> el acentuado viene del catálogo, de modo que una regla por acentos habría
+> conservado el nombre equivocado en dos de los nueve casos.
+> `rumbo_scraper/database/merge_people.py` hace la fusión con vista previa.
+>
+> **Defecto adicional corregido:** la lectura paginada que se agregó para
+> superar el tope de 1000 filas no ordenaba la consulta. Sin orden total,
+> PostgreSQL puede devolver una fila en dos páginas consecutivas y omitir otra;
+> se observó en una tabla de 1289 filas, produciendo duplicados fantasma. Ahora
+> pagina ordenando por clave primaria.
+>
+> **Próximo paso ahora:** auditoría parametrizada por universidad, que sigue
+> siendo exclusiva de UTDT.
 
 El plan original era **completar posgrados de UdeSA de manera determinística**, porque:
 

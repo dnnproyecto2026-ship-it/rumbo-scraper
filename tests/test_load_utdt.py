@@ -51,7 +51,12 @@ class SelectAllTests(unittest.TestCase):
         def __init__(self, rows: list[dict[str, object]]) -> None:
             self.rows = rows
             self.ranges: list[tuple[int, int]] = []
+            self.ordered_by: str | None = None
             self._slice: list[dict[str, object]] = []
+
+        def order(self, column: str) -> "SelectAllTests._Query":
+            self.ordered_by = column
+            return self
 
         def range(self, start: int, end: int) -> "SelectAllTests._Query":
             self.ranges.append((start, end))
@@ -83,3 +88,11 @@ class SelectAllTests(unittest.TestCase):
     def test_an_empty_table_returns_nothing(self) -> None:
         from rumbo_scraper.database.supabase import select_all
         self.assertEqual(select_all(self._Query([]), size=1000), [])
+
+    def test_pages_are_ordered_so_they_cannot_overlap(self) -> None:
+        # Without a total order PostgreSQL may return a row on two consecutive
+        # pages and omit another, which was observed on a 1289-row table.
+        from rumbo_scraper.database.supabase import select_all
+        query = self._Query([{"id": index} for index in range(1500)])
+        select_all(query, size=1000)
+        self.assertEqual(query.ordered_by, "id")
