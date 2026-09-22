@@ -301,9 +301,9 @@ class PostgraduateTests(unittest.TestCase):
                             for _, _, _, strategy in POSTGRADUATE_SOURCES))
 
     def test_the_faculties_that_are_not_read_are_declared(self) -> None:
-        # Two of the thirteen publish their offer in a form this reader does
+        # One of the thirteen publishes its offer in a form this reader does
         # not cover, and silence would look the same as an empty catalogue.
-        self.assertEqual(len(POSTGRADUATES_NOT_READ), 2)
+        self.assertEqual(len(POSTGRADUATES_NOT_READ), 1)
         self.assertTrue(all(reason for reason in POSTGRADUATES_NOT_READ.values()))
         read = {faculty for faculty, _, _, _ in POSTGRADUATE_SOURCES}
         self.assertFalse(read & set(POSTGRADUATES_NOT_READ))
@@ -339,6 +339,25 @@ SECCIONES = """
 <h3>Maestrías</h3><ul><li>Administración Pública</li></ul>
 <h3>Diplomaturas de posgrado</h3><ul><li>Recursos Humanos</li></ul>
 """
+
+
+class NameTests(unittest.TestCase):
+    def test_a_person_joined_to_their_post_is_not_a_programme(self) -> None:
+        page = ('<ul><li>Emanuel Porcelli | Subsecretario de Maestrías</li>'
+                '<li>Maestría en Políticas Sociales</li></ul>')
+        self.assertEqual(
+            [row["nombre"] for row in read_postgraduates(page, "mezcla", "Maestría")],
+            ["Maestría en Políticas Sociales"],
+        )
+
+    def test_a_name_written_as_the_tail_of_its_heading_is_not_doubled(self) -> None:
+        # Medicina writes "en Biología Molecular Médica" under "Oferta de
+        # Maestrías", so the kind completes the name instead of repeating it.
+        page = '<div class="t">en Biología Molecular Médica</div>'
+        self.assertEqual(
+            read_postgraduates(page, "selector:div.t", "Maestría")[0]["nombre"],
+            "Maestría en Biología Molecular Médica",
+        )
 
 
 class MixedPageTests(unittest.TestCase):

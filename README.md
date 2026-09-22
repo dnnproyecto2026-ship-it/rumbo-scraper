@@ -336,11 +336,16 @@ más corta:
 | `parrafos` | los nombres son texto suelto; se descuentan las líneas que la facultad repite en sus otras páginas | FADU, Filosofía y Letras |
 | `mezcla` | una sola página para toda la oferta; sólo se leen las entradas que nombran su propio tipo | Farmacia, Sociales, Veterinarias |
 | `panel:<id>` | la oferta está en solapas; el tipo lo da la solapa | Odontología |
-| `selector:<css>` | bajo cada nombre hay un párrafo de director y contacto, así que el nombre se toma del elemento que lo contiene | Derecho |
+| `selector:<css>` | bajo cada nombre hay un párrafo de director y contacto, o el nombre vive en un acordeón, así que se toma del elemento que lo contiene | Derecho, Medicina |
 
 Una página con una sección por tipo se lee una vez por tipo, y el encabezado
 que abre el bloque tiene que ser el del tipo que se está pidiendo: si no, las
 diplomaturas entrarían como maestrías.
+
+Un nombre que ya dice su tipo lo conserva. Uno que empieza con "en" o "de" es
+la cola del encabezado de la página —Medicina escribe "en Biología Molecular
+Médica" bajo "Oferta de Maestrías"— así que el tipo lo completa en vez de
+repetirlo. El resto recibe el tipo que anuncia el índice.
 
 Un nombre que ya dice su tipo lo conserva; una página que lista nombres pelados
 les presta el tipo que anuncia, igual que el catálogo de la UTN. Las ocho

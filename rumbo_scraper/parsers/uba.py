@@ -513,7 +513,9 @@ _CUT_OFF = re.compile(
 
 
 def _usable(name: str) -> bool:
-    return (10 <= len(name) <= 120 and "@" not in name
+    # A pipe joins a person to their post -- "Emanuel Porcelli | Subsecretario
+    # de Maestrías" -- and never appears inside the name of a programme.
+    return (10 <= len(name) <= 120 and "@" not in name and "|" not in name
             and not _CUT_OFF.search(comparison_key(name))
             and name[:1].isalpha() and not name.endswith(":")
             and not _NOT_A_PROGRAMME.match(name)
@@ -669,7 +671,7 @@ def read_paragraph_page(html: str, chrome: set[str]) -> list[str]:
         name = _candidate(raw)
         if name in chrome or not _usable(name) or name in names:
             continue
-        if _KIND_HEADING.fullmatch(comparison_key(name)) or "|" in name:
+        if _KIND_HEADING.fullmatch(comparison_key(name)):
             continue
         if re.search(r"\d{4}|\bdel?\s+\d", name):
             continue
@@ -748,6 +750,15 @@ POSTGRADUATE_SOURCES: tuple[tuple[str, str, str, str], ...] = (
      "Especialización", "panel:curso-1"),
     ("Facultad de Odontología", "https://posgrado.odontologia.uba.ar/",
      "Maestría", "panel:curso-2"),
+    ("Facultad de Derecho",
+     "https://www.derecho.uba.ar/academica/posgrados/prog_actualizacion.php",
+     "Programa de Actualización", "selector:div.contenido_pagina-col2 > h3"),
+    ("Facultad de Ciencias Médicas",
+     "https://www.fmed.uba.ar/carreras-de-especialistas/ofertas-de-carreras-de-especializacion",
+     "Especialización", "selector:div.field--name-field-titulo"),
+    ("Facultad de Ciencias Médicas",
+     "https://www.fmed.uba.ar/index.php/maestrias/oferta-de-maestrias",
+     "Maestría", "selector:div.field--name-field-titulo"),
 )
 
 POSTGRADUATE_URLS = tuple(dict.fromkeys(url for _, url, _, _ in POSTGRADUATE_SOURCES))
@@ -755,8 +766,6 @@ POSTGRADUATE_URLS = tuple(dict.fromkeys(url for _, url, _, _ in POSTGRADUATE_SOU
 # The faculties whose postgraduate offer is published in a form this reader
 # does not cover, with what stands in the way of reading it.
 POSTGRADUATES_NOT_READ = {
-    "Facultad de Ciencias Médicas": "las páginas de oferta describen los "
-                                    "requisitos de ingreso y no listan los programas",
     "Facultad de Psicología": "la oferta se publica en un visor por año lectivo "
                               "que no entrega el listado en el HTML",
 }
@@ -764,12 +773,14 @@ POSTGRADUATES_NOT_READ = {
 # Sections of a faculty already covered above that publish a kind in a form
 # this reader does not cover; the faculty is read, this part of it is not.
 POSTGRADUATE_PARTS_NOT_READ = {
-    "Facultad de Derecho": "los programas de actualización y el doctorado usan "
-                           "una marca distinta de la de las maestrías",
+    "Facultad de Derecho": "el doctorado se describe en prosa y la facultad "
+                           "tiene uno solo, sin un nombre propio que leer",
     "Facultad de Ciencias Sociales": "los programas de actualización están "
                                      "mezclados con el calendario académico",
     "Facultad de Ciencias Económicas": "los cursos y los programas ejecutivos no "
                                        "son títulos del contrato",
+    "Facultad de Ciencias Médicas": "los doctorados y los cursos se describen en "
+                                    "prosa, sin un listado",
 }
 
 
@@ -817,7 +828,14 @@ def read_postgraduates(
     seen: set[str] = set()
     for name in names:
         stated = postgraduate_kind(name)
-        full = name if stated else f"{kind} en {name}"
+        if stated:
+            full = name
+        elif re.match(r"(?i)^(en|de|del)\s", name):
+            # One faculty writes the names as the tail of its own heading:
+            # "en Biología Molecular Médica" under "Oferta de Maestrías".
+            full = f"{kind} {name}"
+        else:
+            full = f"{kind} en {name}"
         if comparison_key(full) in seen:
             continue
         seen.add(comparison_key(full))
