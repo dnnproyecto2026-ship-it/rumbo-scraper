@@ -200,3 +200,38 @@ class SitemapTests(unittest.TestCase):
     def test_reads_every_location(self) -> None:
         xml = "<urlset><url><loc>https://a/</loc></url><url><loc>https://b/</loc></url></urlset>"
         self.assertEqual(sitemap_urls(xml), ["https://a/", "https://b/"])
+
+
+class PlanPdfTests(unittest.TestCase):
+    """The plan documents name each year in capitals and list subjects under it."""
+
+    def test_reads_the_years_and_the_subjects_under_them(self) -> None:
+        from rumbo_scraper.parsers.itba import _PDF_SECTION, _PDF_TRAILER, _PDF_YEAR
+        self.assertTrue(_PDF_YEAR.match("PRIMER AÑO"))
+        self.assertTrue(_PDF_YEAR.match("QUINTO AÑO"))
+        self.assertIsNone(_PDF_YEAR.match("Química General"))
+
+    def test_an_elective_heading_clears_the_year(self) -> None:
+        from rumbo_scraper.parsers.itba import _PDF_SECTION
+        for heading in ("Electivas", "Optativas", "Minors", "Orientaciones"):
+            self.assertTrue(_PDF_SECTION.match(heading), heading)
+        self.assertIsNone(_PDF_SECTION.match("Electrónica Digital"))
+
+    def test_the_closing_block_ends_the_plan(self) -> None:
+        from rumbo_scraper.parsers.itba import _PDF_TRAILER
+        for line in ("// INFO DE CONTACTO", "DURACIÓN TOTAL DE LA CARRERA: 5 AÑOS",
+                     "TÍTULO QUE SE EXPIDE: INGENIERO/A CIVIL",
+                     "Resolución de acreditación CONEAU"):
+            self.assertTrue(_PDF_TRAILER.search(line), line)
+        self.assertIsNone(_PDF_TRAILER.search("Mecánica de Fluidos"))
+
+    def test_layout_leftovers_are_not_subjects(self) -> None:
+        from rumbo_scraper.parsers.itba import _PDF_NOISE
+        for line in ("//////////", "-----", "Primer cuatrimestre Segundo cuatrimestre"):
+            self.assertTrue(_PDF_NOISE.match(line), line)
+        self.assertIsNone(_PDF_NOISE.match("Análisis Matemático I"))
+
+    def test_an_unreadable_document_yields_nothing(self) -> None:
+        from rumbo_scraper.parsers.itba import parse_plan_pdf, parse_plan_pdf_degree
+        self.assertEqual(parse_plan_pdf(b"no es un pdf", "X"), [])
+        self.assertIsNone(parse_plan_pdf_degree(b""))

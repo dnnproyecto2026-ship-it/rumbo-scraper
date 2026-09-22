@@ -379,9 +379,98 @@ def parse_teacher_page(html: str, url: str) -> dict[str, Any] | None:
     }
 
 
+# The plan PDFs name each year in capitals and list the subjects under it in
+# title case, so the case of a line says what it is. Collection starts at the
+# first year heading, which leaves the cover -- "PLAN DE ESTUDIOS", the name of
+# the degree -- out of the subjects.
+_PDF_YEAR = re.compile(
+    r"^(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\b", re.I
+)
+_PDF_YEARS = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+
+
+# The plan closes with a block of facts about the degree. It is where the
+# subjects end, and where the awarded title is stated.
+_PDF_TRAILER = re.compile(
+    r"INFO DE CONTACTO|DURACI[ÓO]N TOTAL|T[ÍI]TULO QUE SE EXPIDE|MODALIDAD\s|"
+    r"Resoluci[óo]n de acreditaci[óo]n|MINORS",
+    re.I,
+)
+_PDF_DEGREE = re.compile(r"T[ÍI]TULO QUE SE EXPIDE\s*:\s*([^\n]{3,80})", re.I)
+# These headings open a list that belongs to the plan but to no single year,
+# so they clear the year instead of leaving the electives filed under the last
+# one the document named.
+_PDF_SECTION = re.compile(r"^(electivas?|optativas?|minors?|orientaciones?)\b", re.I)
+# Layout leftovers of the chart: rules and the header of its two columns.
+_PDF_NOISE = re.compile(r"^[^\wÁÉÍÓÚÑáéíóúñ]+$|^(primer|segundo)\s+cuatrimestre", re.I)
+
+
+def pdf_text(pdf_bytes: bytes) -> str:
+    """Return the text of a PDF, or nothing when it cannot be read."""
+    from io import BytesIO
+
+    from pypdf import PdfReader
+
+    try:
+        reader = PdfReader(BytesIO(pdf_bytes))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    except Exception:
+        return ""
+
+
+def parse_plan_pdf_degree(pdf_bytes: bytes) -> str | None:
+    """Read the degree the plan states it awards."""
+    match = _PDF_DEGREE.search(pdf_text(pdf_bytes))
+    return clean_text(match.group(1)).rstrip(".,;") if match else None
+
+
+def parse_plan_pdf(pdf_bytes: bytes, programme: str) -> list[dict[str, Any]]:
+    """Read the subjects of a plan published as a PDF."""
+    text = pdf_text(pdf_bytes)
+    if not text:
+        return []
+
+    subjects: list[dict[str, Any]] = []
+    seen: set[tuple[str, int | None]] = set()
+    year: int | None = None
+    started = False
+    for raw in text.splitlines():
+        line = clean_text(raw)
+        if not line:
+            continue
+        if _PDF_TRAILER.search(line):
+            break
+        if _PDF_NOISE.match(line):
+            continue
+        heading = _PDF_YEAR.match(line)
+        if heading:
+            year = _PDF_YEARS.get(comparison_key(heading.group(1)))
+            started = True
+            continue
+        if _PDF_SECTION.match(line):
+            year = None
+            continue
+        # Before the first year heading everything belongs to the cover, and a
+        # line written wholly in capitals is a section label, not a subject.
+        if not started or line.isupper() or len(line) < 3:
+            continue
+        identity = (comparison_key(line), year)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        subjects.append(blank_record(
+            "materias", universidad_nombre=UNIVERSITY,
+            carrera_o_programa=programme, nombre_materia=line,
+            anio_cursada=year, turno=None, area_tematica=None,
+            descripcion_breve=None, regimen=None, carga_horaria_semanal=None,
+        ))
+    return subjects
+
+
 def build_dataset(
     programmes: tuple[ProgrammeRef, ...],
     programme_pages: dict[str, str],
+    plan_documents: dict[str, bytes] | None = None,
     campuses_html: str = "",
     authorities_html: str = "",
     teacher_pages: dict[str, str] | None = None,
@@ -431,6 +520,13 @@ def build_dataset(
         details.append(detail)
         if ref.level == "Grado":
             subjects = parse_study_plan(html, ref.name)
+            # The plan document states the degree the career awards, whether or
+            # not the page also lists the subjects.
+            document = (plan_documents or {}).get(detail["plan_url"] or "", b"")
+            if document:
+                detail["awarded_degree"] = parse_plan_pdf_degree(document)
+                if not subjects:
+                    subjects = parse_plan_pdf(document, ref.name)
             data["materias"].extend(subjects)
             data["carreras"].append(blank_record(
                 "carreras", universidad_nombre=UNIVERSITY, facultad_nombre=None,
@@ -438,7 +534,8 @@ def build_dataset(
                 nivel="Grado",
                 # The pages state neither the awarded degree nor whether an
                 # intermediate one exists.
-                titulo_otorgado=None, tiene_titulo_intermedio=None,
+                titulo_otorgado=detail.get("awarded_degree"),
+                tiene_titulo_intermedio=None,
                 duracion_anios=duration_years(detail["duration"]),
                 descripcion_breve=description,
                 cantidad_materias_total=len(subjects) or None,

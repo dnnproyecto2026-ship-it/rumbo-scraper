@@ -17,6 +17,7 @@ from rumbo_scraper.parsers.itba import (
     AUTHORITIES_URL, BASE_URL, CAMPUSES_URL, TEACHER_SITEMAP_URL,
     build_dataset, discover_programmes, sitemap_urls,
 )
+from rumbo_scraper.parsers.itba import _plan_url as plan_url
 from rumbo_scraper.validators.itba import validate_dataset
 
 DEFAULT_OUTPUT = Path("data/itba_completo.json")
@@ -57,6 +58,16 @@ def _get(client: httpx.Client, url: str, errors: list[dict[str, str]]) -> str:
         return ""
 
 
+def _get_bytes(client: httpx.Client, url: str, errors: list[dict[str, str]]) -> bytes:
+    try:
+        response = client.get(url)
+        response.raise_for_status()
+        return response.content
+    except httpx.HTTPError as exc:
+        errors.append({"url": url, "error": str(exc)})
+        return b""
+
+
 def run(output: Path = DEFAULT_OUTPUT, teacher_limit: int | None = None) -> dict[str, Any]:
     errors: list[dict[str, str]] = []
     menu = asyncio.run(_menu_links(errors))
@@ -65,6 +76,13 @@ def run(output: Path = DEFAULT_OUTPUT, teacher_limit: int | None = None) -> dict
     with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True,
                       timeout=45) as client:
         programme_pages = {ref.url: _get(client, ref.url, errors) for ref in programmes}
+        # Most degrees publish their plan only as a document.
+        plan_documents: dict[str, bytes] = {}
+        for html in programme_pages.values():
+            url = plan_url(html) if html else None
+            if url and url not in plan_documents:
+                plan_documents[url] = _get_bytes(client, url, errors)
+
         campuses_html = _get(client, CAMPUSES_URL, errors)
         authorities_html = _get(client, AUTHORITIES_URL, errors)
         teacher_urls = sitemap_urls(_get(client, TEACHER_SITEMAP_URL, errors))
@@ -74,6 +92,7 @@ def run(output: Path = DEFAULT_OUTPUT, teacher_limit: int | None = None) -> dict
 
     dataset = build_dataset(
         programmes, {url: html for url, html in programme_pages.items() if html},
+        {url: data for url, data in plan_documents.items() if data},
         campuses_html, authorities_html,
         {url: html for url, html in teacher_pages.items() if html}, errors,
     )

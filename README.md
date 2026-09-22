@@ -175,9 +175,11 @@ menú, que se renderiza con JavaScript —la página de una carrera se titula
 "Civil", y el menú publica "Ing. Civil"—, así que el descubrimiento usa un
 navegador y el resto del recorrido va por HTTP directo.
 
-Once de las trece carreras publican su plan sólo en PDF. Como el proyecto no
-tiene pipeline de PDF, esas carreras quedan sin materias y el documento se
-registra como recurso; `control_calidad.carreras_sin_plan_publicado` las lista.
+Once de las trece carreras publican su plan sólo en PDF, así que el scraper lo
+descarga y lo lee con `pypdf`. Los documentos nombran cada año en mayúsculas y
+listan las materias debajo en Title Case; una sección de electivas deja la
+materia sin año, porque el documento no se lo asigna. El mismo PDF publica el
+título que otorga la carrera, que la página no dice.
 
 ## Datos pendientes
 
