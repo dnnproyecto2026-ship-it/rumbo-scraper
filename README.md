@@ -177,6 +177,22 @@ pendientes con:
 python -m rumbo_scraper.database.audit_completeness --apply
 ```
 
+## Personas duplicadas por grafía
+
+`personas` es única por el nombre exacto, mientras que los loaders identifican a
+una persona con `comparison_key`, que ignora acentos y mayúsculas. Cuando un
+loader no podía ver una fila existente, insertaba a la misma persona con la
+grafía de su propia fuente. Para revisarlas y fusionarlas:
+
+```bash
+python -m rumbo_scraper.database.merge_people
+```
+
+Muestra qué fila se conserva y cuál se elimina; escribe sólo con `--apply`.
+La fila que sobrevive se decide por la calidad de la evidencia —una página de la
+universidad gana sobre el catálogo de terceros—, nunca por la grafía: hay casos
+en que el nombre correcto es el que no lleva acento.
+
 ## Manifiesto y baseline entre corridas
 
 Los archivos de `data/` no se versionan, así que los conteos de una corrida sólo
