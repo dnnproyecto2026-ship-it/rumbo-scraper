@@ -161,6 +161,24 @@ a partir de los horarios efectivamente publicados.
 
 El esquema SQL no se guarda en este repositorio.
 
+## Extracción completa: ITBA
+
+```bash
+python -m rumbo_scraper.spiders.itba
+python -m rumbo_scraper.database.load_itba
+python -m rumbo_scraper.database.load_itba --apply
+```
+
+El sitio es WordPress: las páginas son HTML plano y el sitemap enumera los
+programas y las fichas de docentes. Los nombres completos sólo aparecen en el
+menú, que se renderiza con JavaScript —la página de una carrera se titula
+"Civil", y el menú publica "Ing. Civil"—, así que el descubrimiento usa un
+navegador y el resto del recorrido va por HTTP directo.
+
+Once de las trece carreras publican su plan sólo en PDF. Como el proyecto no
+tiene pipeline de PDF, esas carreras quedan sin materias y el documento se
+registra como recurso; `control_calidad.carreras_sin_plan_publicado` las lista.
+
 ## Datos pendientes
 
 La auditoría genera un archivo con cada campo importante que sigue vacío y la
