@@ -2162,8 +2162,29 @@ Esto es diseño futuro. Las migraciones SQL pertenecen al repositorio/flujo de b
 > - Apareció una novena unidad académica, Departamento de Matemática y Ciencias,
 >   que el catálogo de grado no cubría.
 >
-> **Próximo paso ahora:** auditoría parametrizada por universidad (Etapa A,
-> punto 4), que sigue siendo exclusiva de UTDT.
+> **Cargado en Supabase el 22-09-2026:** 18 carreras, 31 posgrados, 9 unidades,
+> 4 sedes, 31 ofertas y 1172 materias (681 de grado, 491 de posgrado). Diez
+> posgrados quedan fuera de la base porque `tipo_posgrado` es NOT NULL sobre un
+> enum de cuatro valores y UdeSA no publica el tipo de MBA, la familia
+> "Master in ...", Profesorado Universitario ni Programa en Cultura Brasileña.
+> Están en el JSON y el loader los lista al terminar.
+>
+> **P0 nuevo, fuera de este repo:** permitir un posgrado sin tipo en el esquema
+> compartido, ya sea con `tipo_posgrado` nullable o con un valor del enum para
+> lo no clasificado. Hasta entonces esos diez programas y sus 102 materias no
+> son visibles para la app.
+>
+> **Defecto encontrado y corregido:** los loaders leían sus filas existentes con
+> un `select` sin paginar, y PostgREST corta en 1000 filas sin avisar. Al cruzar
+> UdeSA ese umbral, la sincronización dio por inexistentes las filas ocultas y
+> las insertó de nuevo: 1344 filas donde debía haber 1172. Afectaba también a
+> `personas` de UTDT, que ya tiene 1475 filas contra 1466 identidades locales, y
+> es la explicación más probable de esas nueve filas sin origen que la sección 1
+> no podía justificar. `select_all` en `database/supabase.py` pagina y ahora se
+> usa en materias, personas y comisiones.
+>
+> **Próximo paso ahora:** reconciliar `personas` de UTDT reejecutando el
+> catálogo con la lectura paginada, y auditoría parametrizada por universidad.
 
 El plan original era **completar posgrados de UdeSA de manera determinística**, porque:
 

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 from typing import Any
 
+from rumbo_scraper.database.supabase import select_all
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
 
 
@@ -153,9 +154,9 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         catalog_by_equivalent_name.setdefault(
             _equivalent_subject_key(name), []
         ).append(course_ids[code])
-    plan_subjects = _data(
+    plan_subjects = select_all(
         client.table("materias").select("id,carrera_id,nombre_materia,anio_cursada")
-        .eq("universidad_id", university_id).execute()
+        .eq("universidad_id", university_id)
     )
     subject_links: list[dict[str, Any]] = []
     for subject in plan_subjects:
@@ -194,10 +195,10 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
     existing_commissions: list[str] = []
     for course_id_chunk in _chunks(list(course_ids.values())):
-        rows = _data(
+        rows = select_all(
             client.table("comisiones_materia").select("id")
             .in_("materia_catalogo_id", course_id_chunk)
-            .eq("anio", period["anio"]).eq("semestre", period["semestre"]).execute()
+            .eq("anio", period["anio"]).eq("semestre", period["semestre"])
         )
         existing_commissions.extend(row["id"] for row in rows)
     for id_chunk in _chunks(existing_commissions):
@@ -282,9 +283,11 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     for chunk in _chunks(shift_rows):
         _data(client.table("turnos_anio").insert(chunk).execute())
 
-    people = _data(
+    # UdeSA and UTDT both hold more than a thousand people, so this read has to
+    # be paginated or the loader creates a second copy of everyone past the cap.
+    people = select_all(
         client.table("personas").select("id,nombre_completo")
-        .eq("universidad_id", university_id).execute()
+        .eq("universidad_id", university_id)
     )
     person_ids = {comparison_key(row["nombre_completo"]): row["id"] for row in people}
     missing_people: dict[str, str] = {}

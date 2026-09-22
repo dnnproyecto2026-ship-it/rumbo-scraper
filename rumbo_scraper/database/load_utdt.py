@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from rumbo_scraper.database.supabase import select_all
 from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.validators.utdt import validate_dataset
 
@@ -100,10 +101,10 @@ def _sync_subjects(
     client: Any, university_id: str, rows: list[dict[str, Any]]
 ) -> int:
     """Synchronize subjects in batches while preserving catalogue-linked IDs."""
-    existing = _data(
+    existing = select_all(
         client.table("materias")
         .select("id,carrera_id,posgrado_id,nombre_materia,anio_cursada")
-        .eq("universidad_id", university_id).execute()
+        .eq("universidad_id", university_id)
     )
     available: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
     for row in existing:

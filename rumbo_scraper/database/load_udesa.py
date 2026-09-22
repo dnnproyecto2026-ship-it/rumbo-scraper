@@ -26,9 +26,29 @@ def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
     return dataset
 
 
+def loadable(dataset: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Split what the schema accepts from what it rejects.
+
+    A postgraduate without a published type cannot be written, because the
+    column is NOT NULL over a four-value enum, and its subjects have no parent
+    to hang from.
+    """
+    data = dataset["datos"]
+    programmes = [row for row in data["posgrados"] if row["tipo_posgrado"]]
+    parents = {row["nombre_carrera"] for row in data["carreras"]}
+    parents |= {row["nombre_programa"] for row in programmes}
+    subjects = [row for row in data["materias"] if row["carrera_o_programa"] in parents]
+    return programmes, subjects
+
+
 def preview(dataset: dict[str, Any]) -> dict[str, int]:
+    """Count what a load would actually write, not what the file holds."""
     validate_dataset(dataset)
-    return {section: len(dataset["datos"][section]) for section in CORE_SECTIONS}
+    programmes, subjects = loadable(dataset)
+    counts = {section: len(dataset["datos"][section]) for section in CORE_SECTIONS}
+    counts["posgrados"] = len(programmes)
+    counts["materias"] = len(subjects)
+    return counts
 
 
 def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[str, int]:
@@ -125,7 +145,18 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     counts["areas_tematicas"] = len(area_ids)
 
     postgraduate_ids: dict[str, str] = {}
+    # tipo_posgrado is NOT NULL and its enum accepts only Diplomatura,
+    # Especialización, Maestría and Doctorado. UdeSA publishes no type for ten
+    # programmes -- MBA, the "Master in ..." family, Profesorado Universitario,
+    # Programa en Cultura Brasileña -- and inventing one would state something
+    # the university does not. They stay in the JSON and out of the database
+    # until the shared schema allows an unclassified programme.
+    skipped_postgraduates = [
+        row["nombre_programa"] for row in data["posgrados"] if not row["tipo_posgrado"]
+    ]
     for row in data["posgrados"]:
+        if not row["tipo_posgrado"]:
+            continue
         saved = _upsert_one(client, "posgrados", {
             "universidad_id": university_id,
             "facultad_id": faculty_ids.get(str(_faculty_name(row["facultad_nombre"]))),
@@ -145,9 +176,11 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         }, "universidad_id,nombre_programa")
         postgraduate_ids[row["nombre_programa"]] = saved["id"]
     counts["posgrados"] = len(postgraduate_ids)
+    counts["posgrados_omitidos_sin_tipo"] = len(skipped_postgraduates)
 
     # carrera_o_programa is polymorphic: the parent is a degree or a
     # postgraduate programme, never both.
+    loadable_parents = set(career_ids) | set(postgraduate_ids)
     subjects = [{
         "universidad_id": university_id,
         "carrera_id": career_ids.get(row["carrera_o_programa"]),
@@ -158,7 +191,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "descripcion_breve": row["descripcion_breve"],
         "regimen": row["regimen"],
         "carga_horaria_semanal": row["carga_horaria_semanal"],
-    } for row in data["materias"]]
+    } for row in data["materias"] if row["carrera_o_programa"] in loadable_parents]
     counts["materias"] = _sync_subjects(client, university_id, subjects)
     return counts
 
@@ -173,6 +206,12 @@ def main() -> None:
     print("CARGADO" if args.apply else "VALIDADO (sin escribir)")
     for section, count in counts.items():
         print(f"- {section}: {count}")
+    untyped = [row["nombre_programa"] for row in dataset["datos"]["posgrados"]
+               if not row["tipo_posgrado"]]
+    if untyped:
+        print("\nSin cargar porque la fuente no publica su tipo y el esquema lo exige:")
+        for name in untyped:
+            print(f"- {name}")
 
 
 if __name__ == "__main__":

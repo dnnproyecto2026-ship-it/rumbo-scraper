@@ -42,3 +42,44 @@ class LoadUTDTTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SelectAllTests(unittest.TestCase):
+    """PostgREST caps an unbounded select; the loader must read past it."""
+
+    class _Query:
+        def __init__(self, rows: list[dict[str, object]]) -> None:
+            self.rows = rows
+            self.ranges: list[tuple[int, int]] = []
+            self._slice: list[dict[str, object]] = []
+
+        def range(self, start: int, end: int) -> "SelectAllTests._Query":
+            self.ranges.append((start, end))
+            self._slice = self.rows[start:end + 1]
+            return self
+
+        def execute(self) -> object:
+            return type("Response", (), {"data": self._slice})()
+
+    def test_reads_every_page_until_a_short_one(self) -> None:
+        from rumbo_scraper.database.supabase import select_all
+        query = self._Query([{"id": index} for index in range(2500)])
+        rows = select_all(query, size=1000)
+        self.assertEqual(len(rows), 2500)
+        self.assertEqual(query.ranges, [(0, 999), (1000, 1999), (2000, 2999)])
+
+    def test_a_single_short_page_stops_immediately(self) -> None:
+        from rumbo_scraper.database.supabase import select_all
+        query = self._Query([{"id": 1}])
+        self.assertEqual(len(select_all(query, size=1000)), 1)
+        self.assertEqual(query.ranges, [(0, 999)])
+
+    def test_an_exact_multiple_still_terminates(self) -> None:
+        from rumbo_scraper.database.supabase import select_all
+        query = self._Query([{"id": index} for index in range(1000)])
+        self.assertEqual(len(select_all(query, size=1000)), 1000)
+        self.assertEqual(query.ranges, [(0, 999), (1000, 1999)])
+
+    def test_an_empty_table_returns_nothing(self) -> None:
+        from rumbo_scraper.database.supabase import select_all
+        self.assertEqual(select_all(self._Query([]), size=1000), [])
