@@ -296,6 +296,31 @@ la materia queda con año nulo y el plan se reporta en
 enum del contrato, así que quedan en el artefacto con `tipo_posgrado` nulo y
 fuera de la base, reportados.
 
+## Extracción completa: Universidad de Buenos Aires
+
+```bash
+python -m rumbo_scraper.spiders.uba
+python -m rumbo_scraper.database.load_uba
+python -m rumbo_scraper.database.load_uba --apply
+```
+
+La UBA publica su oferta de forma centralizada y su detalle en ningún lado:
+`uba.ar/facultades` enumera las trece facultades, y la página de cada una trae
+la dirección y el teléfono de sus sedes y la lista de carreras que dicta, con un
+enlace al sitio de esa facultad. El plan, la duración y el título que expide
+cada carrera viven en trece sitios distintos, así que este adapter lee lo que el
+catálogo central publica y **declara** lo demás en vez de inventarlo.
+
+Dos detalles del origen que el lector tiene en cuenta: la lista de carreras está
+escrita con un ancla que se autocierra —`<a ... class=""/>Nombre`— así que el
+nombre que sobrevive al parseo es el del atributo `alt`; y dos facultades
+publican dos edificios sin decir cuál dicta cada carrera, así que esas catorce
+ofertas quedan sin sede en vez de asignarles una.
+
+Las autoridades que publica el sitio son las del Rectorado, no las de una
+facultad, y `autoridades.facultad_id` es NOT NULL, así que quedan en el
+artefacto y fuera de la base.
+
 ## Bitácora de cobertura
 
 ```bash

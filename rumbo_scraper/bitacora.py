@@ -29,6 +29,7 @@ SOURCES: tuple[tuple[str, str, str], ...] = (
     ("Universidad Argentina de la Empresa", "uade_completo", "uade_pendientes"),
     ("Universidad de Belgrano", "ub_completo", "ub_pendientes"),
     ("Universidad Tecnológica Nacional", "utn_completo", "utn_pendientes"),
+    ("Universidad de Buenos Aires", "uba_completo", "uba_pendientes"),
 )
 
 # The sections worth reporting, in the order a reader cares about them.

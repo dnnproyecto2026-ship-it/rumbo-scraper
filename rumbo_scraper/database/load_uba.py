@@ -1,4 +1,4 @@
-"""Validate and load the UTN dataset into Supabase."""
+"""Validate and load the Universidad de Buenos Aires dataset into Supabase."""
 
 from __future__ import annotations
 
@@ -7,20 +7,14 @@ import json
 from pathlib import Path
 from typing import Any
 
-from rumbo_scraper.database.load_utdt import (
-    _boolean, _insert_chunks, _sync_subjects, _upsert_one,
-)
-from rumbo_scraper.validators.utn import validate_dataset
+from rumbo_scraper.database.load_utdt import _boolean, _insert_chunks, _upsert_one
+from rumbo_scraper.database.load_utn import SCHEMA_CHANNELS
+from rumbo_scraper.validators.uba import validate_dataset
 
-DEFAULT_INPUT = Path("data/utn_completo.json")
-# The values contactos.canal accepts; a telephone is not one of them.
-SCHEMA_CHANNELS = frozenset({
-    "Email", "Sitio Web", "Instagram", "Facebook", "LinkedIn", "YouTube",
-    "TikTok", "Twitter", "WhatsApp", "Otro",
-})
+DEFAULT_INPUT = Path("data/uba_completo.json")
 CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
-    "ofertas", "materias", "posgrados", "autoridades", "redes_contacto",
+    "ofertas", "autoridades", "redes_contacto",
 )
 
 
@@ -30,27 +24,16 @@ def load_file(path: Path = DEFAULT_INPUT) -> dict[str, Any]:
     return dataset
 
 
-def loadable(dataset: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Split what the shared schema accepts from what it rejects.
-
-    A postgraduate course has no kind in the contract's enum and the column is
-    NOT NULL, so those rows stay in the dataset and out of the database.
-    """
-    data = dataset["datos"]
-    programmes = [row for row in data["posgrados"] if row["tipo_posgrado"]]
-    parents = {row["nombre_carrera"] for row in data["carreras"]}
-    parents |= {row["nombre_programa"] for row in programmes}
-    subjects = [row for row in data["materias"] if row["carrera_o_programa"] in parents]
-    return programmes, subjects
-
-
 def preview(dataset: dict[str, Any]) -> dict[str, int]:
     validate_dataset(dataset)
-    programmes, subjects = loadable(dataset)
-    counts = {section: len(dataset["datos"][section]) for section in CORE_SECTIONS}
-    counts["posgrados"] = len(programmes)
-    counts["posgrados_omitidos_sin_tipo"] = len(dataset["datos"]["posgrados"]) - len(programmes)
-    counts["materias"] = len(subjects)
+    data = dataset["datos"]
+    counts = {section: len(data[section]) for section in CORE_SECTIONS}
+    counts["ofertas_sin_sede_publicada"] = sum(
+        1 for row in data["ofertas"] if not row["sede"]
+    )
+    counts["autoridades_sin_facultad"] = sum(
+        1 for row in data["autoridades"] if not row["facultad_nombre"]
+    )
     return counts
 
 
@@ -65,7 +48,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     locality_ids: dict[str, str] = {}
     for row in data["localidades"]:
         saved = _upsert_one(client, "localidades", row, "nombre_localidad,provincia")
-        locality_ids[f"{row['nombre_localidad']} — {row['provincia']}"] = saved["id"]
+        locality_ids[row["nombre_localidad"]] = saved["id"]
     counts["localidades"] = len(locality_ids)
 
     university_id = _upsert_one(
@@ -75,11 +58,9 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
     campus_ids: dict[str, str] = {}
     for row in data["sedes"]:
-        locality = next((key for key in locality_ids
-                         if key.startswith(f"{row['localidad']} — ")), None)
         saved = _upsert_one(client, "sedes", {
             "universidad_id": university_id, "nombre_sede": row["nombre_sede"],
-            "localidad_id": locality_ids.get(locality or ""),
+            "localidad_id": locality_ids.get(str(row["localidad"])),
             "calle": row["calle"], "numero": row["numero"],
             "tipo_sede": row["tipo_sede"],
         }, "universidad_id,nombre_sede")
@@ -112,8 +93,8 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         career_ids[row["nombre_carrera"]] = saved["id"]
     counts["carreras"] = len(career_ids)
 
-    # The UTN is the first source that states which regional faculty teaches
-    # each career, so the offers carry the campus the schema requires.
+    # Two faculties publish two buildings and do not say which one teaches
+    # each career; ofertas_academicas.sede_id is NOT NULL, so those stay out.
     offers = [row for row in data["ofertas"]
               if campus_ids.get(str(row["sede"])) and career_ids.get(row["carrera_nombre"])]
     counts["ofertas_sin_sede_publicada"] = len(data["ofertas"]) - len(offers)
@@ -130,59 +111,16 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         }, "carrera_id,sede_id,modalidad")
     counts["ofertas"] = len(offers)
 
-    postgraduate_ids: dict[str, str] = {}
-    programmes, subjects_rows = loadable(dataset)
-    for row in programmes:
-        saved = _upsert_one(client, "posgrados", {
-            "universidad_id": university_id,
-            "facultad_id": faculty_ids.get(str(row["facultad_nombre"])),
-            "nombre_programa": row["nombre_programa"],
-            "tipo_posgrado": row["tipo_posgrado"],
-            "titulo_otorgado": row["titulo_otorgado"],
-            "sede_id": campus_ids.get(str(row["sede"])),
-            "modalidad": row["modalidad"], "duracion_meses": row["duracion_meses"],
-            "requiere_tesis_trabajo_final": _boolean(row["requiere_tesis_trabajo_final"]),
-            "requisito_titulo_previo": row["requisito_titulo_previo"],
-            "cohorte_inicio": row["cohorte_inicio"],
-            "costo_total_programa": row["costo_total_programa"],
-            "moneda": row["moneda"], "descripcion_breve": row["descripcion_breve"],
-            "url_oficial": row["url_oficial"],
-        }, "universidad_id,nombre_programa")
-        postgraduate_ids[row["nombre_programa"]] = saved["id"]
-    counts["posgrados"] = len(postgraduate_ids)
-    counts["posgrados_omitidos_sin_tipo"] = len(data["posgrados"]) - len(programmes)
-
-    counts["materias"] = _sync_subjects(client, university_id, [{
-        "universidad_id": university_id,
-        "carrera_id": career_ids.get(row["carrera_o_programa"]),
-        "posgrado_id": postgraduate_ids.get(row["carrera_o_programa"]),
-        "nombre_materia": row["nombre_materia"], "anio_cursada": row["anio_cursada"],
-        "turno": row["turno"], "area_tematica_id": None,
-        "descripcion_breve": row["descripcion_breve"], "regimen": row["regimen"],
-        "carga_horaria_semanal": row["carga_horaria_semanal"],
-    } for row in subjects_rows])
-
-    # Neither table has a natural unique constraint in the current schema, so
-    # the rows of this university are replaced instead of merged.
     client.table("contactos").delete().eq("universidad_id", university_id).execute()
     if faculty_ids:
         client.table("autoridades").delete().in_(
             "facultad_id", list(faculty_ids.values())
         ).execute()
 
-    # The UTN is the first source that names the dean of each regional
-    # faculty, so autoridades.facultad_id -- which is NOT NULL -- can be filled.
-    authorities = [row for row in data["autoridades"]
-                   if faculty_ids.get(str(row["facultad_nombre"]))]
-    counts["autoridades"] = _insert_chunks(client, "autoridades", [{
-        "facultad_id": faculty_ids[str(row["facultad_nombre"])],
-        "carrera_id": None, "cargo": row["cargo"], "tipo": row["tipo"],
-        "nombre_autoridad": row["nombre_autoridad"],
-    } for row in authorities])
-    counts["autoridades_sin_facultad"] = len(data["autoridades"]) - len(authorities)
+    # The page publishes the authorities of the Rectorado, not of a faculty,
+    # and autoridades.facultad_id is NOT NULL, so they have no row.
+    counts["autoridades_sin_facultad"] = len(data["autoridades"])
 
-    # contactos.canal is an enum of the channels the schema knows; it has no
-    # value for a telephone number, so those rows stay in the artifact.
     contacts = [row for row in data["redes_contacto"] if row["canal"] in SCHEMA_CHANNELS]
     counts["redes_contacto"] = _insert_chunks(client, "contactos", [{
         "universidad_id": university_id,
@@ -195,7 +133,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Cargar el dataset de la UTN")
+    parser = argparse.ArgumentParser(description="Cargar el dataset de la UBA")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
     args = parser.parse_args()
