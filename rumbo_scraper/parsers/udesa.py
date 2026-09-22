@@ -20,6 +20,21 @@ SHORT_NAME = "UdeSA"
 BASE_URL = "https://udesa.edu.ar"
 SOURCE_URL = f"{BASE_URL}/estudia-en-udesa"
 CAMPUSES_URL = "https://exed.udesa.edu.ar/sedes/"
+POSTGRADUATE_INDEX_URL = f"{BASE_URL}/posgrados"
+
+# The official index classifies each programme by the first word of its name.
+# Anything outside this vocabulary -- an MBA, a "Master in ...", a
+# "Profesorado Universitario" -- keeps a null type instead of being forced
+# into an enum the source never claimed.
+POSTGRADUATE_KINDS = {
+    "diplomatura": "Diplomatura",
+    "especializacion": "Especialización",
+    "maestria": "Maestría",
+    "doctorado": "Doctorado",
+}
+
+MONTHS_PER_UNIT = {"ano": 12, "anos": 12, "semestre": 6, "semestres": 6,
+                   "cuatrimestre": 4, "cuatrimestres": 4, "mes": 1, "meses": 1}
 
 
 @dataclass(frozen=True)
@@ -52,6 +67,15 @@ CAREERS = (
     CareerConfig("Profesorado en Educación Primaria", "Educación", "Escuela", "/escuela-de-educacion/profesorado-en-educacion-primaria"),
     CareerConfig("Licenciatura en Relaciones Internacionales", "Ciencias Sociales", "Departamento", "/departamento-de-ciencias-sociales/licenciatura-en-relaciones-internacionales"),
 )
+
+
+@dataclass(frozen=True)
+class PostgraduateRef:
+    """A programme as the official postgraduate index publishes it."""
+
+    name: str
+    url: str
+    department: str | None
 
 
 def _plain(value: Any) -> str | None:
@@ -87,6 +111,163 @@ def discover_plan_url(page: dict[str, Any], career_url: str) -> str | None:
             if comparison_key(item.get("undergraduatePageType")) == "plan de estudios":
                 return urljoin(career_url, str(item.get("url") or ""))
     return None
+
+
+def _entity_lists(payload: Any, key: str) -> list[dict[str, Any]]:
+    """Collect every EntityList item stored under ``key``, at any depth.
+
+    The index renders its programmes inside a numbered module, and the module
+    order is presentation, not data. Walking the document keeps the discovery
+    working when the page is rearranged.
+    """
+    found: list[dict[str, Any]] = []
+    if isinstance(payload, dict):
+        for name, value in payload.items():
+            if name == key and isinstance(value, dict):
+                found.extend(item for item in value.get("items") or [] if isinstance(item, dict))
+            else:
+                found.extend(_entity_lists(value, key))
+    elif isinstance(payload, list):
+        for item in payload:
+            found.extend(_entity_lists(item, key))
+    return found
+
+
+def discover_postgraduates(index_page: dict[str, Any]) -> tuple[PostgraduateRef, ...]:
+    """Enumerate the programmes the official index classifies as postgraduate.
+
+    Only ``Graduate`` entities count. Nothing is inferred from the URL shape,
+    so a marketing page that happens to live under the same path is ignored.
+    """
+    refs: list[PostgraduateRef] = []
+    seen: set[str] = set()
+    for item in _entity_lists(index_page, "listDegreesModule29"):
+        if item.get("__typename") != "Graduate":
+            continue
+        name = _plain(item.get("name"))
+        url = str(item.get("url") or "").strip()
+        if not name or not url:
+            continue
+        absolute = urljoin(BASE_URL, url)
+        if absolute in seen:
+            continue
+        seen.add(absolute)
+        departments = item.get("associatedDepartment") or []
+        department = _plain(departments[0].get("name")) if departments else None
+        refs.append(PostgraduateRef(name=name, url=absolute, department=department))
+    return tuple(sorted(refs, key=lambda ref: comparison_key(ref.name)))
+
+
+def postgraduate_kind(name: str) -> str | None:
+    """Classify by the leading word the university itself publishes."""
+    first = comparison_key(name).split(" ", 1)[0]
+    return POSTGRADUATE_KINDS.get(first)
+
+
+def duration_months(value: str | None) -> int | None:
+    """Convert a published duration such as "1 año" or "3 cuatrimestres"."""
+    match = re.search(
+        r"(\d+(?:[,.]\d+)?)\s*(anos?|semestres?|cuatrimestres?|meses|mes)\b",
+        comparison_key(value or ""),
+    )
+    if not match:
+        return None
+    amount = float(match.group(1).replace(",", "."))
+    return round(amount * MONTHS_PER_UNIT[match.group(2)])
+
+
+# The published cell is free text: "Presencial", "Online o Híbrida",
+# "Flexible: presencial + online". The contract field is an enum, so only an
+# unambiguous label is mapped and anything else stays null; the literal text is
+# preserved in detalle_posgrados.
+def postgraduate_modality(value: str | None) -> str | None:
+    key = comparison_key(value)
+    if not key:
+        return None
+    in_person = bool(re.search(r"presencial", key))
+    remote = bool(re.search(r"online|virtual|a distancia|distancia", key))
+    if re.search(r"hibrid", key) or (in_person and remote):
+        return "Híbrida"
+    if in_person:
+        return "Presencial"
+    if remote:
+        return "Virtual"
+    return None
+
+
+# The same cell holds campuses, street addresses and even partner names
+# ("Clarín / Riobamba / Artear / Radio Mitre"). Matching a token inside such a
+# label would read a sponsor as a site, so the whole published label must be an
+# official campus. Anything compound or unrecognised stays null and survives
+# literally in detalle_posgrados.
+CAMPUS_LABELS = {
+    "campus victoria": "Campus Victoria",
+    "victoria": "Campus Victoria",
+    "sede nordelta": "Sede Nordelta",
+    "nordelta": "Sede Nordelta",
+    "sede callao": "Sede Callao",
+    "callao": "Sede Callao",
+    "sede riobamba": "Sede Riobamba",
+    "riobamba": "Sede Riobamba",
+}
+
+
+def postgraduate_campus(value: str | None) -> str | None:
+    return CAMPUS_LABELS.get(comparison_key(value))
+
+
+def split_academic_unit(published: str | None) -> tuple[str, str] | None:
+    """Split "Departamento de Economía" into its name and its kind."""
+    text = clean_text(published)
+    for kind in ("Escuela", "Departamento", "Centro"):
+        prefix = f"{kind} de "
+        if text.startswith(prefix):
+            name = text[len(prefix):].strip()
+            if name:
+                return name, kind
+    return None
+
+
+def discover_graduate_plan_url(page: dict[str, Any], programme_url: str) -> str | None:
+    for card in page.get("navigationCards") or []:
+        for item in card.get("graduatePage") or []:
+            # UdeSA fills one field or the other depending on the programme.
+            label = item.get("graduatePageType") or item.get("undergraduatePageType")
+            if comparison_key(label) == "plan de estudios":
+                return urljoin(programme_url, str(item.get("url") or ""))
+    return None
+
+
+def parse_postgraduate_detail(
+    ref: PostgraduateRef, page: dict[str, Any], final_url: str
+) -> dict[str, Any]:
+    """Read one programme page, keeping only what the page states."""
+    if _plain(page.get("pageType")) != "Graduate":
+        raise ValueError(f"{ref.name}: la página no es un posgrado ({page.get('pageType')!r}).")
+    title = _plain(page.get("title")) or _plain(page.get("pageName"))
+    if not title or comparison_key(title) != comparison_key(ref.name):
+        raise ValueError(f"{ref.name}: la página publicó el título {title!r}.")
+    attendance = _attendance(page)
+    description = _plain((page.get("header") or {}).get("description"))
+    if not description:
+        description = _meta(page, "description") or _meta(page, "og:description")
+    return {
+        "name": ref.name,
+        "department": ref.department,
+        "url": final_url,
+        # UdeSA labels this cell "Sede" or "Sedes" depending on the programme.
+        "campus": postgraduate_campus(
+            attendance.get("sede") or attendance.get("sedes")
+        ),
+        "campus_published": attendance.get("sede") or attendance.get("sedes") or None,
+        "modality_published": attendance.get("modalidad") or None,
+        "modality": postgraduate_modality(attendance.get("modalidad")),
+        "duration_months": duration_months(attendance.get("duracion")),
+        "start": attendance.get("inicio") or None,
+        "description": description,
+        "image_url": (page.get("header") or {}).get("src"),
+        "plan_url": discover_graduate_plan_url(page, final_url),
+    }
 
 
 def parse_career_detail(
@@ -231,6 +412,8 @@ def build_dataset(
     plan_pages: dict[str, dict[str, Any]],
     campuses_html: str = "",
     errors: list[dict[str, str]] | None = None,
+    postgraduate_refs: tuple[PostgraduateRef, ...] = (),
+    postgraduate_pages: dict[str, tuple[dict[str, Any], str]] | None = None,
 ) -> dict[str, Any]:
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
     data["universidades"] = [blank_record(
@@ -286,7 +469,62 @@ def build_dataset(
                 "url": detail["image_url"], "fuente_url": detail["url"],
             })
 
-    faculties = sorted({(row.faculty, row.faculty_type) for row in CAREERS})
+    postgraduate_pages = postgraduate_pages or {}
+    postgraduate_details: list[dict[str, Any]] = []
+    postgraduate_units: set[tuple[str, str]] = set()
+    excluded: list[dict[str, str]] = []
+    for ref in postgraduate_refs:
+        if ref.url not in postgraduate_pages:
+            excluded.append({"nombre": ref.name, "url": ref.url,
+                             "motivo": "la página no se pudo descargar"})
+            continue
+        page, final_url = postgraduate_pages[ref.url]
+        try:
+            detail = parse_postgraduate_detail(ref, page, final_url)
+        except ValueError as error:
+            excluded.append({"nombre": ref.name, "url": ref.url, "motivo": str(error)})
+            continue
+        unit = split_academic_unit(detail["department"])
+        if unit:
+            postgraduate_units.add(unit)
+            detail["faculty_reference"] = f"{UNIVERSITY} — {unit[1]} de {unit[0]}"
+        else:
+            detail["faculty_reference"] = None
+        postgraduate_details.append(detail)
+        data["posgrados"].append(blank_record(
+            "posgrados", universidad_nombre=UNIVERSITY,
+            facultad_nombre=detail["faculty_reference"], nombre_programa=ref.name,
+            tipo_posgrado=postgraduate_kind(ref.name),
+            # The pages state neither the official degree nor the admission
+            # requirements in a labelled field, and the project does not infer
+            # them from prose. They stay null and surface in the audit.
+            titulo_otorgado=None, sede=detail["campus"], modalidad=detail["modality"],
+            duracion_meses=detail["duration_months"],
+            requiere_tesis_trabajo_final=None, requisito_titulo_previo=None,
+            cohorte_inicio=detail["start"], costo_total_programa=None, moneda=None,
+            descripcion_breve=detail["description"], url_oficial=detail["url"],
+        ))
+        if detail["image_url"]:
+            resources.append({
+                "entidad_tipo": "posgrado", "entidad_nombre": ref.name,
+                "tipo_recurso": "imagen", "titulo": f"Imagen de {ref.name}",
+                "url": detail["image_url"], "fuente_url": detail["url"],
+            })
+        if detail["plan_url"]:
+            # The postgraduate plan is prose, not a table: it mixes subjects
+            # with lecturers and instructions. Linking it keeps the evidence
+            # without turning paragraphs into invented "materias" rows.
+            resources.append({
+                "entidad_tipo": "posgrado", "entidad_nombre": ref.name,
+                "tipo_recurso": "enlace", "titulo": f"Plan de estudios de {ref.name}",
+                "url": detail["plan_url"], "fuente_url": detail["url"],
+            })
+
+    # Postgraduate programmes reach units the undergraduate catalogue does not
+    # cover, such as the Departamento de Matemática y Ciencias.
+    faculties = sorted(
+        {(row.faculty, row.faculty_type) for row in CAREERS} | postgraduate_units
+    )
     data["facultades"] = [blank_record(
         "facultades", universidad_nombre=UNIVERSITY,
         nombre_facultad=name, tipo_unidad=kind, sede=None,
@@ -315,8 +553,11 @@ def build_dataset(
         "datos": data,
         "recursos_publicos": resources,
         "detalle_carreras": details,
+        "detalle_posgrados": postgraduate_details,
         "control_calidad": {
             "secciones_vacias": missing,
+            "posgrados_descubiertos": len(postgraduate_refs),
+            "posgrados_excluidos": excluded,
             "errores_descarga": errors or [],
             "campos_inferidos": [],
             "nota": "Los valores ausentes permanecen nulos; no se inventan datos.",

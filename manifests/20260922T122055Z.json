@@ -1,0 +1,112 @@
+{
+  "generado_at": "2026-09-22T12:20:55.338808+00:00",
+  "commit": "b0e48365d8659251c3a9f242e520e9e0823e5a5a",
+  "artefactos": {
+    "udesa_completo.json": {
+      "sha256": "c029f49f3cfc36e6f58a91860ced86ef61c8018b98a2a0a59a9b0b6361538960",
+      "bytes": 488288,
+      "modified_at": "2026-09-22T12:19:51.016387+00:00",
+      "contenido_sha256": "c749dee8189f099850535478f436abbc7a1dafa1d55834393e774043f6d927ed",
+      "conteos": {
+        "datos.localidades": 3,
+        "datos.universidades": 1,
+        "datos.sedes": 4,
+        "datos.facultades": 9,
+        "datos.carreras": 18,
+        "datos.ofertas": 31,
+        "datos.turnos_anio": 0,
+        "datos.ofertas_ciclo": 0,
+        "datos.aranceles": 0,
+        "datos.areas_tematicas": 84,
+        "datos.materias": 681,
+        "datos.posgrados": 41,
+        "datos.actividades": 0,
+        "datos.autoridades": 0,
+        "datos.redes_contacto": 0,
+        "datos.becas": 0,
+        "datos.servicios_estudiantiles": 0,
+        "datos.actividades_extracurriculares": 0,
+        "datos.alojamiento": 0,
+        "datos.programas_internacionales": 0,
+        "datos.convenios_intercambio": 0,
+        "recursos_publicos": 126,
+        "detalle_carreras": 18,
+        "detalle_posgrados": 41,
+        "control_calidad.secciones_vacias": 12,
+        "control_calidad.posgrados_excluidos": 0,
+        "control_calidad.errores_descarga": 0,
+        "control_calidad.campos_inferidos": 0
+      },
+      "extraido_en": "2026-09-22T12:19:51.012979+00:00"
+    },
+    "utdt_carreras.json": {
+      "sha256": "4d1e11fd3ca4cbbcc4729853ae5bc483f6583ec2c21b06778e3c200772c89b4b",
+      "bytes": 4856,
+      "modified_at": "2026-09-19T12:57:31.536077+00:00",
+      "contenido_sha256": "5e93c95442173103d1b3a5f30e08e95afb0d7b2487782e6bc1bc20cafb53d363",
+      "conteos": {
+        "carreras": 13
+      }
+    },
+    "utdt_catalogo_cursos.json": {
+      "sha256": "f8ab5f942571b62dd50485913451295185ac2042c96291d80d0f158d8f319900",
+      "bytes": 1576674,
+      "modified_at": "2026-09-21T14:03:13.198959+00:00",
+      "contenido_sha256": "65164a030d26850b6398adb097a8e6f691d6b3b512376fddfc6abb3ef85bf46f",
+      "conteos": {
+        "horarios": 2248,
+        "detalles": 616
+      },
+      "extraido_at": "2026-09-21T14:03:13.191113+00:00",
+      "periodo": {
+        "anio": 2026,
+        "semestre": 2
+      }
+    },
+    "utdt_completo.json": {
+      "sha256": "65bc072ce45e9c708887d01547218c0832a886a47f8857f20cc9b458f73aae03",
+      "bytes": 1569066,
+      "modified_at": "2026-09-22T12:05:38.280208+00:00",
+      "contenido_sha256": "7fdef2775a0108dbbee1a9f00f1d99b20e3d77e3a1166397115e091a6c3c5528",
+      "conteos": {
+        "metadata.fuentes": 17,
+        "datos.localidades": 1,
+        "datos.universidades": 1,
+        "datos.sedes": 1,
+        "datos.facultades": 11,
+        "datos.carreras": 13,
+        "datos.ofertas": 13,
+        "datos.turnos_anio": 0,
+        "datos.ofertas_ciclo": 13,
+        "datos.aranceles": 0,
+        "datos.areas_tematicas": 88,
+        "datos.materias": 829,
+        "datos.posgrados": 28,
+        "datos.actividades": 12,
+        "datos.autoridades": 17,
+        "datos.redes_contacto": 9,
+        "datos.becas": 6,
+        "datos.servicios_estudiantiles": 8,
+        "datos.actividades_extracurriculares": 32,
+        "datos.alojamiento": 3,
+        "datos.programas_internacionales": 5,
+        "datos.convenios_intercambio": 671,
+        "directorio_academico.personas": 632,
+        "directorio_academico.roles_academicos": 688,
+        "control_calidad.secciones_vacias": 2,
+        "control_calidad.errores_descarga": 6,
+        "control_calidad.advertencias": 3
+      }
+    },
+    "utdt_pendientes.json": {
+      "sha256": "ecb50e00b7e2f89169860792bacc329142666f8b6d8a03f2afc76d90f549cd7e",
+      "bytes": 458567,
+      "modified_at": "2026-09-21T17:28:49.964320+00:00",
+      "contenido_sha256": "778ddef26dfcc9aa22529456103e13c7b48ef47697ada3f9567208e647f19d23",
+      "conteos": {
+        "pendientes": 899
+      },
+      "generado_at": "2026-09-21T17:28:49.957865+00:00"
+    }
+  }
+}

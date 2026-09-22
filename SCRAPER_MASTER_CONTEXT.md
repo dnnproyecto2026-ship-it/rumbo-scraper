@@ -2134,7 +2134,28 @@ Esto es diseño futuro. Las migraciones SQL pertenecen al repositorio/flujo de b
 
 # 28. Próximo paso exacto
 
-El próximo paso recomendado es **completar posgrados de UdeSA de manera determinística**, porque:
+> **COMPLETADO el 22-09-2026.** Los 41 posgrados que publica el índice oficial
+> `https://udesa.edu.ar/posgrados` se descubren, extraen, validan y cargan. Dos
+> corridas consecutivas produjeron contenido idéntico. Los conteos de este
+> documento ya no deben leerse como fuente: ejecutar
+> `python -m rumbo_scraper.manifest`, que los genera desde los artefactos.
+>
+> Diferencias respecto de lo planificado abajo:
+>
+> - El descubrimiento no necesita enumerar rutas a mano: el índice publica una
+>   `EntityList` de entidades `Graduate` con nombre, URL y departamento.
+> - No se extraen `materias` de posgrado. El plan es prosa HTML que mezcla
+>   materias con docentes e instrucciones; convertirla en filas sería inferir.
+>   El plan queda enlazado como recurso.
+> - `titulo_otorgado`, `requisito_titulo_previo` y `requiere_tesis_trabajo_final`
+>   quedan nulos: no aparecen en ningún campo estructurado de las páginas.
+> - Apareció una novena unidad académica, Departamento de Matemática y Ciencias,
+>   que el catálogo de grado no cubría.
+>
+> **Próximo paso ahora:** auditoría parametrizada por universidad (Etapa A,
+> punto 4), que sigue siendo exclusiva de UTDT.
+
+El plan original era **completar posgrados de UdeSA de manera determinística**, porque:
 
 - UdeSA grado ya corre end-to-end.
 - El menú/dataset de la web ya permite descubrir URLs de posgrado.

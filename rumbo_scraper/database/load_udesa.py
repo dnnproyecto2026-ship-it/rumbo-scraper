@@ -16,7 +16,7 @@ from rumbo_scraper.validators.udesa import validate_dataset
 DEFAULT_INPUT = Path("data/udesa_completo.json")
 CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
-    "ofertas", "areas_tematicas", "materias",
+    "ofertas", "areas_tematicas", "materias", "posgrados",
 )
 
 
@@ -123,6 +123,28 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         saved = _upsert_one(client, "areas_tematicas", {"nombre": name}, "nombre")
         area_ids[name] = saved["id"]
     counts["areas_tematicas"] = len(area_ids)
+
+    postgraduate_ids: dict[str, str] = {}
+    for row in data["posgrados"]:
+        saved = _upsert_one(client, "posgrados", {
+            "universidad_id": university_id,
+            "facultad_id": faculty_ids.get(str(_faculty_name(row["facultad_nombre"]))),
+            "nombre_programa": row["nombre_programa"],
+            "tipo_posgrado": row["tipo_posgrado"],
+            "titulo_otorgado": row["titulo_otorgado"],
+            "sede_id": campus_ids.get(str(row["sede"])) if row["sede"] else None,
+            "modalidad": row["modalidad"],
+            "duracion_meses": row["duracion_meses"],
+            "requiere_tesis_trabajo_final": _boolean(row["requiere_tesis_trabajo_final"]),
+            "requisito_titulo_previo": row["requisito_titulo_previo"],
+            "cohorte_inicio": row["cohorte_inicio"],
+            "costo_total_programa": row["costo_total_programa"],
+            "moneda": row["moneda"],
+            "descripcion_breve": row["descripcion_breve"],
+            "url_oficial": row["url_oficial"],
+        }, "universidad_id,nombre_programa")
+        postgraduate_ids[row["nombre_programa"]] = saved["id"]
+    counts["posgrados"] = len(postgraduate_ids)
 
     subjects = [{
         "universidad_id": university_id,

@@ -13,7 +13,8 @@ import httpx
 from playwright.async_api import Browser, async_playwright
 
 from rumbo_scraper.parsers.udesa import (
-    BASE_URL, CAMPUSES_URL, CAREERS, SOURCE_URL, build_dataset, discover_plan_url,
+    BASE_URL, CAMPUSES_URL, CAREERS, POSTGRADUATE_INDEX_URL, SOURCE_URL,
+    build_dataset, discover_plan_url, discover_postgraduates,
 )
 from rumbo_scraper.validators.udesa import validate_dataset
 
@@ -66,6 +67,20 @@ async def _run(output: Path) -> dict[str, Any]:
         career_results = await asyncio.gather(*(
             _fetch_next_data(browser, url, errors, semaphore) for url in career_urls
         ))
+        index_result = await _fetch_next_data(
+            browser, POSTGRADUATE_INDEX_URL, errors, semaphore
+        )
+        postgraduate_refs = discover_postgraduates(index_result[0]) if index_result else ()
+        postgraduate_urls = [ref.url for ref in postgraduate_refs]
+        postgraduate_results = await asyncio.gather(*(
+            _fetch_next_data(browser, url, errors, semaphore) for url in postgraduate_urls
+        ))
+        postgraduate_pages = {
+            requested: result
+            for requested, result in zip(postgraduate_urls, postgraduate_results, strict=True)
+            if result is not None
+        }
+
         landing_result = await landing_task
         career_pages = {
             requested: result
@@ -90,7 +105,8 @@ async def _run(output: Path) -> dict[str, Any]:
 
     landing_page = landing_result[0] if landing_result else {}
     dataset = build_dataset(
-        landing_page, career_pages, plan_pages, campuses_html, errors
+        landing_page, career_pages, plan_pages, campuses_html, errors,
+        postgraduate_refs, postgraduate_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -116,9 +132,13 @@ def main() -> None:
     print(f"OK: {len(data['carreras'])} carreras")
     print(f"OK: {len(data['materias'])} materias de planes de estudio")
     print(f"OK: {len(data['facultades'])} unidades académicas")
+    print(f"OK: {len(data['posgrados'])} posgrados de "
+          f"{quality['posgrados_descubiertos']} descubiertos en el índice oficial")
     print(f"OK: {len(dataset['recursos_publicos'])} imágenes, documentos y enlaces")
     print(f"Archivo: {args.output}")
     print("Método: algorítmico, sin IA y sin tokens")
+    for excluded in quality["posgrados_excluidos"]:
+        print(f"Excluido: {excluded['nombre']} — {excluded['motivo']}")
     if quality["errores_descarga"]:
         print(f"Advertencia: {len(quality['errores_descarga'])} páginas no se pudieron descargar")
 
