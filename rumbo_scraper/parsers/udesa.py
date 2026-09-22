@@ -21,6 +21,12 @@ BASE_URL = "https://udesa.edu.ar"
 SOURCE_URL = f"{BASE_URL}/estudia-en-udesa"
 CAMPUSES_URL = "https://exed.udesa.edu.ar/sedes/"
 POSTGRADUATE_INDEX_URL = f"{BASE_URL}/posgrados"
+FACULTY_DIRECTORY_URL = f"{BASE_URL}/cuerpo-docente"
+AUTHORITY_URLS = (
+    f"{BASE_URL}/conduccion-academica",
+    f"{BASE_URL}/consejo-superior",
+    f"{BASE_URL}/autoridades",
+)
 
 # The official index classifies each programme by the first word of its name.
 # Anything outside this vocabulary -- an MBA, a "Master in ...", a
@@ -488,6 +494,160 @@ def parse_postgraduate_plan(
     return subjects
 
 
+# The body of a person card ends with the label of its link.
+_LINK_LABEL = re.compile(r"\s*(?:ver\s+(?:perfil|m[áa]s)|conocelos?|contactar)\s*$", re.I)
+# A position often names the unit it leads: "Director del Departamento de
+# Ciencias Sociales". The unit is published inside the position, not beside it.
+_POSITION_UNIT = re.compile(
+    r"\b(?:de la|del|de)\s+((?:Departamento|Escuela|Centro)\s+de\s+[^,.;]+)$", re.I
+)
+
+
+def _person_sections(page: dict[str, Any]) -> list[tuple[str | None, list[dict[str, Any]]]]:
+    """Return every published group of people with the label above it."""
+    groups: list[tuple[str | None, list[dict[str, Any]]]] = []
+    for section in page.get("sections") or []:
+        people = section.get("persons")
+        if isinstance(people, list) and people:
+            groups.append((_plain(section.get("label")), people))
+    return groups
+
+
+def parse_faculty_directory(
+    page: dict[str, Any], source_url: str, unit_names: dict[str, str],
+    programme_names: dict[str, str],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Read the published faculty list into people and their academic roles.
+
+    Every professor is tagged with the units and programmes they teach in, so a
+    person keeps one role per tag instead of being flattened into a single one.
+    """
+    people: list[dict[str, Any]] = []
+    roles: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in (page.get("professors") or {}).get("items") or []:
+        name = _plain(item.get("name"))
+        if not name:
+            continue
+        key = comparison_key(name)
+        if key in seen:
+            continue
+        seen.add(key)
+        picture = item.get("professorPicture") or {}
+        people.append({
+            "universidad_nombre": UNIVERSITY,
+            "nombre_completo": name,
+            "email": None,
+            "perfil_url": urljoin(source_url, str(item.get("url") or "")) or None,
+            "foto_url": picture.get("src"),
+            "formacion": None,
+            "biografia": None,
+            "fuente_url": source_url,
+        })
+        tags = [_plain(tag.get("name")) for tag in item.get("tags") or []]
+        matched = False
+        for tag in tags:
+            if not tag:
+                continue
+            programme_faculty = programme_names.get(comparison_key(tag))
+            if programme_faculty is not None:
+                roles.append(_role(name, programme_faculty, tag, source_url))
+                matched = True
+        for tag in tags:
+            unit = unit_names.get(comparison_key(tag or ""))
+            if unit and not matched:
+                roles.append(_role(name, unit, None, source_url))
+                matched = True
+        if not matched:
+            roles.append(_role(name, None, None, source_url))
+    return people, roles
+
+
+def _role(
+    name: str, faculty: str | None, career: str | None, source_url: str,
+    cargo: str = "Profesor/a", is_authority: bool = False,
+) -> dict[str, Any]:
+    return {
+        "nombre_completo": name, "facultad_nombre": faculty,
+        "carrera_nombre": career, "materia_nombre": None, "cargo": cargo,
+        "tipo_rol": "Académico", "es_autoridad": is_authority,
+        "fuente_url": source_url,
+    }
+
+
+def parse_authorities(
+    pages: dict[str, dict[str, Any]], unit_names: dict[str, str]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Read the published authorities from the institutional pages.
+
+    Two shapes are published: a module whose label reads "Name, Position" with
+    the biography as its body, and a group of people whose body names either
+    the unit they lead or the position they hold.
+    """
+    authorities: list[dict[str, Any]] = []
+    people: list[dict[str, Any]] = []
+    roles: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    # A person can hold more than one published position, and the same position
+    # can appear on two pages. Positions are deduplicated per person, the
+    # person only once.
+    known_people: set[str] = set()
+
+    def add(name: str, cargo: str, faculty: str | None, source_url: str,
+            biography: str | None = None) -> None:
+        cargo = clean_text(_LINK_LABEL.sub("", cargo))
+        if faculty is None:
+            match = _POSITION_UNIT.search(cargo)
+            if match:
+                faculty = unit_names.get(comparison_key(match.group(1)))
+        identity = (comparison_key(name), comparison_key(cargo))
+        if not name or not cargo or identity in seen:
+            return
+        seen.add(identity)
+        if comparison_key(name) not in known_people:
+            known_people.add(comparison_key(name))
+            people.append({
+                "universidad_nombre": UNIVERSITY, "nombre_completo": name,
+                "email": None, "perfil_url": None, "foto_url": None,
+                "formacion": None, "biografia": biography, "fuente_url": source_url,
+            })
+        authorities.append(blank_record(
+            "autoridades", facultad_nombre=faculty, carrera=None, cargo=cargo,
+            tipo="Académico", nombre_autoridad=name,
+        ))
+        roles.append(_role(name, faculty, None, source_url, cargo, True))
+
+    for source_url, page in pages.items():
+        for section in page.get("sections") or []:
+            label = _plain(section.get("label"))
+            # "Lucas S. Grosman, Rector" -- the module label carries both.
+            if label and "," in label and section.get("body"):
+                name, _, cargo = label.rpartition(",")
+                add(clean_text(name), clean_text(cargo), None, source_url,
+                    _plain(section.get("body")))
+        for group_label, members in _person_sections(page):
+            for member in members:
+                name = _plain(member.get("name"))
+                body = _plain(member.get("body")) or ""
+                # The body is either the unit the person directs or the
+                # position they hold; only a published unit becomes a faculty.
+                # UdeSA writes "Departamento de Ingeniería" here while the
+                # degree catalogue says "Escuela de Ingeniería", so an
+                # unmatched unit leaves the faculty null instead of guessing.
+                faculty = unit_names.get(comparison_key(body))
+                group = comparison_key(group_label)
+                if group == "directores":
+                    cargo = "Director/a"
+                elif group == "profesores emeritos":
+                    cargo = "Profesor/a Emérito/a"
+                elif faculty:
+                    cargo = group_label or "Autoridad"
+                else:
+                    cargo = body or group_label or "Autoridad"
+                add(str(name or ""), clean_text(cargo), faculty, source_url)
+    return authorities, people, roles
+
+
 def parse_campuses(html: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Extract addresses from UdeSA's official campuses page."""
     soup = BeautifulSoup(html, "html.parser")
@@ -551,6 +711,8 @@ def build_dataset(
     postgraduate_refs: tuple[PostgraduateRef, ...] = (),
     postgraduate_pages: dict[str, tuple[dict[str, Any], str]] | None = None,
     postgraduate_plan_pages: dict[str, dict[str, Any]] | None = None,
+    directory_page: dict[str, Any] | None = None,
+    authority_pages: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
     data["universidades"] = [blank_record(
@@ -685,6 +847,39 @@ def build_dataset(
         area_tematica=area, cantidad_materias=count,
     ) for (career, area), count in sorted(counts.items())]
 
+    # Units and programmes are the vocabulary the directory tags people with.
+    unit_names: dict[str, str] = {}
+    for row in data["facultades"]:
+        reference = f"{UNIVERSITY} — {row['tipo_unidad']} de {row['nombre_facultad']}"
+        unit_names[comparison_key(f"{row['tipo_unidad']} de {row['nombre_facultad']}")] = reference
+        unit_names[comparison_key(str(row["nombre_facultad"]))] = reference
+    programme_faculties = {
+        comparison_key(config.name): f"{UNIVERSITY} — {config.faculty_type} de {config.faculty}"
+        for config in CAREERS
+    }
+    programme_faculties.update({
+        comparison_key(str(row["nombre_programa"])): row["facultad_nombre"]
+        for row in data["posgrados"]
+    })
+
+    people: list[dict[str, Any]] = []
+    roles: list[dict[str, Any]] = []
+    if directory_page:
+        people, roles = parse_faculty_directory(
+            directory_page, FACULTY_DIRECTORY_URL, unit_names, programme_faculties
+        )
+    if authority_pages:
+        authorities, authority_people, authority_roles = parse_authorities(
+            authority_pages, unit_names
+        )
+        data["autoridades"] = authorities
+        known = {comparison_key(str(row["nombre_completo"])) for row in people}
+        people.extend(
+            row for row in authority_people
+            if comparison_key(str(row["nombre_completo"])) not in known
+        )
+        roles.extend(authority_roles)
+
     missing = [section for section, rows in data.items() if not rows]
     return {
         "universidad": UNIVERSITY,
@@ -695,6 +890,7 @@ def build_dataset(
         "recursos_publicos": resources,
         "detalle_carreras": details,
         "detalle_posgrados": postgraduate_details,
+        "directorio_academico": {"personas": people, "roles_academicos": roles},
         "control_calidad": {
             "secciones_vacias": missing,
             "posgrados_descubiertos": len(postgraduate_refs),

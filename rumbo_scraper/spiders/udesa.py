@@ -13,7 +13,8 @@ import httpx
 from playwright.async_api import Browser, async_playwright
 
 from rumbo_scraper.parsers.udesa import (
-    BASE_URL, CAMPUSES_URL, CAREERS, POSTGRADUATE_INDEX_URL, SOURCE_URL,
+    AUTHORITY_URLS, BASE_URL, CAMPUSES_URL, CAREERS, FACULTY_DIRECTORY_URL,
+    POSTGRADUATE_INDEX_URL, SOURCE_URL,
     build_dataset, discover_graduate_plan_url, discover_plan_url,
     discover_postgraduates,
 )
@@ -99,6 +100,18 @@ async def _run(output: Path) -> dict[str, Any]:
             if result is not None
         }
 
+        directory_result = await _fetch_next_data(
+            browser, FACULTY_DIRECTORY_URL, errors, semaphore
+        )
+        authority_results = await asyncio.gather(*(
+            _fetch_next_data(browser, url, errors, semaphore) for url in AUTHORITY_URLS
+        ))
+        authority_pages = {
+            url: result[0]
+            for url, result in zip(AUTHORITY_URLS, authority_results, strict=True)
+            if result is not None
+        }
+
         landing_result = await landing_task
         career_pages = {
             requested: result
@@ -125,6 +138,7 @@ async def _run(output: Path) -> dict[str, Any]:
     dataset = build_dataset(
         landing_page, career_pages, plan_pages, campuses_html, errors,
         postgraduate_refs, postgraduate_pages, postgraduate_plan_pages,
+        directory_result[0] if directory_result else None, authority_pages,
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -157,6 +171,10 @@ def main() -> None:
     print(f"OK: {len(data['facultades'])} unidades académicas")
     print(f"OK: {len(data['posgrados'])} posgrados de "
           f"{quality['posgrados_descubiertos']} descubiertos en el índice oficial")
+    directory = dataset["directorio_academico"]
+    print(f"OK: {len(data['autoridades'])} autoridades")
+    print(f"OK: {len(directory['personas'])} personas académicas")
+    print(f"OK: {len(directory['roles_academicos'])} roles académicos")
     print(f"OK: {len(dataset['recursos_publicos'])} imágenes, documentos y enlaces")
     print(f"Archivo: {args.output}")
     print("Método: algorítmico, sin IA y sin tokens")

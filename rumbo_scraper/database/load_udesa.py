@@ -8,15 +8,16 @@ from pathlib import Path
 from typing import Any
 
 from rumbo_scraper.database.load_utdt import (
-    _boolean, _faculty_name, _sync_subjects, _upsert_one,
+    _boolean, _faculty_name, _insert_chunks, _sync_subjects, _upsert_chunks, _upsert_one,
 )
+from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.validators.udesa import validate_dataset
 
 
 DEFAULT_INPUT = Path("data/udesa_completo.json")
 CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
-    "ofertas", "areas_tematicas", "materias", "posgrados",
+    "ofertas", "areas_tematicas", "materias", "posgrados", "autoridades",
 )
 
 
@@ -193,6 +194,63 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "carga_horaria_semanal": row["carga_horaria_semanal"],
     } for row in data["materias"] if row["carrera_o_programa"] in loadable_parents]
     counts["materias"] = _sync_subjects(client, university_id, subjects)
+
+    directory = dataset.get("directorio_academico", {})
+    saved_people = _upsert_chunks(client, "personas", [{
+        "universidad_id": university_id,
+        "nombre_completo": row["nombre_completo"], "email": row["email"],
+        "perfil_url": row["perfil_url"], "formacion": row["formacion"],
+        "biografia": row["biografia"], "fuente_url": row["fuente_url"],
+        "activa": True,
+    } for row in directory.get("personas", [])], "universidad_id,nombre_completo")
+    person_ids = {comparison_key(row["nombre_completo"]): row["id"] for row in saved_people}
+    counts["personas"] = len(person_ids)
+
+    # Roles have no natural key, so they are rebuilt for this university only.
+    client.table("roles_academicos").delete().eq("universidad_id", university_id).execute()
+    # roles_academicos is unique over (persona, facultad, carrera, materia,
+    # cargo) and has no postgraduate column, so every role a person holds in
+    # postgraduate programmes of one unit collapses into a single faculty-level
+    # role. Deduplicating here by the same identity keeps the insert honest
+    # instead of letting the database reject the whole batch.
+    academic_roles: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for row in directory.get("roles_academicos", []):
+        person_id = person_ids.get(comparison_key(row["nombre_completo"]))
+        if person_id is None:
+            continue
+        payload = {
+            "persona_id": person_id,
+            "universidad_id": university_id,
+            "facultad_id": faculty_ids.get(str(_faculty_name(row["facultad_nombre"]))),
+            "carrera_id": career_ids.get(row["carrera_nombre"]),
+            "materia_id": None,
+            "cargo": row["cargo"], "tipo_rol": row["tipo_rol"],
+            "es_autoridad": row["es_autoridad"], "vigente": True,
+            "fuente_url": row["fuente_url"],
+        }
+        identity = (payload["persona_id"], payload["facultad_id"],
+                    payload["carrera_id"], payload["materia_id"], payload["cargo"])
+        current = academic_roles.get(identity)
+        # An authority role carries more information than a teaching one.
+        if current is None or (payload["es_autoridad"] and not current["es_autoridad"]):
+            academic_roles[identity] = payload
+    counts["roles_academicos"] = _insert_chunks(
+        client, "roles_academicos", list(academic_roles.values())
+    )
+
+    # autoridades.facultad_id is NOT NULL, so an institution-wide authority --
+    # the Rector, the Vicerrectora -- has no row to go in. They are still kept
+    # as academic roles flagged es_autoridad, and counted here.
+    counts["autoridades_sin_facultad"] = sum(
+        1 for row in data["autoridades"] if not row["facultad_nombre"]
+    )
+    client.table("autoridades").delete().in_("facultad_id", list(faculty_ids.values())).execute()
+    counts["autoridades"] = _insert_chunks(client, "autoridades", [{
+        "facultad_id": faculty_ids.get(str(_faculty_name(row["facultad_nombre"]))),
+        "carrera_id": career_ids.get(row["carrera"]),
+        "cargo": row["cargo"], "tipo": row["tipo"],
+        "nombre_autoridad": row["nombre_autoridad"],
+    } for row in data["autoridades"] if row["facultad_nombre"]])
     return counts
 
 
