@@ -223,6 +223,34 @@ Los planes son una tabla por ciclo, con el año nombrado en palabras en grado
 ("PRIMER AÑO") y entre paréntesis en posgrado ("(1 AÑO)"), y una segunda columna
 con el régimen de cursada.
 
+## Extracción completa: UCA
+
+```bash
+python -m rumbo_scraper.spiders.uca
+python -m rumbo_scraper.database.load_uca
+python -m rumbo_scraper.database.load_uca --apply
+```
+
+El sitio de UCA renderiza del lado del cliente, así que se lee con navegador. El
+recorrido sigue cómo la universidad enlaza su oferta: el hub de facultades lista
+las facultades y cada facultad enlaza sus programas. El plan de estudios sólo
+aparece al abrir su sección, así que cada página recibe un click.
+
+Una página de facultad puede terminar de cargar su shell antes que sus enlaces;
+por eso, si no devolvió ninguno, se le vuelve a pedir una vez. Sin ese reintento
+dos corridas del mismo sitio descubrían distinta cantidad de programas.
+
+## Bitácora de cobertura
+
+```bash
+python -m rumbo_scraper.bitacora
+```
+
+Genera `data/bitacora.md` leyendo los artefactos de cada adapter y los informes
+de auditoría: qué tiene cada universidad, qué secciones están vacías y con qué
+motivo declarado, cuántas filas traen cada campo clave y qué quedó fuera del
+contrato. No contiene nada escrito a mano.
+
 ## Datos pendientes
 
 La auditoría genera, por universidad, un archivo con cada campo importante que
