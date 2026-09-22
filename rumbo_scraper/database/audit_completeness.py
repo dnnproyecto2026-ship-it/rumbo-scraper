@@ -29,6 +29,7 @@ ARTIFACTS = {
     "Universidad del Museo Social Argentino": Path("data/umsa_completo.json"),
     "Pontificia Universidad Católica Argentina": Path("data/uca_completo.json"),
     "Universidad Argentina de la Empresa": Path("data/uade_completo.json"),
+    "Universidad de Belgrano": Path("data/ub_completo.json"),
 }
 
 # How each table is scoped to a university: directly, or through the row that
@@ -259,6 +260,7 @@ def _slug(university: str) -> str:
         "universidad del museo social argentino": "umsa",
         "pontificia universidad catolica argentina": "uca",
         "universidad argentina de la empresa": "uade",
+        "universidad de belgrano": "ub",
     }
     key = comparison_key(university)
     return known.get(key, key.replace(" ", "_"))

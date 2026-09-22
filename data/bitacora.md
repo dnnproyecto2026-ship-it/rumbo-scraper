@@ -13,6 +13,7 @@ Generada el 2026-09-22 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 | Universidad del Museo Social Argentino | 23 | 55 | 733 | 0 | 317 |
 | Pontificia Universidad Católica Argentina | 80 | 30 | 3833 | 0 | 237 |
 | Universidad Argentina de la Empresa | 84 | 14 | 3433 | 0 | 189 |
+| Universidad de Belgrano | 25 | 13 | 939 | 0 | 79 |
 
 ## Secciones vacías, por universidad
 
@@ -100,21 +101,36 @@ Generada el 2026-09-22 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 - `turnos_anio` — sin datos, causa no declarada
 - `ofertas_ciclo` — sin datos, causa no declarada
 
+**Universidad de Belgrano**
+
+- `sedes` — sin datos, causa no declarada
+- `becas` — sin datos, causa no declarada
+- `servicios_estudiantiles` — sin datos, causa no declarada
+- `actividades_extracurriculares` — sin datos, causa no declarada
+- `alojamiento` — sin datos, causa no declarada
+- `programas_internacionales` — sin datos, causa no declarada
+- `convenios_intercambio` — sin datos, causa no declarada
+- `autoridades` — sin datos, causa no declarada
+- `redes_contacto` — sin datos, causa no declarada
+- `aranceles` — sin datos, causa no declarada
+- `turnos_anio` — sin datos, causa no declarada
+- `ofertas_ciclo` — sin datos, causa no declarada
+
 ## Cobertura de los campos que más importan
 
 Cuántas filas traen el dato sobre el total de esa sección.
 
-| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l |
-|---|---|---|---|---|---|---|---|
-| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 |
-| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 |
-| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 |
-| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 |
-| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 |
-| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 |
-| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 |
-| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 |
-| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 |
+| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l | de Belgrano |
+|---|---|---|---|---|---|---|---|---|
+| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 |
+| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 |
+| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 |
+| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 |
+| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 |
+| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 |
+| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 |
+| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 |
+| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 |
 
 ## Qué queda fuera y por qué
 
@@ -169,4 +185,10 @@ Cuántas filas traen el dato sobre el total de esa sección.
 - 1 programa(s) fuera del contrato: la página no publica un título
 - 20 programa(s) publicados más de una vez, unificados en una fila
 - Backlog de auditoría: alta 112, media 77, baja 0
+
+### Universidad de Belgrano
+
+- Método: HTML público y documentos de plan; sin IA
+- 10 programa(s) fuera del contrato: la página no publica datos de la carrera
+- Backlog de auditoría: alta 37, media 42, baja 0
 

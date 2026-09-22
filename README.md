@@ -254,6 +254,21 @@ universidad publica de él: sólo un programa tiene una página
 así que una carrera combinada como "Lic. en Administración de Empresas + MBA"
 queda como grado y no como maestría.
 
+## Extracción completa: Universidad de Belgrano
+
+```bash
+python -m rumbo_scraper.spiders.ub
+python -m rumbo_scraper.database.load_ub
+python -m rumbo_scraper.database.load_ub --apply
+```
+
+Belgrano publica la ficha técnica más completa de las que lleva el proyecto: una
+tabla con el título final, el intermedio, los requisitos, la modalidad, la
+extensión, la cantidad de materias, el turno y la acreditación de CONEAU. Los
+posgrados no usan esa tabla y escriben los mismos datos en una oración, así que
+se leen los dos formatos. Una página que no publica ninguno no es un programa
+—es un servicio— y queda afuera con su motivo.
+
 ## Bitácora de cobertura
 
 ```bash
