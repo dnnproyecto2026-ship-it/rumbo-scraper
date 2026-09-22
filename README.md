@@ -86,6 +86,31 @@ omite `turnos_anio` y `aranceles`: los turnos se derivan después desde los hora
 del catálogo semestral y los aranceles permanecen vacíos mientras no exista una
 fuente oficial vigente.
 
+## Extracción: Universidad de San Andrés
+
+UdeSA se procesa de forma completamente algorítmica. El scraper abre las páginas
+oficiales con Playwright, lee el JSON estructurado de Next.js y aplica reglas
+fijas; no llama a modelos de IA, no usa prompts y no consume tokens.
+
+```bash
+python -m rumbo_scraper.spiders.udesa
+python -m rumbo_scraper.database.load_udesa
+```
+
+La primera orden genera `data/udesa_completo.json`. Actualmente extrae las
+carreras de grado, unidades académicas, sedes oficiales, modalidad, duración,
+descripción, planes de estudio, año de cada materia, clasificaciones temáticas,
+imágenes y documentos públicos. La segunda orden valida el resultado sin
+escribir. Después de revisar el resumen, la carga explícita es:
+
+```bash
+python -m rumbo_scraper.database.load_udesa --apply
+```
+
+Los posgrados, docentes, becas y vida universitaria de UdeSA se incorporan por
+etapas posteriores. Hasta que una fuente oficial los publique y el parser los
+valide, esos campos permanecen vacíos; no se completan con inferencias.
+
 ## Directorio académico
 
 La base de Supabase debe contar con las tablas `personas` y `roles_academicos`.
