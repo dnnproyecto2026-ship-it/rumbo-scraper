@@ -181,6 +181,30 @@ listan las materias debajo en Title Case; una sección de electivas deja la
 materia sin año, porque el documento no se lo asigna. El mismo PDF publica el
 título que otorga la carrera, que la página no dice.
 
+## Extracción completa: Universidad Austral
+
+```bash
+python -m rumbo_scraper.spiders.austral
+python -m rumbo_scraper.database.load_austral
+python -m rumbo_scraper.database.load_austral --apply
+```
+
+Austral expone la API REST de WordPress, así que el catálogo llega clasificado
+por la propia universidad: cada programa trae la taxonomía que dice de qué tipo
+es, en qué sede se dicta y qué unidad académica lo dirige. Los cursos que el
+catálogo clasifica como "Programas" quedan fuera del contrato, con su motivo.
+
+La misma carrera se publica una vez por sede, y a veces dos veces en la misma
+sede con una página de campaña. El contrato modela eso con una carrera y una
+oferta por sede, así que las entradas se agrupan por nombre y la página con más
+datos publicados describe el programa; `control_calidad.programas_unificados`
+registra cuáles se unieron.
+
+Los planes son cuadros en PDF cuyo texto extraído no conserva el orden visual
+—los encabezados de año aparecen separados de sus materias—, así que las
+materias se guardan sin año y el motivo queda en
+`control_calidad.materias_sin_anio`.
+
 ## Datos pendientes
 
 La auditoría genera un archivo con cada campo importante que sigue vacío y la
