@@ -269,6 +269,33 @@ posgrados no usan esa tabla y escriben los mismos datos en una oración, así qu
 se leen los dos formatos. Una página que no publica ninguno no es un programa
 —es un servicio— y queda afuera con su motivo.
 
+## Extracción completa: Universidad Tecnológica Nacional
+
+```bash
+python -m rumbo_scraper.spiders.utn
+python -m rumbo_scraper.database.load_utn
+python -m rumbo_scraper.database.load_utn --apply
+```
+
+La UTN es la primera de las nueve que publica su oferta como datos y no como
+páginas: el buscador "Estudiar en UTN" lee un endpoint JSON público,
+`/modules/mod_oferta_acad/web-oferta.php`, que devuelve el catálogo de carreras,
+las facultades regionales que dictan cada una y los documentos de cada plan. No
+hace falta navegador.
+
+También es la primera cuyas facultades traen dirección y decano, así que las
+sedes, las ofertas por sede y las autoridades se cargan desde la fuente en vez
+de quedar bloqueadas por las columnas `NOT NULL` del esquema.
+
+Los planes son PDF y están escritos en cuatro formatos distintos —encabezado por
+nivel, número romano en la columna de nivel, columna "Año" antes del nombre y
+columna "Año" después—, así que el lector es una máquina de estados sobre el
+texto extraído. Cuando el año no está publicado de ninguna de las cuatro formas,
+la materia queda con año nulo y el plan se reporta en
+`planes_sin_anio_publicado`. Los 484 cursos de posgrado no son un título del
+enum del contrato, así que quedan en el artefacto con `tipo_posgrado` nulo y
+fuera de la base, reportados.
+
 ## Bitácora de cobertura
 
 ```bash
