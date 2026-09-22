@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import json
 import re
 from typing import Any
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -39,6 +39,32 @@ CONTENT_SOURCES: tuple[tuple[str, str, str], ...] = (
     ("alojamiento", "/dormis", "Residencia"),
 )
 CONTENT_URLS = tuple(f"{BASE_URL}{path}" for _, path, _ in CONTENT_SOURCES)
+
+# Same vocabulary UTDT uses to recognise an academic activity inside a plan.
+ACTIVITY_TYPES = (
+    ("practica", "Práctica Profesional"), ("pasant", "Pasantía"),
+    ("tesis", "Trabajo Final / Tesis"), ("trabajo final", "Trabajo Final / Tesis"),
+    ("seminario", "Seminario"), ("taller", "Taller"), ("intercambio", "Intercambio"),
+)
+
+# One entry per page publishing an international programme, with the type the
+# page itself represents.
+INTERNATIONAL_SOURCES: tuple[tuple[str, str, str], ...] = (
+    ("/intercambio-de-grado", "Intercambio", "Grado"),
+    ("/intercambio-de-posgrado", "Intercambio", "Posgrado"),
+    ("/programas-de-doble-diploma", "Doble diploma", None),
+    ("/programas-cortos", "Programa corto", None),
+)
+INTERNATIONAL_URLS = tuple(f"{BASE_URL}{path}" for path, _, _ in INTERNATIONAL_SOURCES)
+
+# The channels UdeSA links from its own pages. A tracking endpoint such as
+# facebook.com/tr is not a profile, so the path has to name one.
+SOCIAL_HOSTS = {
+    "instagram.com": "Instagram", "facebook.com": "Facebook",
+    "linkedin.com": "LinkedIn", "twitter.com": "Twitter", "x.com": "Twitter",
+    "youtube.com": "YouTube", "tiktok.com": "TikTok",
+}
+SOCIAL_NON_PROFILE_PATHS = {"tr", "sharer", "share", "intent", "plugins"}
 
 AUTHORITY_URLS = (
     f"{BASE_URL}/conduccion-academica",
@@ -650,6 +676,75 @@ def build_content_rows(
     return rows
 
 
+def parse_international_programmes(
+    pages: dict[str, dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Read the published international programmes, one row per block."""
+    rows: list[dict[str, Any]] = []
+    for path, kind, level in INTERNATIONAL_SOURCES:
+        source_url = f"{BASE_URL}{path}"
+        page = pages.get(source_url)
+        if not page:
+            continue
+        blocks = parse_content_blocks(page, source_url)
+        blocks.extend(parse_headed_blocks(page, source_url))
+        for block in blocks:
+            rows.append(blank_record(
+                "programas_internacionales", universidad_nombre=UNIVERSITY,
+                nivel=level, tipo_programa=kind, nombre_programa=block["titulo"],
+                # The pages state neither how many agreements back a programme
+                # nor its length, credit recognition or fee treatment.
+                cantidad_convenios=None, duracion_maxima=None,
+                reconocimiento_academico=None, arancel_destino_cubierto=None,
+                requisitos=block["descripcion"], url=block["url"],
+                fuente_url=block["fuente_url"],
+            ))
+    return rows
+
+
+def parse_social_channels(html: str, source_url: str) -> list[dict[str, Any]]:
+    """Read the institutional channels linked from the rendered pages."""
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for match in re.finditer(r"https?://[^\s\"'<>\\]+", html):
+        parsed = urlparse(match.group(0))
+        host = (parsed.hostname or "").lower().removeprefix("www.")
+        channel = SOCIAL_HOSTS.get(host)
+        if not channel:
+            continue
+        segments = [part for part in parsed.path.split("/") if part]
+        if not segments or segments[0].lower() in SOCIAL_NON_PROFILE_PATHS:
+            continue
+        address = f"https://{host}/{'/'.join(segments)}"
+        if address in seen:
+            continue
+        seen.add(address)
+        rows.append(blank_record(
+            "redes_contacto", universidad_nombre=UNIVERSITY, facultad_nombre=None,
+            canal=channel, usuario_o_direccion=address,
+        ))
+    return sorted(rows, key=lambda row: str(row["canal"]))
+
+
+def derive_activities(subjects: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Recognise the academic activities a plan lists as subjects."""
+    rows: list[dict[str, Any]] = []
+    for subject in subjects:
+        key = comparison_key(str(subject["nombre_materia"]))
+        kind = next((label for needle, label in ACTIVITY_TYPES if needle in key), None)
+        if not kind:
+            continue
+        rows.append(blank_record(
+            "actividades", universidad_nombre=UNIVERSITY,
+            carrera_o_programa=subject["carrera_o_programa"], tipo_actividad=kind,
+            nombre_actividad=subject["nombre_materia"],
+            # Whether it is compulsory, how many hours it takes and what it
+            # covers are not published beside the plan entry.
+            obligatoria=None, carga_horaria_total=None, descripcion_breve=None,
+        ))
+    return rows
+
+
 def _person_sections(page: dict[str, Any]) -> list[tuple[str | None, list[dict[str, Any]]]]:
     """Return every published group of people with the label above it."""
     groups: list[tuple[str | None, list[dict[str, Any]]]] = []
@@ -861,6 +956,8 @@ def build_dataset(
     directory_page: dict[str, Any] | None = None,
     authority_pages: dict[str, dict[str, Any]] | None = None,
     content_pages: dict[str, dict[str, Any]] | None = None,
+    international_pages: dict[str, dict[str, Any]] | None = None,
+    landing_html: str = "",
 ) -> dict[str, Any]:
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
     data["universidades"] = [blank_record(
@@ -1005,6 +1102,12 @@ def build_dataset(
         blocks.extend(parse_headed_blocks(page, source_url))
         data[section_name].extend(build_content_rows(section_name, category, blocks))
 
+    data["programas_internacionales"] = parse_international_programmes(
+        international_pages or {}
+    )
+    data["redes_contacto"] = parse_social_channels(landing_html, SOURCE_URL)
+    data["actividades"] = derive_activities(data["materias"])
+
     # Units and programmes are the vocabulary the directory tags people with.
     unit_names: dict[str, str] = {}
     for row in data["facultades"]:
@@ -1051,6 +1154,18 @@ def build_dataset(
         "directorio_academico": {"personas": people, "roles_academicos": roles},
         "control_calidad": {
             "secciones_vacias": missing,
+            "secciones_sin_fuente_publica": {
+                # UdeSA publishes its partner universities inside the Campus
+                # Virtual, which requires a login; the project does not scrape
+                # behind authentication.
+                "convenios_intercambio": "el listado de destinos está detrás del "
+                                         "login del Campus Virtual",
+                # Admissions state "Inscribite en cualquier momento del año",
+                # so there is no discrete intake cycle to record.
+                "ofertas_ciclo": "la admisión es continua y no publica un ciclo",
+                "aranceles": "no hay arancel publicado en el sitio",
+                "turnos_anio": "no se publica un catálogo de horarios",
+            },
             "posgrados_descubiertos": len(postgraduate_refs),
             "posgrados_excluidos": excluded,
             "errores_descarga": errors or [],

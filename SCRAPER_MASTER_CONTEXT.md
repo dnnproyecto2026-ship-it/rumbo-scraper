@@ -2183,6 +2183,22 @@ Esto es diseño futuro. Las migraciones SQL pertenecen al repositorio/flujo de b
 > no podía justificar. `select_all` en `database/supabase.py` pagina y ahora se
 > usa en materias, personas y comisiones.
 >
+> **Paridad con UTDT alcanzada el 22-09-2026.** UdeSA cubre ahora todas las
+> secciones que UTDT tiene con datos: 41 posgrados, 1274 materias, 1289
+> personas, 1882 roles, 35 autoridades, 13 becas, 27 servicios, 10
+> extracurriculares, 2 alojamientos, 18 programas internacionales, 118
+> actividades académicas y 4 canales de contacto.
+>
+> Cuatro secciones quedan vacías por ausencia de fuente pública, declarada en
+> `control_calidad.secciones_sin_fuente_publica`:
+>
+> - `convenios_intercambio`: el listado de universidades destino está detrás del
+>   login del Campus Virtual. No se scrapea: la restricción del proyecto prohíbe
+>   páginas privadas y sortear controles de acceso.
+> - `ofertas_ciclo`: la admisión es continua ("Inscribite en cualquier momento
+>   del año"), no hay ciclo discreto equivalente al "marzo 2027" de UTDT.
+> - `aranceles` y `turnos_anio`: sin fuente pública, igual que en UTDT.
+>
 > **Próximo paso ahora:** reconciliar `personas` de UTDT reejecutando el
 > catálogo con la lectura paginada, y auditoría parametrizada por universidad.
 

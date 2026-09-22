@@ -19,7 +19,7 @@ CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
     "ofertas", "areas_tematicas", "materias", "posgrados", "autoridades",
     "becas", "servicios_estudiantiles", "actividades_extracurriculares",
-    "alojamiento",
+    "alojamiento", "programas_internacionales", "actividades", "redes_contacto",
 )
 
 
@@ -199,7 +199,8 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
 
     # These tables have no natural key, so this university's rows are rebuilt.
     for table in ("becas", "servicios_estudiantiles",
-                  "actividades_extracurriculares", "alojamientos"):
+                  "actividades_extracurriculares", "alojamientos",
+                  "programas_internacionales", "actividades", "contactos"):
         client.table(table).delete().eq("universidad_id", university_id).execute()
 
     counts["becas"] = _insert_chunks(client, "becas", [{
@@ -236,6 +237,39 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "descripcion": row["descripcion"], "contacto": row["contacto"],
         "url": row["url"], "fuente_url": row["fuente_url"],
     } for row in data["alojamiento"]])
+
+    counts["programas_internacionales"] = _insert_chunks(
+        client, "programas_internacionales", [{
+            "universidad_id": university_id, "nivel": row["nivel"],
+            "tipo_programa": row["tipo_programa"],
+            "nombre_programa": row["nombre_programa"],
+            "cantidad_convenios": row["cantidad_convenios"],
+            "duracion_maxima": row["duracion_maxima"],
+            "reconocimiento_academico": _boolean(row["reconocimiento_academico"]),
+            "arancel_destino_cubierto": _boolean(row["arancel_destino_cubierto"]),
+            "requisitos": row["requisitos"], "url": row["url"],
+            "fuente_url": row["fuente_url"],
+        } for row in data["programas_internacionales"]])
+
+    counts["actividades"] = _insert_chunks(client, "actividades", [{
+        "universidad_id": university_id,
+        "carrera_id": career_ids.get(row["carrera_o_programa"]),
+        "posgrado_id": postgraduate_ids.get(row["carrera_o_programa"]),
+        "tipo_actividad": row["tipo_actividad"],
+        "nombre_actividad": row["nombre_actividad"],
+        "obligatoria": _boolean(row["obligatoria"]),
+        "carga_horaria_total": row["carga_horaria_total"],
+        "descripcion_breve": row["descripcion_breve"],
+    } for row in data["actividades"]
+        if row["carrera_o_programa"] in career_ids
+        or row["carrera_o_programa"] in postgraduate_ids])
+
+    counts["redes_contacto"] = _insert_chunks(client, "contactos", [{
+        "universidad_id": university_id,
+        "facultad_id": faculty_ids.get(str(_faculty_name(row["facultad_nombre"]))),
+        "carrera_id": None, "canal": row["canal"],
+        "usuario_o_direccion": row["usuario_o_direccion"],
+    } for row in data["redes_contacto"]])
 
     directory = dataset.get("directorio_academico", {})
     saved_people = _upsert_chunks(client, "personas", [{
