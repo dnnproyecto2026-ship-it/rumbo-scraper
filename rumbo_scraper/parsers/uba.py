@@ -433,6 +433,7 @@ def build_dataset(
             "facultades_excluidas": excluded,
             "carreras_sin_sede_publicada": shared_campus,
             "posgrados_por_facultad_sin_leer": POSTGRADUATES_NOT_READ,
+            "posgrados_parciales_por_facultad": POSTGRADUATE_PARTS_NOT_READ,
             "indices_de_posgrado_vacios": empty_indexes,
             "nombres_de_facultad_fuera_de_forma": misspelled,
             "errores_descarga": errors or [],
@@ -491,7 +492,8 @@ def postgraduate_kind(name: str) -> str | None:
 
 
 def _candidate(text: str) -> str:
-    return clean_text(text).strip(" .·—–-")
+    """One line as the page prints it, without the marker that opens a panel."""
+    return clean_text(re.sub(r"\s*\[\+\]\s*$", "", clean_text(text))).strip(" .·—–-")
 
 
 # "Especializaciones de Filosofía y Letras" is the title of the page, not a
@@ -502,26 +504,41 @@ _SECTION_TITLE = re.compile(
 )
 
 
+# A line the extractor cut in half ends where the next one begins: "Maestría
+# con título" is the first half of "...intermedio de Especialista".
+_CUT_OFF = re.compile(
+    r"\b(con|de|del|en|para|por|y|e|la|el|los|las|un|una|titulo|t[ií]tulo|"
+    r"intermedio|sobre|entre)$", re.I
+)
+
+
 def _usable(name: str) -> bool:
     return (10 <= len(name) <= 120 and "@" not in name
-            and name[:1].isalpha()
+            and not _CUT_OFF.search(comparison_key(name))
+            and name[:1].isalpha() and not name.endswith(":")
             and not _NOT_A_PROGRAMME.match(name)
             and not _SECTION_TITLE.match(comparison_key(name))
             and bool(re.search(r"[a-záéíóúñ]", name)))
 
 
-def read_list_page(html: str) -> list[str]:
+def read_list_page(html: str, kind: str | None = None) -> list[str]:
     """Read a page that opens with the kind and then lists the programmes.
 
     Used by the faculties that write "Maestrías" as a heading and the names
-    below it, each one its own list item or link.
+    below it, each one its own list item or link. A page with one section per
+    kind is read once per kind, so the heading that opens the block has to be
+    the one that announces the kind being asked for.
     """
     soup = _soup(html)
     for element in soup(["nav", "footer", "header", "aside"]):
         element.decompose()
+    wanted = comparison_key(kind) if kind else None
     for heading in soup.find_all(["h1", "h2", "h3", "h4", "strong", "b"]):
         opening = _candidate(heading.get_text(" ", strip=True))
         if not _KIND_HEADING.match(comparison_key(opening)):
+            continue
+        if wanted and not re.match(rf"^\W*(carreras?|programas?)?\s*(de\s+)?{wanted[:8]}",
+                                   comparison_key(opening)):
             continue
         names: list[str] = []
         # Everything that follows the heading, until the next one opens a
@@ -535,7 +552,7 @@ def read_list_page(html: str) -> list[str]:
                 name = _candidate(node.get_text(" ", strip=True))
                 if _usable(name) and name != opening and name not in names:
                     names.append(name)
-        if len(names) > 1:
+        if names:
             return names
     return []
 
@@ -551,6 +568,87 @@ def read_heading_page(html: str) -> list[str]:
         if not _usable(name) or not postgraduate_kind(name):
             continue
         if _KIND_HEADING.fullmatch(comparison_key(name)) or name in names:
+            continue
+        names.append(name)
+    return names
+
+
+def _states_several_kinds(name: str) -> bool:
+    """A line that names two programmes is a sentence, not a programme.
+
+    It reads either as two kinds ("Doctorado y Posdoctorado") or as the same
+    one twice ("Doctorado, área Farmacia y el Doctorado Binacional").
+    """
+    key = comparison_key(name)
+    labels = set()
+    occurrences = 0
+    for token, label in POSTGRADUATE_KINDS:
+        found = len(re.findall(rf"\b{token}", key))
+        if found:
+            labels.add(label)
+            occurrences += found
+    return len(labels) > 1 or occurrences > 1
+
+
+def read_mixed_page(html: str) -> list[str]:
+    """Read a page that lists every kind together without separating them.
+
+    Three faculties publish one page for their whole offer, so the kind cannot
+    come from a heading: only the entries that name their own kind are read,
+    and the headings that announce a section are left out.
+
+    Only the footer is dropped. One faculty puts its whole catalogue inside a
+    ``<nav>`` -- the tabs are the sections -- so removing the furniture by tag
+    would remove the offer with it; here the name is the filter.
+    """
+    soup = _soup(html)
+    for element in soup(["footer"]):
+        element.decompose()
+    names: list[str] = []
+    for node in soup.find_all(["li", "a", "h2", "h3", "h4", "p", "strong", "td"]):
+        name = _candidate(node.get_text(" ", strip=True))
+        if not _usable(name) or not postgraduate_kind(name) or name in names:
+            continue
+        if _KIND_HEADING.fullmatch(comparison_key(name)) or _states_several_kinds(name):
+            continue
+        names.append(name)
+    return names
+
+
+def read_panel(html: str, anchor: str) -> list[str]:
+    """Read the panel of a page whose sections are tabs.
+
+    One faculty publishes its whole offer on one page and opens each kind in
+    its own tab; the fragment of the source URL names the panel, so the kind
+    comes from which tab the names are in.
+    """
+    element = _soup(html).find(id=anchor)
+    if element is None:
+        return []
+    names: list[str] = []
+    for node in element.find_all(["li", "a"]):
+        name = _candidate(node.get_text(" ", strip=True))
+        if not _usable(name) or name in names:
+            continue
+        if _KIND_HEADING.fullmatch(comparison_key(name)) or _states_several_kinds(name):
+            continue
+        names.append(name)
+    return names
+
+
+def read_selected(html: str, selector: str) -> list[str]:
+    """Read the names a page keeps in one element of its own markup.
+
+    Two faculties write a paragraph of directors and contacts under every
+    programme, so no rule over the text can tell a name from a person. Their
+    markup does say it, and the source declares which element holds the name.
+    """
+    names: list[str] = []
+    for node in _soup(html).select(selector):
+        name = _candidate(node.get_text(" ", strip=True))
+        if not _usable(name) or name in names:
+            continue
+        if _KIND_HEADING.fullmatch(comparison_key(name)) or _states_several_kinds(name):
             continue
         names.append(name)
     return names
@@ -622,6 +720,34 @@ POSTGRADUATE_SOURCES: tuple[tuple[str, str, str, str], ...] = (
      "Especialización", "lista"),
     ("Facultad de Ingeniería", "https://www.fi.uba.ar/posgrado/diplomaturas",
      "Diplomatura", "lista"),
+    ("Facultad de Ciencias Económicas",
+     "https://economicas.uba.ar/posgrado/oferta-academica/categorias/",
+     "Maestría", "lista"),
+    ("Facultad de Ciencias Económicas",
+     "https://economicas.uba.ar/posgrado/oferta-academica/categorias/",
+     "Especialización", "lista"),
+    ("Facultad de Ciencias Económicas",
+     "https://economicas.uba.ar/posgrado/oferta-academica/categorias/",
+     "Diplomatura", "lista"),
+    ("Facultad de Ciencias Sociales",
+     "https://www.sociales.uba.ar/posgrados/maestriasyespecializaciones/",
+     "Maestría", "mezcla"),
+    ("Facultad de Ciencias Veterinarias",
+     "https://www.fvet.uba.ar/?q=escuelaGraduados", "Maestría", "mezcla"),
+    ("Facultad de Derecho",
+     "https://www.derecho.uba.ar/academica/posgrados/maestrias.php",
+     "Maestría", "selector:div.carrera h3"),
+    ("Facultad de Derecho",
+     "https://www.derecho.uba.ar/academica/posgrados/carr_especializacion.php",
+     "Especialización", "selector:div.carrera h3"),
+    ("Facultad de Farmacia y Bioquímica",
+     "https://www.ffyb.uba.ar/secretaria-de-posgrado/", "Especialización", "mezcla"),
+    ("Facultad de Odontología", "https://posgrado.odontologia.uba.ar/",
+     "Diplomatura", "panel:curso-0"),
+    ("Facultad de Odontología", "https://posgrado.odontologia.uba.ar/",
+     "Especialización", "panel:curso-1"),
+    ("Facultad de Odontología", "https://posgrado.odontologia.uba.ar/",
+     "Maestría", "panel:curso-2"),
 )
 
 POSTGRADUATE_URLS = tuple(dict.fromkeys(url for _, url, _, _ in POSTGRADUATE_SOURCES))
@@ -629,20 +755,21 @@ POSTGRADUATE_URLS = tuple(dict.fromkeys(url for _, url, _, _ in POSTGRADUATE_SOU
 # The faculties whose postgraduate offer is published in a form this reader
 # does not cover, with what stands in the way of reading it.
 POSTGRADUATES_NOT_READ = {
-    "Facultad de Ciencias Económicas": "la escuela de posgrado publica su oferta "
-                                       "por área temática, sin un listado de programas",
-    "Facultad de Ciencias Sociales": "el listado está dentro de una página que "
-                                     "mezcla la oferta con el calendario académico",
-    "Facultad de Ciencias Veterinarias": "la oferta está en anclas de una sola "
-                                         "página, sin un índice por tipo",
-    "Facultad de Derecho": "la oferta está detrás de enlaces 'Más información' "
-                           "que no publican el listado",
-    "Facultad de Farmacia y Bioquímica": "una sola página mezcla los cuatro tipos "
-                                         "sin separarlos",
-    "Facultad de Ciencias Médicas": "la oferta se publica en subpáginas por "
-                                    "especialidad, sin un índice",
-    "Facultad de Odontología": "la oferta está en anclas de una sola página",
-    "Facultad de Psicología": "la oferta se publica en un visor por año lectivo",
+    "Facultad de Ciencias Médicas": "las páginas de oferta describen los "
+                                    "requisitos de ingreso y no listan los programas",
+    "Facultad de Psicología": "la oferta se publica en un visor por año lectivo "
+                              "que no entrega el listado en el HTML",
+}
+
+# Sections of a faculty already covered above that publish a kind in a form
+# this reader does not cover; the faculty is read, this part of it is not.
+POSTGRADUATE_PARTS_NOT_READ = {
+    "Facultad de Derecho": "los programas de actualización y el doctorado usan "
+                           "una marca distinta de la de las maestrías",
+    "Facultad de Ciencias Sociales": "los programas de actualización están "
+                                     "mezclados con el calendario académico",
+    "Facultad de Ciencias Económicas": "los cursos y los programas ejecutivos no "
+                                       "son títulos del contrato",
 }
 
 
@@ -660,7 +787,8 @@ def chrome_lines(pages: dict[str, str]) -> set[str]:
 
 
 STRATEGIES = {"lista": "read_list_page", "titulos": "read_heading_page",
-              "parrafos": "read_paragraph_page"}
+              "parrafos": "read_paragraph_page", "mezcla": "read_mixed_page",
+              "panel": "read_panel", "selector": "read_selected"}
 
 
 def read_postgraduates(
@@ -672,11 +800,17 @@ def read_postgraduates(
     lends them the kind it announces, the same way the UTN catalogue does.
     """
     if strategy == "lista":
-        names = read_list_page(html)
+        names = read_list_page(html, kind)
     elif strategy == "titulos":
         names = read_heading_page(html)
     elif strategy == "parrafos":
         names = read_paragraph_page(html, chrome or set())
+    elif strategy == "mezcla":
+        names = read_mixed_page(html)
+    elif strategy.startswith("panel:"):
+        names = read_panel(html, strategy.split(":", 1)[1])
+    elif strategy.startswith("selector:"):
+        names = read_selected(html, strategy.split(":", 1)[1])
     else:
         raise ValueError(f"Estrategia desconocida: {strategy!r}")
     rows: list[dict[str, str]] = []

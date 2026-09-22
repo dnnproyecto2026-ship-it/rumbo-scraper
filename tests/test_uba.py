@@ -295,11 +295,101 @@ class PostgraduateTests(unittest.TestCase):
         self.assertEqual(empty[0]["motivo"], "el índice no publicó ningún programa")
 
     def test_every_source_declares_a_strategy_the_reader_knows(self) -> None:
-        self.assertTrue(all(strategy in STRATEGIES
+        # Two strategies carry an argument after a colon: which tab to open
+        # and which element of the markup holds the name.
+        self.assertTrue(all(strategy.split(":", 1)[0] in STRATEGIES
                             for _, _, _, strategy in POSTGRADUATE_SOURCES))
 
     def test_the_faculties_that_are_not_read_are_declared(self) -> None:
-        # Eight of the thirteen publish their offer in a form this reader does
+        # Two of the thirteen publish their offer in a form this reader does
         # not cover, and silence would look the same as an empty catalogue.
-        self.assertEqual(len(POSTGRADUATES_NOT_READ), 8)
+        self.assertEqual(len(POSTGRADUATES_NOT_READ), 2)
         self.assertTrue(all(reason for reason in POSTGRADUATES_NOT_READ.values()))
+        read = {faculty for faculty, _, _, _ in POSTGRADUATE_SOURCES}
+        self.assertFalse(read & set(POSTGRADUATES_NOT_READ))
+
+
+MEZCLA = """
+<h2>Carreras de especialización</h2>
+<ul>
+  <li>Maestría en Biotecnología</li>
+  <li>Especialización en Bioquímica</li>
+  <li>Doctorado y Posdoctorado</li>
+  <li>Doctorado, área Farmacia y el Doctorado Binacional</li>
+  <li>Comisión de Doctorado:</li>
+  <li>Una noticia cualquiera sin tipo</li>
+</ul>
+"""
+
+PANELES = """
+<ul class="nav"><li><a href="#curso-1">MAESTRÍAS</a></li></ul>
+<div id="curso-0"><ul><li><a href="/a">Diplomatura Superior en Patología Bucal</a></li></ul></div>
+<div id="curso-1"><ul><li><a href="/b">Cirugía Bucal</a></li>
+<li><a href="/c">Imagenología Bucal</a></li></ul></div>
+"""
+
+SELECTOR = """
+<div class="carrera"><h3><a href="/m1">Derecho Administrativo</a></h3>
+<p class="content"><strong>Director:</strong> Juan Pérez</p></div>
+<div class="carrera"><h3><a href="/m2">Derecho Procesal Civil</a></h3>
+<p class="content"><strong>Director:</strong> Ana Gómez</p></div>
+"""
+
+SECCIONES = """
+<h3>Maestrías</h3><ul><li>Administración Pública</li></ul>
+<h3>Diplomaturas de posgrado</h3><ul><li>Recursos Humanos</li></ul>
+"""
+
+
+class MixedPageTests(unittest.TestCase):
+    def test_only_the_entries_that_name_their_kind_are_read(self) -> None:
+        rows = read_postgraduates(MEZCLA, "mezcla", "Especialización")
+        self.assertEqual([row["nombre"] for row in rows],
+                         ["Maestría en Biotecnología", "Especialización en Bioquímica"])
+
+    def test_a_line_that_names_two_programmes_is_a_sentence(self) -> None:
+        names = {row["nombre"] for row in
+                 read_postgraduates(MEZCLA, "mezcla", "Especialización")}
+        self.assertNotIn("Doctorado y Posdoctorado", names)
+        self.assertNotIn("Doctorado, área Farmacia y el Doctorado Binacional", names)
+
+    def test_a_label_that_ends_in_a_colon_is_not_a_programme(self) -> None:
+        names = {row["nombre"] for row in
+                 read_postgraduates(MEZCLA, "mezcla", "Especialización")}
+        self.assertNotIn("Comisión de Doctorado:", names)
+
+
+class PanelTests(unittest.TestCase):
+    def test_the_tab_the_source_names_decides_the_kind(self) -> None:
+        rows = read_postgraduates(PANELES, "panel:curso-1", "Maestría")
+        self.assertEqual([row["nombre"] for row in rows],
+                         ["Maestría en Cirugía Bucal", "Maestría en Imagenología Bucal"])
+
+    def test_a_tab_that_does_not_exist_yields_nothing(self) -> None:
+        self.assertEqual(read_postgraduates(PANELES, "panel:curso-9", "Maestría"), [])
+
+
+class SelectorTests(unittest.TestCase):
+    def test_the_markup_separates_the_name_from_its_director(self) -> None:
+        rows = read_postgraduates(SELECTOR, "selector:div.carrera h3", "Maestría")
+        self.assertEqual([row["nombre"] for row in rows],
+                         ["Maestría en Derecho Administrativo",
+                          "Maestría en Derecho Procesal Civil"])
+
+
+class SectionTests(unittest.TestCase):
+    def test_a_page_with_one_section_per_kind_is_read_once_per_kind(self) -> None:
+        # The same page holds the maestrías and the diplomaturas, so the
+        # heading that opens the block has to be the one being asked for.
+        maestrias = read_postgraduates(SECCIONES, "lista", "Maestría")
+        diplomaturas = read_postgraduates(SECCIONES, "lista", "Diplomatura")
+        self.assertEqual([r["nombre"] for r in maestrias],
+                         ["Maestría en Administración Pública"])
+        self.assertEqual([r["nombre"] for r in diplomaturas],
+                         ["Diplomatura en Recursos Humanos"])
+
+    def test_a_name_the_extractor_cut_in_half_is_not_a_programme(self) -> None:
+        cut = '<h3>Maestrías</h3><ul><li>Maestría con título</li>'\
+              '<li>Gestión Ambiental Metropolitana</li></ul>'
+        self.assertEqual([r["nombre"] for r in read_postgraduates(cut, "lista", "Maestría")],
+                         ["Maestría en Gestión Ambiental Metropolitana"])
