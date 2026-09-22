@@ -12,6 +12,7 @@ Generada el 2026-09-22 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 | Universidad Austral | 30 | 201 | 1375 | 1104 | 3124 |
 | Universidad del Museo Social Argentino | 23 | 55 | 733 | 0 | 317 |
 | Pontificia Universidad Católica Argentina | 80 | 30 | 3833 | 0 | 237 |
+| Universidad Argentina de la Empresa | 84 | 14 | 3433 | 0 | 189 |
 
 ## Secciones vacías, por universidad
 
@@ -84,21 +85,36 @@ Generada el 2026-09-22 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 - `turnos_anio` — sin datos, causa no declarada
 - `ofertas_ciclo` — sin datos, causa no declarada
 
+**Universidad Argentina de la Empresa**
+
+- `sedes` — sin datos, causa no declarada
+- `becas` — sin datos, causa no declarada
+- `servicios_estudiantiles` — sin datos, causa no declarada
+- `actividades_extracurriculares` — sin datos, causa no declarada
+- `alojamiento` — sin datos, causa no declarada
+- `programas_internacionales` — sin datos, causa no declarada
+- `convenios_intercambio` — sin datos, causa no declarada
+- `autoridades` — sin datos, causa no declarada
+- `redes_contacto` — sin datos, causa no declarada
+- `aranceles` — sin datos, causa no declarada
+- `turnos_anio` — sin datos, causa no declarada
+- `ofertas_ciclo` — sin datos, causa no declarada
+
 ## Cobertura de los campos que más importan
 
 Cuántas filas traen el dato sobre el total de esa sección.
 
-| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen |
-|---|---|---|---|---|---|---|
-| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 |
-| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 |
-| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 |
-| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 |
-| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 |
-| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 |
-| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 |
-| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 |
-| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 |
+| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l |
+|---|---|---|---|---|---|---|---|
+| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 |
+| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 |
+| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 |
+| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 |
+| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 |
+| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 |
+| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 |
+| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 |
+| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 |
 
 ## Qué queda fuera y por qué
 
@@ -145,4 +161,12 @@ Cuántas filas traen el dato sobre el total de esa sección.
 - 1 programa(s) fuera del contrato: ni la sección ni el nombre declaran el nivel
 - 32 programa(s) publicados más de una vez, unificados en una fila
 - Backlog de auditoría: alta 91, media 146, baja 0
+
+### Universidad Argentina de la Empresa
+
+- Método: HTML público enumerado por sitemap; sin IA
+- 12 programa(s) fuera del contrato: el nombre no declara el tipo de programa
+- 1 programa(s) fuera del contrato: la página no publica un título
+- 20 programa(s) publicados más de una vez, unificados en una fila
+- Backlog de auditoría: alta 112, media 77, baja 0
 

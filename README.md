@@ -240,6 +240,20 @@ Una página de facultad puede terminar de cargar su shell antes que sus enlaces;
 por eso, si no devolvió ninguno, se le vuelve a pedir una vez. Sin ese reintento
 dos corridas del mismo sitio descubrían distinta cantidad de programas.
 
+## Extracción completa: UADE
+
+```bash
+python -m rumbo_scraper.spiders.uade
+python -m rumbo_scraper.database.load_uade
+python -m rumbo_scraper.database.load_uade --apply
+```
+
+El sitemap enumera todo el sitio y un programa se reconoce por lo que la propia
+universidad publica de él: sólo un programa tiene una página
+`/plan-de-estudios` al lado. El tipo lo declara la palabra que abre el nombre,
+así que una carrera combinada como "Lic. en Administración de Empresas + MBA"
+queda como grado y no como maestría.
+
 ## Bitácora de cobertura
 
 ```bash
