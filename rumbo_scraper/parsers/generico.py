@@ -1182,3 +1182,54 @@ def _sin_recortes(programas: list[Programa],
             continue
         kept.append(programme)
     return kept
+
+
+# ------------------------------------------------------- the plan as a file
+
+# The code of the subject, printed against its name by an extractor that
+# flattens a table: "ANALISIS MATEMATICO I04052".
+_CODIGO_PEGADO = re.compile(r"(?<=[^\W\d_])\d{4,6}$")
+# What a plan document prints that belongs to the letterhead, not the plan.
+_DEL_MEMBRETE = re.compile(
+    r"(?i)www\.|https?:|@|provincia de|rep[úu]blica argentina|"
+    r"resoluci[óo]n|expediente|ordenanza|l[íi]neas? rotativas?|"
+    r"c[óo]digo postal|\b(?:lic|dr|ing|prof|cdor)\.")
+
+
+def _limpiar_materia(nombre: str) -> str:
+    return clean_text(_CODIGO_PEGADO.sub("", clean_text(nombre)))
+
+
+def leer_plan_documento(pdf: bytes, programa: str, universidad: str) -> list[dict[str, Any]]:
+    """Read the plan a career publishes as a document, strictly.
+
+    The shared reader of plan documents is deliberately permissive, because
+    the adapters feed it plans whose university publishes no year at all and
+    those are still plans. Here the source is a file found by following a
+    link, and nothing has vouched for it: the same reader pointed at a
+    university's letterhead returns its address and the names of its
+    authorities as subjects.
+
+    So a document is only believed when it publishes the year of each
+    subject. That is the one thing a plan does and a letterhead does not.
+    """
+    from rumbo_scraper.parsers.plan_documents import parse_plan_pdf
+
+    leido = parse_plan_pdf(pdf, programa, universidad)
+    filas = [fila for fila in leido["materias"] if fila.get("anio_cursada")]
+    if len(filas) < 4 or len(filas) < len(leido["materias"]) / 2:
+        return []
+
+    materias: list[dict[str, Any]] = []
+    vistas: set[tuple[int, str]] = set()
+    for fila in filas:
+        nombre = _limpiar_materia(str(fila["nombre_materia"]))
+        if not es_materia(nombre) or _DEL_MEMBRETE.search(nombre):
+            continue
+        anio = int(fila["anio_cursada"])
+        clave = (anio, comparison_key(nombre))
+        if clave in vistas:
+            continue
+        vistas.add(clave)
+        materias.append({"nombre": nombre, "anio": anio})
+    return materias if len(materias) >= 4 else []

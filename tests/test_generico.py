@@ -448,3 +448,18 @@ class UnaOfertaNoSeEscribeDosVeces(unittest.TestCase):
         _upsert_oferta(cliente, fila)
         _upsert_oferta(cliente, fila)
         self.assertEqual(len(almacen), 1)
+
+
+class ElPlanPublicadoComoDocumento(unittest.TestCase):
+    def test_el_codigo_pegado_al_nombre_se_saca(self):
+        from rumbo_scraper.parsers.generico import _limpiar_materia
+        self.assertEqual(_limpiar_materia("ANALISIS MATEMATICO I04052"),
+                         "ANALISIS MATEMATICO I")
+        self.assertEqual(_limpiar_materia("Química II"), "Química II")
+
+    def test_un_documento_sin_anos_no_es_un_plan(self):
+        # The same reader pointed at a university's letterhead returns its
+        # address and the names of its authorities as subjects.
+        from rumbo_scraper.parsers import generico
+        materias = generico.leer_plan_documento(b"", "Licenciatura", "Universidad")
+        self.assertEqual(materias, [])

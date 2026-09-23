@@ -46,6 +46,12 @@ DEFAULT_DIR = Path("data")
 
 _PLAN = re.compile(r"(?i)plan\s*(de\s*)?estudi|materias|asignaturas|"
                    r"estructura\s*curricular|curricula")
+# A university publishes several documents with "plan" in the name and only
+# one of them is the plan of a career.
+_NO_ES_EL_PLAN = re.compile(
+    r"(?i)plan\s+estrat[ée]gico|plan\s+institucional|plan\s+de\s+"
+    r"(?:gesti[óo]n|obras|desarrollo|mejora)|calendario|arancel|"
+    r"reglamento|estatuto")
 
 
 class Lector:
@@ -135,6 +141,21 @@ class Lector:
         with self._lock:
             self.errores.append({"url": url, "error": "el sitio pidió menos pedidos"})
         return ""
+
+    def get_documento(self, url: str) -> bytes:
+        """Download a plan published as a file, rather than as a page."""
+        self._esperar_turno()
+        try:
+            response = self.client.get(url)
+            response.raise_for_status()
+            kind = response.headers.get("content-type", "").lower()
+            if "pdf" not in kind and not url.lower().endswith(".pdf"):
+                return b""
+            return response.content
+        except Exception as exc:
+            with self._lock:
+                self.errores.append({"url": url, "error": str(exc)[:200]})
+            return b""
 
     def get_many(self, urls: list[str]) -> dict[str, str]:
         if self._navegador is not None:
@@ -448,7 +469,46 @@ def _planes_de(lector: Lector, programas: list[generico.Programa],
         materias = generico.leer_plan(aparte.get(enlace, ""))
         if materias:
             planes[origen] = materias
+
+    # What is left is a career whose plan the university publishes as a
+    # document. Half the national universities do, and their pages link it.
+    nombres = {programa.url: programa.nombre for programa in programas}
+    for programa in programas:
+        if programa.url in planes:
+            continue
+        documento = _documento_del_plan(paginas.get(programa.url, ""),
+                                        programa.url, lector.dominios)
+        if not documento:
+            continue
+        materias = generico.leer_plan_documento(
+            lector.get_documento(documento), nombres[programa.url],
+            lector.universidad.nombre_oficial)
+        if materias:
+            planes[programa.url] = materias
     return planes
+
+
+def _documento_del_plan(html: str, pagina: str,
+                        dominios: tuple[str, ...]) -> str | None:
+    """The file a page offers as its plan of studies, if it offers one.
+
+    Only a link the page itself calls a plan of studies counts. A page also
+    links the strategic plan of the university, the minutes that approved the
+    degree and the calendar, and none of those is the plan of a career.
+    """
+    from bs4 import BeautifulSoup
+    for anchor in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
+        etiqueta = clean_text(anchor.get_text(" ", strip=True))
+        href = clean_text(anchor["href"])
+        if not href.lower().split("?")[0].endswith(".pdf"):
+            continue
+        junto = f"{etiqueta} {href}"
+        if not _PLAN.search(junto) or _NO_ES_EL_PLAN.search(junto):
+            continue
+        url = urljoin(pagina, href)
+        if _es_propio(url, dominios):
+            return url
+    return None
 
 
 def _enlace_al_plan(html: str, pagina: str, dominios: tuple[str, ...]) -> str | None:
