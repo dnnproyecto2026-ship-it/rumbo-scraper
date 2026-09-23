@@ -392,6 +392,7 @@ def leer_autoridades(html: str, pagina: str) -> list[dict[str, str]]:
 
     for persona in por_guion(html):
         guardar(persona["nombre"], persona["cargo"])
+    por_guion_leidas = len(personas)
 
     soup = _soup(html)
     for element in soup(["script", "style", "noscript", "nav", "footer", "header"]):
@@ -437,13 +438,49 @@ def leer_autoridades(html: str, pagina: str) -> list[dict[str, str]]:
                 i += 2
                 continue
         i += 1
+    if _se_contradice(personas[por_guion_leidas:]):
+        return personas[:por_guion_leidas]
     return personas
 
 
 def _es_persona(linea: str) -> bool:
-    """Whether a line can be the name beside a post: a person, not a unit."""
+    """Whether a line can be the name beside a post: a person, not a place."""
+    clave = comparison_key(linea)
     return bool(_UN_NOMBRE_PROPIO.match(_sin_tratamiento(clean_text(linea)))) \
-        and not _UNA_UNIDAD.match(linea) and "universidad" not in comparison_key(linea)
+        and not _UNA_UNIDAD.match(linea) and "universidad" not in clave \
+        and clave.split()[:1] != [] and clave.split()[0] not in _NO_ABRE_UN_NOMBRE
+
+
+# "Sede Patagonia" reads like a first name and a surname and is a campus.
+_NO_ABRE_UN_NOMBRE = frozenset(
+    "sede anexo campus facultad escuela departamento instituto centro area "
+    "licenciatura carrera secretaria direccion".split())
+
+
+def _se_contradice(personas: list[dict[str, str]]) -> bool:
+    """Whether a page read as pairs has been read out of step.
+
+    A faculty has one dean and a person is dean of one faculty. When the
+    pairs a page yields make somebody dean of two faculties, or give one
+    faculty two deans, the posts and the names were paired a line out of step
+    somewhere -- Austral's page made one person the dean of Communication and
+    of Biomedical Sciences -- and none of its pairs can be trusted.
+    """
+    def es_decano(cargo: str) -> bool:
+        clave = comparison_key(cargo)
+        return bool(re.search(r"\bdecan[oa]\b", clave)) and "vice" not in clave
+
+    por_persona: dict[str, set[str]] = {}
+    por_unidad: dict[str, set[str]] = {}
+    for persona in personas:
+        if not es_decano(persona["cargo"]):
+            continue
+        unidad = comparison_key(persona.get("unidad") or persona["cargo"])
+        nombre = comparison_key(persona["nombre"])
+        por_persona.setdefault(nombre, set()).add(unidad)
+        por_unidad.setdefault(unidad, set()).add(nombre)
+    return any(len(v) > 1 for v in por_persona.values()) or any(
+        len(v) > 1 for v in por_unidad.values())
 
 
 # The posts a faculty, a school or a department has of its own.

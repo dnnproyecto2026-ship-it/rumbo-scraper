@@ -116,6 +116,22 @@ def aplicar(client: Any, universidad: dict[str, Any],
         escrito["facultades"] = len(hallado["facultades"])
 
     personas = hallado.get("autoridades") or []
+    # The page of authorities names each faculty in full over its dean. A
+    # faculty named there and missing from the table is a faculty of this
+    # university all the same, and is added before its people are filed.
+    for persona in personas:
+        nombre_unidad = persona.get("unidad")
+        if not nombre_unidad or _unidad_del_cargo(nombre_unidad, por_nombre):
+            continue
+        if not ins._UNA_UNIDAD.match(nombre_unidad) or nombre_unidad.isupper():
+            continue
+        guardada = _upsert_one(client, "facultades", {
+            "universidad_id": universidad_id, "nombre_facultad": nombre_unidad,
+            "tipo_unidad": ins.tipo_de_unidad(nombre_unidad),
+        }, "universidad_id,nombre_facultad,tipo_unidad")
+        por_nombre[comparison_key(nombre_unidad)] = guardada["id"]
+        escrito["facultades_de_la_pagina_de_autoridades"] = escrito.get(
+            "facultades_de_la_pagina_de_autoridades", 0) + 1
     # A person is stored only under the unit their own post names. The
     # rectorado runs the university and not one of its faculties, and
     # ``autoridades.facultad_id`` cannot be null, so filing the rector under
@@ -132,14 +148,19 @@ def aplicar(client: Any, universidad: dict[str, Any],
         else:
             sin_unidad += 1
     if con_unidad:
-        ya = select_all(client.table("autoridades").select("id")
-                        .in_("facultad_id", sorted({u for u, _ in con_unidad})))
-        if not ya:
+        # Unit by unit: a faculty whose authorities an adapter or an earlier
+        # reading already stored keeps them, and does not stop the faculties
+        # beside it that have none from getting theirs.
+        ya = {fila["facultad_id"] for fila in select_all(
+            client.table("autoridades").select("facultad_id")
+            .in_("facultad_id", sorted({u for u, _ in con_unidad})))}
+        nuevas = [(unidad, persona) for unidad, persona in con_unidad if unidad not in ya]
+        if nuevas:
             escrito["autoridades"] = _insert_chunks(client, "autoridades", [{
                 "facultad_id": unidad, "carrera_id": None,
                 "cargo": persona["cargo"], "tipo": persona["tipo"],
                 "nombre_autoridad": persona["nombre"],
-            } for unidad, persona in con_unidad])
+            } for unidad, persona in nuevas])
     if sin_unidad:
         escrito["autoridades_de_la_universidad_sin_tabla"] = sin_unidad
     return escrito

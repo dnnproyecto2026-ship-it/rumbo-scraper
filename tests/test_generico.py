@@ -736,3 +736,17 @@ class VidaSinBasuraTest(unittest.TestCase):
                       "Bolsa de trabajo y Pasantías", "PLAYÓN DEPORTIVO",
                       "Biblioteca Central - UNDAV"):
             self.assertTrue(_es_un_nombre(texto), texto)
+
+
+class AutoridadesFueraDePasoTest(unittest.TestCase):
+    def test_a_page_that_makes_one_person_dean_of_two_faculties_is_not_trusted(self):
+        from rumbo_scraper.parsers.institucional import leer_autoridades
+        html = ("<html><body><p>Decana de la Facultad de Comunicación</p><p>Marcela Pizarro</p>"
+                "<p>Decana de la Facultad de Ciencias Empresariales</p><p>Marcela Pizarro</p>"
+                "</body></html>")
+        self.assertEqual(leer_autoridades(html, "u"), [])
+
+    def test_a_campus_is_not_a_person(self):
+        from rumbo_scraper.parsers.institucional import leer_autoridades
+        html = "<html><body><p>Directora Lic. en Psicología</p><p>Sede Patagonia</p></body></html>"
+        self.assertEqual(leer_autoridades(html, "u"), [])
