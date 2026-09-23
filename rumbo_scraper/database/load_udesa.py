@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from rumbo_scraper.database.load_utdt import (
+    _upsert_oferta,
     _boolean, _faculty_name, _insert_chunks, _sync_subjects, _upsert_chunks, _upsert_one,
 )
 from rumbo_scraper.normalizers.text import comparison_key
@@ -121,7 +122,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     for row in data["ofertas"]:
         career_id = career_ids[row["carrera_nombre"]]
         campus_id = campus_ids[row["sede"]]
-        _upsert_one(client, "ofertas_academicas", {
+        _upsert_oferta(client, {
             "carrera_id": career_id, "sede_id": campus_id,
             "modalidad": row["modalidad"],
             "regimen_ingreso": row["regimen_ingreso"],
@@ -130,7 +131,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "tiene_pasantias": _boolean(row["tiene_pasantias"]),
             "tiene_bolsa_trabajo": _boolean(row["tiene_bolsa_trabajo"]),
             "url_oficial": row["url_oficial"], "activa": True,
-        }, "carrera_id,sede_id,modalidad")
+        })
         faculty_id = faculty_ids[faculty_by_career[row["carrera_nombre"]]]
         relation = (faculty_id, campus_id)
         if relation not in linked_faculty_campuses:

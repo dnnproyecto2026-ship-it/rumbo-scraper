@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from rumbo_scraper.database.load_utdt import (
+    _upsert_oferta,
     _boolean, _insert_chunks, _sync_subjects, _upsert_chunks, _upsert_one,
 )
 from rumbo_scraper.normalizers.text import comparison_key
@@ -107,7 +108,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     offers = [row for row in data["ofertas"] if campus_ids.get(str(row["sede"]))]
     counts["ofertas_sin_sede_publicada"] = len(data["ofertas"]) - len(offers)
     for row in offers:
-        _upsert_one(client, "ofertas_academicas", {
+        _upsert_oferta(client, {
             "carrera_id": career_ids[row["carrera_nombre"]],
             "sede_id": campus_ids[str(row["sede"])],
             "modalidad": row["modalidad"], "regimen_ingreso": row["regimen_ingreso"],
@@ -116,7 +117,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "tiene_pasantias": _boolean(row["tiene_pasantias"]),
             "tiene_bolsa_trabajo": _boolean(row["tiene_bolsa_trabajo"]),
             "url_oficial": row["url_oficial"], "activa": True,
-        }, "carrera_id,sede_id,modalidad")
+        })
     counts["ofertas"] = len(offers)
 
     postgraduate_ids: dict[str, str] = {}

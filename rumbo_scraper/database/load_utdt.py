@@ -71,6 +71,34 @@ def _upsert_one(client: Any, table: str, row: dict[str, Any], conflict: str) -> 
     return rows[0]
 
 
+def _upsert_oferta(client: Any, row: dict[str, Any]) -> dict[str, Any]:
+    """Save one academic offer without ever writing it twice.
+
+    Upserting on ``carrera_id, sede_id, modalidad`` looks right and is not: a
+    university that does not publish the modality of a career leaves that
+    column null, and in Postgres a null never equals another null, so the
+    conflict never fires and every reading inserts the offer again. Two
+    thousand rows once held six hundred and sixty-three offers.
+
+    An offer is identified here by its career and its campus, which is what
+    makes it one offer, and the row already stored keeps its id so the
+    timetables and intake cycles that point at it survive the update.
+    """
+    existing = _data(
+        client.table("ofertas_academicas").select("id")
+        .eq("carrera_id", row["carrera_id"]).eq("sede_id", row["sede_id"])
+        .limit(1).execute()
+    )
+    if existing:
+        saved = _data(client.table("ofertas_academicas").update(row)
+                      .eq("id", existing[0]["id"]).execute())
+        return saved[0] if saved else existing[0]
+    saved = _data(client.table("ofertas_academicas").insert(row).execute())
+    if not saved:
+        raise RuntimeError("Supabase no devolvió la oferta guardada.")
+    return saved[0]
+
+
 def _insert_chunks(client: Any, table: str, rows: list[dict[str, Any]], size: int = 100) -> int:
     for start in range(0, len(rows), size):
         _data(client.table(table).insert(rows[start:start + size]).execute())
@@ -247,9 +275,7 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
             "url_oficial": row["url_oficial"],
             "activa": True,
         }
-        saved = _upsert_one(
-            client, "ofertas_academicas", payload, "carrera_id,sede_id,modalidad"
-        )
+        saved = _upsert_oferta(client, payload)
         offer_ids[row["carrera_nombre"]] = saved["id"]
     counts["ofertas"] = len(offer_ids)
 

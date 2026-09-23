@@ -408,3 +408,43 @@ class UnSitioQueNombraTodoIgual(unittest.TestCase):
     def test_un_menu_no_alcanza_para_ser_una_carrera(self):
         self.assertIsNone(generico.leer_programa_por_etiqueta(
             "<h1>Universidad</h1><p>corto</p>", "https://u.edu.ar/x", "Abogacía"))
+
+
+class UnaOfertaNoSeEscribeDosVeces(unittest.TestCase):
+    """The offer is identified by its career and its campus.
+
+    Upserting on the modality as well looks right and is not: a university
+    that does not publish a modality leaves the column null, and in Postgres
+    a null never equals another null, so the conflict never fires.
+    """
+
+    class _Tabla:
+        def __init__(self, almacen): self.almacen = almacen; self._filtros = {}
+        def select(self, *_a, **_k): return self
+        def eq(self, campo, valor): self._filtros[campo] = valor; return self
+        def limit(self, _n): return self
+        def insert(self, fila):
+            fila = {**fila, "id": f"id{len(self.almacen)}"}
+            self.almacen.append(fila); self._resultado = [fila]; return self
+        def update(self, fila):
+            for guardada in self.almacen:
+                if guardada["id"] == self._filtros.get("id"):
+                    guardada.update(fila); self._resultado = [guardada]
+            return self
+        def execute(self):
+            if hasattr(self, "_resultado"):
+                salida, self._resultado = self._resultado, None
+                return type("R", (), {"data": salida})()
+            hallados = [f for f in self.almacen
+                        if all(f.get(k) == v for k, v in self._filtros.items())]
+            self._filtros = {}
+            return type("R", (), {"data": hallados})()
+
+    def test_la_misma_oferta_dos_veces_es_una_fila(self):
+        from rumbo_scraper.database.load_utdt import _upsert_oferta
+        almacen: list[dict] = []
+        cliente = type("C", (), {"table": lambda _s, _t: UnaOfertaNoSeEscribeDosVeces._Tabla(almacen)})()
+        fila = {"carrera_id": "c1", "sede_id": "s1", "modalidad": None, "activa": True}
+        _upsert_oferta(cliente, fila)
+        _upsert_oferta(cliente, fila)
+        self.assertEqual(len(almacen), 1)
