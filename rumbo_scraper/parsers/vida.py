@@ -82,8 +82,17 @@ _NOT_AN_ITEM = re.compile(
     r"(?i)^(inicio|home|contacto|men[úu]|buscar|ver m[áa]s|leer m[áa]s|"
     r"volver|siguiente|anterior|compartir|imprimir|descargar|suscrib|"
     r"cookies?|pol[íi]tica|t[ée]rminos|copyright|todos los derechos|"
-    r"seguinos|seguí|newsletter|ingresar|iniciar sesi[óo]n)"
+    r"seguinos|seguí|newsletter|ingresar|iniciar sesi[óo]n|"
+    # A page about a topic also sells it: the invitation to take it, the
+    # question it answers and the testimony of someone who did are headings
+    # on the same page, and none of them is something the university offers.
+    r"experiencias?|testimonios?|por qu[ée]|c[óo]mo |qu[ée] es|"
+    r"conoc[ée]|descubr[íi]|sumate|enterate|mir[áa]|particip[áa]|"
+    r"viv[íi]|eleg[íi]|estudi[áa]|ingres[áa]|asesorate|consult[áa]|"
+    r"pod[ée]s|quer[ée]s|animate|aprovech[áa])"
 )
+# A heading that asks instead of naming.
+_A_QUESTION = re.compile(r"[¿?]")
 
 
 # Whether an item belongs to the topic of the page that lists it. A page
@@ -114,6 +123,8 @@ def read_items(html: str, topic: str | None = None) -> list[dict[str, str]]:
     for heading in soup.find_all(["h2", "h3", "h4"]):
         name = clean_text(heading.get_text(" ", strip=True))
         if not name or len(name) < 4 or len(name) > 90 or _NOT_AN_ITEM.match(name):
+            continue
+        if _A_QUESTION.search(name):
             continue
         if comparison_key(name) in seen:
             continue

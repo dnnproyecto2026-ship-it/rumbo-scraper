@@ -436,6 +436,81 @@ después de cargar— y para esos dos se usa el navegador.
 Resultado: Instagram y YouTube en 15 de 15, LinkedIn y Facebook en 14, Twitter
 en 13, TikTok en 11, mail y teléfono en 9.
 
+## Lector general: leer una universidad que no tiene adaptador
+
+Las primeras quince universidades se leyeron con un adaptador cada una, porque
+cada sitio publica su catálogo con una forma propia. Eso sirve para quince y no
+sirve para un país: la Argentina tiene más de cien universidades y escribir
+cuatrocientas líneas para cada una es un año de trabajo.
+
+El lector general (`rumbo_scraper/parsers/generico.py`) se apoya en otra cosa.
+Una universidad argentina no puede inventar el nombre de un título: el
+Ministerio reconoce un conjunto cerrado —Licenciatura, Ingeniería, Profesorado,
+Tecnicatura, Abogacía, Medicina, Maestría, Especialización, Doctorado— y la
+universidad escribe ese nombre en el encabezado de la página que ofrece la
+carrera. Entonces una página de carrera se reconoce **por lo que dice**, no por
+dónde está, y el mismo lector sirve para cualquier universidad del país.
+
+```bash
+python -m rumbo_scraper.spiders.generico unq
+python -m rumbo_scraper.database.load_generico unq --apply
+```
+
+Cada universidad que se lee así necesita solamente su nombre, su dirección y
+dónde queda, en `rumbo_scraper/catalogo.py`.
+
+### Qué lee y qué no
+
+Lee el nombre, el nivel, el título que otorga, la duración, la modalidad, la
+unidad académica, la resolución que lo reconoce, el plan de estudios cuando la
+página lo publica como lista bajo cada año, las autoridades que la página
+nombra con su cargo y las direcciones de correo de la propia universidad.
+
+No lee lo que cada sitio publica con una forma propia: aranceles, becas, vida
+universitaria, convenios. Eso queda para un adaptador escrito para esa
+universidad, y cada artefacto declara en `secciones_sin_fuente_publica` por qué
+una sección quedó vacía.
+
+### Las reglas que costaron un error cada una
+
+- **El plan termina donde empieza la sección siguiente.** Sin ese límite el
+  lector se pasaba de largo y una carrera volvía con trescientas materias
+  llamadas "Contacto", "Sedes" y "Suscribite". Si un año trae más de treinta
+  materias, el plan entero se descarta: el lector se salió del plan y nada de
+  lo que leyó es confiable.
+- **La página se lee por renglones, no por elementos.** La mitad de los sitios
+  le da a cada materia un elemento propio y la otra mitad escribe el año entero
+  en un párrafo con saltos de línea. Aplanado a renglones, los dos son iguales.
+- **Nunca borrar un elemento por su clase sin mirar cuál es.** Los sitios
+  hechos con WordPress escriben `sidebar` en la clase del `<body>`, así que
+  barrer por clase se llevaba la página entera.
+- **"Directora" contiene "rector".** Sin anclar el cargo a los límites de
+  palabra, la directora de una carrera entraba como rectora de la universidad.
+  Y "vicerrector" se escribe con doble erre: no es "vice" más "rector".
+- **El título de un grado también aparece adentro de cosas que no son grados.**
+  "Agente de Propaganda Médica" es un curso de extensión, no Medicina. Los
+  títulos que se nombran por su materia sola se leen únicamente al principio
+  del nombre.
+- **Un encabezado que es sólo la palabra del título es el índice, no la
+  carrera.** "Licenciatura", "Profesorados", "Tecnicatura universitaria".
+
+### Lo que no se lee a propósito
+
+- **UNSAM** responde todo pedido con un desafío anti-bots de su red de
+  contenidos, incluido el de su propio sitemap. Es un control que la
+  universidad eligió poner delante de sus páginas y este proyecto no lo
+  esquiva. Su catálogo queda sin leer.
+- **La duración y el título** quedan nulos en las universidades que no los
+  publican junto a la carrera. Son muchas: el dato existe en el plan en PDF y
+  no en la página.
+
+### Cortesía
+
+El lector espera un cuarto de segundo entre pedidos y no abre más de cinco
+conexiones. Un sitio que respondió 1195 de 1364 pedidos con un 503 no fue leído
+y además gastó su servidor en negarse; cuando un sitio pide menos pedidos, la
+única respuesta correcta es esperar más.
+
 ## Bitácora de cobertura
 
 ```bash

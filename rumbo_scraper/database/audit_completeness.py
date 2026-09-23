@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from rumbo_scraper.catalogo import UNIVERSIDADES
 from rumbo_scraper.database.supabase import select_all
 
 DEFAULT_UNIVERSITY = "Universidad Torcuato Di Tella"
@@ -38,6 +39,13 @@ ARTIFACTS = {
     "Universidad de Ciencias Empresariales y Sociales": Path("data/uces_completo.json"),
     "Universidad del Salvador": Path("data/usal_completo.json"),
 }
+# The universities read by the general reader keep their artifact under their
+# short name, so they are registered from the catalogue instead of by hand.
+ARTIFACTS.update({
+    universidad.nombre_oficial:
+        Path(f"data/{universidad.nombre_corto.lower()}_completo.json")
+    for universidad in UNIVERSIDADES
+})
 
 # How each table is scoped to a university: directly, or through the row that
 # does carry the key.
