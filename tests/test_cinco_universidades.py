@@ -204,3 +204,97 @@ class UsalTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+from rumbo_scraper.parsers import perfil, vida
+
+
+class PerfilTests(unittest.TestCase):
+    FOOTER = """
+    <footer>
+      <a href="https://www.instagram.com/itbauniversidad/">Instagram</a>
+      <a href="https://x.com/ITBA">X</a>
+      <a href="https://www.youtube.com/watch?v=abc">Nuestro video</a>
+      <a href="https://www.youtube.com/user/ITBAuniversidad">YouTube</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://itba.edu.ar">Compartir</a>
+      <a href="mailto:rrhh@itba.edu.ar">Trabajá con nosotros</a>
+      <a href="mailto:informes@itba.edu.ar">Informes</a>
+      <a href="tel:+54 11 5371 5600">Teléfono</a>
+    </footer>
+    """
+
+    def test_reads_the_account_of_each_network(self) -> None:
+        accounts = perfil.social_accounts(self.FOOTER, "https://www.itba.edu.ar")
+        self.assertEqual(accounts["instagram"],
+                         "https://www.instagram.com/itbauniversidad/")
+        self.assertEqual(accounts["twitter"], "https://x.com/ITBA")
+
+    def test_a_video_is_not_the_account_that_published_it(self) -> None:
+        accounts = perfil.social_accounts(self.FOOTER, "https://www.itba.edu.ar")
+        self.assertEqual(accounts["youtube"],
+                         "https://www.youtube.com/user/ITBAuniversidad")
+
+    def test_the_button_that_shares_the_page_is_not_an_account(self) -> None:
+        accounts = perfil.social_accounts(self.FOOTER, "https://www.itba.edu.ar")
+        self.assertNotIn("facebook", accounts)
+
+    def test_the_contact_is_the_address_named_for_information(self) -> None:
+        # The first address of the domain receives job applications; publishing
+        # it as the contact of the university would be worse than none.
+        contact = perfil.contact(self.FOOTER, "itba.edu.ar")
+        self.assertEqual(contact["mail_contacto"], "informes@itba.edu.ar")
+
+    def test_the_telephone_is_split_where_the_site_split_it(self) -> None:
+        contact = perfil.contact(self.FOOTER, "itba.edu.ar")
+        self.assertEqual(contact["telefono_area"], "11")
+        self.assertEqual(contact["telefono_numero"], "53715600")
+
+    def test_a_national_number_has_no_area_to_split(self) -> None:
+        self.assertEqual(perfil._split_phone("0810-122-1222"), (None, "8101221222"))
+
+    def test_a_number_published_without_its_area_keeps_it_empty(self) -> None:
+        # Guessing where the area ends turns 2304-431260 into area 23.
+        self.assertEqual(perfil._split_phone("+542304431260"), (None, "2304431260"))
+
+    def test_a_page_of_another_domain_is_not_read(self) -> None:
+        profile = perfil.read_profile({"https://example.com": self.FOOTER}, "itba.edu.ar")
+        self.assertEqual(profile, {})
+
+
+class VidaTests(unittest.TestCase):
+    HOME = """
+    <a href="/becas">Becas de grado</a>
+    <a href="/deportes">Deportes</a>
+    <a href="/noticias/beca-ganada">Una beca ganada</a>
+    <a href="https://otro.com/becas">Becas de otro</a>
+    """
+
+    def test_the_words_of_the_link_decide_the_topic(self) -> None:
+        topics = vida.discover_topics(self.HOME, "https://www.ub.edu.ar", "ub.edu.ar")
+        self.assertEqual(topics["becas"], ["https://www.ub.edu.ar/becas"])
+        self.assertEqual(topics["actividades_extracurriculares"],
+                         ["https://www.ub.edu.ar/deportes"])
+
+    def test_a_news_item_about_a_topic_is_not_its_page(self) -> None:
+        topics = vida.discover_topics(self.HOME, "https://www.ub.edu.ar", "ub.edu.ar")
+        self.assertNotIn("https://www.ub.edu.ar/noticias/beca-ganada", topics["becas"])
+
+    def test_a_page_of_another_site_is_not_read(self) -> None:
+        topics = vida.discover_topics(self.HOME, "https://www.ub.edu.ar", "ub.edu.ar")
+        self.assertTrue(all("otro.com" not in url
+                            for urls in topics.values() for url in urls))
+
+    def test_an_item_is_kept_only_when_its_name_names_the_topic(self) -> None:
+        page = ("<h2>Coro</h2><p>El coro de la universidad ensaya los martes "
+                "en el aula magna del campus.</p>"
+                "<h2>Esteban Girón</h2><p>Contó su experiencia en el coro "
+                "durante el encuentro anual de estudiantes de la casa.</p>")
+        items = vida.read_items(page, "actividades_extracurriculares")
+        self.assertEqual([item["titulo"] for item in items], ["Coro"])
+
+    def test_a_page_of_prose_lists_nothing(self) -> None:
+        self.assertEqual(vida.read_items("<p>Ofrecemos becas.</p>", "becas"), [])
+
+    def test_the_share_a_scholarship_covers_is_read_when_stated(self) -> None:
+        self.assertEqual(vida.percentage("Cubre hasta el 35% del arancel"), 35.0)
+        self.assertIsNone(vida.percentage("Cubre parte del arancel"))

@@ -403,6 +403,39 @@ reporta en vez de adivinarle el nivel. Y en Palermo una carrera que se dicta
 online y presencial aparece en dos índices bajo dos direcciones: es una sola
 carrera, y gana el primer índice que la nombra.
 
+## Datos institucionales de todas las universidades
+
+```bash
+python -m rumbo_scraper.database.perfil_universidades
+python -m rumbo_scraper.database.perfil_universidades --apply
+```
+
+`universidades` tiene columnas que ninguna página de carrera llena nunca: la
+cuenta de cada red social, el mail y el teléfono que la universidad publica
+para sí misma. Viven en el pie de la home, que es la única parte de un sitio
+que quince gestores de contenido distintos siguen armando igual, así que se
+leen una vez para las quince en vez de una vez por adapter. No se pisa nada: la
+columna que ya llenó un adapter queda como está.
+
+Tres reglas que el lector necesitó:
+
+- **Un video no es la cuenta que lo publicó.** `youtube.com/watch?v=…` estaba
+  entrando como el canal de la UTN.
+- **El contacto es la dirección que la universidad nombró para informes.** La
+  primera dirección del dominio es tan probablemente la que recibe currículums,
+  y publicar esa como contacto es peor que no publicar ninguna.
+- **El área del teléfono se lee sólo donde el sitio la separó** —entre
+  paréntesis, después del código de país o abierta con un cero—. Los códigos de
+  área argentinos van de dos a cuatro dígitos y los abonados de seis a ocho, así
+  que una tira de dígitos no dice dónde termina uno y empieza el otro: partirla
+  mal es un teléfono que no suena.
+
+Dos sitios no contestan un pedido común —uno responde 403 y el otro arma el pie
+después de cargar— y para esos dos se usa el navegador.
+
+Resultado: Instagram y YouTube en 15 de 15, LinkedIn y Facebook en 14, Twitter
+en 13, TikTok en 11, mail y teléfono en 9.
+
 ## Bitácora de cobertura
 
 ```bash
