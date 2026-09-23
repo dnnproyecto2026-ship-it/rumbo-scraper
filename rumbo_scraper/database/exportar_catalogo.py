@@ -59,6 +59,79 @@ def es_un_ciclo(nombre: str) -> bool:
     return bool(_UN_CICLO.search(comparison_key(nombre)))
 
 
+# --- the name a career is shown under ---------------------------------------
+#
+# The same career reached the database several times over, because each site
+# names its variants as if they were careers of their own: "Abogacía" and
+# "Abogacía a distancia", "Contador Público" and "Contador Público (Pilar)",
+# "Arquitectura" and "Arquitectura (9)", "Ingeniería Electrónica" and
+# "Ingeniería en Electrónica". A student sees one career. Here each name is
+# brought to the career it names, the modality and the campus it carried are
+# kept on the offer, and careers that come out the same are merged.
+
+_MODALIDAD_EN_EL_NOMBRE = re.compile(
+    r"\s*[\(\-–]?\s*(?:modalidad\s+)?(?P<modo>a distancia|online|virtual|semipresencial|"
+    r"presencial)\s*[\)\-–]?\s*$", re.I)
+_COLA_PUBLICITARIA = re.compile(
+    r"\s+(?:conoc[ée] la carrera|la um est[áa] donde vos est[áa]s|en la cat[óo]lica)\s*$", re.I)
+_SIN_MAYUSCULA = frozenset("de del la las los el y e en a al con para por o u".split())
+_STOP = frozenset("de del la las los el y e en con".split())
+# A block of subjects published as if it were a degree: "Arquitectura I a V y PFC".
+_UN_BLOQUE_DE_MATERIAS = re.compile(r"\b[ivx]+ a [ivx]+\b")
+
+
+def _titulo(nombre: str) -> str:
+    """ "CONTADOR PÚBLICO" -> "Contador Público"; leaves mixed case alone."""
+    palabras = nombre.split()
+    salida = []
+    for i, palabra in enumerate(palabras):
+        # Four letters or fewer in capitals is an acronym: "TUIB", "IAG", "UBA".
+        sigla = len(palabra.strip("()")) <= 4 and palabra.lower() not in _SIN_MAYUSCULA
+        if palabra.isupper() and len(palabra) > 1 and not sigla:
+            minuscula = palabra.lower()
+            palabra = minuscula if i and minuscula in _SIN_MAYUSCULA else minuscula.capitalize()
+        elif palabra.isupper() and palabra.lower() in _SIN_MAYUSCULA and i:
+            palabra = palabra.lower()
+        salida.append(palabra)
+    return " ".join(salida)
+
+
+def nombre_de_la_carrera(nombre: str, sedes: list[str]) -> tuple[str, str | None, str | None]:
+    """The career a name names, and the modality and campus it carried."""
+    n = re.sub(r"^[^\wÁÉÍÓÚÑáéíóúñ¿¡]+|^_+", "", nombre or "").strip()
+    n = _COLA_PUBLICITARIA.sub("", n)
+    modalidad = None
+    m = _MODALIDAD_EN_EL_NOMBRE.search(n)
+    if m and m.start() > 0:
+        modo = comparison_key(m.group("modo"))
+        modalidad = {"online": "a distancia", "virtual": "a distancia"}.get(modo, modo)
+        n = n[:m.start()]
+    n = re.sub(r"\s*\(\d+\)$", "", n)
+    # The acronym a site puts after the name: "... Sexual Integral (ESI)".
+    n = re.sub(r"\s*\([A-ZÁÉÍÓÚÑ]{2,8}\)$", "", n)
+    n = re.sub(r"(?i)\s*\(compartid[oa] con[^)]*\)$", "", n)
+    sede = None
+    m = re.search(r"\s*\(([^)]*)\)$", n)
+    if m:
+        dentro = comparison_key(m.group(1))
+        encontrada = next((s for s in sedes if dentro and dentro in comparison_key(s)), None)
+        if encontrada:
+            sede, n = encontrada, n[:m.start()]
+    n = re.sub(r"^Lic\.?\s+en\s+", "Licenciatura en ", n).rstrip(" +-–")
+    n = _titulo(" ".join(n.split()))
+    # "ingenieria electrica": a name written all in lower case gets its capital.
+    if n and n[0].islower():
+        n = n[0].upper() + n[1:]
+    return n, modalidad, sede
+
+
+def clave_de_carrera(nombre: str) -> str:
+    """Two names of one career share this: accents, punctuation, connecting
+    words and word order left out."""
+    palabras = re.findall(r"[a-z0-9]+", comparison_key(nombre).replace("licenciatura", "lic"))
+    return " ".join(sorted({p for p in palabras if p not in _STOP}))
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -106,35 +179,62 @@ def exportar(client: Any) -> dict[str, Any]:
     carreras = [c for c in carreras if c["id"] not in ciclos]
     carrera_nombre = {c["id"]: c["nombre_carrera"] for c in carreras}
 
-    for c in carreras:
+    sedes_de: dict[str, list[str]] = defaultdict(list)
+    for s_ in sedes:
+        sedes_de[s_["universidad_id"]].append(s_["nombre_sede"])
+    # Each career under the name of the career it is, merged with the others
+    # of its university that come out the same.
+    representante: dict[tuple[str, str], str] = {}
+    for c in sorted(carreras, key=lambda c: len(c["nombre_carrera"])):
         uid = c["universidad_id"]
+        if _UN_BLOQUE_DE_MATERIAS.search(comparison_key(c["nombre_carrera"])):
+            continue
+        base, modalidad_del_nombre, sede_del_nombre = nombre_de_la_carrera(
+            c["denominacion_canonica"] or c["nombre_carrera"], sedes_de[uid])
+        if not base:
+            continue
+        clave = (uid, clave_de_carrera(base))
+        nuevo = clave not in representante
+        nombre = representante.setdefault(clave, base)
+        carrera_nombre[c["id"]] = nombre
         facultad = facultades.get(c["facultad_id"])
         facultad_nombre = facultad["nombre_facultad"] if facultad else None
-        por_uni[uid]["carreras"].append({
-            "nombre_carrera": c["nombre_carrera"],
-            "denominacion_canonica": c["denominacion_canonica"],
-            "nivel": c["nivel"], "titulo_otorgado": c["titulo_otorgado"],
-            "duracion_anios": c["duracion_anios"],
-            "descripcion_breve": c["descripcion_breve"],
-            "facultad_nombre": facultad_nombre,
-        })
+        if nuevo:
+            por_uni[uid]["carreras"].append({
+                "nombre_carrera": nombre, "denominacion_canonica": nombre,
+                "nivel": c["nivel"], "titulo_otorgado": c["titulo_otorgado"],
+                "duracion_anios": c["duracion_anios"],
+                "descripcion_breve": c["descripcion_breve"],
+                "facultad_nombre": facultad_nombre,
+            })
         propias = ofertas_por_carrera.get(c["id"]) or [None]
         for o in propias:
             por_uni[uid]["ofertas"].append({
-                "carrera_nombre": c["nombre_carrera"],
-                "sede": sede_nombre.get(o["sede_id"]) if o else None,
+                "carrera_nombre": nombre,
+                "sede": (sede_nombre.get(o["sede_id"]) if o else None) or sede_del_nombre,
                 "facultad_nombre": facultad_nombre,
-                "modalidad": o["modalidad"] if o else None,
+                "modalidad": modalidad_del_nombre or (o["modalidad"] if o else None),
                 "regimen_ingreso": o["regimen_ingreso"] if o else None,
                 "url_oficial": (o and o["url_oficial"])
                 or urls.get((nombre_uni[uid], c["nombre_carrera"])),
             })
 
-    for p in posgrados:
+    vistos_posgrado: dict[tuple[str, str], str] = {}
+    for p in sorted(posgrados, key=lambda p: len(p["nombre_programa"])):
+        base, modalidad_del_nombre, _ = nombre_de_la_carrera(
+            p["nombre_programa"], sedes_de[p["universidad_id"]])
+        if not base:
+            continue
+        clave = (p["universidad_id"], clave_de_carrera(base))
+        nuevo = clave not in vistos_posgrado
+        posgrado_nombre[p["id"]] = vistos_posgrado.setdefault(clave, base)
+        if not nuevo:
+            continue
         facultad = facultades.get(p["facultad_id"])
         por_uni[p["universidad_id"]]["posgrados"].append({
-            "nombre_programa": p["nombre_programa"], "tipo_posgrado": p["tipo_posgrado"],
-            "titulo_otorgado": p["titulo_otorgado"], "modalidad": p["modalidad"],
+            "nombre_programa": base, "tipo_posgrado": p["tipo_posgrado"],
+            "titulo_otorgado": p["titulo_otorgado"],
+            "modalidad": modalidad_del_nombre or p["modalidad"],
             "duracion_meses": p["duracion_meses"], "url_oficial": p["url_oficial"],
             "descripcion_breve": p["descripcion_breve"], "sede": sede_nombre.get(p["sede_id"]),
             "facultad_nombre": facultad["nombre_facultad"] if facultad else None,

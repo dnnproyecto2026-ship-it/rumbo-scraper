@@ -804,3 +804,25 @@ class TitularesTest(unittest.TestCase):
                        "Doble Titulación en Contador Público y Licenciatura en Administración",
                        "Tecnicatura Universitaria en Tecnología | Orientación en Videojuegos"):
             self.assertFalse(generico.es_un_titular(nombre), nombre)
+
+
+class NombreDeLaCarreraTest(unittest.TestCase):
+    def test_modality_campus_counters_and_ads_leave_the_name(self):
+        from rumbo_scraper.database.exportar_catalogo import nombre_de_la_carrera as n
+        self.assertEqual(n("Abogacía a distancia", []), ("Abogacía", "a distancia", None))
+        self.assertEqual(n("Contador Público (Pilar)", ["Sede Pilar"]),
+                         ("Contador Público", None, "Sede Pilar"))
+        self.assertEqual(n("Arquitectura (9)", [])[0], "Arquitectura")
+        self.assertEqual(n("Contador Público Conocé la carrera", [])[0], "Contador Público")
+        self.assertEqual(n("CONTADOR PÚBLICO", [])[0], "Contador Público")
+        self.assertEqual(n("🎓 Tecnicatura Universitaria en Industrias de Bebidas (TUIB)", [])[0],
+                         "Tecnicatura Universitaria en Industrias de Bebidas")
+        self.assertEqual(n("Licenciatura en Comercio Internacional (Francia)", [])[0],
+                         "Licenciatura en Comercio Internacional (Francia)")
+
+    def test_two_spellings_of_one_career_share_a_key(self):
+        from rumbo_scraper.database.exportar_catalogo import clave_de_carrera as k
+        self.assertEqual(k("Ingeniería en Electrónica"), k("Ingeniería Electrónica"))
+        self.assertEqual(k("Diseño de Moda (Diseño Textil y de Indumentaria)"),
+                         k("Diseño de Moda (Diseño Textil e indumentaria)"))
+        self.assertNotEqual(k("Licenciatura en Economía"), k("Licenciatura en Economía Empresarial"))

@@ -148,8 +148,13 @@ def aplicar(client: Any, plan: list[dict[str, Any]]) -> dict[str, int]:
     for paso in plan:
         tabla, clave = paso["tabla"], paso["clave"]
         if paso["accion"] == "renombrar":
-            client.table(tabla).update({paso["columna"]: paso["limpio"]}).eq(
-                "id", paso["id"]).execute()
+            cambios = {paso["columna"]: paso["limpio"]}
+            # The canonical name of a career is what the application imports
+            # first; renaming only the name left "Contador Público Conocé la
+            # carrera" standing there.
+            if tabla == "carreras":
+                cambios["denominacion_canonica"] = paso["limpio"]
+            client.table(tabla).update(cambios).eq("id", paso["id"]).execute()
         else:
             gemelo = paso["gemelo"]
             if gemelo:
