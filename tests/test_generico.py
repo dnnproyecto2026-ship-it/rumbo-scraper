@@ -565,3 +565,28 @@ class ElPaisDelConvenio(unittest.TestCase):
         from rumbo_scraper.parsers.convenios import leer_convenios
         self.assertEqual(leer_convenios(
             "<li>Universidad de Argentina en la región</li>", "u", "X"), [])
+
+
+class UnaLecturaVaciaNoSeAplica(unittest.TestCase):
+    """A reading that found nothing is a fact about the network.
+
+    UNGS lost a hundred and forty-nine subjects and three hundred and
+    forty-one contacts to six "Network is unreachable" errors: the guard that
+    refuses to retire careers did not cover the tables that are rewritten
+    whole.
+    """
+
+    def _vacio(self):
+        from rumbo_scraper.contracts import SECTION_FIELDS, blank_record
+        datos = {seccion: [] for seccion in SECTION_FIELDS}
+        datos["universidades"] = [blank_record(
+            "universidades", nombre_oficial="Universidad Nacional",
+            nombre_corto="UN", tipo_gestion="Estatal",
+            sitio_web="https://u.edu.ar")]
+        return {"datos": datos, "fuente_principal": "https://u.edu.ar",
+                "control_calidad": {"paginas_recorridas": 0}}
+
+    def test_se_rechaza(self):
+        from rumbo_scraper.database.load_generico import LecturaVacia, apply_dataset
+        with self.assertRaises(LecturaVacia):
+            apply_dataset(self._vacio(), client=object())

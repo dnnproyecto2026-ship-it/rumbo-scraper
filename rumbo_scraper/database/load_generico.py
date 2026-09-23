@@ -42,9 +42,22 @@ def preview(dataset: dict[str, Any]) -> dict[str, int]:
     }
 
 
+class LecturaVacia(RuntimeError):
+    """A reading that found nothing, which is never news about a university."""
+
+
 def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[str, int]:
     validate_dataset(dataset)
     data = dataset["datos"]
+    # A reading that reached no page at all is a fact about the network, not
+    # about the university. Applying one wipes what the last good reading
+    # stored: UNGS lost a hundred and forty-nine subjects and three hundred
+    # and forty-one contacts to six "Network is unreachable" errors, because
+    # the guard that refuses to retire careers does not cover the tables that
+    # are rewritten whole.
+    if not data["carreras"] and not data["posgrados"]:
+        raise LecturaVacia(
+            "La lectura no encontró ninguna carrera ni posgrado; no se aplica.")
     if client is None:
         from rumbo_scraper.database.supabase import get_supabase_client
         client = get_supabase_client()
@@ -109,6 +122,15 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     subjects = [row for row in data["materias"]
                 if career_ids.get(row["carrera_o_programa"])
                 or postgraduate_ids.get(row["carrera_o_programa"])]
+    # The subjects are synchronised, which deletes the ones a reading no
+    # longer finds. A reading that found none at all is not a university that
+    # stopped publishing its plans.
+    if not subjects and _cuantas(client, "materias", university_id):
+        counts["materias_conservadas"] = _cuantas(client, "materias", university_id)
+        subjects = []
+        counts["materias"] = 0
+        return _sin_materias(client, data, counts, university_id, faculty_ids,
+                             career_ids)
     counts["materias"] = _sync_subjects(client, university_id, [{
         "universidad_id": university_id,
         "carrera_id": career_ids.get(row["carrera_o_programa"]),
@@ -130,29 +152,66 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         client, "posgrados", "nombre_programa", university_id,
         set(postgraduate_ids))
 
-    # Both tables are rewritten whole: they are read from the same pages as
-    # the careers, so a second run should replace them, not double them.
-    if faculty_ids:
-        client.table("autoridades").delete().in_(
-            "facultad_id", list(faculty_ids.values())).execute()
+    counts.update(_cargar_personas_y_canales(
+        client, data, university_id, faculty_ids, career_ids))
+    return counts
+
+
+def _cargar_personas_y_canales(client: Any, data: dict[str, Any],
+                               university_id: str, faculty_ids: dict[str, str],
+                               career_ids: dict[str, str]) -> dict[str, int]:
+    """Rewrite the authorities and the contacts read from the career pages.
+
+    Both are rewritten whole, because they come from the same pages as the
+    careers and a second run should replace them rather than double them.
+    Rewriting whole is also how a reading that found none of them erases the
+    ones a previous reading did find, so an empty one is refused.
+    """
+    counts: dict[str, int] = {}
     authorities = [row for row in data["autoridades"]
                    if faculty_ids.get(str(row["facultad_nombre"]))]
-    counts["autoridades"] = _insert_chunks(client, "autoridades", [{
-        "facultad_id": faculty_ids[str(row["facultad_nombre"])],
-        "carrera_id": career_ids.get(str(row["carrera"])),
-        "cargo": row["cargo"], "tipo": row["tipo"],
-        "nombre_autoridad": row["nombre_autoridad"],
-    } for row in authorities])
+    if authorities and faculty_ids:
+        client.table("autoridades").delete().in_(
+            "facultad_id", list(faculty_ids.values())).execute()
+        counts["autoridades"] = _insert_chunks(client, "autoridades", [{
+            "facultad_id": faculty_ids[str(row["facultad_nombre"])],
+            "carrera_id": career_ids.get(str(row["carrera"])),
+            "cargo": row["cargo"], "tipo": row["tipo"],
+            "nombre_autoridad": row["nombre_autoridad"],
+        } for row in authorities])
     counts["autoridades_sin_facultad"] = len(data["autoridades"]) - len(authorities)
 
-    client.table("contactos").delete().eq("universidad_id", university_id).execute()
     channels = [row for row in data["redes_contacto"] if row["canal"] in SCHEMA_CHANNELS]
+    if not channels:
+        guardados = _cuantas(client, "contactos", university_id)
+        if guardados:
+            counts["contactos_conservados"] = guardados
+            return counts
+    client.table("contactos").delete().eq("universidad_id", university_id).execute()
     counts["redes_contacto"] = _insert_chunks(client, "contactos", [{
         "universidad_id": university_id,
         "facultad_id": faculty_ids.get(str(row["facultad_nombre"])),
         "carrera_id": None, "canal": row["canal"],
         "usuario_o_direccion": row["usuario_o_direccion"],
     } for row in channels])
+    return counts
+
+
+def _cuantas(client: Any, table: str, university_id: str) -> int:
+    """How many rows of a table this university already has stored."""
+    try:
+        return client.table(table).select("id", count="exact").eq(
+            "universidad_id", university_id).limit(1).execute().count or 0
+    except Exception:
+        return 0
+
+
+def _sin_materias(client: Any, data: dict[str, Any], counts: dict[str, int],
+                  university_id: str, faculty_ids: dict[str, str],
+                  career_ids: dict[str, str]) -> dict[str, int]:
+    """Finish a load that read no subjects, keeping the ones already stored."""
+    counts.update(_cargar_personas_y_canales(
+        client, data, university_id, faculty_ids, career_ids))
     return counts
 
 
@@ -190,7 +249,11 @@ def main() -> None:
 
     path = args.input or DEFAULT_DIR / f"{args.universidad.lower()}_completo.json"
     dataset = load_file(path)
-    counts = apply_dataset(dataset) if args.apply else preview(dataset)
+    try:
+        counts = apply_dataset(dataset) if args.apply else preview(dataset)
+    except LecturaVacia as vacia:
+        print(f"NO SE APLICA: {vacia}")
+        return
     print("CARGADO" if args.apply else "VALIDADO (sin escribir)")
     for section, count in counts.items():
         print(f"- {section}: {count}")
