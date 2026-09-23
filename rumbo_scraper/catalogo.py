@@ -119,12 +119,14 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://www.unaj.edu.ar", "unaj.edu.ar", "GBA",
         "Buenos Aires", "Florencio Varela",
     ),
-    # Avellaneda serves a page of three hundred bytes and builds the rest in
-    # the browser; José C. Paz serves its catalogue the same way.
+    # Avellaneda's home page is three hundred bytes of script that sets
+    # window.location, which the reader follows on its own, so no browser is
+    # needed. It also heads every page of its site with the name of the
+    # university, so its careers are named by the links that open them.
     Universidad(
         "Universidad Nacional de Avellaneda", "UNDAV", "Estatal",
         "https://undav.edu.ar", "undav.edu.ar", "GBA",
-        "Buenos Aires", "Avellaneda", navegador=True,
+        "Buenos Aires", "Avellaneda",
     ),
     Universidad(
         "Universidad Nacional de Moreno", "UNM", "Estatal",

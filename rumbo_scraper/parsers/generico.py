@@ -281,6 +281,23 @@ def sin_cohorte(nombre: str) -> str:
     return recortado if len(recortado) >= 6 else clean_text(nombre)
 
 
+def leer_programa_por_etiqueta(html: str, url: str, etiqueta: str) -> Programa | None:
+    """The programme a page offers, named by the link that led to it.
+
+    Only for a page that names nothing itself: a site that heads every one of
+    its pages with the name of the university writes the name of a career
+    exactly once, in the menu entry that opens it. The page still has to
+    carry enough text to be the page of a programme rather than a menu.
+    """
+    if encabezado(html):
+        return None
+    name = sin_cohorte(clean_text(etiqueta))
+    if not es_programa(name) or len(html) < 4000:
+        return None
+    level, kind = clasificar(name)
+    return Programa(nombre=name, nivel=level, tipo_posgrado=kind, url=url)
+
+
 def leer_programa(html: str, url: str) -> Programa | None:
     """The programme a page offers, when its heading names one."""
     name = sin_cohorte(encabezado(html))
@@ -724,7 +741,19 @@ def es_del_dominio(url: str, dominios: tuple[str, ...]) -> bool:
 
 def enlaces(html: str, pagina: str, dominios: tuple[str, ...]) -> list[str]:
     """Every address of the university a page links to."""
-    found: list[str] = []
+    return [url for url, _ in enlaces_con_etiqueta(html, pagina, dominios)]
+
+
+def enlaces_con_etiqueta(html: str, pagina: str,
+                         dominios: tuple[str, ...]) -> list[tuple[str, str]]:
+    """Every address a page links to, with the words it used to link it.
+
+    The words matter where a site gives every page the same heading. A few
+    universities publish one template with the name of the university at the
+    top of every page, and then the only place the name of a career is
+    written is the link that leads to it.
+    """
+    found: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in _soup(html).find_all("a", href=True):
         href = clean_text(anchor["href"])
@@ -736,7 +765,7 @@ def enlaces(html: str, pagina: str, dominios: tuple[str, ...]) -> list[str]:
         if _NO_ES_PAGINA.search(url) or url in seen:
             continue
         seen.add(url)
-        found.append(url)
+        found.append((url, clean_text(anchor.get_text(" ", strip=True))))
     return found
 
 
@@ -769,6 +798,30 @@ _EL_INDICE = re.compile(
 def es_el_indice(url: str) -> bool:
     """Whether an address is the page that lists what a university teaches."""
     return bool(_EL_INDICE.search(_ruta_y_consulta(url)))
+
+
+# A page whose whole body is an instruction to go somewhere else. Both
+# spellings are older than the sites that still use them, and a browser is
+# not needed to follow either: Avellaneda's home page is a script that sets
+# window.location and nothing more.
+_SE_MUDO = (
+    re.compile(r"""(?is)window\.location(?:\.href)?\s*=\s*["']([^"']+)["']"""),
+    re.compile(r"""(?is)<meta[^>]+http-equiv=["']?refresh["']?[^>]+"""
+               r"""content=["'][^"']*url\s*=\s*([^"'\s;]+)"""),
+)
+
+
+def se_mudo_a(html: str, pagina: str) -> str | None:
+    """Where a page sends the reader, when sending is all it does."""
+    if not html or len(html) > 8000:
+        return None
+    for pattern in _SE_MUDO:
+        match = pattern.search(html)
+        if match:
+            destino = urljoin(pagina, clean_text(match.group(1)))
+            if destino.rstrip("/") != pagina.rstrip("/"):
+                return destino
+    return None
 
 
 def direcciones_del_sitemap(xml: str) -> list[str]:

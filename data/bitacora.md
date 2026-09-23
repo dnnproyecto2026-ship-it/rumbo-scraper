@@ -33,7 +33,7 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 | Universidad Nacional de Lanús | 38 | 39 | 563 | 0 | — |
 | Universidad Nacional de General Sarmiento | 34 | 29 | 149 | 0 | — |
 | Universidad Nacional Arturo Jauretche | 46 | 47 | 4 | 0 | — |
-| Universidad Nacional de Avellaneda | 0 | 0 | 0 | 0 | — |
+| Universidad Nacional de Avellaneda | 24 | 20 | 0 | 0 | — |
 | Universidad Nacional de Moreno | 26 | 10 | 4 | 0 | — |
 | Universidad Nacional de José C. Paz | 24 | 27 | 0 | 0 | — |
 | Universidad Nacional de Hurlingham | 34 | 19 | 104 | 0 | — |
@@ -442,9 +442,6 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 
 - `sedes` — el lector general no lee el domicilio de cada sede
 - `facultades` — sin datos, causa no declarada
-- `carreras` — sin datos, causa no declarada
-- `ofertas` — sin datos, causa no declarada
-- `posgrados` — sin datos, causa no declarada
 - `materias` — sin datos, causa no declarada
 - `becas` — el lector general no lee el catálogo de becas
 - `servicios_estudiantiles` — el lector general no lee los servicios
@@ -453,7 +450,6 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 - `programas_internacionales` — el lector general no lee los intercambios
 - `convenios_intercambio` — el lector general no lee los convenios
 - `autoridades` — ninguna página de carrera nombró a su director
-- `redes_contacto` — ninguna página publicó una dirección de la universidad
 - `aranceles` — el arancel se publica fuera de la página de la carrera
 - `turnos_anio` — no se publica un catálogo de horarios por año
 - `ofertas_ciclo` — no se publica el cupo ni la fecha de cada ciclo
@@ -685,13 +681,13 @@ Cuántas filas traen el dato sobre el total de esa sección.
 
 | Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l | de Belgrano | Tecnológica Na | de Buenos Aire | Abierta Intera | de Palermo | del CEMA | de Ciencias Em | del Salvador | Nacional de la | de Flores | Maimónides | Favaloro | Argentina John | Nacional de La | Nacional de Sa | Nacional de Qu | Nacional de Tr | Nacional de La | Nacional de Ge | Nacional Artur | Nacional de Av | Nacional de Mo | Nacional de Jo | Nacional de Hu | Nacional del O | de Morón | Nacional de La | Nacional de Có | Siglo 21 | Católica de Có | Blas Pascal | Nacional de Ro | del Centro Edu | Nacional de Ma | FASTA |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 | 0/98 | 0/125 | 57/57 | 10/72 | 12/14 | 30/30 | 69/69 | 10/48 | 0/13 | — | 0/46 | 32/33 | 52/56 | — | 49/50 | 3/33 | 4/38 | 26/34 | 0/46 | — | 0/26 | 14/24 | 4/34 | 0/23 | 0/68 | 1/52 | 1/44 | 2/69 | 0/58 | 0/13 | 0/10 | — | 23/70 | — |
-| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 | 73/98 | 0/125 | 56/57 | 13/72 | 12/14 | 30/30 | 59/69 | 1/48 | 0/13 | — | 2/46 | 32/33 | 0/56 | — | 0/50 | 0/33 | 0/38 | 25/34 | 1/46 | — | 0/26 | 9/24 | 0/34 | 0/23 | 2/68 | 1/52 | 12/44 | 52/69 | 1/58 | 0/13 | 1/10 | — | 23/70 | — |
-| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 8/125 | 57/57 | 72/72 | 0/14 | 29/30 | 0/69 | 16/48 | 0/13 | — | 2/46 | 32/33 | 0/56 | — | 2/50 | 27/33 | 11/38 | 2/34 | 0/46 | — | 1/26 | 0/24 | 0/34 | 2/23 | 53/68 | 19/52 | 7/44 | 52/69 | 44/58 | 13/13 | 0/10 | — | 12/70 | — |
-| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 | 73/557 | 592/592 | 31/31 | 18/18 | 12/22 | — | 75/75 | 45/45 | — | — | — | 41/41 | 21/21 | — | 59/59 | 91/91 | 39/39 | 29/29 | 47/47 | — | 10/10 | 27/27 | 19/19 | 22/22 | 21/21 | 87/87 | 120/120 | 38/38 | 33/33 | 68/68 | 112/112 | — | 61/61 | — |
-| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 | 0/557 | 0/592 | 31/31 | 1/18 | 10/22 | — | 75/75 | 1/45 | — | — | — | 12/41 | 21/21 | — | 0/59 | 50/91 | 0/39 | 2/29 | 1/47 | — | 0/10 | 0/27 | 3/19 | 0/22 | 0/21 | 4/87 | 15/120 | 6/38 | 0/33 | 0/68 | 1/112 | — | 16/61 | — |
-| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 | 0/557 | 0/592 | 31/31 | 6/18 | 13/22 | — | 22/75 | 0/45 | — | — | — | 27/41 | 0/21 | — | 0/59 | 3/91 | 1/39 | 2/29 | 2/47 | — | 0/10 | 0/27 | 1/19 | 1/22 | 1/21 | 8/87 | 5/120 | 24/38 | 0/33 | 0/68 | 4/112 | — | 7/61 | — |
-| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 | 0/557 | 0/592 | 31/31 | 5/18 | 20/22 | — | 8/75 | 0/45 | — | — | — | 1/41 | 0/21 | — | 1/59 | 6/91 | 4/39 | 5/29 | 2/47 | — | 0/10 | 12/27 | 1/19 | 0/22 | 2/21 | 11/87 | 5/120 | 24/38 | 0/33 | 0/68 | 3/112 | — | 10/61 | — |
+| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 | 0/98 | 0/125 | 57/57 | 10/72 | 12/14 | 30/30 | 69/69 | 10/48 | 0/13 | — | 0/46 | 32/33 | 52/56 | — | 49/50 | 3/33 | 4/38 | 26/34 | 0/46 | 24/24 | 0/26 | 14/24 | 4/34 | 0/23 | 0/68 | 1/52 | 1/44 | 2/69 | 0/58 | 0/13 | 0/10 | — | 23/70 | — |
+| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 | 73/98 | 0/125 | 56/57 | 13/72 | 12/14 | 30/30 | 59/69 | 1/48 | 0/13 | — | 2/46 | 32/33 | 0/56 | — | 0/50 | 0/33 | 0/38 | 25/34 | 1/46 | 0/24 | 0/26 | 9/24 | 0/34 | 0/23 | 2/68 | 1/52 | 12/44 | 52/69 | 1/58 | 0/13 | 1/10 | — | 23/70 | — |
+| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 8/125 | 57/57 | 72/72 | 0/14 | 29/30 | 0/69 | 16/48 | 0/13 | — | 2/46 | 32/33 | 0/56 | — | 2/50 | 27/33 | 11/38 | 2/34 | 0/46 | 0/24 | 1/26 | 0/24 | 0/34 | 2/23 | 53/68 | 19/52 | 7/44 | 52/69 | 44/58 | 13/13 | 0/10 | — | 12/70 | — |
+| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 | 73/557 | 592/592 | 31/31 | 18/18 | 12/22 | — | 75/75 | 45/45 | — | — | — | 41/41 | 21/21 | — | 59/59 | 91/91 | 39/39 | 29/29 | 47/47 | 20/20 | 10/10 | 27/27 | 19/19 | 22/22 | 21/21 | 87/87 | 120/120 | 38/38 | 33/33 | 68/68 | 112/112 | — | 61/61 | — |
+| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 | 0/557 | 0/592 | 31/31 | 1/18 | 10/22 | — | 75/75 | 1/45 | — | — | — | 12/41 | 21/21 | — | 0/59 | 50/91 | 0/39 | 2/29 | 1/47 | 0/20 | 0/10 | 0/27 | 3/19 | 0/22 | 0/21 | 4/87 | 15/120 | 6/38 | 0/33 | 0/68 | 1/112 | — | 16/61 | — |
+| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 | 0/557 | 0/592 | 31/31 | 6/18 | 13/22 | — | 22/75 | 0/45 | — | — | — | 27/41 | 0/21 | — | 0/59 | 3/91 | 1/39 | 2/29 | 2/47 | 0/20 | 0/10 | 0/27 | 1/19 | 1/22 | 1/21 | 8/87 | 5/120 | 24/38 | 0/33 | 0/68 | 4/112 | — | 7/61 | — |
+| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 | 0/557 | 0/592 | 31/31 | 5/18 | 20/22 | — | 8/75 | 0/45 | — | — | — | 1/41 | 0/21 | — | 1/59 | 6/91 | 4/39 | 5/29 | 2/47 | 0/20 | 0/10 | 12/27 | 1/19 | 0/22 | 2/21 | 11/87 | 5/120 | 24/38 | 0/33 | 0/68 | 3/112 | — | 10/61 | — |
 | `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 | 1933/2179 | 0/336 | 2504/2504 | 3105/3128 | — | 1330/1433 | — | 644/644 | — | — | 13/13 | 1763/1763 | — | — | 85/85 | 1844/1844 | 563/563 | 149/149 | 4/4 | — | 4/4 | — | 104/104 | 32/32 | 2983/2983 | 627/627 | 314/314 | 2755/2755 | 2231/2231 | 720/720 | 43/43 | — | 431/431 | — |
 | `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 | 295/2179 | 0/336 | 2422/2504 | 0/3128 | — | 1134/1433 | — | 0/644 | — | — | 0/13 | 0/1763 | — | — | 0/85 | 0/1844 | 0/563 | 0/149 | 0/4 | — | 0/4 | — | 0/104 | 0/32 | 0/2983 | 0/627 | 0/314 | 0/2755 | 0/2231 | 0/720 | 0/43 | — | 0/431 | — |
 
@@ -913,7 +909,13 @@ Cuántas filas traen el dato sobre el total de esa sección.
 ### Universidad Nacional de Avellaneda
 
 - Método: HTML público; la carrera se reconoce por el título que declara su encabezado; sin IA
-- 3 descarga(s) fallidas en la última corrida
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=163
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=181
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=182
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=190
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=221
+- 3 programa(s) fuera del contrato: ya figura en http://undav.edu.ar/index.php?idcateg=222
+- 27 descarga(s) fallidas en la última corrida
 
 ### Universidad Nacional de Moreno
 

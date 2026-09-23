@@ -58,6 +58,10 @@ class Lector:
         self._lock = threading.Lock()
         self._turno = threading.Lock()
         self._ultimo = 0.0
+        self._mudanzas: set[str] = set()
+        # What the site called each page, for the few that name every page
+        # of theirs the same.
+        self.etiquetas: dict[str, str] = {}
         self._navegador = Navegador() if universidad.navegador else None
         self.client = httpx.Client(
             headers={"User-Agent": USER_AGENT,
@@ -82,9 +86,15 @@ class Lector:
         university and, with several open at once, crashes them.
         """
         html = self._get_directo(url, intentos)
-        if self._navegador is None or url.endswith(".xml"):
+        if url.endswith(".xml") or _tiene_contenido(html):
             return html
-        if _tiene_contenido(html):
+        # A page that does nothing but send the reader elsewhere is followed
+        # here rather than with a browser.
+        destino = generico.se_mudo_a(html, url)
+        if destino and destino not in self._mudanzas:
+            self._mudanzas.add(destino)
+            return self.get(destino, intentos)
+        if self._navegador is None:
             return html
         rendered = self._navegador.get(url)
         if rendered:
@@ -229,7 +239,7 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
     catalogue: list[str] = []
     todos: list[str] = []
     hosts_vistos: set[str] = set()
-    por_nombre = False
+    por_nombre = 0
     frontier = [url for url in semillas if url]
     por_direccion = True
     depth = 0
@@ -244,7 +254,10 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
             # address says, so the index is trusted over the addresses.
             indice = generico.es_el_indice(url)
             host_actual = urlparse(url).netloc.lower().removeprefix("www.")
-            for link in generico.enlaces(html, url, lector.dominios):
+            for link, etiqueta in generico.enlaces_con_etiqueta(
+                    html, url, lector.dominios):
+                if etiqueta and link not in lector.etiquetas:
+                    lector.etiquetas[link] = etiqueta
                 if link not in todos:
                     todos.append(link)
                 if link in seen:
@@ -260,18 +273,20 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
                     hosts_vistos.add(host)
                 nombrado = indice or generico.parece_catalogo(link)
                 if nombrado:
-                    por_nombre = True
+                    por_nombre += 1
                 if nuevo_host or nombrado:
                     if link not in catalogue:
                         catalogue.append(link)
                     following.append(link)
                 elif depth == 0 or not por_direccion:
                     following.append(link)
-        if depth == 0 and not por_nombre:
-            # The site names nothing in its addresses: read it whole rather
-            # than not at all. What matters is whether any address said what
-            # it held -- a link to another host of the university is followed
-            # for being another host, and says nothing about this one.
+        if depth == 0 and por_nombre < MINIMO_NOMBRADO:
+            # The site barely names anything in its addresses: read it whole
+            # rather than not at all. The test is a handful rather than one,
+            # because one match happens by accident -- Avellaneda numbers
+            # every page of its catalogue and still links a host called
+            # "academica", which was enough to call the site well named and
+            # leave its fifteen careers unread.
             por_direccion = False
         frontier = following
         depth += 1
@@ -281,6 +296,9 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
 # Below this many careers the sitemap has not shown the catalogue, whatever
 # else it showed. A national university teaches more than this.
 POCAS_CARRERAS = 15
+# How many addresses have to name what they hold before the crawl trusts the
+# addresses of a site. One is an accident.
+MINIMO_NOMBRADO = 5
 
 
 def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
@@ -290,7 +308,7 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
     try:
         candidatas = _del_sitemap(lector, tope)
         paginas = lector.get_many(candidatas[:limite] if limite else candidatas)
-        programas = _programas_de(paginas)
+        programas = _programas_de(paginas, lector.etiquetas)
 
         # A national university does not keep its careers on the host that
         # carries its sitemap: each faculty publishes its own on a host of its
@@ -313,7 +331,8 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
             nuevas = lector.get_many(extra[:tope])
             paginas.update(nuevas)
             vistos = {programa.url for programa in programas}
-            programas += [programa for programa in _programas_de(nuevas)
+            programas += [programa for programa
+                          in _programas_de(nuevas, lector.etiquetas)
                           if programa.url not in vistos]
             candidatas = sorted(set(candidatas) | set(nuevas))
 
@@ -390,11 +409,21 @@ def _del_sitemap(lector: Lector, tope: int) -> list[str]:
     return sorted(set(candidatas))[:tope]
 
 
-def _programas_de(paginas: dict[str, str]) -> list[generico.Programa]:
-    """The pages that turned out to offer a degree."""
+def _programas_de(paginas: dict[str, str],
+                  etiquetas: dict[str, str] | None = None) -> list[generico.Programa]:
+    """The pages that turned out to offer a degree.
+
+    A page is named by its own heading wherever it has one. A few sites give
+    every page of theirs the same heading -- the name of the university, on
+    the career pages as on all the rest -- and there the only place the name
+    of the career is written is the link that led to it.
+    """
     programas: list[generico.Programa] = []
     for url, html in paginas.items():
         programa = generico.leer_programa(html, url)
+        if programa is None and etiquetas:
+            programa = generico.leer_programa_por_etiqueta(
+                html, url, etiquetas.get(url, ""))
         if programa is not None:
             programas.append(programa)
     return programas

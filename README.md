@@ -509,8 +509,20 @@ medias:
 4. **Un host nuevo de la universidad siempre se sigue.** Una nacional enseña
    por facultades, cada una con su sitio, y el enlace a ese sitio apunta a su
    raíz. Mar del Plata pasó de 18 carreras a 80 con esta regla.
-5. **Si ninguna dirección nombra nada, se recorre el sitio entero.**
-   Avellaneda numera sus páginas: `index.php?idcateg=7`.
+5. **Si casi ninguna dirección nombra nada, se recorre el sitio entero.**
+   Avellaneda numera sus páginas: `index.php?idcateg=7`. El umbral son cinco
+   direcciones con nombre, no una: una coincidencia sola pasa por accidente
+   —esa universidad enlaza un host llamado `academica`— y alcanzaba para
+   dejar sus quince carreras sin leer.
+6. **Una página que no se nombra a sí misma se nombra por el enlace que lleva
+   a ella.** Avellaneda encabeza cada una de sus páginas con el nombre de la
+   universidad, así que el nombre de la carrera está escrito una sola vez en
+   todo el sitio: en la entrada de menú que la abre. Sólo se usa si la página
+   no tiene encabezado propio, si el texto del enlace nombra un título
+   reconocido y si la página trae texto suficiente para ser una carrera.
+7. **Una página que sólo redirige se sigue leyendo el HTML.** La portada de
+   Avellaneda son trescientos bytes de script que hacen `window.location`.
+   No hace falta un navegador para eso.
 
 El navegador se usa **sólo donde el servidor contestó vacío**. Un sitio que
 arma su índice en el cliente igual sirve las demás páginas enteras: Siglo 21

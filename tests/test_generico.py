@@ -366,3 +366,45 @@ class ElCatalogoEnLaConsulta(unittest.TestCase):
 
     def test_una_noticia_sigue_sin_ser_catalogo(self):
         self.assertFalse(generico.parece_catalogo("https://x.edu.ar/noticias/algo"))
+
+
+class UnaPaginaQueSoloRedirige(unittest.TestCase):
+    def test_se_sigue_la_mudanza_por_javascript(self):
+        html = ('<html><body><script>window.location = '
+                '"https://undav.edu.ar/index.php"</script></body></html>')
+        self.assertEqual(generico.se_mudo_a(html, "https://undav.edu.ar"),
+                         "https://undav.edu.ar/index.php")
+
+    def test_se_sigue_la_mudanza_por_meta(self):
+        self.assertEqual(
+            generico.se_mudo_a('<meta http-equiv="refresh" content="0; url=/inicio">',
+                               "https://x.edu.ar"),
+            "https://x.edu.ar/inicio")
+
+    def test_una_pagina_con_contenido_no_es_una_mudanza(self):
+        # The instruction appears inside pages that also say something; only
+        # a page that says nothing else is following it.
+        self.assertIsNone(generico.se_mudo_a("<html>" + "x" * 9000 + "</html>",
+                                             "https://x.edu.ar"))
+
+
+class UnSitioQueNombraTodoIgual(unittest.TestCase):
+    def test_la_carrera_se_nombra_por_el_enlace_que_lleva_a_ella(self):
+        # Avellaneda heads every page with the name of the university, so the
+        # name of the career is written only in the menu entry that opens it.
+        pagina = ("<html><body><h1>Universidad Nacional de Avellaneda</h1>"
+                  + "<p>texto de la carrera</p>" * 200 + "</body></html>")
+        programa = generico.leer_programa_por_etiqueta(
+            pagina, "https://undav.edu.ar/index.php?idcateg=297", "Abogacía")
+        self.assertIsNotNone(programa)
+        self.assertEqual(programa.nombre, "Abogacía")
+        self.assertEqual(programa.nivel, "Grado")
+
+    def test_no_se_usa_el_enlace_si_la_pagina_se_nombra_sola(self):
+        pagina = "<h1>Licenciatura en Letras</h1>" + "<p>x</p>" * 200
+        self.assertIsNone(generico.leer_programa_por_etiqueta(
+            pagina, "https://u.edu.ar/x", "Abogacía"))
+
+    def test_un_menu_no_alcanza_para_ser_una_carrera(self):
+        self.assertIsNone(generico.leer_programa_por_etiqueta(
+            "<h1>Universidad</h1><p>corto</p>", "https://u.edu.ar/x", "Abogacía"))
