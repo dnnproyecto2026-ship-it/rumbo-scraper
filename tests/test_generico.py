@@ -750,3 +750,13 @@ class AutoridadesFueraDePasoTest(unittest.TestCase):
         from rumbo_scraper.parsers.institucional import leer_autoridades
         html = "<html><body><p>Directora Lic. en Psicología</p><p>Sede Patagonia</p></body></html>"
         self.assertEqual(leer_autoridades(html, "u"), [])
+
+
+class TramosDeUnaDireccionTest(unittest.TestCase):
+    def test_a_footer_with_bars_and_a_campus_named_on_its_line_are_read(self):
+        from rumbo_scraper.parsers.institucional import leer_sedes
+        pie = leer_sedes("<html><body><p>Leandro N. Alem 4731 | José C. Paz (C.P 1665) | "
+                         "Prov. Buenos Aires</p></body></html>", "u")
+        self.assertEqual((pie[0]["calle"], pie[0]["numero"]), ("Leandro N. Alem", "4731"))
+        sede = leer_sedes("<html><body><p>Sede Pueyrredón - L. N. Alem 4593</p></body></html>", "u")
+        self.assertEqual(sede[0]["nombre_sede"], "Sede Pueyrredón")

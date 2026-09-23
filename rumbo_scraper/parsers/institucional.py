@@ -132,6 +132,29 @@ def _es_calle(calle: str, numero: str | None) -> bool:
     return True
 
 
+def _tramos(lineas: list[str]) -> list[str]:
+    """The lines of a page with the ones that hold two facts cut in two.
+
+    A footer strings the address and the town with bars, "Leandro N. Alem
+    4731 | José C. Paz (C.P 1665) | Prov. Buenos Aires", and each piece is
+    read on its own so the postcode beside it does not sink the address. A
+    campus is named before its address on the same line, "Sede Pueyrredón -
+    L. N. Alem 4593", and becomes the name over the address.
+    """
+    salida: list[str] = []
+    for linea in lineas:
+        if " | " in linea:
+            salida.extend(tramo.strip() for tramo in linea.split(" | ") if tramo.strip())
+            continue
+        nombre, separador, resto = linea.partition(" - ")
+        if separador and _UNA_SEDE.match(nombre) and len(nombre) <= 50 \
+                and re.search(r"\d", resto):
+            salida.extend([nombre.strip(), resto.strip()])
+            continue
+        salida.append(linea)
+    return salida
+
+
 def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
     """Read the campuses a page lists, with the address of each.
 
@@ -149,7 +172,7 @@ def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
     vistas: set[str] = set()
     nombre: str | None = None
     lineas_desde_el_nombre = 0
-    for linea in _lineas(soup):
+    for linea in _tramos(_lineas(soup)):
         if not linea or len(linea) > 120:
             continue
         if _UNA_SEDE.match(linea) and len(linea) <= 70 \
