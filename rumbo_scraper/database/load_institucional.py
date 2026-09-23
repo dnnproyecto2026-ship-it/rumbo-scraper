@@ -122,22 +122,50 @@ def aplicar(client: Any, universidad: dict[str, Any],
         escrito["facultades"] = len(hallado["facultades"])
 
     personas = hallado.get("autoridades") or []
-    if personas and por_nombre:
-        # The rectorado runs the university and not one of its faculties,
-        # and facultad_id cannot be null, so those people are counted apart
-        # rather than filed under a faculty they do not run.
+    # A person is stored only under the unit their own post names. The
+    # rectorado runs the university and not one of its faculties, and
+    # ``autoridades.facultad_id`` cannot be null, so filing the rector under
+    # whichever faculty came first would state something the university never
+    # said. Those people are counted and left out until the column can be
+    # null or a university-level table exists.
+    con_unidad: list[tuple[str, dict[str, Any]]] = []
+    sin_unidad = 0
+    for persona in personas:
+        unidad = _unidad_del_cargo(persona["cargo"], por_nombre)
+        if unidad:
+            con_unidad.append((unidad, persona))
+        else:
+            sin_unidad += 1
+    if con_unidad:
         ya = select_all(client.table("autoridades").select("id")
-                        .in_("facultad_id", list(por_nombre.values())))
+                        .in_("facultad_id", sorted({u for u, _ in con_unidad})))
         if not ya:
-            cabecera = next(iter(por_nombre.values()))
             escrito["autoridades"] = _insert_chunks(client, "autoridades", [{
-                "facultad_id": cabecera, "carrera_id": None,
+                "facultad_id": unidad, "carrera_id": None,
                 "cargo": persona["cargo"], "tipo": persona["tipo"],
                 "nombre_autoridad": persona["nombre"],
-            } for persona in personas])
-    elif personas:
-        escrito["autoridades_sin_unidad"] = len(personas)
+            } for unidad, persona in con_unidad])
+    if sin_unidad:
+        escrito["autoridades_de_la_universidad_sin_tabla"] = sin_unidad
     return escrito
+
+
+def _unidad_del_cargo(cargo: str, unidades: dict[str, str]) -> str | None:
+    """The academic unit a post names, when it names one.
+
+    "Decano de la Facultad de Ciencias Exactas" belongs to that faculty.
+    "Rector" belongs to the university, which this table cannot hold.
+    """
+    clave = comparison_key(cargo)
+    for nombre, unidad_id in unidades.items():
+        if nombre and nombre in clave:
+            return unidad_id
+        # A post names the faculty by its subject alone as often as in full:
+        # "Decano de Ciencias Económicas".
+        sujeto = nombre.split(" de ", 1)[-1] if " de " in nombre else ""
+        if len(sujeto) >= 8 and sujeto in clave:
+            return unidad_id
+    return None
 
 
 def main() -> None:

@@ -159,18 +159,45 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
     return encontrado
 
 
+# The universities read by an adapter of their own. What an adapter wrote is
+# never replaced here: it looked at that site and this reader did not.
+CON_ADAPTADOR = frozenset({
+    "Universidad Torcuato Di Tella", "Universidad de San Andrés",
+    "Instituto Tecnológico de Buenos Aires", "Universidad Austral",
+    "Universidad del Museo Social Argentino",
+    "Pontificia Universidad Católica Argentina",
+    "Universidad Argentina de la Empresa", "Universidad de Belgrano",
+    "Universidad Tecnológica Nacional", "Universidad de Buenos Aires",
+    "Universidad Abierta Interamericana", "Universidad de Palermo",
+    "Universidad del CEMA",
+    "Universidad de Ciencias Empresariales y Sociales",
+    "Universidad del Salvador",
+})
+
+
 def aplicar(client: Any, universidad: dict[str, Any],
-            hallazgos: dict[str, list[dict[str, str]]]) -> dict[str, int]:
-    """Write the topics this university has nothing in yet."""
+            hallazgos: dict[str, list[dict[str, str]]],
+            rehacer: bool = False) -> dict[str, int]:
+    """Write what this university publishes about student life.
+
+    A university read by an adapter of its own keeps what the adapter wrote.
+    For the rest, ``rehacer`` replaces what an earlier and rougher reading of
+    this same reader left behind, which is the only way a correction to the
+    reader reaches the rows it already wrote.
+    """
     escrito: dict[str, int] = {}
+    propia = universidad["nombre_oficial"] in CON_ADAPTADOR
     for topic, filas in hallazgos.items():
         tabla = DESTINOS[topic]
         ya = client.table(tabla).select("id").eq(
             "universidad_id", universidad["id"]).limit(1).execute().data
-        if ya:
+        if ya and (propia or not rehacer):
             # Its adapter already read this section, and the adapter looked
             # at the site.
             continue
+        if ya and rehacer:
+            client.table(tabla).delete().eq(
+                "universidad_id", universidad["id"]).execute()
         if topic == "alojamiento":
             filas = [item for item in filas
                      if item["tipo"] and item["tipo"].startswith("Residencia")]
@@ -188,6 +215,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Completar la vida universitaria de cada universidad")
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    parser.add_argument("--rehacer", action="store_true",
+                        help="Reemplazar lo que dejó una lectura anterior")
     parser.add_argument("--output", type=Path, default=Path("data/vida.json"))
     args = parser.parse_args()
 
@@ -200,7 +229,7 @@ def main() -> None:
         hallazgos = leer(universidad)
         todo[universidad["nombre_oficial"]] = hallazgos
         if args.apply and hallazgos:
-            escrito = aplicar(client, universidad, hallazgos)
+            escrito = aplicar(client, universidad, hallazgos, args.rehacer)
             if escrito:
                 print(f'{universidad["nombre_oficial"]}: {escrito}')
         elif hallazgos:
