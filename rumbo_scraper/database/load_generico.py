@@ -122,6 +122,8 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     # noisier reading invented, has to leave the database too. Upserting
     # alone only ever adds, so a name corrected here would live on beside its
     # correction.
+    # A negative count means the reading was refused for being too small to
+    # be believed, and is reported rather than acted on.
     counts["carreras_retiradas"] = _retirar(
         client, "carreras", "nombre_carrera", university_id, set(career_ids))
     counts["posgrados_retirados"] = _retirar(
@@ -161,11 +163,19 @@ def _retirar(client: Any, table: str, column: str, university_id: str,
     Only rows of this university are touched, and only by the name the
     catalogue gives them, so a row the university still publishes under
     another name is never taken for a stale one.
+
+    A reading that would retire more than half of what is stored is refused
+    instead. A site that is down, rate-limiting or mid-redesign comes back
+    with few programmes or none, and that is a fact about the afternoon
+    rather than about the university; deleting a catalogue on the strength of
+    it is the one mistake here that cannot be undone by running again.
     """
     from rumbo_scraper.database.supabase import select_all
     existing = select_all(
         client.table(table).select(f"id,{column}").eq("universidad_id", university_id))
     stale = [row["id"] for row in existing if row[column] not in vigentes]
+    if existing and len(stale) > len(existing) / 2:
+        return -len(stale)
     for start in range(0, len(stale), 50):
         client.table(table).delete().in_("id", stale[start:start + 50]).execute()
     return len(stale)
