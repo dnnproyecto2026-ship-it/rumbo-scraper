@@ -132,6 +132,67 @@ def clave_de_carrera(nombre: str) -> str:
     return " ".join(sorted({p for p in palabras if p not in _STOP}))
 
 
+# --- what a plan lists that is not a subject --------------------------------
+#
+# The plan readers took whatever a page listed under a year, and three kinds
+# of line came in that no student takes: the questions of a FAQ block
+# ("¿Cuánto dura la carrera?"), the degree a plan awards on the way
+# ("TÉCNICO/A UNIVERSITARIO/A EN MARKETING", "Licenciado/a en ..."), and the
+# buttons around the plan ("Quiero inscribirme", "Consultas"). A comparison
+# that says a university teaches "Quiero inscribirme" and the other does not
+# is worse than one that says nothing, so these do not leave.
+#
+# Palermo prints each subject with its codes and the module it belongs to
+# glued on: "Diseño Industrial I 022096 | 026490 ESTILO Personalizar para
+# diferenciar (...)". The subject is what comes before the first code.
+
+_CODIGO_DE_MATERIA = re.compile(r"\s+\d{5,6}\b")
+_NO_ES_UNA_MATERIA = re.compile(
+    r"^(?:licenciad[oa]s?\b|licenciatura\b|tecnic[oa]s?(?:/a)? universitari|tecnicatura\b|"
+    r"ingenier[oa](?:/a)? en\b|abogad[oa]$|contador(?:/a)? publico|carrera de grado$|"
+    r"consultas?\b|quiero\b|inscribi|matriculate\b|presenta la\b|proceso de admision|"
+    r"programas? relacionados?$|universidad \S+$|titulo\b|"
+    # "Segundo Cuatrimestre Finanzas Empresariales Management del ...": a
+    # whole term run into one line. Its subjects cannot be told apart.
+    r"(?:primer|segundo|tercer|cuarto|quinto|sexto|septimo|octavo|noveno|decimo)[oa]? "
+    r"(?:cuatrimestre|semestre)\b)"
+)
+
+
+_NUMERAL_ROMANO = re.compile(r"^(?=[IVX])X{0,3}(?:IX|IV|V?I{0,3})[.:,]?$")
+
+
+def _materia_sin_mayusculas(nombre: str) -> str:
+    """ "PSICOLOGÍA EN LAS EMPRESAS" -> "Psicología en las empresas". UADE escribe el plan en mayúsculas, y al
+    lado de otra universidad parece que grita. Sólo el nombre escrito todo en
+    mayúsculas; los números romanos quedan: "MATEMÁTICA II" -> "Matemática II".
+    """
+    if not nombre.isupper() or len(nombre) <= 4:
+        return nombre
+    palabras = []
+    for i, palabra in enumerate(nombre.split()):
+        if _NUMERAL_ROMANO.match(palabra):
+            palabras.append(palabra)
+        elif i == 0:
+            palabras.append(palabra.capitalize())
+        else:
+            palabras.append(palabra.lower())
+    return " ".join(palabras)
+
+
+def nombre_de_la_materia(nombre: str | None) -> str | None:
+    """The subject a plan line names, or None when the line names none."""
+    n = _CODIGO_DE_MATERIA.split(" ".join((nombre or "").split()), maxsplit=1)[0].strip()
+    # A question is a FAQ entry, unless it is the title of a seminar that
+    # asks one halfway: "Derechos Humanos ¿paradigma vigente ...?".
+    if len(n) < 3 or n.startswith("¿") or n.endswith("?") and "¿" not in n[1:] \
+            or any(signo in n for signo in "¡!"):
+        return None
+    if _NO_ES_UNA_MATERIA.match(comparison_key(n)):
+        return None
+    return _materia_sin_mayusculas(n)
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -242,10 +303,11 @@ def exportar(client: Any) -> dict[str, Any]:
 
     for m in materias:
         programa = carrera_nombre.get(m["carrera_id"]) or posgrado_nombre.get(m["posgrado_id"])
-        if not programa:
+        materia = nombre_de_la_materia(m["nombre_materia"])
+        if not programa or not materia:
             continue
         por_uni[m["universidad_id"]]["materias"].append({
-            "nombre_materia": m["nombre_materia"], "carrera_o_programa": programa,
+            "nombre_materia": materia, "carrera_o_programa": programa,
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
         })
 
