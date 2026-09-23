@@ -204,25 +204,16 @@ def aplicar(client: Any, universidad: dict[str, Any],
     """
     escrito: dict[str, int] = {}
     propia = universidad["nombre_oficial"] in CON_ADAPTADOR
+    # ``convenios_intercambio.programa_origen`` is NOT NULL and holds the
+    # career the student leaves from: Di Tella publishes its agreements one
+    # list per career. What a university publishes centrally is the list of
+    # the institutions it has agreements with, and that list does not say
+    # which career each one is for. The agreements are kept in the artifact
+    # and counted here; writing them would mean choosing a career the
+    # university never named.
     convenios = hallazgos.pop("convenios", None)
     if convenios and not propia:
-        ya = client.table("convenios_intercambio").select("id").eq(
-            "universidad_id", universidad["id"]).limit(1).execute().data
-        if ya and rehacer:
-            client.table("convenios_intercambio").delete().eq(
-                "universidad_id", universidad["id"]).execute()
-            ya = []
-        if not ya:
-            filas = [{"universidad_id": universidad["id"], "carrera_id": None,
-                      "posgrado_id": None, "programa_origen": None,
-                      "universidad_destino": fila["universidad_destino"],
-                      "ciudad": None, "pais": fila["pais"],
-                      "latitud": None, "longitud": None, "observaciones": None,
-                      "fuente_url": fila["fuente"]} for fila in convenios]
-            for inicio in range(0, len(filas), 50):
-                client.table("convenios_intercambio").insert(
-                    filas[inicio:inicio + 50]).execute()
-            escrito["convenios_intercambio"] = len(filas)
+        escrito["convenios_sin_carrera_de_origen"] = len(convenios)
     for topic, filas in hallazgos.items():
         tabla = DESTINOS[topic]
         ya = client.table(tabla).select("id").eq(
