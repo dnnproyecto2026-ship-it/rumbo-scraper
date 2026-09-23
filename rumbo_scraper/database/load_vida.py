@@ -20,7 +20,6 @@ from urllib.parse import urljoin, urlparse
 
 import re
 
-import httpx
 
 from rumbo_scraper.normalizers.text import clean_text
 from rumbo_scraper.parsers import vida
@@ -82,17 +81,6 @@ def _fila(topic: str, item: dict[str, str], universidad_id: str,
             "url": fuente, "fuente_url": fuente}
 
 
-def _get(client: httpx.Client, url: str) -> str:
-    try:
-        response = client.get(url)
-        response.raise_for_status()
-        if "html" not in response.headers.get("content-type", ""):
-            return ""
-        return response.text
-    except Exception:
-        return ""
-
-
 # What a university calls the page that gathers everything about being a
 # student there. Half of them hang student life one click under it rather
 # than off the home page.
@@ -128,14 +116,16 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
         return {}
     domain = (urlparse(site).netloc or "").lower().removeprefix("www.")
     encontrado: dict[str, list[dict[str, str]]] = {}
-    with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True,
-                      timeout=30) as client:
-        home = _get(client, site)
+    # A visitor's reading: it follows a home page that redirects in script and
+    # opens a browser for a site that sends an empty shell.
+    from rumbo_scraper.spiders.visitante import Visitante
+    with Visitante() as client:
+        home = client.get(site)
         if not home:
             return {}
         temas: dict[str, list[str]] = vida.discover_topics(home, site, domain)
         for puerta in _puertas(home, site, domain):
-            pagina = _get(client, puerta)
+            pagina = client.get(puerta)
             if not pagina:
                 continue
             for topic, urls in vida.discover_topics(pagina, puerta, domain).items():
@@ -146,7 +136,7 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
             vistos: set[str] = set()
             filas: list[dict[str, str]] = []
             for url in urls[:MAX_PAGINAS]:
-                html = _get(client, url)
+                html = client.get(url)
                 if not html:
                     continue
                 for item in vida.read_items(html, topic):
@@ -163,7 +153,7 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
         convenios: list[dict[str, str]] = []
         vistos: set[str] = set()
         for url in temas.get("programas_internacionales", [])[:MAX_PAGINAS]:
-            html = _get(client, url)
+            html = client.get(url)
             if not html:
                 continue
             for fila in leer_convenios(html, url, universidad["nombre_oficial"]):
