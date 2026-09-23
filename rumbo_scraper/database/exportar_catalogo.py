@@ -9,8 +9,8 @@ Favaloro's postgraduates. The database is the corrected catalogue, so this
 writes it out whole in the shape the importer already understands, one entry
 per university with the sections of the contract under ``datos``.
 
-What the application has no table for -- contacts, authorities, services,
-activities, exchange -- is not written.
+Student life, authorities and contacts go too, since the application's
+migration 0028 gave them tables of their own.
 
     python -m rumbo_scraper.database.exportar_catalogo
 """
@@ -137,6 +137,43 @@ def exportar(client: Any) -> dict[str, Any]:
             "url": b["url_postulacion"] or b["fuente_url"],
         })
 
+    carrera_de = {c["id"]: c["nombre_carrera"] for c in carreras}
+    for fila in todo("contactos"):
+        facultad = facultades.get(fila["facultad_id"])
+        por_uni[fila["universidad_id"]]["contactos"].append({
+            "canal": fila["canal"], "valor": fila["usuario_o_direccion"],
+            "facultad_nombre": facultad["nombre_facultad"] if facultad else None})
+    for fila in todo("autoridades"):
+        facultad = facultades.get(fila["facultad_id"])
+        if not facultad:
+            continue
+        por_uni[facultad["universidad_id"]]["autoridades"].append({
+            "nombre": fila["nombre_autoridad"], "cargo": fila["cargo"], "tipo": fila["tipo"],
+            "facultad_nombre": facultad["nombre_facultad"]})
+    for tabla, nombre in (("servicios_estudiantiles", "nombre_servicio"),
+                          ("actividades_extracurriculares", "nombre_actividad")):
+        for fila in todo(tabla):
+            por_uni[fila["universidad_id"]][tabla].append({
+                "nombre": fila[nombre], "categoria": fila["categoria"],
+                "descripcion": fila["descripcion"], "url": fila["url"],
+                "fuente_url": fila["fuente_url"]})
+    for fila in todo("programas_internacionales"):
+        por_uni[fila["universidad_id"]]["programas_internacionales"].append({
+            "nombre": fila["nombre_programa"], "tipo": fila["tipo_programa"],
+            "nivel": fila["nivel"], "requisitos": fila["requisitos"],
+            "reconocimiento_academico": fila["reconocimiento_academico"],
+            "url": fila["url"], "fuente_url": fila["fuente_url"]})
+    for fila in todo("convenios_intercambio"):
+        por_uni[fila["universidad_id"]]["convenios_intercambio"].append({
+            "carrera_origen": fila["programa_origen"] or carrera_de.get(fila["carrera_id"]),
+            "universidad_destino": fila["universidad_destino"], "pais": fila["pais"],
+            "ciudad": fila["ciudad"], "fuente_url": fila["fuente_url"]})
+    for fila in todo("alojamientos"):
+        por_uni[fila["universidad_id"]]["alojamientos"].append({
+            "tipo": fila["tipo_alojamiento"], "descripcion": fila["descripcion"],
+            "residencia_propia": fila["residencia_propia"], "url": fila["url"],
+            "fuente_url": fila["fuente_url"]})
+
     salida = []
     for u in sorted(universidades, key=lambda u: u["nombre_oficial"]):
         datos = por_uni[u["id"]]
@@ -147,7 +184,10 @@ def exportar(client: Any) -> dict[str, Any]:
                 "anio_fundacion": u["anio_fundacion"],
             }],
             **{seccion: list(datos.get(seccion, [])) for seccion in
-               ("sedes", "facultades", "carreras", "ofertas", "materias", "posgrados", "becas")},
+               ("sedes", "facultades", "carreras", "ofertas", "materias", "posgrados", "becas",
+                "contactos", "autoridades", "servicios_estudiantiles",
+                "actividades_extracurriculares", "programas_internacionales",
+                "convenios_intercambio", "alojamientos")},
         }})
     return {"universidades": salida}
 
@@ -164,8 +204,10 @@ def main() -> None:
         d = entrada["datos"]
         print(f"{d['universidades'][0]['nombre_corto'] or '':10} "
               + " ".join(f"{k}={len(d[k])}" for k in
-                         ("sedes", "facultades", "carreras", "ofertas", "materias",
-                          "posgrados", "becas")))
+                         ("sedes", "facultades", "carreras", "materias", "posgrados",
+                          "becas", "contactos", "autoridades", "servicios_estudiantiles",
+                          "actividades_extracurriculares", "programas_internacionales",
+                          "convenios_intercambio", "alojamientos")))
     print(f"Archivo: {args.output}")
 
 
