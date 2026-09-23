@@ -286,10 +286,22 @@ class LaVidaUniversitaria(unittest.TestCase):
         html = ("<h3>Te proponemos actividades deportivas porque:</h3>"
                 "<h3>Formate y sé parte de la evolución del deporte</h3>"
                 "<h3>¿Por qué hacer un intercambio?</h3>"
-                "<h3>Deportes</h3>")
+                "<h3>Departamento de Deportes UP</h3>")
         nombres = [row["titulo"]
                    for row in vida.read_items(html, "actividades_extracurriculares")]
-        self.assertEqual(nombres, ["Deportes"])
+        self.assertEqual(nombres, ["Departamento de Deportes UP"])
+
+    def test_la_etiqueta_de_la_seccion_no_es_una_actividad(self):
+        # "Deportes" on its own is the entry of the menu that opens the page.
+        from rumbo_scraper.parsers import vida
+        html = "<h3>Deportes</h3><h3>Becas</h3><h3>Vida universitaria</h3>"
+        self.assertEqual(vida.read_items(html, "actividades_extracurriculares"), [])
+
+    def test_una_noticia_no_es_una_actividad(self):
+        from rumbo_scraper.parsers import vida
+        html = ("<h3>La UNLP consolida el acceso a actividades deportivas</h3>"
+                "<h3>Requisitos médicos | Deportes 2025</h3>")
+        self.assertEqual(vida.read_items(html, "actividades_extracurriculares"), [])
 
     def test_la_vineta_no_forma_parte_del_nombre(self):
         from rumbo_scraper.parsers import vida
@@ -463,3 +475,19 @@ class ElPlanPublicadoComoDocumento(unittest.TestCase):
         from rumbo_scraper.parsers import generico
         materias = generico.leer_plan_documento(b"", "Licenciatura", "Universidad")
         self.assertEqual(materias, [])
+
+
+class ElArchivoDelPlan(unittest.TestCase):
+    def test_el_nombre_del_archivo_separa_con_guiones(self):
+        from rumbo_scraper.spiders.generico import _documento_del_plan
+        html = ('<a href="/uploads/Ingenieria-Industrial-PLAN-DE-ESTUDIOS.pdf">'
+                'Descargar</a>')
+        self.assertEqual(
+            _documento_del_plan(html, "https://www.unlam.edu.ar/x", ("unlam.edu.ar",)),
+            "https://www.unlam.edu.ar/uploads/Ingenieria-Industrial-PLAN-DE-ESTUDIOS.pdf")
+
+    def test_el_plan_estrategico_no_es_el_plan_de_una_carrera(self):
+        from rumbo_scraper.spiders.generico import _documento_del_plan
+        html = '<a href="/plan-estrategico-2022.pdf">Plan estratégico</a>'
+        self.assertIsNone(
+            _documento_del_plan(html, "https://u.edu.ar/x", ("u.edu.ar",)))

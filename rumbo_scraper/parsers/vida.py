@@ -94,6 +94,41 @@ _NOT_AN_ITEM = re.compile(
 )
 # A heading that asks instead of naming.
 _A_QUESTION = re.compile(r"[¿?]")
+# A line that reports something rather than naming it. A page about a topic
+# carries its own news, and a headline is a sentence with a verb in it.
+_UNA_FRASE = re.compile(
+    r"(?i)\b(consolid\w*|dio|dieron|brind\w*|realiz\w*|particip\w*|"
+    r"present\w*|lanz\w*|abri[óo]|cerr[óo]|firm\w*|recib\w*|celebr\w*|"
+    r"comenz\w*|inaugur\w*|gan\w*|entreg\w*|visit\w*|anunci\w*|"
+    r"se\s+(?:realiz|dict|abre|entreg))\b")
+
+
+# The label of the section itself, which a menu prints and which names
+# nothing the university offers in particular.
+_SECCION_COMPUESTA = frozenset({
+    "becas y beneficios", "vida universitaria", "servicios al estudiante",
+    "servicios estudiantiles", "actividades extracurriculares",
+    "programas internacionales", "explorar la biblioteca",
+    "bolsa de trabajo", "centro de estudiantes",
+})
+_LA_SECCION = frozenset(
+    "becas beca deportes deporte cultura biblioteca servicios servicio "
+    "alojamiento residencias residencia intercambio intercambios "
+    "internacional internacionales bienestar salud voluntariado tutorias "
+    "pasantias empleo becas y beneficios beneficios actividades "
+    "vida universitaria estudiantes alumnos".split("\n")[0].split(" ") )
+
+
+def _es_un_nombre(texto: str) -> bool:
+    """Whether a line names something the university offers.
+
+    A page prints its news beside what it offers, and a headline is a
+    sentence: it has a verb, it runs long, and it often carries the name of
+    the university as its subject.
+    """
+    if "|" in texto or len(texto.split()) > 9:
+        return False
+    return not _UNA_FRASE.search(texto)
 
 
 # Whether an item belongs to the topic of the page that lists it. A page
@@ -111,17 +146,25 @@ CLASSIFIERS = {
 def read_items(html: str, topic: str | None = None) -> list[dict[str, str]]:
     """Read the items a topic page lists, each with the sentence beside it.
 
-    An item is a heading with text under it that the vocabulary of the topic
-    recognises. A page that has no headings has no items, and a heading the
-    topic does not recognise is the news, the name of a person or a section of
-    the site -- all of which a page about scholarships also prints.
+    An item is a name that the vocabulary of the topic recognises, published
+    as a heading, as an entry of a list or as a link. Only the heading was
+    read at first, and half the universities list their scholarships and
+    their services as links instead: what was found for the whole country fit
+    in a hundred rows.
+
+    What the topic does not recognise is the news, the name of a person or a
+    section of the site, all of which a page about scholarships also prints.
     """
     soup = _soup(html)
     for element in soup(["nav", "footer", "header", "aside", "form"]):
         element.decompose()
     items: list[dict[str, str]] = []
     seen: set[str] = set()
-    for heading in soup.find_all(["h2", "h3", "h4"]):
+    for heading in soup.find_all(["h2", "h3", "h4", "li", "a", "strong"]):
+        # An element that holds a list of its own is the container of the
+        # items, not one of them.
+        if heading.name in ("li", "a") and heading.find(["li", "a", "h2", "h3"]):
+            continue
         name = clean_text(heading.get_text(" ", strip=True))
         if not name or len(name) < 4 or len(name) > 90 or _NOT_AN_ITEM.match(name):
             continue
@@ -130,7 +173,9 @@ def read_items(html: str, topic: str | None = None) -> list[dict[str, str]]:
             # not name it.
             continue
         name = clean_text(name.lstrip("—–-•* "))
-        if len(name) < 4:
+        if len(name) < 4 or not _es_un_nombre(name):
+            continue
+        if comparison_key(name) in _LA_SECCION or comparison_key(name) in _SECCION_COMPUESTA:
             continue
         if comparison_key(name) in seen:
             continue
@@ -169,12 +214,23 @@ _SCHOLARSHIP_KINDS = (
 _PERCENTAGE = re.compile(r"(\d{1,3})\s*%")
 
 
+# A university names a scholarship a scholarship. Without this the vocabulary
+# of what a scholarship covers matches everything academic on the page, and
+# "Modelo Académico" and "Centros de Excelencia" arrive as scholarships.
+_SE_LLAMA_BECA = re.compile(
+    r"(?i)\bbeca(?:s)?\b|ayudas? econ[óo]mica|media beca|descuento|"
+    r"financiamiento|cr[ée]dito educativo|subsidio")
+
+
 def scholarship_kind(text: str) -> str | None:
+    if not _SE_LLAMA_BECA.search(text or ""):
+        return None
     key = comparison_key(text)
     for pattern, kind in _SCHOLARSHIP_KINDS:
         if re.search(pattern, key):
             return kind
-    return None
+    # A scholarship the university does not describe is still a scholarship.
+    return "Otra"
 
 
 def percentage(text: str) -> float | None:

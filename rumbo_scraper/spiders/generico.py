@@ -502,7 +502,10 @@ def _documento_del_plan(html: str, pagina: str,
         href = clean_text(anchor["href"])
         if not href.lower().split("?")[0].endswith(".pdf"):
             continue
-        junto = f"{etiqueta} {href}"
+        # The name of a file separates its words with hyphens and
+        # underscores: "Ingenieria-Industrial-PLAN-DE-ESTUDIOS.pdf" is a plan
+        # of studies and does not read as one until they are spaces.
+        junto = re.sub(r"[-_+%20]+", " ", f"{etiqueta} {href}")
         if not _PLAN.search(junto) or _NO_ES_EL_PLAN.search(junto):
             continue
         url = urljoin(pagina, href)
@@ -518,7 +521,8 @@ def _enlace_al_plan(html: str, pagina: str, dominios: tuple[str, ...]) -> str | 
     for anchor in soup.find_all("a", href=True):
         label = clean_text(anchor.get_text(" ", strip=True))
         href = clean_text(anchor["href"])
-        if not _PLAN.search(label) and not _PLAN.search(href):
+        junto = re.sub(r"[-_]+", " ", f"{label} {href}")
+        if not _PLAN.search(junto):
             continue
         url = urljoin(pagina, href).split("#")[0]
         if url.lower().endswith(".pdf") or not _es_propio(url, dominios):
