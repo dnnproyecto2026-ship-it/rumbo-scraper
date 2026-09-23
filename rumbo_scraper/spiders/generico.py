@@ -264,7 +264,8 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
         # that decides whether to go looking is of careers alone -- Rosario
         # publishes a hundred and twelve postgraduates centrally, and they
         # were hiding the fact that only ten of its careers had been found.
-        if _cuantas_carreras(programas) < POCAS_CARRERAS:
+        if (_cuantas_carreras(programas) < POCAS_CARRERAS
+                or _un_solo_host(programas)):
             semillas = [universidad.sitio_web, *universidad.semillas]
             extra = [url for url in recorrer(lector, semillas, tope)
                      if url not in paginas]
@@ -284,6 +285,20 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
         )
     finally:
         lector.close()
+
+
+def _un_solo_host(programas: list[generico.Programa]) -> bool:
+    """Whether every career found sits on the one host the sitemap covers.
+
+    A national university teaches through faculties that each publish on a
+    host of their own, and its sitemap covers only the central host. So when
+    every career found shares one host, the faculties have not been read --
+    however many careers the central host happened to list. Cordoba lists
+    forty-three and teaches about a hundred.
+    """
+    hosts = {urlparse(programa.url).netloc.lower()
+             for programa in programas if programa.nivel != "Posgrado"}
+    return len(hosts) <= 1
 
 
 def _cuantas_carreras(programas: list[generico.Programa]) -> int:
