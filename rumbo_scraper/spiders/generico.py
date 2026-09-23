@@ -228,6 +228,7 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
     seen: set[str] = set()
     catalogue: list[str] = []
     todos: list[str] = []
+    hosts_vistos: set[str] = set()
     frontier = [url for url in semillas if url]
     por_direccion = True
     depth = 0
@@ -241,12 +242,22 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
             # Everything the index of careers links is a career, whatever its
             # address says, so the index is trusted over the addresses.
             indice = generico.es_el_indice(url)
+            host_actual = urlparse(url).netloc.lower().removeprefix("www.")
             for link in generico.enlaces(html, url, lector.dominios):
                 if link not in todos:
                     todos.append(link)
                 if link in seen:
                     continue
-                if indice or generico.parece_catalogo(link):
+                # A host of the university this crawl has not been on is a
+                # site of its own, and its catalogue starts at its front
+                # door. Rosario keeps a page per faculty on the central
+                # domain and each one links the faculty's own site at its
+                # root, where no word in the address says "carreras".
+                host = urlparse(link).netloc.lower().removeprefix("www.")
+                nuevo_host = host != host_actual and host not in hosts_vistos
+                if nuevo_host:
+                    hosts_vistos.add(host)
+                if nuevo_host or indice or generico.parece_catalogo(link):
                     if link not in catalogue:
                         catalogue.append(link)
                     following.append(link)
@@ -314,21 +325,35 @@ def _hosts_con_carreras(programas: list[generico.Programa]) -> set[str]:
             for programa in programas if programa.nivel != "Posgrado"}
 
 
+# The page a university keeps its list of faculties on. Rosario links its
+# schools and its services from the home page and its faculties only from
+# here, so the home page alone names none of the hosts that teach.
+_LAS_FACULTADES = re.compile(r"(?i)/(facultades|unidades-?academicas|"
+                             r"escuelas|institutos|sedes-y-facultades)/?$")
+
+
 def _hosts_de_la_universidad(lector: Lector) -> list[str]:
-    """Every host of the university its home page links to.
+    """Every host of the university, from its home and its list of faculties.
 
     A national university teaches through faculties that each publish on a
-    host of their own, and its sitemap covers only the central one. The home
-    page is where it says which they are, and while fewer of them have been
-    read than exist, the catalogue has not been read.
+    host of their own, and its sitemap covers only the central one. While
+    fewer of those hosts have been read than the university has, its
+    catalogue has not been read.
     """
-    inicio = lector.get(lector.universidad.sitio_web)
+    inicio = lector.universidad.sitio_web
+    paginas = [inicio]
+    primera = lector.get(inicio)
+    paginas += [url for url in generico.enlaces(primera, inicio, lector.dominios)
+                if _LAS_FACULTADES.search(urlparse(url).path)][:3]
+
     hosts: dict[str, str] = {}
-    for url in generico.enlaces(inicio, lector.universidad.sitio_web, lector.dominios):
-        parsed = urlparse(url)
-        host = parsed.netloc.lower().removeprefix("www.")
-        if host and host != lector.universidad.dominio:
-            hosts.setdefault(host, f"{parsed.scheme}://{parsed.netloc}/")
+    for pagina in paginas:
+        html = primera if pagina == inicio else lector.get(pagina)
+        for url in generico.enlaces(html, pagina, lector.dominios):
+            parsed = urlparse(url)
+            host = parsed.netloc.lower().removeprefix("www.")
+            if host and host != lector.universidad.dominio:
+                hosts.setdefault(host, f"{parsed.scheme}://{parsed.netloc}/")
     return list(hosts.values())
 
 
