@@ -12,6 +12,10 @@ what that page links, never off a search engine's memory of the site.
 
 - Ingeniería: https://www.fi.uba.ar/institucional/plan2020/planes-de-estudio-2023
   links one resolution per career, read by `parsers.plan_por_cuatrimestre`.
+- Ciencias Sociales, careers whose page lists each cycle with its count
+  ("Ciclo General: Veintidós (22) asignaturas"), read by
+  `parsers.plan_por_ciclos`: Ciencia Política. Those pages do not say the
+  year, so none is given.
 
 A career gets subjects only if it has none: this does not second-guess a
 plan read before. Downloads are kept in ``data/planes_uba/`` so a second run
@@ -32,12 +36,16 @@ from bs4 import BeautifulSoup
 
 from rumbo_scraper.database.exportar_catalogo import clave_de_carrera
 from rumbo_scraper.normalizers.text import comparison_key
-from rumbo_scraper.parsers import plan_por_cuatrimestre
+from rumbo_scraper.parsers import plan_por_ciclos, plan_por_cuatrimestre
 from rumbo_scraper.spiders.visitante import Visitante
 
 CACHE = Path("data/planes_uba")
 PAUSA = 1.0
 INGENIERIA = "https://www.fi.uba.ar/institucional/plan2020/planes-de-estudio-2023"
+POR_CICLOS = {
+    "Licenciatura en Ciencia Política": "https://cienciapolitica.sociales.uba.ar/home/estudiantes/"
+                        "info-academica/plan-de-estudios-8558-17/",
+}
 
 
 def planes_de_ingenieria(visitante: Visitante) -> dict[str, list[tuple[str, int]]]:
@@ -98,7 +106,11 @@ def main() -> None:
         client.table("materias").select("carrera_id").eq("universidad_id", uba["id"]))}
 
     with Visitante(timeout=60) as visitante:
-        planes = planes_de_ingenieria(visitante)
+        planes: dict[str, list[tuple[str, int | None]]] = dict(planes_de_ingenieria(visitante))
+        for carrera, url in POR_CICLOS.items():
+            materias = plan_por_ciclos.leer_html(visitante.get(url))
+            if materias:
+                planes[carrera] = [(materia, None) for materia in materias]
 
     filas = []
     for nombre, materias in planes.items():
