@@ -301,6 +301,55 @@ def leer_facultades(html: str, pagina: str) -> list[dict[str, str]]:
     return unidades
 
 
+_UNIDAD_EN_LA_RUTA = {"departamentos": "Departamento", "facultades": "Facultad",
+                      "escuelas": "Escuela"}
+_UNIDAD_EN_EL_SLUG = re.compile(
+    r"^(?P<tipo>facultad|escuela-superior|escuela|departamento)-(?:de|del)-(?P<resto>.+)$")
+_TIPO_EN_EL_SLUG = {"facultad": "Facultad", "escuela-superior": "Escuela Superior",
+                    "escuela": "Escuela", "departamento": "Departamento"}
+
+
+def unidades_por_enlace(html: str, pagina: str) -> list[dict[str, str]]:
+    """Read the units a menu names by their subject alone.
+
+    UNLa lists "Humanidades y Artes" under /departamentos/, and Morón links
+    "Ciencias de la Salud" to .../escuela-superior-de-ciencias-de-la-salud.
+    The full name is what the address says the link is: the folder names the
+    kind of unit, or the address spells the whole name and the label is its
+    subject word for word. Anything short of that is left unread.
+    """
+    from urllib.parse import unquote, urljoin, urlparse
+    unidades: list[dict[str, str]] = []
+    vistas: set[str] = set()
+    for anchor in _soup(html).find_all("a", href=True):
+        etiqueta = clean_text(anchor.get_text(" ", strip=True))
+        if not etiqueta or not (4 <= len(etiqueta) <= 60) or _UNA_UNIDAD.match(etiqueta):
+            continue
+        partes = [p for p in unquote(urlparse(urljoin(pagina, anchor["href"])).path)
+                  .lower().split("/") if p]
+        if not partes:
+            continue
+        nombre = None
+        if len(partes) >= 2 and partes[-2] in _UNIDAD_EN_LA_RUTA:
+            if comparison_key(etiqueta).replace(" ", "-") == comparison_key(partes[-1]) \
+                    or comparison_key(partes[-1]).startswith(
+                        comparison_key(etiqueta).split()[0]):
+                nombre = f"{_UNIDAD_EN_LA_RUTA[partes[-2]]} de {etiqueta}"
+        else:
+            slug = _UNIDAD_EN_EL_SLUG.match(comparison_key(partes[-1]))
+            if slug and slug.group("resto") == comparison_key(etiqueta).replace(" ", "-"):
+                nombre = f"{_TIPO_EN_EL_SLUG[slug.group('tipo')]} de {etiqueta}"
+        if not nombre or _NO_ES_UNIDAD_ACADEMICA.match(nombre):
+            continue
+        clave = comparison_key(nombre)
+        if clave in vistas:
+            continue
+        vistas.add(clave)
+        unidades.append({"nombre_facultad": nombre, "tipo_unidad": tipo_de_unidad(nombre),
+                         "fuente": pagina})
+    return unidades
+
+
 def tipo_de_unidad(nombre: str) -> str:
     clave = comparison_key(nombre)
     for token, tipo in _TIPOS_UNIDAD:

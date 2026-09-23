@@ -674,3 +674,16 @@ class SedesTest(unittest.TestCase):
         unlp = leer_sedes("<html><body><p>Universidad Nacional de La Plata Av. 7 N° 776, "
                           "La Plata (CP 1900)</p></body></html>", "u")
         self.assertEqual((unlp[0]["calle"], unlp[0]["numero"]), ("Av. 7", "776"))
+
+
+class UnidadesPorEnlaceTest(unittest.TestCase):
+    def test_a_unit_named_by_its_subject_is_read_from_its_address(self):
+        from rumbo_scraper.parsers.institucional import unidades_por_enlace
+        html = ('<a href="/departamentos/humanidades-y-artes">Humanidades y Artes</a>'
+                '<a href="https://x.edu.ar/carreras/escuela-superior-de-ciencias-de-la-salud">'
+                'Ciencias de la Salud</a>'
+                '<a href="/carreras/licenciatura-en-arte">Arte</a>'
+                '<a href="/departamentos/alumnos">Alumnos</a>')
+        self.assertEqual([u["nombre_facultad"] for u in unidades_por_enlace(html, "https://x.edu.ar")],
+                         ["Departamento de Humanidades y Artes",
+                          "Escuela Superior de Ciencias de la Salud"])

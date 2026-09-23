@@ -55,6 +55,7 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
                     hallado["sedes"] += ins.leer_sedes(html, url)
                 elif clave == "facultades":
                     hallado["facultades"] += ins.leer_facultades(html, url)
+                    hallado["facultades"] += ins.unidades_por_enlace(html, url)
                 else:
                     hallado["autoridades"] += [
                         {**persona, "fuente": url}
