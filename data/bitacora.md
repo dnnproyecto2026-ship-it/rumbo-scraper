@@ -16,6 +16,11 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 | Universidad de Belgrano | 25 | 13 | 939 | 0 | 79 |
 | Universidad Tecnológica Nacional | 98 | 557 | 2179 | 0 | 1083 |
 | Universidad de Buenos Aires | 125 | 592 | 336 | 0 | 4551 |
+| Universidad Abierta Interamericana | 57 | 31 | 2504 | 0 | 133 |
+| Universidad de Palermo | 72 | 18 | 3128 | 0 | 242 |
+| Universidad del CEMA | 14 | 22 | 0 | 0 | 87 |
+| Universidad de Ciencias Empresariales y Sociales | 30 | 0 | 1433 | 0 | 125 |
+| Universidad del Salvador | 69 | 75 | 0 | 0 | 410 |
 
 ## Secciones vacías, por universidad
 
@@ -142,21 +147,95 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 - `turnos_anio` — el catálogo central no publica horarios
 - `ofertas_ciclo` — el catálogo central no publica ciclos
 
+**Universidad Abierta Interamericana**
+
+- `becas` — las becas se publican fuera del catálogo de carreras
+- `servicios_estudiantiles` — no hay catálogo de servicios
+- `actividades_extracurriculares` — no hay catálogo
+- `alojamiento` — no hay catálogo
+- `programas_internacionales` — no hay catálogo
+- `convenios_intercambio` — no hay catálogo
+- `redes_contacto` — sin datos, causa no declarada
+- `aranceles` — el sitio no publica el arancel de cada carrera
+- `turnos_anio` — el turno se publica por sede, no por año
+- `ofertas_ciclo` — no se publica un ciclo de inscripción
+
+**Universidad de Palermo**
+
+- `sedes` — el catálogo de carreras no dice en qué sede se dicta cada una
+- `becas` — las becas se publican fuera del catálogo
+- `servicios_estudiantiles` — no hay catálogo de servicios
+- `actividades_extracurriculares` — no hay catálogo
+- `alojamiento` — no hay catálogo
+- `programas_internacionales` — no hay catálogo
+- `convenios_intercambio` — no hay catálogo
+- `autoridades` — las autoridades se publican por facultad, fuera del catálogo de carreras
+- `redes_contacto` — no hay un directorio de contactos por facultad
+- `aranceles` — el arancel no se publica junto a la carrera
+- `turnos_anio` — no se publica un catálogo de horarios
+- `ofertas_ciclo` — no se publica un ciclo de inscripción
+
+**Universidad del CEMA**
+
+- `sedes` — el catálogo no dice en qué sede se dicta cada carrera
+- `facultades` — la universidad no organiza su oferta por facultades
+- `materias` — el plan de estudios se publica como prosa y como folleto en PDF, no como listado de materias
+- `becas` — las becas se publican fuera del catálogo
+- `servicios_estudiantiles` — no hay catálogo de servicios
+- `actividades_extracurriculares` — no hay catálogo
+- `alojamiento` — no hay catálogo
+- `programas_internacionales` — no hay catálogo
+- `convenios_intercambio` — no hay catálogo
+- `autoridades` — las autoridades se publican fuera del catálogo
+- `redes_contacto` — el directorio es por departamento, no por facultad
+- `aranceles` — el arancel no se publica junto a la carrera
+- `turnos_anio` — no se publica un catálogo de horarios
+- `ofertas_ciclo` — se publica el próximo inicio, no un ciclo
+
+**Universidad de Ciencias Empresariales y Sociales**
+
+- `posgrados` — el listado de posgrados no viaja en la página; la arma el navegador después de cargarla
+- `becas` — las becas se publican fuera del catálogo
+- `servicios_estudiantiles` — no hay catálogo de servicios
+- `actividades_extracurriculares` — no hay catálogo
+- `alojamiento` — no hay catálogo
+- `programas_internacionales` — no hay catálogo
+- `convenios_intercambio` — no hay catálogo
+- `autoridades` — las autoridades se publican fuera del catálogo
+- `aranceles` — el arancel se publica como plantilla a completar
+- `turnos_anio` — los turnos se publican como plantilla a completar
+- `ofertas_ciclo` — no se publica un ciclo de inscripción
+
+**Universidad del Salvador**
+
+- `sedes` — la propuesta nombra las sedes en la resolución de CONEAU, sin dirección
+- `materias` — la propuesta no publica el plan de estudios
+- `becas` — las becas se publican fuera del catálogo
+- `servicios_estudiantiles` — no hay catálogo de servicios
+- `actividades_extracurriculares` — no hay catálogo
+- `alojamiento` — no hay catálogo
+- `programas_internacionales` — no hay catálogo por carrera
+- `convenios_intercambio` — no hay catálogo por carrera
+- `autoridades` — las autoridades se publican fuera del catálogo
+- `redes_contacto` — no hay un directorio por facultad
+- `turnos_anio` — no se publica un catálogo de horarios
+- `ofertas_ciclo` — no se publica un ciclo de inscripción
+
 ## Cobertura de los campos que más importan
 
 Cuántas filas traen el dato sobre el total de esa sección.
 
-| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l | de Belgrano | Tecnológica Na | de Buenos Aire |
-|---|---|---|---|---|---|---|---|---|---|---|
-| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 | 0/98 | 0/125 |
-| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 | 73/98 | 0/125 |
-| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 8/125 |
-| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 | 73/557 | 592/592 |
-| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 | 0/557 | 0/592 |
-| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 | 0/557 | 0/592 |
-| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 | 0/557 | 0/592 |
-| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 | 1933/2179 | 0/336 |
-| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 | 295/2179 | 0/336 |
+| Campo | Torcuato Di Te | de San Andrés | Instituto Tecn | Austral | del Museo Soci | Católica Argen | Argentina de l | de Belgrano | Tecnológica Na | de Buenos Aire | Abierta Intera | de Palermo | del CEMA | de Ciencias Em | del Salvador |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 | 0/98 | 0/125 | 57/57 | 10/72 | 12/14 | 30/30 | 69/69 |
+| `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 | 73/98 | 0/125 | 56/57 | 13/72 | 12/14 | 30/30 | 59/69 |
+| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 8/125 | 57/57 | 72/72 | 0/14 | 29/30 | 0/69 |
+| `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 | 73/557 | 592/592 | 31/31 | 18/18 | 12/22 | — | 75/75 |
+| `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 | 0/557 | 0/592 | 31/31 | 1/18 | 10/22 | — | 75/75 |
+| `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 | 0/557 | 0/592 | 31/31 | 6/18 | 13/22 | — | 22/75 |
+| `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 | 0/557 | 0/592 | 31/31 | 5/18 | 20/22 | — | 8/75 |
+| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 | 1933/2179 | 0/336 | 2504/2504 | 3105/3128 | — | 1330/1433 | — |
+| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 | 295/2179 | 0/336 | 2422/2504 | 0/3128 | — | 1134/1433 | — |
 
 ## Qué queda fuera y por qué
 
@@ -229,4 +308,31 @@ Cuántas filas traen el dato sobre el total de esa sección.
 - Método: HTML público del catálogo central; sin IA
 - 3 descarga(s) fallidas en la última corrida
 - Backlog de auditoría: alta 2060, media 2491, baja 0
+
+### Universidad Abierta Interamericana
+
+- Método: HTML público por carrera y el plan servido por nbapi; sin IA
+- 2 descarga(s) fallidas en la última corrida
+- Backlog de auditoría: alta 31, media 102, baja 0
+
+### Universidad de Palermo
+
+- Método: HTML público de la página de plan de cada carrera; sin IA
+- Backlog de auditoría: alta 122, media 120, baja 0
+
+### Universidad del CEMA
+
+- Método: HTML público de cada carrera del sitemap; sin IA
+- 36 programa(s) fuera del contrato: la página no publica datos del programa
+- Backlog de auditoría: alta 34, media 53, baja 0
+
+### Universidad de Ciencias Empresariales y Sociales
+
+- Método: Bloque de datos que el sitio imprime en cada página; sin IA
+- Backlog de auditoría: alta 0, media 125, baja 0
+
+### Universidad del Salvador
+
+- Método: HTML público de cada propuesta académica; sin IA
+- Backlog de auditoría: alta 121, media 289, baja 0
 

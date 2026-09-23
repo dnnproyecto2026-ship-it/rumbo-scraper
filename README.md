@@ -377,6 +377,32 @@ como una página que enlaza a otra parte: no hay texto que leer.
 Una materia equivocada es peor que una materia faltante, así que lo que no se
 puede leer queda enlazado y declarado.
 
+## Extracción completa: cinco universidades privadas
+
+```bash
+python -m rumbo_scraper.spiders.uai      && python -m rumbo_scraper.database.load_uai --apply
+python -m rumbo_scraper.spiders.palermo  && python -m rumbo_scraper.database.load_palermo --apply
+python -m rumbo_scraper.spiders.ucema    && python -m rumbo_scraper.database.load_ucema --apply
+python -m rumbo_scraper.spiders.uces     && python -m rumbo_scraper.database.load_uces --apply
+python -m rumbo_scraper.spiders.usal     && python -m rumbo_scraper.database.load_usal --apply
+```
+
+Cada una publica de una forma distinta y el adapter lee la que tiene:
+
+| Universidad | De dónde sale el catálogo | Qué trae de más |
+|---|---|---|
+| **UAI** | una página por carrera bajo `/facultades/`, y el plan detrás de un iframe servido por `nbapi.uai.edu.ar` | el mejor plan de las quince: año, cuatrimestre, código y correlativas |
+| **Palermo** | el índice de cada facultad, y una página de plan por carrera | el plan está marcado en el HTML: un bloque por año y un enlace por materia |
+| **UCEMA** | las ramas `/grado` y `/posgrado` del sitemap | la resolución que reconoce oficialmente cada carrera |
+| **UCES** | el bloque `laravel.data` que el propio sitio imprime en la página | la facultad con su dirección, teléfono y mail |
+| **USAL** | los índices de grado y de posgrado, y una página por propuesta | **aranceles**: matrícula y cuota mensual, la primera universidad que los publica |
+
+Dos decisiones que valen para las cinco. La UAI declara el nivel de cada
+carrera en un comentario junto al plan, así que una página que no lo declara se
+reporta en vez de adivinarle el nivel. Y en Palermo una carrera que se dicta
+online y presencial aparece en dos índices bajo dos direcciones: es una sola
+carrera, y gana el primer índice que la nombra.
+
 ## Bitácora de cobertura
 
 ```bash
