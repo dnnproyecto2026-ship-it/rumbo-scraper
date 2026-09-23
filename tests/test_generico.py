@@ -648,3 +648,29 @@ class NoEsUnProgramaTest(unittest.TestCase):
                          "Ingeniería Biomédica")
         self.assertIsNone(nombre_limpio("Maestría en Preguntas Frecuentes", "seccion"))
         self.assertEqual(motivo('RES 054 - 2012 "CS" CGA Maestría'), "resolucion")
+
+
+class SedesTest(unittest.TestCase):
+    def test_an_unnamed_address_is_named_after_its_street_not_as_the_main_campus(self):
+        from rumbo_scraper.parsers.institucional import leer_sedes
+        sedes = leer_sedes("<html><body><p>Av. Calchaquí 610, B1884 Berazategui</p>"
+                           "<p>Av. Calchaquí 6200</p></body></html>", "u")
+        self.assertEqual([s["nombre_sede"] for s in sedes],
+                         ["Sede Av. Calchaquí 610", "Sede Av. Calchaquí 6200"])
+
+    def test_counts_phones_and_error_pages_are_not_addresses(self):
+        from rumbo_scraper.parsers.institucional import leer_sedes
+        for linea in ("Alumnos 0800 555 1234", "Aulas con capacidad para 40",
+                      "Error 404", "Mayores de 25", "Julio 2024, Buenos Aires"):
+            self.assertEqual(leer_sedes(f"<html><body><p>{linea}</p></body></html>", "u"),
+                             [], linea)
+
+    def test_a_campus_without_a_number_and_a_footer_address_are_read(self):
+        from rumbo_scraper.parsers.institucional import leer_sedes
+        unc = leer_sedes("<html><body><p>Pabellón Argentina, Av. Haya de la Torre s/n, "
+                         "Ciudad Universitaria</p></body></html>", "u")
+        self.assertEqual((unc[0]["nombre_sede"], unc[0]["calle"], unc[0]["numero"]),
+                         ("Pabellón Argentina", "Av. Haya de la Torre", None))
+        unlp = leer_sedes("<html><body><p>Universidad Nacional de La Plata Av. 7 N° 776, "
+                          "La Plata (CP 1900)</p></body></html>", "u")
+        self.assertEqual((unlp[0]["calle"], unlp[0]["numero"]), ("Av. 7", "776"))

@@ -16,7 +16,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import httpx
 
@@ -25,6 +25,7 @@ from rumbo_scraper.parsers import institucional as ins
 
 USER_AGENT = "RumboScraper/0.4 (+catalogo educativo publico)"
 MAX_PAGINAS = 3
+RUTAS_DE_SEDES = ("/contacto", "/sedes")
 
 
 def _get(client: httpx.Client, url: str) -> str:
@@ -46,26 +47,60 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     dominio = (urlparse(sitio).netloc or "").lower().removeprefix("www.")
     hallado: dict[str, list[dict[str, Any]]] = {"sedes": [], "facultades": [],
                                                 "autoridades": []}
-    with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True,
-                      timeout=30) as client:
-        inicio = _get(client, sitio)
-        if not inicio:
-            return {}
-        paginas = ins.descubrir(inicio, sitio, dominio)
-        # The home page carries some of this itself, so it is read as well.
-        for clave, urls in paginas.items():
-            for url in [sitio, *urls[:MAX_PAGINAS]]:
-                html = inicio if url == sitio else _get(client, url)
-                if not html:
-                    continue
-                if clave == "sedes":
-                    hallado["sedes"] += ins.leer_sedes(html, url)
-                elif clave == "facultades":
-                    hallado["facultades"] += ins.leer_facultades(html, url)
-                else:
-                    hallado["autoridades"] += [
-                        {**persona, "fuente": url}
-                        for persona in ins.leer_autoridades(html, url)]
+    from rumbo_scraper.parsers.generico import se_mudo_a
+    from rumbo_scraper.spiders.generico import Navegador, _tiene_contenido
+    navegador: list[Navegador] = []
+
+    def pagina(client: httpx.Client, url: str) -> str:
+        """A page as a visitor sees it: from the server, or, when the
+        server sends an empty shell the way UCA's and Morón's do, from a
+        browser that lets the site build it."""
+        html = _get(client, url)
+        # A page the server does not have is not one a browser would find.
+        if not html or _tiene_contenido(html):
+            return html
+        destino = se_mudo_a(html, url)
+        if destino and destino.rstrip("/") != url.rstrip("/"):
+            return pagina(client, destino)
+        if not navegador:
+            try:
+                navegador.append(Navegador())
+            except Exception:
+                return html
+        return navegador[0].get(url) or html
+
+    # A certificate a site installed without its chain is a fault of the
+    # server's setup, not a door it closed; the general reader reads those
+    # sites too.
+    try:
+        with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True,
+                          timeout=30, verify=False) as client:
+            inicio = pagina(client, sitio)
+            if not inicio:
+                return {}
+            paginas = ins.descubrir(inicio, sitio, dominio)
+            # A site that links no page about its campuses from the home page
+            # still has the one every site has. What it says is read like any
+            # other page; a page that is not there says nothing.
+            if not paginas.get("sedes"):
+                paginas["sedes"] = [urljoin(sitio, ruta) for ruta in RUTAS_DE_SEDES]
+            # The home page carries some of this itself, so it is read as well.
+            for clave, urls in paginas.items():
+                for url in [sitio, *urls[:MAX_PAGINAS]]:
+                    html = inicio if url == sitio else pagina(client, url)
+                    if not html:
+                        continue
+                    if clave == "sedes":
+                        hallado["sedes"] += ins.leer_sedes(html, url)
+                    elif clave == "facultades":
+                        hallado["facultades"] += ins.leer_facultades(html, url)
+                    else:
+                        hallado["autoridades"] += [
+                            {**persona, "fuente": url}
+                            for persona in ins.leer_autoridades(html, url)]
+    finally:
+        for abierto in navegador:
+            abierto.close()
     return {clave: _sin_repetir(filas, clave) for clave, filas in hallado.items()}
 
 

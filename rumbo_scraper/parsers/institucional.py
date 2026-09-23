@@ -79,6 +79,59 @@ _UNA_SEDE = re.compile(
     r"centro regional|predio|complejo)\b")
 
 
+# An address with the kind of way spelled out can sit anywhere in a line: in
+# a footer it follows the name of the university and precedes the postcode,
+# "Universidad Nacional de La Plata Av. 7 N° 776, La Plata (CP 1900)". The
+# kind of way is what makes it safe to find it mid-line, so only the forms a
+# sentence does not use are taken: "Av." with its full stop, never "av".
+_DIRECCION_CON_TIPO = re.compile(
+    r"(?P<calle>(?:Av\.|Avda\.|Avenida|Calle|Bv\.|Boulevard|Diag\.|Diagonal|"
+    r"Pasaje|Pje\.)\s+[\w.'’]+(?:\s+[\w.'’]+){0,4}?)"
+    r"\s+(?:N[°º]\.?\s*)?(?:(?P<numero>\d{1,5})\b(?![-\d]|\s*(?:hs|km|%))"
+    # "Av. Haya de la Torre s/n": a street with no number is how a campus
+    # built on its own grounds is addressed, and the number stays empty.
+    r"|(?P<sin_numero>s/n)\b)", re.I)
+# A street may be named after a year, and a number may look like one: an
+# address is told from a date by the town that follows it,
+# "Florencio Varela 1903, San Justo".
+_SIGUE_UNA_LOCALIDAD = re.compile(r"\d{4},\s*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]")
+_MESES = frozenset("enero febrero marzo abril mayo junio julio agosto septiembre "
+                   "setiembre octubre noviembre diciembre".split())
+
+
+def sin_nombre(calle: str, numero: str | None = None) -> str:
+    """The name of an address the page gives no name to.
+
+    It used to be "Sede central", which states something no page said: UCA's
+    campus in Rosario was stored as its main one. It was also one name for
+    every unnamed address of a university, and campuses are stored one per
+    name, so the second overwrote the first. The street is neither a claim
+    nor shared.
+    """
+    return f"Sede {calle} {numero}" if numero else f"Sede {calle}"
+
+
+# The first word of a line with a number in it that no street starts with.
+_NO_ABRE_UNA_CALLE = frozenset(
+    "error alumnos alumno aulas aula experiencias mayores menores hasta "
+    "capacidad cupos cupo mas".split())
+_PREPOSICIONES = frozenset("de del para con a al en por".split())
+
+
+def _es_calle(calle: str, numero: str | None) -> bool:
+    """Whether a street and number read like an address at all."""
+    palabras = comparison_key(calle).split()
+    if not palabras or palabras[0] in _NO_ABRE_UNA_CALLE:
+        return False
+    # "Aulas con capacidad para 40", "Mayores de 25": a count, not a street.
+    if palabras[-1] in _PREPOSICIONES:
+        return False
+    # "Alumnos 0800": the start of a free telephone line.
+    if numero and numero.startswith("0"):
+        return False
+    return True
+
+
 def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
     """Read the campuses a page lists, with the address of each.
 
@@ -95,13 +148,37 @@ def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
     sedes: list[dict[str, Any]] = []
     vistas: set[str] = set()
     nombre: str | None = None
+    lineas_desde_el_nombre = 0
     for linea in _lineas(soup):
         if not linea or len(linea) > 120:
             continue
-        if _UNA_SEDE.match(linea) and len(linea) <= 70:
+        if _UNA_SEDE.match(linea) and len(linea) <= 70 \
+                and "virtual" not in comparison_key(linea):
             nombre = clean_text(linea).strip(" :.-")
+            lineas_desde_el_nombre = 0
             continue
-        if _NO_ES_DIRECCION.search(linea):
+        lineas_desde_el_nombre += 1
+        # A name belongs to the address right under it. One a dozen lines up
+        # is a menu entry: "Escuela de Artes..." over UNLaM's footer.
+        if lineas_desde_el_nombre > 3:
+            nombre = None
+        con_tipo_en_linea = _DIRECCION_CON_TIPO.search(linea)
+        if con_tipo_en_linea and not re.search(r"@|https?:", linea):
+            calle = clean_text(con_tipo_en_linea.group("calle")).strip(" ,.-")
+            numero = con_tipo_en_linea.group("numero")
+            # "Pabellón Argentina, Av. Haya de la Torre s/n": what precedes
+            # the street on its own line is the building's name.
+            antes = clean_text(linea[:con_tipo_en_linea.start()]).strip(" ,.-:")
+            propio = antes if 3 <= len(antes) <= 50 and "universidad" not in \
+                comparison_key(antes) else None
+            clave = comparison_key(f"{calle} {numero or ''}")
+            if clave not in vistas and _es_calle(calle, numero):
+                vistas.add(clave)
+                sedes.append({"nombre_sede": nombre or propio or sin_nombre(calle, numero),
+                              "calle": calle, "numero": numero, "fuente": pagina})
+                nombre = None
+            continue
+        if _NO_ES_DIRECCION.search(linea) and not _SIGUE_UNA_LOCALIDAD.search(linea):
             continue
         if comparison_key(linea).split()[0] in _ARRANCA_UNA_FRASE:
             continue
@@ -110,7 +187,8 @@ def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
             continue
         calle = clean_text(match.group("calle")).strip(" ,.-")
         numero = match.group("numero")
-        if len(calle) < 4 or comparison_key(calle) in _NO_ES_CALLE:
+        if len(calle) < 4 or comparison_key(calle) in _NO_ES_CALLE \
+                or not _es_calle(calle, numero):
             continue
         # Either the university named the kind of way, or the line is short
         # enough that it can only be an address.
@@ -122,13 +200,17 @@ def leer_sedes(html: str, pagina: str) -> list[dict[str, Any]]:
             # Without a word naming the kind of way, the street has to read
             # like a name and the number like a number: a line in capitals is
             # a banner and a four-digit year is a date.
-            if calle.isupper() or 1900 <= int(numero) <= 2099:
+            if calle.isupper():
+                continue
+            if 1900 <= int(numero) <= 2099 and (
+                    not _SIGUE_UNA_LOCALIDAD.search(linea)
+                    or _MESES & set(comparison_key(calle).split())):
                 continue
         clave = comparison_key(f"{calle} {numero}")
         if clave in vistas:
             continue
         vistas.add(clave)
-        sedes.append({"nombre_sede": nombre or "Sede central",
+        sedes.append({"nombre_sede": nombre or sin_nombre(calle, numero),
                       "calle": calle, "numero": numero, "fuente": pagina})
         nombre = None
     return sedes

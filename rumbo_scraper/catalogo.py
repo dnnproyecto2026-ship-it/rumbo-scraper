@@ -72,6 +72,13 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "Universidad Favaloro", "Favaloro", "Privada",
         "https://www.favaloro.edu.ar", "favaloro.edu.ar", "CABA",
         "Ciudad Autónoma de Buenos Aires", "Ciudad Autónoma de Buenos Aires",
+        # The postgraduates hang from indexes the careers never link.
+        semillas=(
+            "https://www.favaloro.edu.ar/actividades-de-posgrado/maestrias/",
+            "https://www.favaloro.edu.ar/actividades-de-posgrado/especializaciones/",
+            "https://www.favaloro.edu.ar/actividades-de-posgrado/doctorados/",
+            "https://www.favaloro.edu.ar/posgrados/",
+        ),
     ),
     Universidad(
         "Universidad Argentina John F. Kennedy", "UK", "Privada",
