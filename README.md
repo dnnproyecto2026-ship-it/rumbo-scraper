@@ -556,6 +556,32 @@ para 2818 carreras sería el dato que más decisiones torcería de toda la base.
   publican junto a la carrera. Son muchas: el dato existe en el plan en PDF y
   no en la página.
 
+- **Rectores y vicerrectores** se leen y no se guardan: `autoridades.facultad_id`
+  no admite nulo, y archivar al rector bajo una facultad cualquiera afirma algo
+  que ninguna página dice. Se guarda solo quien ocupa un cargo de una unidad
+  que su cargo nombra o bajo cuyo encabezado figura.
+- **Unidades académicas de UNA y UNAJ**: UNA encabeza sus unidades solo por
+  tema y algunas son departamentos y otras áreas transdepartamentales, sin que
+  la página diga cuál; UNAJ se organiza en institutos, un tipo que el esquema
+  no tiene. **Siglo 21** y **Blas Pascal** no publican unidades.
+- **Materias de USAL**: la sección «Plan de estudios» de cada carrera trae la
+  resolución y no las materias.
+
+### Completar lo que un adaptador no leyó
+
+- `planes_adaptador <sigla>` apunta el lector de planes a la página exacta que
+  el adaptador registró para cada carrera y completa solo las que no tienen
+  materias.
+- `posgrados_adaptador uces` lee el catálogo de posgrados que el adaptador de
+  UCES nunca miró; el sitio lo arma en el navegador en cada nivel.
+- `retirar_no_programas` y `corregir_sedes` aplican a la base las mismas reglas
+  que hoy impiden leer subpáginas, resoluciones, personas, títulos, teléfonos
+  o páginas de error como si fueran carreras o direcciones. Vista previa por
+  defecto; `--apply` escribe.
+- `spiders/visitante.py` lee una página como la ve una persona: sigue una
+  redirección por script, abre un navegador solo si el servidor manda una
+  cáscara vacía, y tolera un certificado instalado sin su cadena.
+
 ### Cortesía
 
 El lector espera un cuarto de segundo entre pedidos y no abre más de cinco
