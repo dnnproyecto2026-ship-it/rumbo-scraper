@@ -138,8 +138,12 @@ class Navegador:
         self._page = self._browser.new_page(user_agent=USER_AGENT)
 
     def get(self, url: str) -> str:
+        # Waiting for the network to fall silent costs up to a minute on a
+        # page that polls, and a university site polls. Waiting for the
+        # document and then a moment more is enough to read what it built.
         try:
-            self._page.goto(url, wait_until="networkidle", timeout=45000)
+            self._page.goto(url, wait_until="domcontentloaded", timeout=25000)
+            self._page.wait_for_timeout(1200)
             return self._page.content()
         except Exception:
             return ""
@@ -184,10 +188,23 @@ def _es_propio(url: str, dominios: tuple[str, ...]) -> bool:
 
 
 def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
-    """Follow links out from the seeds, keeping to the catalogue of the site."""
+    """Follow links out from the seeds, keeping to the catalogue of the site.
+
+    Which pages belong to the catalogue is decided from the address, because
+    deciding it from the page means downloading every page of a site that
+    publishes a hundred pieces of news for every career.
+
+    Some sites number their pages instead of naming them -- "index.php?
+    idcateg=7" -- and there the address says nothing at all. When the first
+    pass finds no address that reads like a catalogue, every page of the site
+    becomes a candidate, up to the cap: a slower read is the only kind
+    available.
+    """
     seen: set[str] = set()
     catalogue: list[str] = []
+    todos: list[str] = []
     frontier = [url for url in semillas if url]
+    por_direccion = True
     depth = 0
     while frontier and len(seen) < tope and depth < 4:
         batch = [url for url in frontier if url not in seen][:400]
@@ -197,17 +214,27 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
         following: list[str] = []
         for url, html in pages.items():
             for link in generico.enlaces(html, url, lector.dominios):
+                if link not in todos:
+                    todos.append(link)
                 if link in seen:
                     continue
                 if generico.parece_catalogo(link):
                     if link not in catalogue:
                         catalogue.append(link)
                     following.append(link)
-                elif depth == 0:
+                elif depth == 0 or not por_direccion:
                     following.append(link)
+        if depth == 0 and not catalogue:
+            # The site names nothing: read it whole rather than not at all.
+            por_direccion = False
         frontier = following
         depth += 1
-    return catalogue
+    return catalogue if por_direccion else todos[:tope]
+
+
+# Below this many careers the sitemap has not shown the catalogue, whatever
+# else it showed. A national university teaches more than this.
+POCAS_CARRERAS = 15
 
 
 def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
@@ -215,47 +242,78 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
     """Read one university whole: its programmes and the plans they publish."""
     lector = Lector(universidad)
     try:
-        todas = direcciones(lector)
-        candidatas = [url for url in todas if generico.parece_catalogo(url)]
-        if len(candidatas) < 20:
-            # Either the site has no sitemap or it keeps its catalogue out of
-            # it. Walking out from the home page finds it either way.
+        candidatas = _del_sitemap(lector, tope)
+        paginas = lector.get_many(candidatas[:limite] if limite else candidatas)
+        programas = _programas_de(paginas)
+
+        # A national university does not keep its careers on the host that
+        # carries its sitemap: each faculty publishes its own on a host of its
+        # own. When the sitemap comes back short, the links do the rest.
+        if len(programas) < POCAS_CARRERAS:
             semillas = [universidad.sitio_web, *universidad.semillas]
-            candidatas = sorted(set(candidatas) | set(recorrer(lector, semillas, tope)))
-        candidatas = sorted(set(candidatas))[:tope]
-        if limite is not None:
-            candidatas = candidatas[:limite]
+            extra = [url for url in recorrer(lector, semillas, tope)
+                     if url not in paginas]
+            if limite:
+                extra = extra[:limite]
+            nuevas = lector.get_many(extra[:tope])
+            paginas.update(nuevas)
+            vistos = {programa.url for programa in programas}
+            programas += [programa for programa in _programas_de(nuevas)
+                          if programa.url not in vistos]
+            candidatas = sorted(set(candidatas) | set(nuevas))
 
-        paginas = lector.get_many(candidatas)
-        programas: list[generico.Programa] = []
-        for url, html in paginas.items():
-            programme = generico.leer_programa(html, url)
-            if programme is not None:
-                programas.append(programme)
-
-        planes: dict[str, list[dict[str, Any]]] = {}
-        faltantes: list[tuple[str, str]] = []
-        for programme in programas:
-            subjects = generico.leer_plan(paginas.get(programme.url, ""))
-            if subjects:
-                planes[programme.url] = subjects
-            else:
-                enlace = _enlace_al_plan(paginas.get(programme.url, ""),
-                                        programme.url, lector.dominios)
-                if enlace:
-                    faltantes.append((programme.url, enlace))
-        extra = lector.get_many([enlace for _, enlace in faltantes])
-        for origen, enlace in faltantes:
-            subjects = generico.leer_plan(extra.get(enlace, ""))
-            if subjects:
-                planes[origen] = subjects
-
+        planes = _planes_de(lector, programas, paginas)
         return generico.build_dataset(
             universidad, programas, paginas, planes, lector.errores,
             descubiertas=len(candidatas),
         )
     finally:
         lector.close()
+
+
+def _del_sitemap(lector: Lector, tope: int) -> list[str]:
+    """The pages of the catalogue the site lists in its own sitemap."""
+    universidad = lector.universidad
+    todas = direcciones(lector)
+    candidatas = [url for url in todas if generico.parece_catalogo(url)]
+    if len(candidatas) < 20:
+        # Either the site has no sitemap or it keeps its catalogue out of it.
+        # Walking out from the home page finds it either way.
+        semillas = [universidad.sitio_web, *universidad.semillas]
+        candidatas = sorted(set(candidatas) | set(recorrer(lector, semillas, tope)))
+    return sorted(set(candidatas))[:tope]
+
+
+def _programas_de(paginas: dict[str, str]) -> list[generico.Programa]:
+    """The pages that turned out to offer a degree."""
+    programas: list[generico.Programa] = []
+    for url, html in paginas.items():
+        programa = generico.leer_programa(html, url)
+        if programa is not None:
+            programas.append(programa)
+    return programas
+
+
+def _planes_de(lector: Lector, programas: list[generico.Programa],
+               paginas: dict[str, str]) -> dict[str, list[dict[str, Any]]]:
+    """The plan of each programme, from its own page or from the one it links."""
+    planes: dict[str, list[dict[str, Any]]] = {}
+    faltantes: list[tuple[str, str]] = []
+    for programa in programas:
+        materias = generico.leer_plan(paginas.get(programa.url, ""))
+        if materias:
+            planes[programa.url] = materias
+            continue
+        enlace = _enlace_al_plan(paginas.get(programa.url, ""), programa.url,
+                                lector.dominios)
+        if enlace:
+            faltantes.append((programa.url, enlace))
+    aparte = lector.get_many([enlace for _, enlace in faltantes])
+    for origen, enlace in faltantes:
+        materias = generico.leer_plan(aparte.get(enlace, ""))
+        if materias:
+            planes[origen] = materias
+    return planes
 
 
 def _enlace_al_plan(html: str, pagina: str, dominios: tuple[str, ...]) -> str | None:

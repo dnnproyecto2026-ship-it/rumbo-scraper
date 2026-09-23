@@ -269,3 +269,12 @@ class ElRuidoQueQuedaba(unittest.TestCase):
                       "y también con el programa"):
             with self.subTest(texto=texto):
                 self.assertFalse(generico.es_materia(texto))
+
+
+class LasPaginasVecinas(unittest.TestCase):
+    def test_la_lista_de_materias_no_es_otra_carrera(self):
+        for nombre in ("Asignaturas de la Tecnicatura en Comunicación Popular",
+                       "Materias de la Licenciatura en Letras",
+                       "Correlatividades de Abogacía"):
+            with self.subTest(nombre=nombre):
+                self.assertFalse(generico.es_programa(nombre))

@@ -74,6 +74,9 @@ _NOT_A_PROGRAMME = re.compile(
     r"inscripci|admisi[óo]n|ingreso|preinscrip|novedad|noticia|resultado|"
     r"informaci[óo]n|requisitos?|aranceles?|calendario|listado|[íi]ndice|"
     r"plan de estudios|equivalencias|cambio de|"
+    # The page that lists what a career teaches is not a second career.
+    r"asignaturas?\s+(?:de|del)\b|materias?\s+(?:de|del)\b|"
+    r"correlativ|programas?\s+(?:de|del)\s+(?:las|los)\b|"
     # A headline is about the people of a degree, not about the degree.
     r"(?:l[oa]s )?(?:estudiantes|alumn[oa]s|docentes|egresad[oa]s|"
     r"graduad[oa]s|investigador)\b|"

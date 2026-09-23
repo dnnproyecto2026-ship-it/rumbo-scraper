@@ -118,6 +118,16 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "regimen": None, "carga_horaria_semanal": None,
     } for row in subjects])
 
+    # A programme the university stopped publishing, or one an earlier and
+    # noisier reading invented, has to leave the database too. Upserting
+    # alone only ever adds, so a name corrected here would live on beside its
+    # correction.
+    counts["carreras_retiradas"] = _retirar(
+        client, "carreras", "nombre_carrera", university_id, set(career_ids))
+    counts["posgrados_retirados"] = _retirar(
+        client, "posgrados", "nombre_programa", university_id,
+        set(postgraduate_ids))
+
     # Both tables are rewritten whole: they are read from the same pages as
     # the careers, so a second run should replace them, not double them.
     if faculty_ids:
@@ -142,6 +152,23 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         "usuario_o_direccion": row["usuario_o_direccion"],
     } for row in channels])
     return counts
+
+
+def _retirar(client: Any, table: str, column: str, university_id: str,
+             vigentes: set[str]) -> int:
+    """Delete the rows of a university that this reading no longer publishes.
+
+    Only rows of this university are touched, and only by the name the
+    catalogue gives them, so a row the university still publishes under
+    another name is never taken for a stale one.
+    """
+    from rumbo_scraper.database.supabase import select_all
+    existing = select_all(
+        client.table(table).select(f"id,{column}").eq("universidad_id", university_id))
+    stale = [row["id"] for row in existing if row[column] not in vigentes]
+    for start in range(0, len(stale), 50):
+        client.table(table).delete().in_("id", stale[start:start + 50]).execute()
+    return len(stale)
 
 
 def main() -> None:

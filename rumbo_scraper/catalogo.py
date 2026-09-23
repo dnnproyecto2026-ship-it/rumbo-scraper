@@ -61,6 +61,8 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://www.uflouniversidad.edu.ar", "uflouniversidad.edu.ar", "CABA",
         "Ciudad Autónoma de Buenos Aires", "Ciudad Autónoma de Buenos Aires",
     ),
+    # Maimónides answers every address with a 500 and an empty body, from
+    # every user agent tried. There is nothing to read until its site works.
     Universidad(
         "Universidad Maimónides", "Maimónides", "Privada",
         "https://maimonides.edu.ar", "maimonides.edu.ar", "CABA",

@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from rumbo_scraper.catalogo import UNIVERSIDADES
 from rumbo_scraper.contracts import SECTION_FIELDS
 
 DEFAULT_OUTPUT = Path("data/bitacora.md")
@@ -36,6 +37,14 @@ SOURCES: tuple[tuple[str, str, str], ...] = (
     ("Universidad de Ciencias Empresariales y Sociales", "uces_completo",
      "uces_pendientes"),
     ("Universidad del Salvador", "usal_completo", "usal_pendientes"),
+)
+# The universities read by the general reader register themselves from the
+# catalogue, so adding one to the country adds it to the log.
+SOURCES += tuple(
+    (universidad.nombre_oficial,
+     f"{universidad.nombre_corto.lower()}_completo",
+     f"{universidad.nombre_corto.lower()}_pendientes")
+    for universidad in UNIVERSIDADES
 )
 
 # The sections worth reporting, in the order a reader cares about them.
