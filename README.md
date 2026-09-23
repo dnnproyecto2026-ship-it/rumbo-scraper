@@ -529,6 +529,18 @@ arma su índice en el cliente igual sirve las demás páginas enteras: Siglo 21
 parecía necesitar navegador y no lo necesitaba —con él perdía 79 páginas por
 tiempo y encontraba cero carreras; sin él encontró 69.
 
+### Aranceles
+
+De 2828 programas leídos, **diez publican un monto**. Todos son posgrados de
+universidades públicas, entre $36.000 y $205.000 por mes, con mediana de
+$65.000. Ninguna carrera de grado publica su arancel en la página de la
+carrera: las privadas lo mandan a un formulario de contacto o a una página de
+aranceles sin decir a qué carrera corresponde cada valor, y las nacionales son
+gratuitas.
+
+Por eso la tabla `aranceles` queda vacía y no se estima. Un número inventado
+para 2818 carreras sería el dato que más decisiones torcería de toda la base.
+
 ### Lo que no se lee a propósito
 
 - **UNSAM** y **UCEL** responden todo pedido con un desafío anti-bots de su
