@@ -78,6 +78,7 @@ def leer_convenios(html: str, pagina: str, propia: str) -> list[dict[str, Any]]:
     list.
     """
     soup = _soup(html)
+    programa = programa_de_la_pagina(soup)
     for element in soup(["script", "style", "noscript", "nav", "footer",
                          "header", "form", "select"]):
         element.decompose()
@@ -111,8 +112,30 @@ def leer_convenios(html: str, pagina: str, propia: str) -> list[dict[str, Any]]:
         vistas.add(clave)
         convenios.append({"universidad_destino": nombre,
                           "pais": PAISES[pais.group(1).lower()],
-                          "fuente": pagina})
+                          "programa": programa, "fuente": pagina})
     return convenios
+
+
+def programa_de_la_pagina(soup: Any) -> str | None:
+    """The programme a page lists its partners under, as the page names it.
+
+    ``convenios_intercambio.programa_origen`` cannot be null. An adapter
+    fills it with the career an agreement belongs to; a page of the whole
+    university lists them under the name of its exchange programme, which is
+    its own heading. A page that does not name itself gives nothing to put
+    there, and its rows are left out rather than filed under a name the
+    university never used.
+    """
+    for tag in ("h1", "h2"):
+        for heading in soup.find_all(tag):
+            texto = clean_text(heading.get_text(" ", strip=True))
+            if 6 <= len(texto) <= 90 and not _UNA_UNIVERSIDAD.match(texto):
+                return texto
+    if soup.title:
+        titulo = re.split(r"\s+[|–—-]\s+", clean_text(soup.title.get_text(" ", strip=True)))[0]
+        if 6 <= len(titulo) <= 90:
+            return titulo
+    return None
 
 
 def _de_las_celdas(soup: Any) -> list[str]:

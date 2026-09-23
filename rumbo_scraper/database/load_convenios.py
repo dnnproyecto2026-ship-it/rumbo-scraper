@@ -78,9 +78,10 @@ def aplicar(client: Any, universidad: dict[str, Any],
             convenios: list[dict[str, Any]]) -> int:
     ya = client.table("convenios_intercambio").select("id").eq(
         "universidad_id", universidad["id"]).limit(1).execute().data
+    convenios = [c for c in convenios if c.get("programa")]
     if ya or not convenios:
         return 0
-    filas = [{"universidad_id": universidad["id"], "programa_origen": None,
+    filas = [{"universidad_id": universidad["id"], "programa_origen": c["programa"],
               "universidad_destino": c["universidad_destino"], "ciudad": None,
               "pais": c["pais"], "latitud": None, "longitud": None,
               "observaciones": None, "fuente_url": c["fuente"],
