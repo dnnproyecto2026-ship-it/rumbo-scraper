@@ -741,6 +741,20 @@ def parece_catalogo(url: str) -> bool:
     return bool(_PUEDE_SER_CATALOGO.search(urlparse(url).path))
 
 
+# The page that lists the careers of a university. What it links is the
+# catalogue, whatever the addresses look like: a university is free to call
+# its law degree "/abogacia", with no word in the address to say what it is.
+_EL_INDICE = re.compile(
+    r"(?i)/(carreras?|oferta(?:-?academica)?|academicas?|propuesta(?:s)?|"
+    r"grado|pregrado|posgrado|postgrado|estudios|que-estudiar)/?$"
+)
+
+
+def es_el_indice(url: str) -> bool:
+    """Whether an address is the page that lists what a university teaches."""
+    return bool(_EL_INDICE.search(urlparse(url).path))
+
+
 def direcciones_del_sitemap(xml: str) -> list[str]:
     """Every address a sitemap lists, including the sitemaps it points to."""
     return [clean_text(url) for url in re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", xml or "")]

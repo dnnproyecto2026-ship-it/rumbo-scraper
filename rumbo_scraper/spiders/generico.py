@@ -213,12 +213,15 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
         pages = lector.get_many(batch)
         following: list[str] = []
         for url, html in pages.items():
+            # Everything the index of careers links is a career, whatever its
+            # address says, so the index is trusted over the addresses.
+            indice = generico.es_el_indice(url)
             for link in generico.enlaces(html, url, lector.dominios):
                 if link not in todos:
                     todos.append(link)
                 if link in seen:
                     continue
-                if generico.parece_catalogo(link):
+                if indice or generico.parece_catalogo(link):
                     if link not in catalogue:
                         catalogue.append(link)
                     following.append(link)

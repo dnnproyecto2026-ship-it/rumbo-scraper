@@ -322,3 +322,15 @@ class LasMateriasQueTienenPaginaPropia(unittest.TestCase):
         self.assertFalse(generico.es_programa(
             "Ordenanza nº 290/16 y Anexo Diplomatura universitaria"))
         self.assertFalse(generico.es_programa("diplomatura archivos"))
+
+
+class ElIndiceDeCarreras(unittest.TestCase):
+    def test_se_reconoce_la_pagina_que_lista_las_carreras(self):
+        for url in ("https://unpaz.edu.ar/carreras",
+                    "https://x.edu.ar/oferta-academica/",
+                    "https://x.edu.ar/posgrado"):
+            with self.subTest(url=url):
+                self.assertTrue(generico.es_el_indice(url))
+
+    def test_la_carrera_no_es_el_indice(self):
+        self.assertFalse(generico.es_el_indice("https://x.edu.ar/carreras/abogacia"))
