@@ -186,6 +186,12 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "Córdoba", "Córdoba",
     ),
     # -------------------------------------------------------------- Rosario
+    # Rosario is read partially and on purpose. Its central site publishes
+    # its postgraduates and a page per faculty, but no page it serves links
+    # the site of any faculty: the twenty-one hosts its own "facultades" page
+    # mentions are webmail, the journals, the transparency portal. The
+    # careers are on those faculty sites and the only way to reach them would
+    # be to guess their addresses, which is inventing data.
     Universidad(
         "Universidad Nacional de Rosario", "UNR", "Estatal",
         "https://unr.edu.ar", "unr.edu.ar", "Rosario",

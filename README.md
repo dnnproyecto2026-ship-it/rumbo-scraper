@@ -494,12 +494,40 @@ una sección quedó vacía.
 - **Un encabezado que es sólo la palabra del título es el índice, no la
   carrera.** "Licenciatura", "Profesorados", "Tecnicatura universitaria".
 
+### Cómo se encuentra el catálogo de un sitio
+
+Cinco reglas, y cada una nació de una universidad que sin ella quedaba a
+medias:
+
+1. **El sitemap primero.** Es lo que el sitio dice de sí mismo.
+2. **La página que lista las carreras manda sobre las direcciones.** José C.
+   Paz llama a su carrera de derecho `/abogacia`, sin ninguna palabra que
+   diga qué es. El índice sabe qué son sus propios enlaces.
+3. **La consulta también dice de qué es una página.** Moreno publica su
+   catálogo en `/?oferta-academica=carreras-de-pregrado-y-grado`, donde la
+   ruta es una sola barra.
+4. **Un host nuevo de la universidad siempre se sigue.** Una nacional enseña
+   por facultades, cada una con su sitio, y el enlace a ese sitio apunta a su
+   raíz. Mar del Plata pasó de 18 carreras a 80 con esta regla.
+5. **Si ninguna dirección nombra nada, se recorre el sitio entero.**
+   Avellaneda numera sus páginas: `index.php?idcateg=7`.
+
+El navegador se usa **sólo donde el servidor contestó vacío**. Un sitio que
+arma su índice en el cliente igual sirve las demás páginas enteras: Siglo 21
+parecía necesitar navegador y no lo necesitaba —con él perdía 79 páginas por
+tiempo y encontraba cero carreras; sin él encontró 69.
+
 ### Lo que no se lee a propósito
 
-- **UNSAM** responde todo pedido con un desafío anti-bots de su red de
-  contenidos, incluido el de su propio sitemap. Es un control que la
-  universidad eligió poner delante de sus páginas y este proyecto no lo
-  esquiva. Su catálogo queda sin leer.
+- **UNSAM** y **UCEL** responden todo pedido con un desafío anti-bots de su
+  red de contenidos, incluido el de su propio sitemap. **FASTA** rechaza todo
+  con un 403 pelado. Son controles que esas universidades eligieron poner
+  delante de sus páginas y este proyecto no los esquiva. Sus catálogos quedan
+  sin leer.
+- **Maimónides** devuelve un 500 con cuerpo vacío desde cualquier dirección.
+- **Rosario** se lee parcial: publica sus posgrados y una página por facultad
+  en el sitio central, pero ninguna página que sirve enlaza el sitio de
+  ninguna facultad. Llegar a las carreras exigiría adivinar direcciones.
 - **La duración y el título** quedan nulos en las universidades que no los
   publican junto a la carrera. Son muchas: el dato existe en el plan en PDF y
   no en la página.
