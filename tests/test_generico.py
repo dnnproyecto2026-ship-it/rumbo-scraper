@@ -760,3 +760,47 @@ class TramosDeUnaDireccionTest(unittest.TestCase):
         self.assertEqual((pie[0]["calle"], pie[0]["numero"]), ("Leandro N. Alem", "4731"))
         sede = leer_sedes("<html><body><p>Sede Pueyrredón - L. N. Alem 4593</p></body></html>", "u")
         self.assertEqual(sede[0]["nombre_sede"], "Sede Pueyrredón")
+
+
+class NoticiasDeUnaCarreraTest(unittest.TestCase):
+    def test_news_tag_pages_and_parts_of_a_degree_are_not_degrees(self):
+        for nombre in ("25 años de la Licenciatura en Gestión Ambiental Urbana",
+                       "7 de diciembre: Día del Licenciado en Administración",
+                       "XIV Congreso Internacional de Ingeniería Industrial - COINI 2021",
+                       "Concierto por los 25 años de la Licenciatura en Música de Cámara",
+                       "Jornadas de la Licenciatura en Nutrición",
+                       "Mostrando artículos por etiqueta: Licenciatura en Economía Política",
+                       "Etiqueta:Ingeniería", "Bioquímica: Asignaturas Optativas",
+                       "Ingeniería Agronómica: máxima acreditación por excelencia académica",
+                       "Charla Informativa: Maestría en Criminología"):
+            self.assertFalse(generico.es_programa(nombre), nombre)
+
+    def test_a_colon_in_a_real_name_and_roman_looking_letters_are_fine(self):
+        for nombre in ("Licenciatura en Management: Inteligencia Artificial",
+                       "Diseño Gráfico: Diseño en Comunicación Visual, Gráfica y Digital",
+                       "CCC Licenciatura en Periodismo"):
+            self.assertTrue(generico.es_programa(nombre), nombre)
+
+    def test_an_edition_number_is_taken_off_a_real_programme(self):
+        from rumbo_scraper.database.retirar_no_programas import motivo, nombre_limpio
+        self.assertEqual(motivo("XVI Diplomatura en Medicina Fetal"), "edicion")
+        self.assertEqual(nombre_limpio("XVI Diplomatura en Medicina Fetal", "edicion"),
+                         "Diplomatura en Medicina Fetal")
+
+
+class TitularesTest(unittest.TestCase):
+    def test_a_sentence_about_a_degree_is_not_a_degree(self):
+        for nombre in ("Estudiante de Ingeniería Industrial cumple actividades en Nancy",
+                       "Búsqueda de pasantes de Licenciatura en Administración de Empresas",
+                       "Revista Digital del Departamento de Ingeniería",
+                       "Defensa de tesis de Maestría", "Introducción a la Ingeniería",
+                       "UNMdP » Departamento de Producción Vegetal", "Experiencia Ucema"):
+            self.assertTrue(generico.es_un_titular(nombre), nombre)
+
+    def test_the_name_of_a_degree_opens_with_it_or_one_word_before(self):
+        for nombre in ("Turismo - Licenciatura", "Óptico Técnico Universitario",
+                       "Licenciatura en Teología con Especialización en Teología Pastoral",
+                       "Desarrollo Rural (ex Maestría en Sistemas de Producción Agrícola)",
+                       "Doble Titulación en Contador Público y Licenciatura en Administración",
+                       "Tecnicatura Universitaria en Tecnología | Orientación en Videojuegos"):
+            self.assertFalse(generico.es_un_titular(nombre), nombre)

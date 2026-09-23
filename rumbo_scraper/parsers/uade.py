@@ -137,10 +137,28 @@ def _soup(html: str) -> BeautifulSoup:
     return soup
 
 
+# A heading that stops on one of these has been broken across two headings.
+_SIGUE_EN_OTRO = frozenset("de del la las los el en y e o u con para a al".split())
+
+
 def page_title(html: str) -> str | None:
-    """The first heading is the name the university gives the programme."""
-    heading = _soup(html).find("h1")
-    return clean_text(heading.get_text(" ", strip=True)) if heading else None
+    """The first heading is the name the university gives the programme.
+
+    UADE sets a long name over two headings, "Licenciatura en Ciencias de la"
+    and then "Comunicación", so a first heading that stops on a connecting
+    word is joined to the one after it. Read alone it stored fifteen careers
+    under names cut in half.
+    """
+    headings = _soup(html).find_all("h1")
+    if not headings:
+        return None
+    name = clean_text(headings[0].get_text(" ", strip=True))
+    for siguiente in headings[1:3]:
+        palabras = name.lower().split()
+        if not palabras or palabras[-1] not in _SIGUE_EN_OTRO:
+            break
+        name = clean_text(f"{name} {siguiente.get_text(' ', strip=True)}")
+    return name
 
 
 def parse_facts(html: str) -> dict[str, str]:

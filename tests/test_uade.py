@@ -140,3 +140,12 @@ class BuildTests(unittest.TestCase):
         failed = [r for r in dataset["control_calidad"]["programas_excluidos"]
                   if "no se pudo" in r["motivo"]]
         self.assertEqual(len(failed), 1)
+
+
+class TituloPartidoTest(unittest.TestCase):
+    def test_a_name_set_over_two_headings_is_read_whole(self):
+        from rumbo_scraper.parsers.uade import page_title
+        html = ('<h1><strong>Licenciatura en Ciencias de la </strong></h1><h1>Comunicación</h1>'
+                '<h1>¿Por qué estudiar Ciencias de la Comunicación en UADE?</h1>')
+        self.assertEqual(page_title(html), "Licenciatura en Ciencias de la Comunicación")
+        self.assertEqual(page_title("<h1>Abogacía</h1><h1>¿Por qué?</h1>"), "Abogacía")

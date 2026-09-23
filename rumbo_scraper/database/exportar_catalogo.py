@@ -20,9 +20,12 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+
+from rumbo_scraper.normalizers.text import comparison_key
 
 SALIDA = Path("data/catalogo_depurado.json")
 
@@ -45,6 +48,15 @@ def _urls_de_los_artefactos() -> dict[tuple[str, str], str]:
             if oferta.get("url_oficial") and oferta.get("carrera_nombre"):
                 urls.setdefault((universidad, oferta["carrera_nombre"]), oferta["url_oficial"])
     return urls
+
+
+_UN_CICLO = re.compile(
+    r"\bccc\b|\bciclos? de (?:complementacion|licenciatura|profesorado)\b|"
+    r"complementacion curricular|\((?:ciclo|complementacion)\b|licenciatura \(ciclo\)")
+
+
+def es_un_ciclo(nombre: str) -> bool:
+    return bool(_UN_CICLO.search(comparison_key(nombre)))
 
 
 def exportar(client: Any) -> dict[str, Any]:
@@ -84,6 +96,15 @@ def exportar(client: Any) -> dict[str, Any]:
     ofertas_por_carrera: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for o in ofertas:
         ofertas_por_carrera[o["carrera_id"]].append(o)
+
+    # A completion cycle ("CCC Licenciatura en ...", "Ciclo de Complementación
+    # Curricular ...") takes a student who already holds a tecnicatura or a
+    # teaching degree; nobody leaving secondary school can start one. They
+    # stay in this database and out of the application's catalogue, with
+    # their subjects.
+    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"])}
+    carreras = [c for c in carreras if c["id"] not in ciclos]
+    carrera_nombre = {c["id"]: c["nombre_carrera"] for c in carreras}
 
     for c in carreras:
         uid = c["universidad_id"]
@@ -174,6 +195,50 @@ def exportar(client: Any) -> dict[str, Any]:
             "residencia_propia": fila["residencia_propia"], "url": fila["url"],
             "fuente_url": fila["fuente_url"]})
 
+    # Los turnos de cada oferta, que van a la oferta de la aplicación.
+    turnos_por_oferta: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for fila in todo("turnos_anio"):
+        turnos_por_oferta[fila["oferta_id"]].append(
+            {"anio": fila["anio_carrera"], "turno": fila["turno"]})
+    for o in ofertas:
+        if not turnos_por_oferta.get(o["id"]):
+            continue
+        carrera = next((c for c in carreras if c["id"] == o["carrera_id"]), None)
+        if carrera:
+            por_uni[carrera["universidad_id"]]["turnos"].append({
+                "carrera_nombre": carrera["nombre_carrera"],
+                "sede": sede_nombre.get(o["sede_id"]),
+                "turnos": turnos_por_oferta[o["id"]]})
+
+    # Los docentes y las materias que dictan. La materia sale del catálogo
+    # semestral por su nombre, que es como la aplicación la encuentra; el
+    # contenido de la comisión es la única descripción de materia relevada.
+    catalogo = {m["id"]: m for m in todo("materias_catalogo")}
+    comisiones = {c["id"]: c for c in todo("comisiones_materia")}
+    dicta: dict[str, set[str]] = defaultdict(set)
+    for fila in todo("docentes_comision"):
+        comision = comisiones.get(fila["comision_id"])
+        materia = catalogo.get(comision["materia_catalogo_id"]) if comision else None
+        if materia and fila["persona_id"]:
+            dicta[fila["persona_id"]].add(materia["nombre"])
+    descripciones: dict[tuple[str, str], str] = {}
+    for comision in comisiones.values():
+        materia = catalogo.get(comision["materia_catalogo_id"])
+        if materia and comision["contenido"]:
+            descripciones.setdefault((materia["universidad_id"], materia["nombre"]),
+                                     comision["contenido"])
+    for (uid, nombre), texto in descripciones.items():
+        por_uni[uid]["descripciones_materias"].append({"materia": nombre, "descripcion": texto})
+    for persona in todo("personas"):
+        if not persona["universidad_id"] or persona["activa"] is False:
+            continue
+        por_uni[persona["universidad_id"]]["docentes"].append({
+            "nombre": persona["nombre_completo"],
+            "biografia": persona["biografia"] or persona["formacion"],
+            "perfil_url": persona["perfil_url"],
+            "materias": sorted(dicta.get(persona["id"], ())),
+        })
+
     salida = []
     for u in sorted(universidades, key=lambda u: u["nombre_oficial"]):
         datos = por_uni[u["id"]]
@@ -187,7 +252,8 @@ def exportar(client: Any) -> dict[str, Any]:
                ("sedes", "facultades", "carreras", "ofertas", "materias", "posgrados", "becas",
                 "contactos", "autoridades", "servicios_estudiantiles",
                 "actividades_extracurriculares", "programas_internacionales",
-                "convenios_intercambio", "alojamientos")},
+                "convenios_intercambio", "alojamientos", "docentes",
+                "descripciones_materias", "turnos")},
         }})
     return {"universidades": salida}
 
@@ -207,7 +273,8 @@ def main() -> None:
                          ("sedes", "facultades", "carreras", "materias", "posgrados",
                           "becas", "contactos", "autoridades", "servicios_estudiantiles",
                           "actividades_extracurriculares", "programas_internacionales",
-                          "convenios_intercambio", "alojamientos")))
+                          "convenios_intercambio", "alojamientos", "docentes",
+                          "descripciones_materias", "turnos")))
     print(f"Archivo: {args.output}")
 
 

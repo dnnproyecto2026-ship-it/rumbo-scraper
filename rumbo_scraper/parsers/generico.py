@@ -137,6 +137,8 @@ def clasificar(nombre: str) -> tuple[str, str | None] | None:
     key = comparison_key(nombre)
     if not key:
         return None
+    if es_un_titular(nombre):
+        return None
     for pattern, level, kind in DEGREES:
         if re.search(pattern, key):
             return level, kind
@@ -158,6 +160,43 @@ def clasificar(nombre: str) -> tuple[str, str | None] | None:
 
 
 _UNA_PREPOSICION = frozenset("de del para en sobre a al con por".split())
+
+# What may stand before the degree word in the name of a degree.
+_PREFIJO_ADMITIDO = re.compile(
+    r"^(?:la\s+)?carrera de\s+|^doble titulacion en\s+.*|^ciclo de\s+|^ccc\s+|"
+    r"^(?:carrera\s+)?interdisciplinaria de\s+")
+# The first word of a headline, a notice or a promotion that names a degree:
+# "Entrevista a ...", "Búsqueda de pasantes de Licenciatura en ...", "Acerca
+# de la Tecnicatura", "Categoría Ingeniería", "Experiencia Ucema".
+_NO_EMPIEZA_UNA_CARRERA = re.compile(
+    r"^(?:entrevista|estudiantes?|busqueda|acerca|aprobad[oa]|propuesta|programas?\s+de\s+"
+    r"investigacion|metas|mesa|revista|categoria|contratacion|experiencia|desafio|elegi|"
+    r"un ano|alfabetizacion|introduccion|fundamentos|la [a-z]+ acredito|nueva|nuevo)\b")
+# A breadcrumb, not a heading: "UNMdP » Departamento de ...".
+_UN_SEPARADOR_DE_MENU = re.compile(r"[»›]")
+
+
+def es_un_titular(nombre: str) -> bool:
+    """Whether a name that mentions a degree is a sentence about it.
+
+    The name of a degree opens with the degree, or puts one word before it:
+    "Turismo - Licenciatura", "Óptico Técnico Universitario". A headline puts a
+    sentence before it: "Estudiante de Ingeniería Industrial cumple...",
+    "Revista Digital del Departamento de Ingeniería". The distance is measured
+    to the first degree the name mentions, so "Licenciatura en Teología con
+    Especialización en ..." opens with its degree. What is in parentheses is
+    left out: "Desarrollo Rural (ex Maestría en ...)".
+    """
+    key = comparison_key(nombre)
+    if _NO_EMPIEZA_UNA_CARRERA.match(key) or _UN_SEPARADOR_DE_MENU.search(nombre):
+        return True
+    sin_parentesis = re.sub(r"\([^)]*\)", " ", key)
+    inicios = [m.start() for pattern, _, _ in DEGREES
+               for m in [re.search(pattern, sin_parentesis)] if m]
+    if not inicios:
+        return False
+    antes = _PREFIJO_ADMITIDO.sub("", sin_parentesis[:min(inicios)])
+    return len(re.findall(r"[a-z]+", antes)) >= 2
 
 
 # A heading that is the degree word and nothing else names the index of the
@@ -202,6 +241,36 @@ _UNA_SECCION = re.compile(
 # 2020 \"CS\" Aprobar la Diplomatura...", "2013 \"CS\" Modificar los alcances
 # de la Licenciatura...". They name a degree and are not one.
 _UNA_RESOLUCION = re.compile(r"^(?:res(?:olucion)?\b|\d{4}\b)")
+# News about a degree, which names it and is not it: "25 años de la
+# Licenciatura en ...", "7 de diciembre: Día del Licenciado en ...", "XIV
+# Congreso Internacional de Ingeniería Industrial", "Concierto por los 25
+# años de la Licenciatura en Música", "Jornadas de la Licenciatura en ...".
+_UN_EVENTO_DE_LA_CARRERA = re.compile(
+    # A leading number, or a Roman one: "XIV Congreso". Only a well-formed
+    # numeral, because "CCC Licenciatura" and "Lic en ..." spell Roman
+    # letters too.
+    r"^(?:\d|(?=[ivx])x{0,3}(?:ix|iv|v?i{0,3})\s)|"
+    r"^(?:encuentro|jornadas?|concierto|congreso|charla|acto|"
+    r"festejo|celebracion|aniversario|conversatorio|homenaje)\b|\bdia del?\b|"
+    r"\banos de (?:la|el)\b")
+# The edition of a programme put before its name: "XVI Diplomatura en
+# Medicina Fetal", "1° Diplomado ...". The programme is real; the number is
+# which time it runs.
+_UNA_EDICION = re.compile(
+    r"^(?:(?=[ivx])x{0,3}(?:ix|iv|v?i{0,3})|\d{1,2}\s*[°ºa]?)\s+(?=(?:diplomatura|diplomado|"
+    r"maestria|especializacion|doctorado|licenciatura|tecnicatura|curso)\b)")
+# The page a site lists its posts about a degree under: "Mostrando artículos
+# por etiqueta: Licenciatura en Economía Política", "Etiqueta:Ingeniería".
+_UNA_ETIQUETA = re.compile(r"^(?:mostrando articulos por etiqueta|etiqueta)\s*:\s*")
+# What follows a colon when the page is a part of the degree or news about it
+# rather than its name: "Bioquímica: Asignaturas Optativas", "Ingeniería
+# Agronómica: máxima acreditación por excelencia académica". A colon alone
+# is not enough: "Licenciatura en Management: Inteligencia Artificial" is
+# the name Palermo gives a degree.
+_TRAS_LOS_DOS_PUNTOS = re.compile(
+    r":.*\b(?:asignaturas?|orientaciones|contenidos minimos|instructivo|inscripcion|"
+    r"acreditacion|compromiso|excelencia|noticias?|novedades|plan de estudios?|"
+    r"correlatividades|horarios?|calendario)\b")
 # The title a degree awards, printed as a heading of its own: "Título de
 # Enfermero (Primer Ciclo de la LICENCIATURA EN ENFERMERÍA)".
 _UN_TITULO = re.compile(r"^titulo\b")
@@ -241,6 +310,9 @@ def es_programa(nombre: str) -> bool:
         return False
     if _UNA_SECCION.search(key) or _UNA_RESOLUCION.match(key) or _UN_CARGO.search(key) \
             or _UN_TITULO.match(key):
+        return False
+    if _UN_EVENTO_DE_LA_CARRERA.search(key) or _UNA_ETIQUETA.match(key) \
+            or _TRAS_LOS_DOS_PUNTOS.search(key):
         return False
     if _A_SENTENCE.search(key):
         return False

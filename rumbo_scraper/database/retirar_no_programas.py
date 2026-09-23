@@ -26,7 +26,11 @@ import re
 from typing import Any
 
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
-from rumbo_scraper.parsers.generico import _UN_CARGO, _UN_TITULO, _UNA_RESOLUCION, _UNA_SECCION
+from rumbo_scraper.parsers.generico import (
+    clasificar, es_un_titular,
+    _TRAS_LOS_DOS_PUNTOS, _UN_CARGO, _UN_EVENTO_DE_LA_CARRERA, _UN_TITULO, _UNA_EDICION,
+    _UNA_ETIQUETA,
+    _UNA_RESOLUCION, _UNA_SECCION)
 
 TABLAS = (("carreras", "nombre_carrera", "carrera_id"),
           ("posgrados", "nombre_programa", "posgrado_id"))
@@ -44,6 +48,20 @@ def motivo(nombre: str) -> str | None:
         return "seccion"
     if _UN_TITULO.match(clave):
         return "titulo"
+    if _UNA_ETIQUETA.match(clave):
+        return "etiqueta"
+    if _TRAS_LOS_DOS_PUNTOS.search(clave):
+        return "subpagina"
+    if _UNA_EDICION.match(clave):
+        return "edicion"
+    # A completion cycle is a real programme; it leaves the application's
+    # catalogue at export, not the database.
+    if re.search(r"\bciclos? de\b|complementacion", clave):
+        return None
+    if es_un_titular(nombre):
+        return "acerca" if clave.startswith("acerca de") else "titular"
+    if _UN_EVENTO_DE_LA_CARRERA.search(clave):
+        return "evento"
     return None
 
 
@@ -65,10 +83,26 @@ def _grado_del_titulo(nombre: str) -> str | None:
     return None
 
 
+def _SOLO_GRADO(nombre: str) -> bool:
+    from rumbo_scraper.parsers.generico import _SOLO_EL_GRADO
+    return bool(_SOLO_EL_GRADO.match(comparison_key(nombre)))
+
+
 def nombre_limpio(nombre: str, razon: str) -> str | None:
     """The programme a row copies, when it copies one."""
     if razon == "titulo":
         return _grado_del_titulo(nombre)
+    if razon == "etiqueta":
+        return clean_text(re.sub(r"(?i)^.*?etiqueta\s*:\s*", "", nombre)) or None
+    if razon == "subpagina":
+        return clean_text(nombre.split(":", 1)[0]) or None
+    if razon == "acerca":
+        # "Acerca de la carrera de Ingeniería Forestal" is the page of that
+        # degree; "Acerca de la Tecnicatura" names none.
+        limpio = clean_text(re.sub(r"(?i)^acerca de (?:la |el )?(?:carrera de )?", "", nombre))
+        return limpio if limpio and clasificar(limpio) and not _SOLO_GRADO(limpio) else None
+    if razon == "edicion":
+        return clean_text(re.sub(r"^\S+\s+", "", nombre)) or None
     if razon != "seccion":
         return None
     limpio = clean_text(_COLA.sub("", nombre))
@@ -98,6 +132,11 @@ def planificar(client: Any) -> list[dict[str, Any]]:
             gemelo = por_nombre.get((fila["universidad_id"], limpio)) if limpio else None
             accion = ("borrar_duplicado" if gemelo else
                       "renombrar" if limpio else "borrar")
+            # A tag page or a part of a degree with no twin is not the page
+            # of that degree: renaming it would file a degree under the data
+            # of a news item. It leaves.
+            if razon in ("etiqueta", "subpagina") and not gemelo:
+                accion = "borrar"
             plan.append({"tabla": tabla, "columna": columna, "clave": clave,
                          "id": fila["id"], "nombre": fila[columna], "razon": razon,
                          "limpio": limpio, "gemelo": gemelo, "accion": accion})
