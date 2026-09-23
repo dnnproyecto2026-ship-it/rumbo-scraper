@@ -296,3 +296,29 @@ class LaVidaUniversitaria(unittest.TestCase):
         html = "<h3>— Programa de Ayudas Económicas</h3>"
         nombres = [row["titulo"] for row in vida.read_items(html, "becas")]
         self.assertEqual(nombres, ["Programa de Ayudas Económicas"])
+
+
+class LasMateriasQueTienenPaginaPropia(unittest.TestCase):
+    def test_una_materia_no_es_una_carrera(self):
+        # A university that publishes its plans gives each subject a page,
+        # and a subject carries the name of a degree inside it.
+        for nombre in ("Arquitectura de Computadoras", "Psicología del Aprendizaje",
+                       "Ingeniería del Software II",
+                       "Física para Licenciatura en ciencias de la computación"):
+            with self.subTest(nombre=nombre):
+                self.assertFalse(generico.es_programa(nombre))
+
+    def test_el_titulo_que_se_nombra_por_su_materia_sigue_valiendo(self):
+        for nombre in ("Medicina", "Medicina Veterinaria", "Arquitectura",
+                       "Arquitectura Naval", "Diseño de Indumentaria"):
+            with self.subTest(nombre=nombre):
+                self.assertTrue(generico.es_programa(nombre))
+
+    def test_el_codigo_interno_no_forma_parte_del_nombre(self):
+        self.assertEqual(generico.sin_cohorte("(10-09218) Ingeniería en Rehabilitación"),
+                         "Ingeniería en Rehabilitación")
+
+    def test_el_tramite_que_crea_una_carrera_no_es_la_carrera(self):
+        self.assertFalse(generico.es_programa(
+            "Ordenanza nº 290/16 y Anexo Diplomatura universitaria"))
+        self.assertFalse(generico.es_programa("diplomatura archivos"))

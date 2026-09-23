@@ -85,7 +85,9 @@ _NOT_A_PROGRAMME = re.compile(
     r"direcci[óo]n)\s+(?:de|del|en)\b|"
     # What a faculty does besides teaching is not one of its degrees.
     r"(?:investigaci[óo]n|extensi[óo]n|transferencia|vinculaci[óo]n|"
-    r"posgrados?|graduad[oa]s|biblioteca|bienestar)\b)"
+    r"posgrados?|graduad[oa]s|biblioteca|bienestar)\b|"
+    # The paperwork that creates a degree is not the degree.
+    r"(?:ordenanza|resoluci[óo]n|anexo|acta|expediente|disposici[óo]n)\b)"
 )
 # A verb in the third person turns the name of a degree into the report of
 # something that happened to it.
@@ -137,9 +139,23 @@ def clasificar(nombre: str) -> tuple[str, str | None] | None:
         if re.search(pattern, key):
             return level, kind
     for pattern in _AUTONOMOS:
-        if pattern.match(key):
-            return "Grado", None
+        match = pattern.match(key)
+        if not match:
+            continue
+        # A degree named by its subject alone is that subject and at most a
+        # qualifier: "Medicina", "Medicina Veterinaria", "Arquitectura
+        # Naval". Once a preposition follows, the name is a subject taught
+        # inside a degree -- "Arquitectura de Computadoras", "Psicología del
+        # Aprendizaje" -- and those have pages of their own at a university
+        # that publishes its plans.
+        resto = key[match.end():].strip()
+        if resto.split()[:1] and resto.split()[0] in _UNA_PREPOSICION:
+            return None
+        return "Grado", None
     return None
+
+
+_UNA_PREPOSICION = frozenset("de del para en sobre a al con por".split())
 
 
 # A heading that is the degree word and nothing else names the index of the
@@ -177,6 +193,13 @@ def es_programa(nombre: str) -> bool:
     # The short form of a department, which only a heading about the
     # department itself carries.
     if re.search(r"\bd(?:e)?pto\b|\bdepto\.", key):
+        return False
+    # A number of a resolution inside a name means the page is about the
+    # paperwork; "archivos" is what a site calls the list of old entries.
+    if re.search(r"n[°ºo]\s*\d|\barchivos?\b", key):
+        return False
+    # A subject numbered in sequence, and a subject taught for a degree.
+    if re.search(r"\s(?:i{1,3}|iv|v|vi{1,3}|[1-9])$", key) or " para " in key:
         return False
     if _NOT_A_PROGRAMME.match(key) or _SOLO_EL_GRADO.match(key) or _EN_PLURAL.match(key):
         return False
@@ -229,6 +252,8 @@ def _sin_sufijo(titulo: str) -> str:
 
 # What a page appends to the name of a programme when it is announcing one
 # intake of it. Two intakes of the same degree are the same degree.
+# The internal code a university prints before the name of a programme.
+_UN_CODIGO = re.compile(r"^\s*\(\s*[\d][\d.\-/]*\s*\)\s*")
 _UNA_COHORTE = re.compile(
     r"(?i)\s*[:\-–—]\s*(cohorte|inscripci[óo]n|inscripciones|convocatoria|"
     r"edici[óo]n|ciclo|ingreso|comisi[óo]n|"
@@ -248,7 +273,7 @@ def sin_cohorte(nombre: str) -> str:
     name of the section, and so does one that announces each intake apart.
     Neither makes a second career.
     """
-    recortado = clean_text(_UNA_COHORTE.sub("", nombre))
+    recortado = clean_text(_UNA_COHORTE.sub("", _UN_CODIGO.sub("", nombre)))
     return recortado if len(recortado) >= 6 else clean_text(nombre)
 
 
