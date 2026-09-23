@@ -287,8 +287,16 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
 
 
 def _cuantas_carreras(programas: list[generico.Programa]) -> int:
-    """How many of the programmes found are degrees rather than postgraduates."""
-    return sum(1 for programa in programas if programa.nivel != "Posgrado")
+    """How many distinct degrees have been found, postgraduates aside.
+
+    Distinct by name, not by page: a site gives one career several addresses
+    -- the plan, the staff, the fees, the same page with a language in the
+    query -- and counting pages says the catalogue was found when ten careers
+    arrived under sixteen addresses.
+    """
+    from rumbo_scraper.normalizers.text import comparison_key
+    return len({comparison_key(programa.nombre) for programa in programas
+                if programa.nivel != "Posgrado"})
 
 
 def _del_sitemap(lector: Lector, tope: int) -> list[str]:

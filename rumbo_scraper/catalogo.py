@@ -165,12 +165,15 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://www.unc.edu.ar", "unc.edu.ar", "Córdoba",
         "Córdoba", "Córdoba",
     ),
-    # Siglo 21 publishes the index of its careers as a list its page builds
-    # in the reader, so it is read with a browser.
+    # Siglo 21 builds the index of its careers in the reader, which looked
+    # like a site that needs a browser and is not one: every career page
+    # comes whole from the server and the sitemap lists them all, so the
+    # index nobody has to read. Reading it with a browser lost seventy-nine
+    # pages to timeouts and found nothing.
     Universidad(
         "Universidad Siglo 21", "Siglo 21", "Privada",
         "https://21.edu.ar", "21.edu.ar", "Córdoba",
-        "Córdoba", "Córdoba", navegador=True,
+        "Córdoba", "Córdoba",
     ),
     Universidad(
         "Universidad Católica de Córdoba", "UCC", "Privada",
