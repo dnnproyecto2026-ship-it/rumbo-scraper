@@ -24,6 +24,7 @@ import httpx
 
 from rumbo_scraper.normalizers.text import clean_text
 from rumbo_scraper.parsers import vida
+from rumbo_scraper.parsers.convenios import leer_convenios
 
 USER_AGENT = "RumboScraper/0.4 (+catalogo educativo publico)"
 # How many pages of one topic are worth reading. A site that links six pages
@@ -156,6 +157,22 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
                     filas.append({**item, "fuente": url})
             if filas:
                 encontrado[topic] = filas
+
+        # The pages about exchange also carry the list of the universities
+        # abroad the agreements are with, which is a section of its own.
+        convenios: list[dict[str, str]] = []
+        vistos: set[str] = set()
+        for url in temas.get("programas_internacionales", [])[:MAX_PAGINAS]:
+            html = _get(client, url)
+            if not html:
+                continue
+            for fila in leer_convenios(html, url, universidad["nombre_oficial"]):
+                if fila["universidad_destino"].lower() in vistos:
+                    continue
+                vistos.add(fila["universidad_destino"].lower())
+                convenios.append(fila)
+        if convenios:
+            encontrado["convenios"] = convenios
     return encontrado
 
 
@@ -187,6 +204,25 @@ def aplicar(client: Any, universidad: dict[str, Any],
     """
     escrito: dict[str, int] = {}
     propia = universidad["nombre_oficial"] in CON_ADAPTADOR
+    convenios = hallazgos.pop("convenios", None)
+    if convenios and not propia:
+        ya = client.table("convenios_intercambio").select("id").eq(
+            "universidad_id", universidad["id"]).limit(1).execute().data
+        if ya and rehacer:
+            client.table("convenios_intercambio").delete().eq(
+                "universidad_id", universidad["id"]).execute()
+            ya = []
+        if not ya:
+            filas = [{"universidad_id": universidad["id"], "carrera_id": None,
+                      "posgrado_id": None, "programa_origen": None,
+                      "universidad_destino": fila["universidad_destino"],
+                      "ciudad": None, "pais": fila["pais"],
+                      "latitud": None, "longitud": None, "observaciones": None,
+                      "fuente_url": fila["fuente"]} for fila in convenios]
+            for inicio in range(0, len(filas), 50):
+                client.table("convenios_intercambio").insert(
+                    filas[inicio:inicio + 50]).execute()
+            escrito["convenios_intercambio"] = len(filas)
     for topic, filas in hallazgos.items():
         tabla = DESTINOS[topic]
         ya = client.table(tabla).select("id").eq(

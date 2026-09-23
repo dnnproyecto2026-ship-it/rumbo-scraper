@@ -491,3 +491,28 @@ class ElArchivoDelPlan(unittest.TestCase):
         html = '<a href="/plan-estrategico-2022.pdf">Plan estratégico</a>'
         self.assertIsNone(
             _documento_del_plan(html, "https://u.edu.ar/x", ("u.edu.ar",)))
+
+
+class LosConveniosDeIntercambio(unittest.TestCase):
+    def test_se_lee_la_universidad_y_su_pais(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        html = ("<ul><li>Universidad de Salamanca (España)</li>"
+                "<li>University of Toronto, Canadá</li></ul>")
+        filas = leer_convenios(html, "https://u.edu.ar/x", "Universidad Nacional")
+        self.assertEqual([(f["universidad_destino"], f["pais"]) for f in filas],
+                         [("Universidad de Salamanca", "España"),
+                          ("University of Toronto", "Canadá")])
+
+    def test_el_pais_que_es_parte_del_nombre_no_se_corta(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        html = "<li>Universidad Católica del Uruguay</li>"
+        filas = leer_convenios(html, "https://u.edu.ar/x", "Universidad Nacional")
+        self.assertEqual(filas[0]["universidad_destino"],
+                         "Universidad Católica del Uruguay")
+
+    def test_sin_pais_no_hay_convenio(self):
+        # A university named with no country is as likely to be a faculty of
+        # the university publishing the page.
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        html = "<li>Universidad Nacional de Quilmes</li>"
+        self.assertEqual(leer_convenios(html, "https://u.edu.ar/x", "Otra"), [])
