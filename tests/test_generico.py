@@ -718,3 +718,21 @@ class PaginasDeUnProgramaTest(unittest.TestCase):
             "Título de Enfermero (Primer Ciclo de la LICENCIATURA EN ENFERMERÍA)"))
         self.assertTrue(generico.parece_catalogo(
             "https://www.favaloro.edu.ar/informacion/ingIBIO_maestria-en-ingenieria-biomedica"))
+
+
+class VidaSinBasuraTest(unittest.TestCase):
+    def test_addresses_degrees_links_and_events_are_not_student_life(self):
+        from rumbo_scraper.parsers.vida import _es_un_nombre
+        for texto in ("biblioteca@unimoron.edu.ar", "orientacioneducativaunaj",
+                      "https://fnartes.gob.ar/becas", "> Ley de Pasantías",
+                      "Licenciatura en Gestión Cultural", "Cine Debate: The Chosen",
+                      "BECAS PROGRESAR - EMPLEOS - PASANTÍAS",
+                      "Intensificar la vinculación con los actores culturales"):
+            self.assertFalse(_es_un_nombre(texto), texto)
+
+    def test_real_offers_stay(self):
+        from rumbo_scraper.parsers.vida import _es_un_nombre
+        for texto in ("Beca Papa Francisco", "Premio al Mérito", "Coro Polifónico",
+                      "Bolsa de trabajo y Pasantías", "PLAYÓN DEPORTIVO",
+                      "Biblioteca Central - UNDAV"):
+            self.assertTrue(_es_un_nombre(texto), texto)

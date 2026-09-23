@@ -103,6 +103,22 @@ _UNA_FRASE = re.compile(
     r"se\s+(?:realiz|dict|abre|entreg))\b")
 
 
+# What sits on the same pages and is not a scholarship, a service, an
+# activity or an exchange: the degrees the university teaches ("Licenciatura
+# en Gestión Cultural", "CCC ...", "Título: ..."), the person who directs
+# them, events and reports about the thing rather than the thing.
+_NO_ES_UNA_OFERTA = re.compile(
+    r"(?i)^(?:licenciatura|tecnicatura|profesorado|ingenier[íi]a|maestr[íi]a|"
+    r"doctorado|especializaci[óo]n|ccc\b|ciclo de complementaci|t[íi]tulo\b|"
+    r"director|directora|coordinador|integrantes|impacto|caracter[íi]sticas|"
+    r"nuevos?\b|charla|cine debate|himno|premios\b|jornada|convocatoria|"
+    r"observatorio|instituto de investigaci)"
+)
+# A menu entry that strings several sections together in capitals:
+# "BECAS PROGRESAR - EMPLEOS - PASANTÍAS".
+_UN_MENU = re.compile(r"^[^a-záéíóúñ]+\s[-–]\s[^a-záéíóúñ]+\s[-–]\s")
+
+
 # The label of the section itself, which a menu prints and which names
 # nothing the university offers in particular.
 _SECCION_COMPUESTA = frozenset({
@@ -127,6 +143,18 @@ def _es_un_nombre(texto: str) -> bool:
     the university as its subject.
     """
     if "|" in texto or len(texto.split()) > 9:
+        return False
+    if _NO_ES_UNA_OFERTA.search(texto) or _UN_MENU.search(texto):
+        return False
+    # An address or an account is how to reach something, not its name:
+    # "biblioteca@unimoron.edu.ar", "orientacioneducativaunaj".
+    if "@" in texto or (" " not in texto.strip() and texto == texto.lower()):
+        return False
+    if re.match(r"(?i)^\s*(?:https?://|www\.)", texto):
+        return False
+    # A line that opens with an arrow or a verb in the infinitive is a link
+    # to read more or a goal: "> Ley de Pasantías", "Intensificar la ...".
+    if re.match(r"^\s*[>»→]|^\s*\w+(?:ar|er|ir)\s+(?:la|el|los|las|a|al)\b", texto, re.I):
         return False
     return not _UNA_FRASE.search(texto)
 
