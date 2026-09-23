@@ -38,4 +38,4 @@ def validate_dataset(dataset: dict[str, object]) -> None:
 
     domain = str(dataset.get("fuente_principal") or "")
     domain = domain.split("//")[-1].split("/")[0].removeprefix("www.")
-    validate_contract_urls(sections, domain)
+    validate_contract_urls(sections, domain, require_https=False)

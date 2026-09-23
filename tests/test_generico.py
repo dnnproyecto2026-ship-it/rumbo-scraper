@@ -278,3 +278,21 @@ class LasPaginasVecinas(unittest.TestCase):
                        "Correlatividades de Abogacía"):
             with self.subTest(nombre=nombre):
                 self.assertFalse(generico.es_programa(nombre))
+
+
+class LaVidaUniversitaria(unittest.TestCase):
+    def test_la_invitacion_no_es_una_actividad(self):
+        from rumbo_scraper.parsers import vida
+        html = ("<h3>Te proponemos actividades deportivas porque:</h3>"
+                "<h3>Formate y sé parte de la evolución del deporte</h3>"
+                "<h3>¿Por qué hacer un intercambio?</h3>"
+                "<h3>Deportes</h3>")
+        nombres = [row["titulo"]
+                   for row in vida.read_items(html, "actividades_extracurriculares")]
+        self.assertEqual(nombres, ["Deportes"])
+
+    def test_la_vineta_no_forma_parte_del_nombre(self):
+        from rumbo_scraper.parsers import vida
+        html = "<h3>— Programa de Ayudas Económicas</h3>"
+        nombres = [row["titulo"] for row in vida.read_items(html, "becas")]
+        self.assertEqual(nombres, ["Programa de Ayudas Económicas"])

@@ -89,7 +89,8 @@ _NOT_AN_ITEM = re.compile(
     r"experiencias?|testimonios?|por qu[ée]|c[óo]mo |qu[ée] es|"
     r"conoc[ée]|descubr[íi]|sumate|enterate|mir[áa]|particip[áa]|"
     r"viv[íi]|eleg[íi]|estudi[áa]|ingres[áa]|asesorate|consult[áa]|"
-    r"pod[ée]s|quer[ée]s|animate|aprovech[áa])"
+    r"pod[ée]s|quer[ée]s|animate|aprovech[áa]|formate|hacete|"
+    r"te proponemos|te ofrecemos|ven[íi]|acercate|elegi)"
 )
 # A heading that asks instead of naming.
 _A_QUESTION = re.compile(r"[¿?]")
@@ -124,7 +125,12 @@ def read_items(html: str, topic: str | None = None) -> list[dict[str, str]]:
         name = clean_text(heading.get_text(" ", strip=True))
         if not name or len(name) < 4 or len(name) > 90 or _NOT_AN_ITEM.match(name):
             continue
-        if _A_QUESTION.search(name):
+        if _A_QUESTION.search(name) or name.endswith(":"):
+            # A heading that ends in a colon introduces what follows; it does
+            # not name it.
+            continue
+        name = clean_text(name.lstrip("—–-•* "))
+        if len(name) < 4:
             continue
         if comparison_key(name) in seen:
             continue

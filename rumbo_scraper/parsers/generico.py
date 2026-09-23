@@ -82,7 +82,10 @@ _NOT_A_PROGRAMME = re.compile(
     r"graduad[oa]s|investigador)\b|"
     # An academic unit is not one of the degrees it teaches.
     r"(?:instituto|departamento|facultad|escuela|centro|secretar[íi]a|"
-    r"direcci[óo]n)\s+(?:de|del|en)\b)"
+    r"direcci[óo]n)\s+(?:de|del|en)\b|"
+    # What a faculty does besides teaching is not one of its degrees.
+    r"(?:investigaci[óo]n|extensi[óo]n|transferencia|vinculaci[óo]n|"
+    r"posgrados?|graduad[oa]s|biblioteca|bienestar)\b)"
 )
 # A verb in the third person turns the name of a degree into the report of
 # something that happened to it.
@@ -170,6 +173,10 @@ def es_programa(nombre: str) -> bool:
         return False
     key = comparison_key(nombre).lstrip("¡¿\"'«-–— ")
     if _UNA_NOTICIA.search(key):
+        return False
+    # The short form of a department, which only a heading about the
+    # department itself carries.
+    if re.search(r"\bd(?:e)?pto\b|\bdepto\.", key):
         return False
     if _NOT_A_PROGRAMME.match(key) or _SOLO_EL_GRADO.match(key) or _EN_PLURAL.match(key):
         return False

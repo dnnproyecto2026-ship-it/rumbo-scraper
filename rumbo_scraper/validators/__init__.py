@@ -19,10 +19,16 @@ URL_FIELDS: dict[str, tuple[str, ...]] = {
 }
 
 
-def validate_contract_urls(sections: dict[str, list[dict[str, object]]], domain: str) -> None:
+def validate_contract_urls(sections: dict[str, list[dict[str, object]]], domain: str,
+                           *, require_https: bool = True) -> None:
     """Check every published URL of the contract.
 
     An empty value means the source did not publish it and stays valid.
+
+    ``require_https`` is relaxed for the universities read in general, where a
+    good number still publish their own catalogue over plain http. That the
+    address is not encrypted is a fact about the university's site, not a
+    reason to refuse the career it points at.
     """
     for section, fields in URL_FIELDS.items():
         for index, row in enumerate(sections.get(section, [])):
@@ -32,8 +38,9 @@ def validate_contract_urls(sections: dict[str, list[dict[str, object]]], domain:
                     continue
                 context = f"{section}[{index}].{field}"
                 if field in EVIDENCE_FIELDS:
-                    assert_official_url(value, domain, context)
-                elif not is_web_url(value):
+                    assert_official_url(value, domain, context,
+                                        require_https=require_https)
+                elif not is_web_url(value, require_https=require_https):
                     raise ValueError(f"{context}: URL inválida: {value!r}")
 
 

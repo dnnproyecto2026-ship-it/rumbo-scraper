@@ -16,7 +16,9 @@ import argparse
 import json
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
+
+import re
 
 import httpx
 
@@ -90,8 +92,36 @@ def _get(client: httpx.Client, url: str) -> str:
         return ""
 
 
+# What a university calls the page that gathers everything about being a
+# student there. Half of them hang student life one click under it rather
+# than off the home page.
+_LA_PUERTA = re.compile(
+    r"(?i)vida\s+(?:universitaria|estudiantil|en el campus)|estudiantes|"
+    r"alumnos|bienestar|comunidad")
+
+
+def _puertas(home: str, site: str, domain: str) -> list[str]:
+    """The few pages that gather student life, when the home links one."""
+    from bs4 import BeautifulSoup
+    found: list[str] = []
+    for anchor in BeautifulSoup(home, "html.parser").find_all("a", href=True):
+        label = clean_text(anchor.get_text(" ", strip=True))
+        if not label or len(label) > 40 or not _LA_PUERTA.search(label):
+            continue
+        url = urljoin(site, clean_text(anchor["href"])).split("#")[0]
+        host = (urlparse(url).netloc or "").lower().removeprefix("www.")
+        if host == domain and url not in found:
+            found.append(url)
+    return found[:3]
+
+
 def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
-    """Read every topic of student life one university links from its home."""
+    """Read every topic of student life a university links from its home.
+
+    The home page is read first and then the two or three pages it calls
+    "Vida universitaria" or "Estudiantes", because half the universities hang
+    the topics under one of those instead of off the home page itself.
+    """
     site = clean_text(universidad.get("sitio_web"))
     if not site:
         return {}
@@ -102,7 +132,16 @@ def leer(universidad: dict[str, Any]) -> dict[str, list[dict[str, str]]]:
         home = _get(client, site)
         if not home:
             return {}
-        for topic, urls in vida.discover_topics(home, site, domain).items():
+        temas: dict[str, list[str]] = vida.discover_topics(home, site, domain)
+        for puerta in _puertas(home, site, domain):
+            pagina = _get(client, puerta)
+            if not pagina:
+                continue
+            for topic, urls in vida.discover_topics(pagina, puerta, domain).items():
+                for url in urls:
+                    if url not in temas[topic]:
+                        temas[topic].append(url)
+        for topic, urls in temas.items():
             vistos: set[str] = set()
             filas: list[dict[str, str]] = []
             for url in urls[:MAX_PAGINAS]:
