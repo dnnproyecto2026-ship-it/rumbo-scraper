@@ -118,7 +118,10 @@ def _de_las_celdas(soup: Any) -> list[str]:
                   for c in fila.find_all(["td", "th"])]
         celdas = [c for c in celdas if c]
         if 2 <= len(celdas) <= 5:
-            filas.append(" ".join(celdas))
+            # The cells are joined with a separator, because that is what
+            # they are: the country sits in a column of its own, and joined
+            # with a bare space it reads as part of the university's name.
+            filas.append(" | ".join(celdas))
     return filas
 
 

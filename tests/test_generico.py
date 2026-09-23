@@ -516,3 +516,36 @@ class LosConveniosDeIntercambio(unittest.TestCase):
         from rumbo_scraper.parsers.convenios import leer_convenios
         html = "<li>Universidad Nacional de Quilmes</li>"
         self.assertEqual(leer_convenios(html, "https://u.edu.ar/x", "Otra"), [])
+
+
+class LosConveniosDeIntercambio(unittest.TestCase):
+    def test_la_universidad_y_su_pais(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        html = ("<ul><li>Universidad de Salamanca (España)</li>"
+                "<li>Universidade de São Paulo - Brasil</li>"
+                "<li>University of Toronto, Canadá</li></ul>"
+                "<table><tr><td>Universidad de Bolonia</td><td>Italia</td></tr></table>")
+        filas = leer_convenios(html, "u", "Universidad Nacional de Quilmes")
+        self.assertEqual([(f["universidad_destino"], f["pais"]) for f in filas], [
+            ("Universidad de Salamanca", "España"),
+            ("Universidade de São Paulo", "Brasil"),
+            ("University of Toronto", "Canadá"),
+            ("Universidad de Bolonia", "Italia"),
+        ])
+
+    def test_sin_pais_no_es_un_convenio(self):
+        # A university named without a country is as likely to be a faculty
+        # of the one publishing the page.
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        self.assertEqual(leer_convenios("<li>Universidad de Salamanca</li>", "u", "X"), [])
+
+    def test_la_universidad_que_publica_no_es_su_propio_convenio(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        html = "<li>Universidad Nacional de Quilmes (Argentina)</li>"
+        self.assertEqual(
+            leer_convenios(html, "u", "Universidad Nacional de Quilmes"), [])
+
+    def test_el_encabezado_de_la_lista_no_es_un_convenio(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        self.assertEqual(leer_convenios("<li>Universidades de destino - España</li>",
+                                        "u", "X"), [])
