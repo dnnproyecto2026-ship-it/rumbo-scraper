@@ -7,14 +7,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from rumbo_scraper.database.load_utdt import _boolean, _insert_chunks, _upsert_one
+from rumbo_scraper.database.load_utdt import (
+    _boolean, _insert_chunks, _sync_subjects, _upsert_one,
+)
 from rumbo_scraper.database.load_utn import SCHEMA_CHANNELS
 from rumbo_scraper.validators.uba import validate_dataset
 
 DEFAULT_INPUT = Path("data/uba_completo.json")
 CORE_SECTIONS = (
     "localidades", "universidades", "sedes", "facultades", "carreras",
-    "ofertas", "posgrados", "autoridades", "redes_contacto",
+    "ofertas", "posgrados", "materias", "autoridades", "redes_contacto",
 )
 # tipo_posgrado is an enum of degrees; a "Programa de Actualización" is not one
 # of them and the column is NOT NULL, so those rows stay out of the database.
@@ -137,6 +139,20 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
         }, "universidad_id,nombre_programa")
     counts["posgrados"] = len(programmes)
     counts["posgrados_sin_tipo_del_esquema"] = len(data["posgrados"]) - len(programmes)
+
+    # Only the careers whose faculty publishes the plan as a table have
+    # subjects; the rest keep the link to the document and no rows.
+    subjects = [row for row in data["materias"]
+                if career_ids.get(row["carrera_o_programa"])]
+    counts["materias"] = _sync_subjects(client, university_id, [{
+        "universidad_id": university_id,
+        "carrera_id": career_ids[row["carrera_o_programa"]],
+        "posgrado_id": None,
+        "nombre_materia": row["nombre_materia"], "anio_cursada": row["anio_cursada"],
+        "turno": row["turno"], "area_tematica_id": None,
+        "descripcion_breve": row["descripcion_breve"], "regimen": row["regimen"],
+        "carga_horaria_semanal": row["carga_horaria_semanal"],
+    } for row in subjects])
 
     client.table("contactos").delete().eq("universidad_id", university_id).execute()
     if faculty_ids:

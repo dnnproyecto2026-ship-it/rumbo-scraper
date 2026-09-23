@@ -15,7 +15,7 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 | Universidad Argentina de la Empresa | 84 | 14 | 3433 | 0 | 189 |
 | Universidad de Belgrano | 25 | 13 | 939 | 0 | 79 |
 | Universidad Tecnológica Nacional | 98 | 557 | 2179 | 0 | 1083 |
-| Universidad de Buenos Aires | 125 | 592 | 0 | 0 | 3993 |
+| Universidad de Buenos Aires | 125 | 592 | 336 | 0 | 4551 |
 
 ## Secciones vacías, por universidad
 
@@ -132,7 +132,6 @@ Generada el 2026-09-23 por `python -m rumbo_scraper.bitacora`, leyendo los artef
 
 **Universidad de Buenos Aires**
 
-- `materias` — cada facultad publica el plan como documento propio; se enlaza pero todavía no se lee
 - `becas` — las becas se publican fuera del catálogo
 - `servicios_estudiantiles` — no hay catálogo central de servicios
 - `actividades_extracurriculares` — no hay catálogo central
@@ -151,13 +150,13 @@ Cuántas filas traen el dato sobre el total de esa sección.
 |---|---|---|---|---|---|---|---|---|---|---|
 | `carreras.titulo_otorgado` | 13/13 | 0/18 | 11/13 | 15/30 | 0/23 | 80/80 | 0/84 | 25/25 | 0/98 | 0/125 |
 | `carreras.duracion_anios` | 13/13 | 18/18 | 13/13 | 28/30 | 22/23 | 78/80 | 81/84 | 25/25 | 73/98 | 0/125 |
-| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 0/125 |
+| `carreras.cantidad_materias_total` | 13/13 | 18/18 | 13/13 | 16/30 | 20/23 | 78/80 | 84/84 | 25/25 | 83/98 | 8/125 |
 | `posgrados.tipo_posgrado` | 28/28 | 31/41 | 12/13 | 201/201 | 55/55 | 30/30 | 14/14 | 13/13 | 73/557 | 592/592 |
 | `posgrados.titulo_otorgado` | 14/28 | 0/41 | 13/13 | 1/201 | 1/55 | 0/30 | 0/14 | 0/13 | 0/557 | 0/592 |
 | `posgrados.duracion_meses` | 22/28 | 25/41 | 11/13 | 134/201 | 28/55 | 0/30 | 12/14 | 2/13 | 0/557 | 0/592 |
 | `posgrados.modalidad` | 22/28 | 25/41 | 12/13 | 70/201 | 53/55 | 0/30 | 3/14 | 1/13 | 0/557 | 0/592 |
-| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 | 1933/2179 | — |
-| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 | 295/2179 | — |
+| `materias.anio_cursada` | 471/829 | 764/1274 | 521/991 | 0/1375 | 676/733 | 3833/3833 | 3433/3433 | 939/939 | 1933/2179 | 0/336 |
+| `materias.regimen` | 168/829 | 783/1274 | 90/991 | 0/1375 | 638/733 | 3682/3833 | 0/3433 | 644/939 | 295/2179 | 0/336 |
 
 ## Qué queda fuera y por qué
 
@@ -228,6 +227,6 @@ Cuántas filas traen el dato sobre el total de esa sección.
 ### Universidad de Buenos Aires
 
 - Método: HTML público del catálogo central; sin IA
-- 4 descarga(s) fallidas en la última corrida
-- Backlog de auditoría: alta 2060, media 1933, baja 0
+- 3 descarga(s) fallidas en la última corrida
+- Backlog de auditoría: alta 2060, media 2491, baja 0
 

@@ -65,12 +65,20 @@ def run(output: Path = DEFAULT_OUTPUT, limit: int | None = None) -> dict[str, An
                         and url not in career_urls:
                     career_urls.append(url)
         career_pages = {url: _get(client, url, errors) for url in career_urls}
+        plan_urls: list[str] = []
+        for url, html in career_pages.items():
+            document = plan_document_url(html, url) if html else None
+            if document and not document.lower().endswith(".pdf") \
+                    and document not in plan_urls:
+                plan_urls.append(document)
+        plan_pages = {url: _get(client, url, errors) for url in plan_urls}
 
     dataset = build_dataset(
         faculties, {url: html for url, html in pages.items() if html},
         authorities, errors,
         {url: html for url, html in programmes.items() if html},
         {url: html for url, html in career_pages.items() if html},
+        {url: html for url, html in plan_pages.items() if html},
     )
     validate_dataset(dataset)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -93,6 +101,7 @@ def main() -> None:
     print(f"OK: {len(data['carreras'])} carreras")
     print(f"OK: {len(data['sedes'])} sedes")
     print(f"OK: {len(data['posgrados'])} posgrados")
+    print(f"OK: {len(data['materias'])} materias")
     print(f"OK: {len(data['autoridades'])} autoridades del Rectorado")
     print(f"OK: {len(data['redes_contacto'])} canales de contacto")
     print(f"Archivo: {args.output}")

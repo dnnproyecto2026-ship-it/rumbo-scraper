@@ -359,18 +359,23 @@ Ochenta y una de las ciento veinticinco carreras enlazan su plan de estudios
 desde la página de su facultad, y ese enlace queda registrado en
 `recursos_publicos`. Las materias **no** se leen de ahí.
 
-Se probó: el lector de planes de `parsers/plan_documents.py` —el mismo que lee
-los noventa y un planes de la UTN— aplicado a los documentos de la UBA devuelve
-materias reales mezcladas con fragmentos de la prosa que las rodea ("CBC
-aprobado", "Facultad de Agronomía Cod", tres materias corridas en una línea).
-Con un filtro de calidad que exige año en la mayoría de las materias y nombres
-de largo razonable, sobreviven 8 planes de 125, y ni siquiera esos quedan
-limpios.
+Sesenta de esos ochenta y un enlaces van a una página y veinte a un PDF. Los
+que son una **tabla** se leen: una materia por fila, y la columna del nombre se
+elige por cómo leen sus celdas y no por cuánto texto tienen, porque la columna
+más ancha de un plan es la que lista las correlativas. Ocho carreras publican el
+plan así y dan 336 materias.
 
-Los trece documentos son de trece facultades, de trece épocas y trece
-maquetaciones; leerlos bien necesita un lector por facultad, igual que los
-índices de posgrado. Hasta entonces `materias` queda declarada como no leída y
-el enlace al documento queda publicado, que es lo que la universidad sí ofrece.
+Los demás no se leen, y es una decisión. El lector de `parsers/plan_documents.py`
+—el mismo que lee los noventa y un planes de la UTN— aplicado a los PDF de la
+UBA devuelve materias reales mezcladas con fragmentos de la prosa que las rodea
+("CBC aprobado", "Facultad de Agronomía Cod", tres materias corridas en una
+línea). Con un filtro que exige año en la mayoría de las materias y nombres de
+largo razonable sobreviven 8 planes de 125, y ni esos quedan limpios. El resto
+de las facultades publica el plan como resolución, como diagrama en imagen o
+como una página que enlaza a otra parte: no hay texto que leer.
+
+Una materia equivocada es peor que una materia faltante, así que lo que no se
+puede leer queda enlazado y declarado.
 
 ## Bitácora de cobertura
 

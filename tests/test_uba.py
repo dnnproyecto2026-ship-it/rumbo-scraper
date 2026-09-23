@@ -7,7 +7,7 @@ from rumbo_scraper.parsers.uba import (
     POSTGRADUATE_SOURCES, POSTGRADUATES_NOT_READ, STRATEGIES, build_postgraduates,
     chrome_lines, parse_address, parse_authorities, parse_campuses, parse_careers,
     clean_subject, parse_links, plan_document_url, plan_is_sound,
-    read_postgraduates,
+    read_plan_tables, read_postgraduates,
 )
 from rumbo_scraper.validators.uba import validate_dataset
 
@@ -471,3 +471,68 @@ class PlanReadingTests(unittest.TestCase):
         subjects = [{"nombre_materia": f"Materia {i}", "anio_cursada": 1 + i % 5}
                     for i in range(12)]
         self.assertEqual(plan_is_sound(subjects), (True, ""))
+
+
+PLAN_TABLE = """
+<h3>Primer año</h3>
+<table>
+ <tr><th>Cód.</th><th>Asignatura</th><th>Hs.</th><th>Correlativas</th></tr>
+ <tr><td>201</td><td>Anatomía I</td><td>110</td><td>Materias del CBC</td></tr>
+ <tr><td>203</td><td>Química Orgánica</td><td>70</td><td>Anatomía I; Física Biológica</td></tr>
+ <tr><td>603</td><td>Elementos de Estadística</td><td>40</td><td>Tener aprobadas 14 materias</td></tr>
+ <tr><td>206</td><td>Anatomía II</td><td>100</td><td>Anatomía I; Química Orgánica</td></tr>
+ <tr><td>202</td><td>Física Biológica</td><td>80</td><td>Química Orgánica; Estadística</td></tr>
+ <tr><td>205</td><td>Histología</td><td>120</td><td>Anatomía I; Física Biológica</td></tr>
+ <tr><td>207</td><td>Microbiología</td><td>90</td><td>Histología; Química Orgánica</td></tr>
+ <tr><td>208</td><td>Fisiología</td><td>100</td><td>Histología; Física Biológica</td></tr>
+</table>
+"""
+
+CALENDAR = """
+<table>
+ <tr><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th></tr>
+ <tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+ <tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+ <tr><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td></tr>
+ <tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td></tr>
+ <tr><td>27</td><td>28</td><td>29</td><td>30</td><td></td><td></td><td></td></tr>
+</table>
+"""
+
+
+class PlanTableTests(unittest.TestCase):
+    def test_reads_the_column_that_holds_the_names(self) -> None:
+        # The widest column of a plan lists what has to be approved first, so
+        # the column is chosen by how its cells read, not by how long they are.
+        rows = read_plan_tables(PLAN_TABLE, "Veterinaria")["materias"]
+        self.assertEqual([row["nombre_materia"] for row in rows], [
+            "Anatomía I", "Química Orgánica", "Elementos de Estadística",
+            "Anatomía II", "Física Biológica", "Histología", "Microbiología",
+            "Fisiología",
+        ])
+
+    def test_the_year_announced_above_the_table_reaches_its_subjects(self) -> None:
+        rows = read_plan_tables(PLAN_TABLE, "Veterinaria")["materias"]
+        self.assertTrue(all(row["anio_cursada"] == 1 for row in rows))
+
+    def test_the_calendar_of_the_sidebar_is_not_a_plan(self) -> None:
+        result = read_plan_tables(CALENDAR, "Veterinaria")
+        self.assertEqual(result["materias"], [])
+        self.assertIn("no publica el plan como tabla", result["motivo"])
+
+    def test_a_page_with_no_table_says_so(self) -> None:
+        result = read_plan_tables("<p>El plan está en la resolución.</p>", "X")
+        self.assertEqual(result["materias"], [])
+        self.assertIn("no publica el plan como tabla", result["motivo"])
+
+    def test_the_name_of_a_column_is_not_a_subject(self) -> None:
+        names = {row["nombre_materia"]
+                 for row in read_plan_tables(PLAN_TABLE, "Veterinaria")["materias"]}
+        self.assertNotIn("Asignatura", names)
+        self.assertNotIn("Correlativas", names)
+
+    def test_a_requirement_is_never_read_as_a_subject(self) -> None:
+        names = {row["nombre_materia"]
+                 for row in read_plan_tables(PLAN_TABLE, "Veterinaria")["materias"]}
+        self.assertFalse(any(";" in name or name.startswith("Tener")
+                             for name in names))

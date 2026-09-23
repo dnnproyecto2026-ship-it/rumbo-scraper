@@ -296,6 +296,7 @@ def build_dataset(
     errors: list[dict[str, str]] | None = None,
     postgraduate_pages: dict[str, str] | None = None,
     career_pages: dict[str, str] | None = None,
+    plan_pages: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Assemble the UBA dataset from the central catalogue."""
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
@@ -308,6 +309,7 @@ def build_dataset(
     )]
 
     career_pages = career_pages or {}
+    plan_pages = plan_pages or {}
     details: list[dict[str, Any]] = []
     resources: list[dict[str, Any]] = []
     excluded: list[dict[str, str]] = []
@@ -393,6 +395,17 @@ def build_dataset(
             # a wrong subject is worse than a missing one.
             page = career_pages.get(url or "", "")
             plan_url = plan_document_url(page, url or "") if page else None
+            # A plan published as a table of a page can be read; the ones
+            # published as a resolution or a diagram cannot, and are linked.
+            plan_page = plan_pages.get(plan_url or "", "")
+            if plan_page:
+                plan = read_plan_tables(plan_page, career)
+                if plan["materias"]:
+                    data["materias"].extend(plan["materias"])
+                    data["carreras"][-1]["cantidad_materias_total"] = len(plan["materias"])
+                else:
+                    without_plan.append({"carrera": career, "url": plan_url,
+                                         "motivo": plan["motivo"]})
             if plan_url:
                 resources.append({
                     "entidad_tipo": "carrera", "entidad_nombre": career,
@@ -435,10 +448,10 @@ def build_dataset(
                 # document of its own layout. They are linked one by one in
                 # recursos_publicos; reading them needs a reader per faculty,
                 # the way the postgraduate indexes did.
-                "materias": "cada facultad publica el plan como documento "
-                            "propio; se enlaza pero todavía no se lee",
-                "carreras.cantidad_materias_total": "depende de leer el plan "
-                                                    "de cada facultad",
+                "materias": "se leen los planes publicados como tabla; los "
+                            "que son una resolución o un diagrama se enlazan",
+                "carreras.cantidad_materias_total": "depende de que la facultad "
+                                                    "publique el plan como tabla",
                 # The central catalogue names the careers and links to the
                 # faculty that teaches each one; everything about the career
                 # itself lives on thirteen different faculty sites.
@@ -890,6 +903,15 @@ _PLAN_LABEL = re.compile(r"plan\s+de\s+estudio", re.I)
 _PLAN_NOISE = re.compile(
     r"^(cod\s*\d|c[óo]d\.?\s*\d|[A-Z]{1,3}\s+Final\b|total|carga|correlativ)", re.I
 )
+# What the table calls its columns is not one of its rows.
+_COLUMN_LABEL = frozenset({
+    "asignatura", "asignaturas", "materia", "materias", "nombre", "codigo",
+    "cod", "plan", "nuevo plan", "plan nuevo", "plan anterior", "horas",
+    "carga horaria", "regimen", "cuatrimestre", "ciclo", "anio", "ano",
+    "correlativas", "correlatividades", "observaciones", "creditos",
+    "plan 1993", "plan 2016", "plan 2017", "plan 2023",
+    "espacio curricular", "espacios curriculares", "denominacion",
+})
 
 
 def plan_document_url(html: str, page_url: str) -> str | None:
@@ -910,8 +932,13 @@ def clean_subject(name: str) -> str | None:
     a legend of the table in the same column, so both arrive joined to it.
     """
     value = clean_text(re.sub(r"^\s*(cod|c[óo]d\.?)\s*\d+\s*", "", name, flags=re.I))
-    value = clean_text(re.sub(r"\s+[A-Z]\s*$", "", value))
+    # A lone capital at the end is the legend of the table ("F" for final),
+    # except when it is the roman numeral that numbers the subject: dropping
+    # it would turn "Anatomía I" into "Anatomía".
+    value = clean_text(re.sub(r"\s+[A-HJ-UWYZ]\s*$", "", value))
     if len(value) < 4 or _PLAN_NOISE.match(value):
+        return None
+    if comparison_key(value) in _COLUMN_LABEL:
         return None
     return value
 
@@ -956,3 +983,112 @@ def read_plan(document: bytes, career: str) -> dict[str, Any]:
     result["materias"] = subjects if sound else []
     result["motivo"] = result["motivo"] or (None if sound else reason)
     return result
+
+
+# A table of a plan states one subject per row. A calendar states one day per
+# cell, and several faculties put one in the sidebar of the same page.
+_WEEKDAY_HEADER = re.compile(r"^[dlmjvs]{1,2}$", re.I)
+_YEAR_HEADING = re.compile(
+    r"(primer|segundo|tercer|cuarto|quinto|sexto|s[ée]ptimo)\s+a[ñn]o"
+    r"|\b([1-7])\s*[°ºa]?\s*a[ñn]o\b", re.I
+)
+_YEAR_WORDS = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4,
+               "quinto": 5, "sexto": 6, "septimo": 7}
+MIN_PLAN_ROWS = 6
+
+
+def _is_calendar(rows: list[list[str]]) -> bool:
+    """A month has seven columns of one letter and a body of bare numbers."""
+    header = rows[0] if rows else []
+    if len(header) == 7 and all(_WEEKDAY_HEADER.match(cell or "x") for cell in header):
+        return True
+    cells = [cell for row in rows for cell in row if cell]
+    numeric = sum(1 for cell in cells if cell.isdigit())
+    return bool(cells) and numeric > len(cells) * 0.7
+
+
+# A cell that lists what has to be approved first is a requirement, not a
+# name: it enumerates other subjects, or it says so in a sentence.
+_A_REQUIREMENT = re.compile(
+    r";|\b(tener|haber|aprobad|cursad|regulariz|requisito|elegir|incluyendo)", re.I
+)
+
+
+def _looks_like_a_name(value: str) -> bool:
+    return (6 <= len(value) <= 70 and bool(re.search(r"[^\W\d_]{4}", value))
+            and not _A_REQUIREMENT.search(value))
+
+
+def _subject_column(rows: list[list[str]]) -> int | None:
+    """The column that holds the names of the subjects.
+
+    The wordiest column of a plan is usually the one listing what has to be
+    approved before each subject, so the column is chosen by how many of its
+    cells read like a name and not by how much text they hold.
+    """
+    width = max((len(row) for row in rows), default=0)
+    best, best_score = None, 0.0
+    for index in range(width):
+        values = [row[index] for row in rows if index < len(row) and row[index]]
+        if len(values) < MIN_PLAN_ROWS:
+            continue
+        named = {value for value in values if _looks_like_a_name(value)}
+        score = len(named) / len(values)
+        if score > best_score and len(named) >= MIN_PLAN_ROWS:
+            best, best_score = index, score
+    return best if best_score >= 0.6 else None
+
+
+def _year_above(table: Any) -> int | None:
+    """The year the page announces above the table, if it announces one."""
+    for node in table.find_all_previous(["h1", "h2", "h3", "h4", "caption", "strong"]):
+        match = _YEAR_HEADING.search(clean_text(node.get_text(" ", strip=True)))
+        if not match:
+            continue
+        word = comparison_key(match.group(1) or "")
+        return _YEAR_WORDS.get(word) or (int(match.group(2)) if match.group(2) else None)
+    return None
+
+
+def read_plan_tables(html: str, career: str) -> dict[str, Any]:
+    """Read a plan the faculty publishes as a table of its own page.
+
+    Twenty of the eighty-one plans are real tables, one subject per row, and a
+    table is worth reading where a scrambled PDF is not: the columns survive.
+    """
+    soup = _soup(html)
+    for element in soup(["nav", "footer", "header", "aside"]):
+        element.decompose()
+    subjects: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for table in soup.find_all("table"):
+        rows = [[clean_text(cell.get_text(" ", strip=True))
+                 for cell in row.find_all(["td", "th"])]
+                for row in table.find_all("tr")]
+        rows = [row for row in rows if any(row)]
+        if len(rows) < MIN_PLAN_ROWS or _is_calendar(rows):
+            continue
+        column = _subject_column(rows)
+        if column is None:
+            continue
+        year = _year_above(table)
+        for row in rows:
+            if column >= len(row):
+                continue
+            name = clean_subject(row[column])
+            if not name or not _looks_like_a_name(name) or comparison_key(name) in seen:
+                continue
+            seen.add(comparison_key(name))
+            subjects.append(blank_record(
+                "materias", universidad_nombre=UNIVERSITY, carrera_o_programa=career,
+                nombre_materia=name, anio_cursada=year, turno=None,
+                area_tematica=None, descripcion_breve=None, regimen=None,
+                carga_horaria_semanal=None,
+            ))
+    if len(subjects) < MIN_SUBJECTS:
+        return {"materias": [], "motivo": "la página no publica el plan como tabla"}
+    long_names = sum(1 for row in subjects
+                     if len(str(row["nombre_materia"])) > MAX_NAME_LENGTH)
+    if long_names > len(subjects) / 5:
+        return {"materias": [], "motivo": "la tabla no separa una materia por fila"}
+    return {"materias": subjects, "motivo": None}
