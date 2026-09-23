@@ -165,10 +165,12 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://www.unc.edu.ar", "unc.edu.ar", "Córdoba",
         "Córdoba", "Córdoba",
     ),
+    # Siglo 21 publishes the index of its careers as a list its page builds
+    # in the reader, so it is read with a browser.
     Universidad(
         "Universidad Siglo 21", "Siglo 21", "Privada",
         "https://21.edu.ar", "21.edu.ar", "Córdoba",
-        "Córdoba", "Córdoba",
+        "Córdoba", "Córdoba", navegador=True,
     ),
     Universidad(
         "Universidad Católica de Córdoba", "UCC", "Privada",
@@ -186,6 +188,10 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://unr.edu.ar", "unr.edu.ar", "Rosario",
         "Santa Fe", "Rosario",
     ),
+    # UCEL sits behind the same bot challenge as UNSAM, and FASTA refuses
+    # every request outright with a 403. Both are controls the universities
+    # put in front of their own pages, and this project does not work around
+    # one. They stay unread.
     Universidad(
         "Universidad del Centro Educativo Latinoamericano", "UCEL", "Privada",
         "https://www.ucel.edu.ar", "ucel.edu.ar", "Rosario",

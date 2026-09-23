@@ -334,3 +334,11 @@ class ElIndiceDeCarreras(unittest.TestCase):
 
     def test_la_carrera_no_es_el_indice(self):
         self.assertFalse(generico.es_el_indice("https://x.edu.ar/carreras/abogacia"))
+
+
+class LaPublicidadDeLaUniversidad(unittest.TestCase):
+    def test_una_pregunta_no_es_una_carrera(self):
+        self.assertFalse(generico.es_programa("¿Por qué Ingeniería en la Católica?"))
+
+    def test_la_tienda_no_es_una_carrera(self):
+        self.assertFalse(generico.es_programa("Comprar Ingeniería en LibrosUCC"))

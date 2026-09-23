@@ -87,7 +87,9 @@ _NOT_A_PROGRAMME = re.compile(
     r"(?:investigaci[óo]n|extensi[óo]n|transferencia|vinculaci[óo]n|"
     r"posgrados?|graduad[oa]s|biblioteca|bienestar)\b|"
     # The paperwork that creates a degree is not the degree.
-    r"(?:ordenanza|resoluci[óo]n|anexo|acta|expediente|disposici[óo]n)\b)"
+    r"(?:ordenanza|resoluci[óo]n|anexo|acta|expediente|disposici[óo]n)\b|"
+    # The shop of the university sells the books of a degree.
+    r"(?:comprar|compra|carrito|tienda|librer[íi]a|descarg)\b)"
 )
 # A verb in the third person turns the name of a degree into the report of
 # something that happened to it.
@@ -184,8 +186,10 @@ def es_programa(nombre: str) -> bool:
     """Whether a heading names a programme rather than talking about one."""
     if not (6 <= len(nombre) <= 110):
         return False
-    # An exclamation is an advertisement: "¡Estudiá Ingeniería en 2018!".
-    if "!" in nombre or "¡" in nombre:
+    # An exclamation is an advertisement and a question is a sales pitch:
+    # "¡Estudiá Ingeniería en 2018!", "¿Por qué Ingeniería en la Católica?".
+    # The name of a degree is neither.
+    if any(mark in nombre for mark in "!¡?¿"):
         return False
     key = comparison_key(nombre).lstrip("¡¿\"'«-–— ")
     if _UNA_NOTICIA.search(key):
