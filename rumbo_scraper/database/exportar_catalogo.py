@@ -243,6 +243,14 @@ def exportar(client: Any) -> dict[str, Any]:
     sedes_de: dict[str, list[str]] = defaultdict(list)
     for s_ in sedes:
         sedes_de[s_["universidad_id"]].append(s_["nombre_sede"])
+    # A campus that is itself a faculty: the UTN teaches in "Facultad Regional
+    # San Nicolás", which is both where and who. A career read off the
+    # national catalogue carries the campus and not the faculty; it is the
+    # same unit, under the same name.
+    unidad_llamada: dict[tuple[str, str], str] = {
+        (f["universidad_id"], comparison_key(f["nombre_facultad"])): f["nombre_facultad"]
+        for f in facultades.values()
+    }
     # Each career under the name of the career it is, merged with the others
     # of its university that come out the same.
     representante: dict[tuple[str, str], str] = {}
@@ -270,10 +278,12 @@ def exportar(client: Any) -> dict[str, Any]:
             })
         propias = ofertas_por_carrera.get(c["id"]) or [None]
         for o in propias:
+            sede = (sede_nombre.get(o["sede_id"]) if o else None) or sede_del_nombre
             por_uni[uid]["ofertas"].append({
                 "carrera_nombre": nombre,
-                "sede": (sede_nombre.get(o["sede_id"]) if o else None) or sede_del_nombre,
-                "facultad_nombre": facultad_nombre,
+                "sede": sede,
+                "facultad_nombre": facultad_nombre
+                or unidad_llamada.get((uid, comparison_key(sede or ""))),
                 "modalidad": modalidad_del_nombre or (o["modalidad"] if o else None),
                 "regimen_ingreso": o["regimen_ingreso"] if o else None,
                 "url_oficial": (o and o["url_oficial"])
