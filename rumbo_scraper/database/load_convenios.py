@@ -1,9 +1,19 @@
-"""Fill the exchange agreements of every university that publishes them.
+"""Read the exchange agreements every university publishes, and keep them out.
 
-The list of partner universities sits on the international page of a
-university, which the student-life reader already finds. Only a university
-with no agreements stored is written: UTDT's six hundred and seventy-one came
-from its own adapter.
+``convenios_intercambio.programa_origen`` is NOT NULL and holds the career a
+student leaves from: Di Tella publishes its agreements one list per career,
+which is where its six hundred and seventy-one rows come from. Every other
+university publishes a single list for the whole institution, and that list
+does not say which career each agreement is for.
+
+An earlier version filled the column with the heading of the page the list
+was on. What that put in the database was "Últimas Agendas" for thirty-five
+agreements and the name of a member of staff for two others. A heading is not
+a career, and choosing one would state something the university never said.
+
+So the agreements are read and kept in the artifact, where they can be used
+the day the schema has a column for an agreement of the whole university, and
+they are counted as blocked rather than written.
 """
 
 from __future__ import annotations
@@ -76,6 +86,13 @@ def leer(universidad: dict[str, Any]) -> list[dict[str, Any]]:
 
 def aplicar(client: Any, universidad: dict[str, Any],
             convenios: list[dict[str, Any]]) -> int:
+    """Nothing is written: see the module docstring. Kept so the day the
+    schema can hold a university-wide agreement, only this changes."""
+    return 0
+
+
+def _aplicar_cuando_haya_columna(client: Any, universidad: dict[str, Any],
+                                 convenios: list[dict[str, Any]]) -> int:
     ya = client.table("convenios_intercambio").select("id").eq(
         "universidad_id", universidad["id"]).limit(1).execute().data
     convenios = [c for c in convenios if c.get("programa")]
@@ -105,12 +122,12 @@ def main() -> None:
         todo[universidad["nombre_oficial"]] = convenios
         if not convenios:
             continue
-        escrito = aplicar(client, universidad, convenios) if args.apply else 0
-        print(f'{universidad["nombre_oficial"]}: leídos {len(convenios)} | escritos {escrito}')
+        print(f'{universidad["nombre_oficial"]}: leídos {len(convenios)} | '
+              f'bloqueados por programa_origen: {len(convenios)}')
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(todo, ensure_ascii=False, indent=2) + "\n",
                            encoding="utf-8")
-    print("CARGADO" if args.apply else "LEÍDO (sin escribir)")
+    print("LEÍDO. Nada se escribe: la lista no dice para qué carrera es cada convenio.")
 
 
 if __name__ == "__main__":
