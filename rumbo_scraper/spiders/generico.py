@@ -260,8 +260,11 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
 
         # A national university does not keep its careers on the host that
         # carries its sitemap: each faculty publishes its own on a host of its
-        # own. When the sitemap comes back short, the links do the rest.
-        if len(programas) < POCAS_CARRERAS:
+        # own, while the postgraduates stay on the main site. So the count
+        # that decides whether to go looking is of careers alone -- Rosario
+        # publishes a hundred and twelve postgraduates centrally, and they
+        # were hiding the fact that only ten of its careers had been found.
+        if _cuantas_carreras(programas) < POCAS_CARRERAS:
             semillas = [universidad.sitio_web, *universidad.semillas]
             extra = [url for url in recorrer(lector, semillas, tope)
                      if url not in paginas]
@@ -281,6 +284,11 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
         )
     finally:
         lector.close()
+
+
+def _cuantas_carreras(programas: list[generico.Programa]) -> int:
+    """How many of the programmes found are degrees rather than postgraduates."""
+    return sum(1 for programa in programas if programa.nivel != "Posgrado")
 
 
 def _del_sitemap(lector: Lector, tope: int) -> list[str]:
