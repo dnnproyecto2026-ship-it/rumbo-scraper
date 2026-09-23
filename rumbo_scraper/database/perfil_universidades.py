@@ -125,6 +125,58 @@ def apply_profiles(rows: list[dict[str, Any]], profiles: dict[str, dict[str, Any
     return counts
 
 
+# The column of ``universidades`` each channel of ``contactos`` mirrors. The
+# telephone has no channel in the schema and stays in its own columns.
+CANALES_DE_LA_UNIVERSIDAD = (
+    ("sitio_web", "Sitio Web"), ("mail_contacto", "Email"),
+    ("instagram", "Instagram"), ("facebook", "Facebook"),
+    ("twitter", "Twitter"), ("linkedin", "LinkedIn"),
+    ("youtube", "YouTube"), ("tiktok", "TikTok"),
+)
+
+
+def canales_de(row: dict[str, Any]) -> list[dict[str, Any]]:
+    """The university's own channels, as rows of ``contactos``.
+
+    They are the same accounts the columns of ``universidades`` already hold,
+    filed where a page that lists every channel of a university looks for
+    them. A university whose career pages carry no footer of their own had
+    none there, although its home page publishes all of them.
+    """
+    filas = []
+    for columna, canal in CANALES_DE_LA_UNIVERSIDAD:
+        valor = clean_text(row.get(columna))
+        if valor:
+            filas.append({"universidad_id": row["id"], "facultad_id": None,
+                          "carrera_id": None, "canal": canal,
+                          "usuario_o_direccion": valor})
+    return filas
+
+
+def apply_channels(rows: list[dict[str, Any]], client: Any) -> dict[str, int]:
+    """Add each university's own channels to ``contactos`` where missing.
+
+    Nothing is deleted: a channel already stored, under any faculty, is kept
+    and not written twice.
+    """
+    from rumbo_scraper.database.supabase import select_all
+    counts: dict[str, int] = {}
+    for row in rows:
+        guardados = {
+            (fila["canal"], (fila["usuario_o_direccion"] or "").rstrip("/").lower())
+            for fila in select_all(client.table("contactos")
+                                   .select("canal,usuario_o_direccion")
+                                   .eq("universidad_id", row["id"]))
+        }
+        nuevos = [fila for fila in canales_de(row)
+                  if (fila["canal"], fila["usuario_o_direccion"].rstrip("/").lower())
+                  not in guardados]
+        if nuevos:
+            client.table("contactos").insert(nuevos).execute()
+            counts[row["nombre_oficial"]] = len(nuevos)
+    return counts
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Completar los datos institucionales de cada universidad"
@@ -143,7 +195,11 @@ def main() -> None:
 
     if args.apply:
         counts = apply_profiles(rows, profiles, client)
+        rows = select_all(client.table("universidades").select("*"))
+        canales = apply_channels(rows, client)
         print("CARGADO")
+        for name in sorted(canales):
+            print(f"- {name}: {canales[name]} canales en contactos")
     else:
         counts = {name: len(values) for name, values in profiles.items() if values}
         print("LEÍDO (sin escribir)")

@@ -182,6 +182,33 @@ _UN_EVENTO = re.compile(
 )
 
 
+# A page about one part of a programme carries the programme's name and then
+# the part: "Ingeniería Biomédica - Admisión", "... – Cuerpo Directivo". It is
+# not another programme, and the programme's own page is read on its own.
+# Behind a dash or a bar any of these is a part; without one, only the phrases
+# no degree could end in, because "Formación de Docentes" is a degree.
+_UNA_PARTE = (
+    r"admision(?:es)?|ingreso|mision y valores|mision|vision|"
+    r"preguntas frecuentes|cuerpo (?:directivo|docente|academico)|autoridades|"
+    r"contacto|inscripcion(?:es)?|plan de estudios?|perfil del egresado|"
+    r"aranceles|requisitos|staff|docentes|conoce la carrera|mas informacion"
+)
+_UNA_SECCION = re.compile(
+    rf"\s[-–—|]\s*(?:{_UNA_PARTE})$"
+    r"|\s(?:conoce la carrera|mas informacion|mision y valores|preguntas frecuentes)$"
+    r"|\bpreguntas frecuentes\b"
+)
+# The minutes of a council, headed by their number or their year: "RES 469 -
+# 2020 \"CS\" Aprobar la Diplomatura...", "2013 \"CS\" Modificar los alcances
+# de la Licenciatura...". They name a degree and are not one.
+_UNA_RESOLUCION = re.compile(r"^(?:res(?:olucion)?\b|\d{4}\b)")
+# A person and their post: "Emanuel Porcelli | Subsecretario de Maestrías".
+_UN_CARGO = re.compile(
+    r"\b(?:sub)?secretari[oa]\b|\bdirector[a]?\b|\bdecan[oa]\b|"
+    r"\bcoordinador[a]?\b|\bvicedecan[oa]\b"
+)
+
+
 def es_programa(nombre: str) -> bool:
     """Whether a heading names a programme rather than talking about one."""
     if not (6 <= len(nombre) <= 110):
@@ -208,6 +235,8 @@ def es_programa(nombre: str) -> bool:
     if _NOT_A_PROGRAMME.match(key) or _SOLO_EL_GRADO.match(key) or _EN_PLURAL.match(key):
         return False
     if _UN_EVENTO.search(nombre):
+        return False
+    if _UNA_SECCION.search(key) or _UNA_RESOLUCION.match(key) or _UN_CARGO.search(key):
         return False
     if _A_SENTENCE.search(key):
         return False

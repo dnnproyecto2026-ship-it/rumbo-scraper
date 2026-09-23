@@ -590,3 +590,61 @@ class UnaLecturaVaciaNoSeAplica(unittest.TestCase):
         from rumbo_scraper.database.load_generico import LecturaVacia, apply_dataset
         with self.assertRaises(LecturaVacia):
             apply_dataset(self._vacio(), client=object())
+
+
+class CanalesDeLaUniversidadTest(unittest.TestCase):
+    def test_mirrors_only_the_columns_the_university_filled(self):
+        from rumbo_scraper.database.perfil_universidades import canales_de
+        filas = canales_de({"id": "u1", "sitio_web": "https://www.uca.edu.ar",
+                            "instagram": "https://instagram.com/ucaargentina",
+                            "facebook": None, "mail_contacto": "  ",
+                            "telefono_numero": "4338-0600"})
+        self.assertEqual([f["canal"] for f in filas], ["Sitio Web", "Instagram"])
+        self.assertTrue(all(f["facultad_id"] is None and f["universidad_id"] == "u1"
+                            for f in filas))
+
+
+class PlanesDelAdaptadorTest(unittest.TestCase):
+    def test_takes_each_programme_once_with_the_page_its_adapter_recorded(self):
+        from rumbo_scraper.database.planes_adaptador import programas_del_adaptador
+        programas = programas_del_adaptador({"datos": {
+            "ofertas": [
+                {"carrera_nombre": "Economía", "url_oficial": "https://u.edu.ar/grado/eco"},
+                {"carrera_nombre": "Economía", "url_oficial": "https://u.edu.ar/grado/eco"},
+                {"carrera_nombre": "Sin página", "url_oficial": None},
+            ],
+            "posgrados": [{"nombre_programa": "Maestría en Finanzas",
+                           "tipo_posgrado": "Maestría",
+                           "url_oficial": "https://u.edu.ar/posgrado/mf"}],
+        }})
+        self.assertEqual([(p.nombre, p.nivel) for p in programas],
+                         [("Economía", "Grado"), ("Maestría en Finanzas", "Posgrado")])
+
+
+class NoEsUnProgramaTest(unittest.TestCase):
+    def test_a_part_of_a_programme_a_council_minute_and_a_person_are_not_programmes(self):
+        for nombre in ("Ingeniería Biomédica - Admisión",
+                       "Licenciatura en Nutrición - Misión y Valores",
+                       "Maestría en Preguntas Frecuentes",
+                       "Licenciatura en Arte Conocé la carrera",
+                       "Diplomatura Superior en Equidad en Salud – Cuerpo Directivo",
+                       'RES 054 - 2012 "CS" CGA Maestría',
+                       '2013 "CS" Modificar los alcances de la Licenciatura en Actividad Física',
+                       "Emanuel Porcelli | Subsecretario de Maestrías"):
+            self.assertFalse(generico.es_programa(nombre), nombre)
+
+    def test_variants_and_degrees_in_teaching_stay_programmes(self):
+        for nombre in ("Especialización en Formación de Docentes",
+                       "Licenciatura en Administración - Modalidad a Distancia",
+                       "Maestría en Dirección de Empresas",
+                       "Tecnicatura en Secretariado Ejecutivo"):
+            self.assertTrue(generico.es_programa(nombre), nombre)
+
+    def test_the_cleanup_renames_a_programme_it_has_no_other_record_of(self):
+        from rumbo_scraper.database.retirar_no_programas import motivo, nombre_limpio
+        self.assertEqual(nombre_limpio("Contador Público Conocé la carrera", "seccion"),
+                         "Contador Público")
+        self.assertEqual(nombre_limpio("Ingeniería Biomédica - Admisión", "seccion"),
+                         "Ingeniería Biomédica")
+        self.assertIsNone(nombre_limpio("Maestría en Preguntas Frecuentes", "seccion"))
+        self.assertEqual(motivo('RES 054 - 2012 "CS" CGA Maestría'), "resolucion")

@@ -96,7 +96,10 @@ def discover_careers(pages: dict[str, str]) -> tuple[CareerRef, ...]:
         if not faculty or not html:
             continue
         for anchor in _soup(html).find_all("a", href=True):
-            name = clean_text(anchor.get_text(" ", strip=True))
+            # A card carries its call to action inside the same link as the
+            # name: "Licenciatura en Arte Conocé la carrera".
+            name = clean_text(re.sub(r"\s*Conoc[ée] la carrera\s*$", "",
+                                     anchor.get_text(" ", strip=True), flags=re.I))
             if not _CAREER_LABEL.match(name) or len(name) > 90:
                 continue
             url = urljoin(index_url, clean_text(anchor["href"]))
