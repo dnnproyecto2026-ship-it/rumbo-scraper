@@ -549,3 +549,19 @@ class LosConveniosDeIntercambio(unittest.TestCase):
         from rumbo_scraper.parsers.convenios import leer_convenios
         self.assertEqual(leer_convenios("<li>Universidades de destino - España</li>",
                                         "u", "X"), [])
+
+
+class ElPaisDelConvenio(unittest.TestCase):
+    def test_el_pais_repetido_en_el_nombre(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        filas = leer_convenios(
+            "<li>Universidad Católica de Costa Rica (Costa Rica)</li>"
+            "<li>Universidad Iberoamericana (UNIBE) - Paraguay</li>", "u", "X")
+        self.assertEqual([f["universidad_destino"] for f in filas],
+                         ["Universidad Católica de Costa Rica",
+                          "Universidad Iberoamericana (UNIBE)"])
+
+    def test_un_intercambio_es_con_el_exterior(self):
+        from rumbo_scraper.parsers.convenios import leer_convenios
+        self.assertEqual(leer_convenios(
+            "<li>Universidad de Argentina en la región</li>", "u", "X"), [])

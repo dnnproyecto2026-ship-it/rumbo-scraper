@@ -95,6 +95,11 @@ def leer_convenios(html: str, pagina: str, propia: str) -> list[dict[str, Any]]:
         pais = _UN_PAIS.search(comparison_key(texto))
         if not pais:
             continue
+        # An exchange is with a university abroad. What names Argentina on
+        # these pages is the sentence that introduces the list or the title
+        # of the page itself.
+        if PAISES[pais.group(1).lower()] == "Argentina":
+            continue
         nombre = _sin_el_pais(texto, pais.group(1))
         if len(nombre) < 8 or comparison_key(nombre) == clave_propia:
             continue
@@ -141,11 +146,23 @@ def _sin_el_pais(texto: str, pais: str) -> str:
     what it came from for the letters these names use.
     """
     texto = clean_text(texto)
-    indice = comparison_key(texto).find(pais.lower())
+    # The label is appended at the end, so it is the last mention that is cut:
+    # "Universidad Católica de Costa Rica (Costa Rica)" names the country
+    # twice, once as part of the name.
+    indice = comparison_key(texto).rfind(pais.lower())
     if indice <= 0:
         return texto.strip(" .,-–—()[]|")
     antes = texto[:indice].rstrip()
     if not antes or antes[-1] not in _UNA_ETIQUETA:
         # The country is part of the name.
         return texto.strip(" .,-–—()[]|")
-    return clean_text(antes[:-1]).strip(" .,-–—()[]|")
+    return _cerrado(clean_text(antes[:-1]).strip(" .,-–—[]|"))
+
+
+def _cerrado(nombre: str) -> str:
+    """The name with a bracket the cut left open closed again, or dropped."""
+    if nombre.count("(") > nombre.count(")"):
+        return nombre + ")" if re.search(r"\([^)]{2,}$", nombre) else nombre.rstrip("( ")
+    if nombre.count(")") > nombre.count("("):
+        return nombre.rstrip(") ")
+    return nombre.strip()
