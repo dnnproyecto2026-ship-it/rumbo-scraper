@@ -280,9 +280,14 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
         # that decides whether to go looking is of careers alone -- Rosario
         # publishes a hundred and twelve postgraduates centrally, and they
         # were hiding the fact that only ten of its careers had been found.
+        hosts_del_sitio = _hosts_de_la_universidad(lector)
         if (_cuantas_carreras(programas) < POCAS_CARRERAS
-                or _un_solo_host(programas)):
-            semillas = [universidad.sitio_web, *universidad.semillas]
+                or len(_hosts_con_carreras(programas)) < len(hosts_del_sitio)):
+            # Every host of the university is a seed. A faculty that the main
+            # site links but nothing else does is otherwise reached only by
+            # luck, and Cordoba teaches through fifteen of them.
+            semillas = [universidad.sitio_web, *universidad.semillas,
+                        *hosts_del_sitio]
             extra = [url for url in recorrer(lector, semillas, tope)
                      if url not in paginas]
             if limite:
@@ -303,18 +308,28 @@ def leer(universidad: Universidad, tope: int = MAX_PAGINAS,
         lector.close()
 
 
-def _un_solo_host(programas: list[generico.Programa]) -> bool:
-    """Whether every career found sits on the one host the sitemap covers.
+def _hosts_con_carreras(programas: list[generico.Programa]) -> set[str]:
+    """The hosts that turned out to publish a career."""
+    return {urlparse(programa.url).netloc.lower().removeprefix("www.")
+            for programa in programas if programa.nivel != "Posgrado"}
+
+
+def _hosts_de_la_universidad(lector: Lector) -> list[str]:
+    """Every host of the university its home page links to.
 
     A national university teaches through faculties that each publish on a
-    host of their own, and its sitemap covers only the central host. So when
-    every career found shares one host, the faculties have not been read --
-    however many careers the central host happened to list. Cordoba lists
-    forty-three and teaches about a hundred.
+    host of their own, and its sitemap covers only the central one. The home
+    page is where it says which they are, and while fewer of them have been
+    read than exist, the catalogue has not been read.
     """
-    hosts = {urlparse(programa.url).netloc.lower()
-             for programa in programas if programa.nivel != "Posgrado"}
-    return len(hosts) <= 1
+    inicio = lector.get(lector.universidad.sitio_web)
+    hosts: dict[str, str] = {}
+    for url in generico.enlaces(inicio, lector.universidad.sitio_web, lector.dominios):
+        parsed = urlparse(url)
+        host = parsed.netloc.lower().removeprefix("www.")
+        if host and host != lector.universidad.dominio:
+            hosts.setdefault(host, f"{parsed.scheme}://{parsed.netloc}/")
+    return list(hosts.values())
 
 
 def _cuantas_carreras(programas: list[generico.Programa]) -> int:
