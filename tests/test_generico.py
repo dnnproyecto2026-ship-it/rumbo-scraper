@@ -699,3 +699,22 @@ class AutoridadesBajoSuUnidadTest(unittest.TestCase):
         self.assertEqual(por_nombre["Juan Carlos Pérez"].get("unidad"),
                          "Facultad de Ciencias Económicas")
         self.assertNotIn("unidad", por_nombre["María Elena López"])
+
+
+class PaginasDeUnProgramaTest(unittest.TestCase):
+    def test_a_page_of_a_programme_is_dropped_but_a_modality_is_kept(self):
+        P = generico.Programa
+        programas = [P("Ingeniería en Física Médica", "Grado", None, "a"),
+                     P("Ingeniería en Física Médica - Investigación", "Grado", None, "b"),
+                     P("Licenciatura en Administración", "Grado", None, "c"),
+                     P("Licenciatura en Administración - Modalidad a Distancia", "Grado", None, "d")]
+        excluidos: list = []
+        nombres = [p.nombre for p in generico._sin_recortes(programas, excluidos)]
+        self.assertNotIn("Ingeniería en Física Médica - Investigación", nombres)
+        self.assertIn("Licenciatura en Administración - Modalidad a Distancia", nombres)
+
+    def test_an_award_title_is_not_a_programme_and_an_underscore_slug_is_catalogue(self):
+        self.assertFalse(generico.es_programa(
+            "Título de Enfermero (Primer Ciclo de la LICENCIATURA EN ENFERMERÍA)"))
+        self.assertTrue(generico.parece_catalogo(
+            "https://www.favaloro.edu.ar/informacion/ingIBIO_maestria-en-ingenieria-biomedica"))

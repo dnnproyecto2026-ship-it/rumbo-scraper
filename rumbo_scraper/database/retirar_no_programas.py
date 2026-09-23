@@ -26,7 +26,7 @@ import re
 from typing import Any
 
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
-from rumbo_scraper.parsers.generico import _UN_CARGO, _UNA_RESOLUCION, _UNA_SECCION
+from rumbo_scraper.parsers.generico import _UN_CARGO, _UN_TITULO, _UNA_RESOLUCION, _UNA_SECCION
 
 TABLAS = (("carreras", "nombre_carrera", "carrera_id"),
           ("posgrados", "nombre_programa", "posgrado_id"))
@@ -42,11 +42,33 @@ def motivo(nombre: str) -> str | None:
         return "cargo"
     if _UNA_SECCION.search(clave):
         return "seccion"
+    if _UN_TITULO.match(clave):
+        return "titulo"
+    return None
+
+
+# The degree each title is awarded by: a page headed with the title of its
+# graduate, "Título: Licenciado en Astronomía (5 años)", is the page of the
+# Licenciatura en Astronomía.
+_GRADO_DEL_TITULO = (("licenciad[oa]", "Licenciatura"), ("ingenier[oa]", "Ingeniería"),
+                     ("profesor[a]?", "Profesorado"), ("tecnic[oa]", "Tecnicatura"))
+_EL_TITULO = re.compile(r"(?i)^t[íi]tulo\s*(?:de|:)?\s*(?P<grado>\w+)\s+(?P<resto>(?:en|de)\s+[^()]+?)\s*(?:\(.*)?$")
+
+
+def _grado_del_titulo(nombre: str) -> str | None:
+    match = _EL_TITULO.match(nombre)
+    if not match:
+        return None
+    for patron, grado in _GRADO_DEL_TITULO:
+        if re.fullmatch(patron, comparison_key(match.group("grado"))):
+            return f"{grado} {match.group('resto').strip()}"
     return None
 
 
 def nombre_limpio(nombre: str, razon: str) -> str | None:
     """The programme a row copies, when it copies one."""
+    if razon == "titulo":
+        return _grado_del_titulo(nombre)
     if razon != "seccion":
         return None
     limpio = clean_text(_COLA.sub("", nombre))
@@ -69,6 +91,10 @@ def planificar(client: Any) -> list[dict[str, Any]]:
             if not razon:
                 continue
             limpio = nombre_limpio(fila[columna], razon)
+            # A title that names no degree this knows may still be the only
+            # record of a real programme; it is left as it is.
+            if razon == "titulo" and not limpio:
+                continue
             gemelo = por_nombre.get((fila["universidad_id"], limpio)) if limpio else None
             accion = ("borrar_duplicado" if gemelo else
                       "renombrar" if limpio else "borrar")

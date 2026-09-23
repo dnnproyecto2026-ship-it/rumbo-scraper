@@ -202,6 +202,9 @@ _UNA_SECCION = re.compile(
 # 2020 \"CS\" Aprobar la Diplomatura...", "2013 \"CS\" Modificar los alcances
 # de la Licenciatura...". They name a degree and are not one.
 _UNA_RESOLUCION = re.compile(r"^(?:res(?:olucion)?\b|\d{4}\b)")
+# The title a degree awards, printed as a heading of its own: "Título de
+# Enfermero (Primer Ciclo de la LICENCIATURA EN ENFERMERÍA)".
+_UN_TITULO = re.compile(r"^titulo\b")
 # A person and their post: "Emanuel Porcelli | Subsecretario de Maestrías".
 _UN_CARGO = re.compile(
     r"\b(?:sub)?secretari[oa]\b|\bdirector[a]?\b|\bdecan[oa]\b|"
@@ -236,7 +239,8 @@ def es_programa(nombre: str) -> bool:
         return False
     if _UN_EVENTO.search(nombre):
         return False
-    if _UNA_SECCION.search(key) or _UNA_RESOLUCION.match(key) or _UN_CARGO.search(key):
+    if _UNA_SECCION.search(key) or _UNA_RESOLUCION.match(key) or _UN_CARGO.search(key) \
+            or _UN_TITULO.match(key):
         return False
     if _A_SENTENCE.search(key):
         return False
@@ -746,8 +750,10 @@ _NO_ES_PAGINA = re.compile(
 # The part of a site that holds its catalogue. A university publishes hundreds
 # of pages of news for every page of a career, and the address says which is
 # which long before the page is downloaded.
+# The name of a degree can also follow an underscore: Favaloro's master's
+# pages sit at "/informacion/ingIBIO_maestria-en-ingenieria-biomedica".
 _PUEDE_SER_CATALOGO = re.compile(
-    r"(?i)[/=](carrera|carreras|grado|pregrado|posgrado|postgrado|oferta|"
+    r"(?i)[/=_](carrera|carreras|grado|pregrado|posgrado|postgrado|oferta|"
     r"academic|propuesta|estudi|licenciatura|ingenieria|profesorado|"
     r"tecnicatura|maestria|doctorado|especializacion|diplomatura|"
     r"facultad|escuela|departamento|unidad)"
@@ -1209,8 +1215,22 @@ def _sin_recortes(programas: list[Programa],
             excluidos.append({"programa": programme.nombre, "url": programme.url,
                               "motivo": "el nombre llega cortado; se conserva el entero"})
             continue
+        # "Ingeniería en Física Médica - Investigación" is a page of the
+        # programme read alongside it, unless what follows the dash is a way
+        # of taking it: a modality, a cycle, a campus, an orientation.
+        base, _, resto = programme.nombre.rpartition(" - ")
+        if base and comparison_key(base) in keys and not _UNA_VARIANTE.search(
+                comparison_key(resto)):
+            excluidos.append({"programa": programme.nombre, "url": programme.url,
+                              "motivo": "una página del programa, no otro programa"})
+            continue
         kept.append(programme)
     return kept
+
+
+_UNA_VARIANTE = re.compile(
+    r"modalidad|distancia|online|virtual|presencial|hibrid|ciclo|sede|regional|"
+    r"orientaci|menci|turno|binacional|intensiv|edicion|cohorte")
 
 
 # ------------------------------------------------------- the plan as a file
