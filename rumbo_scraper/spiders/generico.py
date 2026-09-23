@@ -229,6 +229,7 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
     catalogue: list[str] = []
     todos: list[str] = []
     hosts_vistos: set[str] = set()
+    por_nombre = False
     frontier = [url for url in semillas if url]
     por_direccion = True
     depth = 0
@@ -257,14 +258,20 @@ def recorrer(lector: Lector, semillas: list[str], tope: int) -> list[str]:
                 nuevo_host = host != host_actual and host not in hosts_vistos
                 if nuevo_host:
                     hosts_vistos.add(host)
-                if nuevo_host or indice or generico.parece_catalogo(link):
+                nombrado = indice or generico.parece_catalogo(link)
+                if nombrado:
+                    por_nombre = True
+                if nuevo_host or nombrado:
                     if link not in catalogue:
                         catalogue.append(link)
                     following.append(link)
                 elif depth == 0 or not por_direccion:
                     following.append(link)
-        if depth == 0 and not catalogue:
-            # The site names nothing: read it whole rather than not at all.
+        if depth == 0 and not por_nombre:
+            # The site names nothing in its addresses: read it whole rather
+            # than not at all. What matters is whether any address said what
+            # it held -- a link to another host of the university is followed
+            # for being another host, and says nothing about this one.
             por_direccion = False
         frontier = following
         depth += 1
