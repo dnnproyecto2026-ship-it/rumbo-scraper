@@ -125,7 +125,8 @@ def aplicar(client: Any, universidad: dict[str, Any],
     con_unidad: list[tuple[str, dict[str, Any]]] = []
     sin_unidad = 0
     for persona in personas:
-        unidad = _unidad_del_cargo(persona["cargo"], por_nombre)
+        unidad = _unidad_del_cargo(persona["cargo"], por_nombre) or (
+            _unidad_del_cargo(persona["unidad"], por_nombre) if persona.get("unidad") else None)
         if unidad:
             con_unidad.append((unidad, persona))
         else:

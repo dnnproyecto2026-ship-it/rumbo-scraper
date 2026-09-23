@@ -374,7 +374,7 @@ def leer_autoridades(html: str, pagina: str) -> list[dict[str, str]]:
     personas: list[dict[str, str]] = []
     vistas: set[str] = set()
 
-    def guardar(nombre: str, cargo: str) -> None:
+    def guardar(nombre: str, cargo: str, unidad: str | None = None) -> None:
         nombre = _sin_tratamiento(nombre)
         tipo = cargo_de(cargo)
         if not tipo or not _UN_NOMBRE_PROPIO.match(nombre) or cargo_de(nombre):
@@ -383,7 +383,12 @@ def leer_autoridades(html: str, pagina: str) -> list[dict[str, str]]:
         if clave in vistas:
             return
         vistas.add(clave)
-        personas.append({"nombre": nombre, "cargo": clean_text(cargo), "tipo": tipo})
+        persona = {"nombre": nombre, "cargo": clean_text(cargo), "tipo": tipo}
+        # Only a post a faculty has is filed under the heading above it: a
+        # rector listed below a menu of faculties runs none of them.
+        if unidad and _CARGO_DE_UNA_UNIDAD.search(comparison_key(cargo)):
+            persona["unidad"] = unidad
+        personas.append(persona)
 
     for persona in por_guion(html):
         guardar(persona["nombre"], persona["cargo"])
@@ -405,15 +410,47 @@ def leer_autoridades(html: str, pagina: str) -> list[dict[str, str]]:
         guardar(clean_text(linea[:match.start()]), clean_text(linea[match.start():]))
 
     # The post over the name, which is how a page of authorities is laid out
-    # when it is a list rather than a table.
-    for anterior, siguiente in zip(lineas, lineas[1:]):
-        if len(anterior) > 70 or len(siguiente) > 70:
+    # when it is a list rather than a table. A page that lists every faculty's
+    # dean puts the name of the faculty over each, a line or three above.
+    # Each line is used once, from the top: in "Decano / Juan Pérez / Rector
+    # / María López" Juan Pérez is the dean and not also the rector, which is
+    # what pairing every line with both its neighbours made him.
+    unidad: str | None = None
+    desde_la_unidad = 0
+    i = 0
+    while i < len(lineas) - 1:
+        anterior, siguiente = lineas[i], lineas[i + 1]
+        desde_la_unidad += 1
+        if _UNA_UNIDAD.match(anterior) and len(anterior) <= 90 \
+                and not _NO_ES_UNIDAD_ACADEMICA.match(anterior):
+            unidad, desde_la_unidad = clean_text(anterior), 0
+            i += 1
             continue
-        if cargo_de(anterior) and not cargo_de(siguiente):
-            guardar(clean_text(siguiente), anterior)
-        elif cargo_de(siguiente) and not cargo_de(anterior):
-            guardar(clean_text(anterior), siguiente)
+        vigente = unidad if desde_la_unidad <= _LINEAS_BAJO_LA_UNIDAD else None
+        if len(anterior) <= 70 and len(siguiente) <= 70:
+            if cargo_de(anterior) and not cargo_de(siguiente) and _es_persona(siguiente):
+                guardar(clean_text(siguiente), anterior, vigente)
+                i += 2
+                continue
+            if cargo_de(siguiente) and not cargo_de(anterior) and _es_persona(anterior):
+                guardar(clean_text(anterior), siguiente, vigente)
+                i += 2
+                continue
+        i += 1
     return personas
+
+
+def _es_persona(linea: str) -> bool:
+    """Whether a line can be the name beside a post: a person, not a unit."""
+    return bool(_UN_NOMBRE_PROPIO.match(_sin_tratamiento(clean_text(linea)))) \
+        and not _UNA_UNIDAD.match(linea) and "universidad" not in comparison_key(linea)
+
+
+# The posts a faculty, a school or a department has of its own.
+_CARGO_DE_UNA_UNIDAD = re.compile(
+    r"\b(?:vice)?decan[oa]\b|\bdirector[a]?\b|\bsecretari[oa]\b|\bcoordinador[a]?\b")
+# How far under the name of a unit its authorities are still its own.
+_LINEAS_BAJO_LA_UNIDAD = 4
 
 
 # The degree a university prints in front of a name. It is a courtesy, not

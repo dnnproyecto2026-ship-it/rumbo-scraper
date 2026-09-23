@@ -687,3 +687,15 @@ class UnidadesPorEnlaceTest(unittest.TestCase):
         self.assertEqual([u["nombre_facultad"] for u in unidades_por_enlace(html, "https://x.edu.ar")],
                          ["Departamento de Humanidades y Artes",
                           "Escuela Superior de Ciencias de la Salud"])
+
+
+class AutoridadesBajoSuUnidadTest(unittest.TestCase):
+    def test_a_dean_is_filed_under_the_faculty_heading_above_but_a_rector_is_not(self):
+        from rumbo_scraper.parsers.institucional import leer_autoridades
+        html = ("<html><body><h3>Facultad de Ciencias Económicas</h3>"
+                "<p>Decano</p><p>Juan Carlos Pérez</p>"
+                "<p>Rector</p><p>María Elena López</p></body></html>")
+        por_nombre = {p["nombre"]: p for p in leer_autoridades(html, "u")}
+        self.assertEqual(por_nombre["Juan Carlos Pérez"].get("unidad"),
+                         "Facultad de Ciencias Económicas")
+        self.assertNotIn("unidad", por_nombre["María Elena López"])
