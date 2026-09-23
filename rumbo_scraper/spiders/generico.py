@@ -29,7 +29,11 @@ from rumbo_scraper.normalizers.text import clean_text
 from rumbo_scraper.parsers import generico
 
 USER_AGENT = "RumboScraper/0.4 (+catalogo educativo publico)"
-MAX_PAGINAS = 2500
+# How many pages of one site are worth downloading. A national university
+# teaches through faculties that each publish on a host of their own, and
+# Mar del Plata went from eighteen careers to eighty once the cap stopped
+# cutting the crawl short of them.
+MAX_PAGINAS = 6000
 HILOS = 5
 # The shortest gap between two requests to the same university. Eight at a
 # time with no gap made one site answer 1195 of 1364 requests with a 503: a
@@ -137,16 +141,21 @@ class Navegador:
         self._browser = self._play.chromium.launch()
         self._page = self._browser.new_page(user_agent=USER_AGENT)
 
-    def get(self, url: str) -> str:
+    def get(self, url: str, intentos: int = 2) -> str:
         # Waiting for the network to fall silent costs up to a minute on a
         # page that polls, and a university site polls. Waiting for the
         # document and then a moment more is enough to read what it built.
-        try:
-            self._page.goto(url, wait_until="domcontentloaded", timeout=25000)
-            self._page.wait_for_timeout(1200)
-            return self._page.content()
-        except Exception:
-            return ""
+        # A heavy page still misses the deadline now and then, and asking a
+        # second time costs less than losing the page.
+        for intento in range(intentos):
+            try:
+                self._page.goto(url, wait_until="domcontentloaded",
+                                timeout=25000 + 15000 * intento)
+                self._page.wait_for_timeout(1200)
+                return self._page.content()
+            except Exception:
+                continue
+        return ""
 
     def close(self) -> None:
         for shut in (self._page.close, self._browser.close, self._play.stop):
