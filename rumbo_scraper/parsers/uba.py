@@ -295,6 +295,7 @@ def build_dataset(
     authorities_html: str = "",
     errors: list[dict[str, str]] | None = None,
     postgraduate_pages: dict[str, str] | None = None,
+    career_pages: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Assemble the UBA dataset from the central catalogue."""
     data: dict[str, list[dict[str, Any]]] = {section: [] for section in SECTION_FIELDS}
@@ -306,10 +307,12 @@ def build_dataset(
         "localidades", nombre_localidad=CABA, provincia="CABA",
     )]
 
+    career_pages = career_pages or {}
     details: list[dict[str, Any]] = []
     resources: list[dict[str, Any]] = []
     excluded: list[dict[str, str]] = []
     misspelled: list[str] = []
+    without_plan: list[dict[str, str]] = []
     shared_campus = 0
     for ref in faculties:
         html = pages.get(ref.url, "")
@@ -381,6 +384,27 @@ def build_dataset(
                     "en_dominio_oficial": is_official_url(url, DOMAIN,
                                                           require_https=False),
                 })
+            # The faculty page is where the plan of the career lives, if the
+            # faculty publishes one at all.
+            # The page of the career is where the faculty links its plan. The
+            # document is recorded as a public resource; its subjects are not
+            # read here, because a generic reading of thirteen faculties'
+            # documents mixes real subjects with fragments of their prose, and
+            # a wrong subject is worse than a missing one.
+            page = career_pages.get(url or "", "")
+            plan_url = plan_document_url(page, url or "") if page else None
+            if plan_url:
+                resources.append({
+                    "entidad_tipo": "carrera", "entidad_nombre": career,
+                    "tipo_recurso": "documento",
+                    "titulo": f"Plan de estudios de {career}",
+                    "url": plan_url, "fuente_url": url,
+                    "en_dominio_oficial": True,
+                })
+            else:
+                without_plan.append({"carrera": career, "url": url,
+                                     "motivo": "la facultad no publica el plan "
+                                               "en la página de la carrera"})
         details.append({
             "id": ref.id, "facultad": name, "url": ref.url,
             "sedes": [campus.name for campus in campuses],
@@ -407,16 +431,21 @@ def build_dataset(
         "control_calidad": {
             "secciones_vacias": missing,
             "secciones_sin_fuente_publica": {
+                # The plan of each career is published by its own faculty, as a
+                # document of its own layout. They are linked one by one in
+                # recursos_publicos; reading them needs a reader per faculty,
+                # the way the postgraduate indexes did.
+                "materias": "cada facultad publica el plan como documento "
+                            "propio; se enlaza pero todavía no se lee",
+                "carreras.cantidad_materias_total": "depende de leer el plan "
+                                                    "de cada facultad",
                 # The central catalogue names the careers and links to the
                 # faculty that teaches each one; everything about the career
                 # itself lives on thirteen different faculty sites.
-                "materias": "el catálogo central no publica los planes de estudio",
                 "carreras.titulo_otorgado": "el catálogo central no publica el "
                                             "título que expide cada carrera",
                 "carreras.duracion_anios": "el catálogo central no publica la "
                                            "duración de cada carrera",
-                "carreras.cantidad_materias_total": "el catálogo central no "
-                                                    "publica el plan de estudios",
                 "aranceles": "la universidad es pública y no publica aranceles",
                 "turnos_anio": "el catálogo central no publica horarios",
                 "ofertas_ciclo": "el catálogo central no publica ciclos",
@@ -432,6 +461,7 @@ def build_dataset(
             "facultades_descubiertas": len(faculties),
             "facultades_excluidas": excluded,
             "carreras_sin_sede_publicada": shared_campus,
+            "carreras_sin_plan_publicado": without_plan,
             "posgrados_por_facultad_sin_leer": POSTGRADUATES_NOT_READ,
             "posgrados_parciales_por_facultad": POSTGRADUATE_PARTS_NOT_READ,
             "indices_de_posgrado_vacios": empty_indexes,
@@ -759,16 +789,18 @@ POSTGRADUATE_SOURCES: tuple[tuple[str, str, str, str], ...] = (
     ("Facultad de Ciencias Médicas",
      "https://www.fmed.uba.ar/index.php/maestrias/oferta-de-maestrias",
      "Maestría", "selector:div.field--name-field-titulo"),
+    ("Faculta de Psicología", "https://www.psi.uba.ar/posgrado.php?var=posgrado2026_2/oferta.php", "Maestría", "panel:Maestrias"),
+    ("Faculta de Psicología", "https://www.psi.uba.ar/posgrado.php?var=posgrado2026_2/oferta.php", "Especialización", "panel:Carreras"),
+    ("Faculta de Psicología", "https://www.psi.uba.ar/posgrado.php?var=posgrado2026_2/oferta.php", "Programa de Actualización", "panel:Programas"),
 )
 
 POSTGRADUATE_URLS = tuple(dict.fromkeys(url for _, url, _, _ in POSTGRADUATE_SOURCES))
 
 # The faculties whose postgraduate offer is published in a form this reader
 # does not cover, with what stands in the way of reading it.
-POSTGRADUATES_NOT_READ = {
-    "Facultad de Psicología": "la oferta se publica en un visor por año lectivo "
-                              "que no entrega el listado en el HTML",
-}
+# Every faculty of the university is read; this stays as the place to declare
+# one that stops being readable.
+POSTGRADUATES_NOT_READ: dict[str, str] = {}
 
 # Sections of a faculty already covered above that publish a kind in a form
 # this reader does not cover; the faculty is read, this part of it is not.
@@ -781,6 +813,8 @@ POSTGRADUATE_PARTS_NOT_READ = {
                                        "son títulos del contrato",
     "Facultad de Ciencias Médicas": "los doctorados y los cursos se describen en "
                                     "prosa, sin un listado",
+    "Faculta de Psicología": "el doctorado y el posdoctorado se publican como "
+                             "reglamentos y aranceles, sin un nombre de programa",
 }
 
 
@@ -841,3 +875,84 @@ def read_postgraduates(
         seen.add(comparison_key(full))
         rows.append({"nombre": full, "tipo": stated or kind})
     return rows
+
+
+# ---------------------------------------------------------------------------
+# Study plans
+# ---------------------------------------------------------------------------
+#
+# The central catalogue links each career to the site of the faculty that
+# teaches it, and eighty-one of those pages publish a study plan. They are the
+# only place the UBA states what a career is made of.
+
+_PLAN_LABEL = re.compile(r"plan\s+de\s+estudio", re.I)
+# A line of the plan that describes the table instead of naming a subject.
+_PLAN_NOISE = re.compile(
+    r"^(cod\s*\d|c[óo]d\.?\s*\d|[A-Z]{1,3}\s+Final\b|total|carga|correlativ)", re.I
+)
+
+
+def plan_document_url(html: str, page_url: str) -> str | None:
+    """Find the plan the faculty links from the page of a career."""
+    for anchor in _soup(html).find_all("a", href=True):
+        if not _PLAN_LABEL.search(anchor.get_text(" ", strip=True)):
+            continue
+        url = urljoin(page_url, clean_text(anchor["href"]))
+        if is_official_url(url, DOMAIN, require_https=False):
+            return url
+    return None
+
+
+def clean_subject(name: str) -> str | None:
+    """Drop what the plan table says about a subject but is not its name.
+
+    The faculties print the subject's code in the same cell as its name and
+    a legend of the table in the same column, so both arrive joined to it.
+    """
+    value = clean_text(re.sub(r"^\s*(cod|c[óo]d\.?)\s*\d+\s*", "", name, flags=re.I))
+    value = clean_text(re.sub(r"\s+[A-Z]\s*$", "", value))
+    if len(value) < 4 or _PLAN_NOISE.match(value):
+        return None
+    return value
+
+
+# A plan is kept only when its reading looks like a plan. The thirteen
+# faculties publish documents of every quality, and a table the extractor
+# scrambles yields lines like "CBC aprobado" or three subjects run together;
+# those are not worth storing next to the ones that read cleanly.
+MIN_SUBJECTS = 8
+MIN_WITH_YEAR = 0.7
+MAX_NAME_LENGTH = 70
+
+
+def plan_is_sound(subjects: list[dict[str, Any]]) -> tuple[bool, str]:
+    """Say whether a reading of a plan can be trusted, and why not."""
+    if len(subjects) < MIN_SUBJECTS:
+        return False, "el documento publicó menos materias que las de un plan"
+    with_year = sum(1 for row in subjects if row["anio_cursada"])
+    if with_year < MIN_WITH_YEAR * len(subjects):
+        return False, "el documento no conserva el año de la mayoría de las materias"
+    long_names = sum(1 for row in subjects
+                     if len(str(row["nombre_materia"])) > MAX_NAME_LENGTH)
+    if long_names > len(subjects) / 5:
+        # Names this long are several subjects the extractor ran together.
+        return False, "el texto extraído une varias materias en una línea"
+    return True, ""
+
+
+def read_plan(document: bytes, career: str) -> dict[str, Any]:
+    """Read the plan of one career out of the document the faculty publishes."""
+    from rumbo_scraper.parsers.plan_documents import parse_plan_pdf
+
+    result = parse_plan_pdf(document, career, UNIVERSITY)
+    subjects = []
+    for row in result["materias"]:
+        name = clean_subject(str(row["nombre_materia"]))
+        if not name:
+            result["descartadas"] = result.get("descartadas", 0) + 1
+            continue
+        subjects.append({**row, "nombre_materia": name})
+    sound, reason = plan_is_sound(subjects)
+    result["materias"] = subjects if sound else []
+    result["motivo"] = result["motivo"] or (None if sound else reason)
+    return result

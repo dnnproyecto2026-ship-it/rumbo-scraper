@@ -6,7 +6,8 @@ from rumbo_scraper.parsers.uba import (
     BASE_URL, CABA, UNIVERSITY, build_dataset, discover_faculties, faculty_name,
     POSTGRADUATE_SOURCES, POSTGRADUATES_NOT_READ, STRATEGIES, build_postgraduates,
     chrome_lines, parse_address, parse_authorities, parse_campuses, parse_careers,
-    parse_links, read_postgraduates,
+    clean_subject, parse_links, plan_document_url, plan_is_sound,
+    read_postgraduates,
 )
 from rumbo_scraper.validators.uba import validate_dataset
 
@@ -300,11 +301,13 @@ class PostgraduateTests(unittest.TestCase):
         self.assertTrue(all(strategy.split(":", 1)[0] in STRATEGIES
                             for _, _, _, strategy in POSTGRADUATE_SOURCES))
 
-    def test_the_faculties_that_are_not_read_are_declared(self) -> None:
-        # One of the thirteen publishes its offer in a form this reader does
-        # not cover, and silence would look the same as an empty catalogue.
-        self.assertEqual(len(POSTGRADUATES_NOT_READ), 1)
-        self.assertTrue(all(reason for reason in POSTGRADUATES_NOT_READ.values()))
+    def test_every_faculty_of_the_university_has_a_source(self) -> None:
+        # The thirteen are read; a faculty that stops being readable is
+        # declared here, because silence looks the same as an empty catalogue.
+        self.assertEqual(POSTGRADUATES_NOT_READ, {})
+        self.assertEqual(len({faculty for faculty, _, _, _ in POSTGRADUATE_SOURCES}), 13)
+
+    def test_a_faculty_is_never_both_read_and_declared_unreadable(self) -> None:
         read = {faculty for faculty, _, _, _ in POSTGRADUATE_SOURCES}
         self.assertFalse(read & set(POSTGRADUATES_NOT_READ))
 
@@ -412,3 +415,59 @@ class SectionTests(unittest.TestCase):
               '<li>Gestión Ambiental Metropolitana</li></ul>'
         self.assertEqual([r["nombre"] for r in read_postgraduates(cut, "lista", "Maestría")],
                          ["Maestría en Gestión Ambiental Metropolitana"])
+
+
+CAREER_PAGE = """
+<h1>Agronomía</h1>
+<a href="/carreras/agronomia">Carrera</a>
+<a href="/sites/default/files/plan-2017.pdf">Plan de estudios</a>
+<a href="https://share.google/abc">Plan de estudios resumido</a>
+"""
+
+
+class PlanLinkTests(unittest.TestCase):
+    def test_finds_the_plan_the_faculty_links(self) -> None:
+        url = plan_document_url(CAREER_PAGE, "https://www.agro.uba.ar/carreras/agronomia")
+        self.assertEqual(url, "https://www.agro.uba.ar/sites/default/files/plan-2017.pdf")
+
+    def test_a_plan_hosted_outside_the_university_is_not_taken(self) -> None:
+        page = '<a href="https://share.google/abc">Plan de estudios</a>'
+        self.assertIsNone(plan_document_url(page, "https://www.agro.uba.ar/x"))
+
+    def test_a_page_with_no_plan_yields_nothing(self) -> None:
+        self.assertIsNone(plan_document_url("<a href='/x'>Ingreso</a>",
+                                            "https://www.agro.uba.ar/x"))
+
+    def test_the_code_the_table_prints_beside_a_name_is_not_part_of_it(self) -> None:
+        self.assertEqual(clean_subject("cod86 Administración General"),
+                         "Administración General")
+        self.assertEqual(clean_subject("Química Analítica F"), "Química Analítica")
+
+    def test_a_legend_of_the_table_is_not_a_subject(self) -> None:
+        self.assertIsNone(clean_subject("Total 30 720"))
+        self.assertIsNone(clean_subject("F Final TP Trabajos Prácticos Para cursar"))
+
+
+class PlanReadingTests(unittest.TestCase):
+    def test_a_reading_that_loses_the_year_is_rejected(self) -> None:
+        subjects = [{"nombre_materia": f"Materia {i}", "anio_cursada": None}
+                    for i in range(10)]
+        sound, reason = plan_is_sound(subjects)
+        self.assertFalse(sound)
+        self.assertIn("año", reason)
+
+    def test_a_reading_that_runs_subjects_together_is_rejected(self) -> None:
+        subjects = [{"nombre_materia": "x" * 90, "anio_cursada": 1} for _ in range(10)]
+        sound, reason = plan_is_sound(subjects)
+        self.assertFalse(sound)
+        self.assertIn("une varias materias", reason)
+
+    def test_a_document_too_short_to_be_a_plan_is_rejected(self) -> None:
+        sound, reason = plan_is_sound([{"nombre_materia": "Álgebra", "anio_cursada": 1}])
+        self.assertFalse(sound)
+        self.assertIn("menos materias", reason)
+
+    def test_a_clean_reading_is_accepted(self) -> None:
+        subjects = [{"nombre_materia": f"Materia {i}", "anio_cursada": 1 + i % 5}
+                    for i in range(12)]
+        self.assertEqual(plan_is_sound(subjects), (True, ""))

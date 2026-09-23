@@ -353,6 +353,25 @@ facultades que publican su oferta de una forma que este lector todavía no cubre
 están declaradas una por una en `posgrados_por_facultad_sin_leer`, con lo que se
 interpone en cada caso.
 
+### Planes de la UBA
+
+Ochenta y una de las ciento veinticinco carreras enlazan su plan de estudios
+desde la página de su facultad, y ese enlace queda registrado en
+`recursos_publicos`. Las materias **no** se leen de ahí.
+
+Se probó: el lector de planes de `parsers/plan_documents.py` —el mismo que lee
+los noventa y un planes de la UTN— aplicado a los documentos de la UBA devuelve
+materias reales mezcladas con fragmentos de la prosa que las rodea ("CBC
+aprobado", "Facultad de Agronomía Cod", tres materias corridas en una línea).
+Con un filtro de calidad que exige año en la mayoría de las materias y nombres
+de largo razonable, sobreviven 8 planes de 125, y ni siquiera esos quedan
+limpios.
+
+Los trece documentos son de trece facultades, de trece épocas y trece
+maquetaciones; leerlos bien necesita un lector por facultad, igual que los
+índices de posgrado. Hasta entonces `materias` queda declarada como no leída y
+el enlace al documento queda publicado, que es lo que la universidad sí ofrece.
+
 ## Bitácora de cobertura
 
 ```bash
