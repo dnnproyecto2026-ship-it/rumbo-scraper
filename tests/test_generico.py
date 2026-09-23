@@ -355,3 +355,14 @@ class CuandoHaceFaltaUnNavegador(unittest.TestCase):
         pagina = ("<html><body>" + "<p>texto de la carrera</p>" * 300
                   + "".join(f'<a href="/x{n}">x</a>' for n in range(8)) + "</body></html>")
         self.assertTrue(_tiene_contenido(pagina))
+
+
+class ElCatalogoEnLaConsulta(unittest.TestCase):
+    def test_la_consulta_tambien_dice_de_que_es_la_pagina(self):
+        # Moreno publishes its catalogue where the path says nothing.
+        url = "https://www.unm.edu.ar/?oferta-academica=carreras-de-pregrado-y-grado"
+        self.assertTrue(generico.parece_catalogo(url))
+        self.assertTrue(generico.es_el_indice(url))
+
+    def test_una_noticia_sigue_sin_ser_catalogo(self):
+        self.assertFalse(generico.parece_catalogo("https://x.edu.ar/noticias/algo"))

@@ -701,7 +701,7 @@ _NO_ES_PAGINA = re.compile(
 # of pages of news for every page of a career, and the address says which is
 # which long before the page is downloaded.
 _PUEDE_SER_CATALOGO = re.compile(
-    r"(?i)/(carrera|carreras|grado|pregrado|posgrado|postgrado|oferta|"
+    r"(?i)[/=](carrera|carreras|grado|pregrado|posgrado|postgrado|oferta|"
     r"academic|propuesta|estudi|licenciatura|ingenieria|profesorado|"
     r"tecnicatura|maestria|doctorado|especializacion|diplomatura|"
     r"facultad|escuela|departamento|unidad)"
@@ -740,23 +740,35 @@ def enlaces(html: str, pagina: str, dominios: tuple[str, ...]) -> list[str]:
     return found
 
 
+def _ruta_y_consulta(url: str) -> str:
+    """The part of an address that says what the page is about.
+
+    The query counts as well as the path: a site is free to publish its
+    catalogue at "/?oferta-academica=carreras-de-pregrado-y-grado", where the
+    path says nothing at all.
+    """
+    parsed = urlparse(url)
+    return f"{parsed.path}?{parsed.query}" if parsed.query else parsed.path
+
+
 def parece_catalogo(url: str) -> bool:
     """Whether an address belongs to the part of a site that holds careers."""
-    return bool(_PUEDE_SER_CATALOGO.search(urlparse(url).path))
+    return bool(_PUEDE_SER_CATALOGO.search(_ruta_y_consulta(url)))
 
 
 # The page that lists the careers of a university. What it links is the
 # catalogue, whatever the addresses look like: a university is free to call
 # its law degree "/abogacia", with no word in the address to say what it is.
 _EL_INDICE = re.compile(
-    r"(?i)/(carreras?|oferta(?:-?academica)?|academicas?|propuesta(?:s)?|"
-    r"grado|pregrado|posgrado|postgrado|estudios|que-estudiar)/?$"
+    r"(?i)[/=](carreras?|oferta(?:-?academica)?|academicas?|propuesta(?:s)?|"
+    r"grado|pregrado|posgrado|postgrado|estudios|que-estudiar|"
+    r"carreras-de-[a-z-]+)/?$"
 )
 
 
 def es_el_indice(url: str) -> bool:
     """Whether an address is the page that lists what a university teaches."""
-    return bool(_EL_INDICE.search(urlparse(url).path))
+    return bool(_EL_INDICE.search(_ruta_y_consulta(url)))
 
 
 def direcciones_del_sitemap(xml: str) -> list[str]:
