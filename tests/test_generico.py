@@ -342,3 +342,16 @@ class LaPublicidadDeLaUniversidad(unittest.TestCase):
 
     def test_la_tienda_no_es_una_carrera(self):
         self.assertFalse(generico.es_programa("Comprar Ingeniería en LibrosUCC"))
+
+
+class CuandoHaceFaltaUnNavegador(unittest.TestCase):
+    def test_una_cascara_vacia_no_tiene_contenido(self):
+        from rumbo_scraper.spiders.generico import _tiene_contenido
+        self.assertFalse(_tiene_contenido(
+            '<html><body><div id="root"></div><script src="app.js"></script></body></html>'))
+
+    def test_una_pagina_servida_entera_si(self):
+        from rumbo_scraper.spiders.generico import _tiene_contenido
+        pagina = ("<html><body>" + "<p>texto de la carrera</p>" * 300
+                  + "".join(f'<a href="/x{n}">x</a>' for n in range(8)) + "</body></html>")
+        self.assertTrue(_tiene_contenido(pagina))

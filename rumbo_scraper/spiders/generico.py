@@ -73,14 +73,25 @@ class Lector:
             self._navegador.close()
 
     def get(self, url: str, intentos: int = 2) -> str:
-        if self._navegador is not None and not url.endswith(".xml"):
-            html = self._navegador.get(url)
-            if html:
-                return html
-            with self._lock:
-                self.errores.append({"url": url, "error": "el navegador no cargó la página"})
-            return ""
-        return self._get_directo(url, intentos)
+        """Read one page, asking the server first and the browser only if
+        the server's answer is empty.
+
+        A site that builds its index in the reader still serves every other
+        page whole: Jose C. Paz needs a browser for the list of its careers
+        and for nothing else. Reading everything with one costs minutes per
+        university and, with several open at once, crashes them.
+        """
+        html = self._get_directo(url, intentos)
+        if self._navegador is None or url.endswith(".xml"):
+            return html
+        if _tiene_contenido(html):
+            return html
+        rendered = self._navegador.get(url)
+        if rendered:
+            return rendered
+        with self._lock:
+            self.errores.append({"url": url, "error": "el navegador no cargó la página"})
+        return html
 
     def _esperar_turno(self) -> None:
         """Let no two requests leave closer together than the interval."""
@@ -117,13 +128,18 @@ class Lector:
 
     def get_many(self, urls: list[str]) -> dict[str, str]:
         if self._navegador is not None:
-            # One browser, one page at a time: a second tab costs more than
-            # it saves and the sites that need a browser are the small ones.
+            # A browser has one window and cannot be driven from several
+            # threads at once, so these sites are read one page at a time.
             return {url: html for url, html in
                     ((url, self.get(url)) for url in urls) if html}
         with ThreadPoolExecutor(max_workers=HILOS) as pool:
             pages = list(pool.map(self.get, urls))
         return {url: html for url, html in zip(urls, pages) if html}
+
+
+# A page the server answered with nothing to read: a shell a script will fill.
+def _tiene_contenido(html: str) -> bool:
+    return len(html) > 4000 and html.count("<a ") >= 5
 
 
 class Navegador:
