@@ -59,6 +59,20 @@ class ElCuerpoDeLaPagina(unittest.TestCase):
         self.assertIsNone(unidad_de_la_pagina(html, []))
 
 
+class FirmadaPorLaUniversidad(unittest.TestCase):
+    def test_una_mencion_con_el_nombre_de_la_universidad(self):
+        html = pagina(cuerpo="<p>Escuela Superior de Ciencias Exactas y Naturales "
+                             "(Universidad de Morón)</p>")
+        self.assertEqual(
+            unidad_de_la_pagina(html, [], ("Universidad de Morón", "UM")),
+            Unidad("Escuela Superior de Ciencias Exactas y Naturales", "Escuela"))
+
+    def test_firmada_por_otra_universidad_no_cuenta(self):
+        html = pagina(cuerpo="<p>Facultad de Ingeniería de la Universidad de Buenos Aires</p>")
+        self.assertIsNone(unidad_de_la_pagina(
+            html, [], ("Instituto Tecnológico de Buenos Aires", "ITBA")))
+
+
 class LaPaginaDeLaCarrera(unittest.TestCase):
     def test_el_titulo_nombra_la_carrera(self):
         self.assertTrue(es_la_pagina_de(pagina(titulo="Licenciatura en Nutrición | UFLO"),

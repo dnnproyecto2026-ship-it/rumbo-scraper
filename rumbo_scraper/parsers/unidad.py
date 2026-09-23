@@ -24,6 +24,11 @@ UBP the law faculty of Córdoba, and one at UNLaM a department of a news item
 beside it. The body gives a unit only when it names one unit, at least twice,
 and no other -- and, if the university published its units, one of those.
 
+One mention is enough when the page signs it with the university's own name:
+Morón writes "Escuela Superior de Ciencias Exactas y Naturales (Universidad
+de Morón)" once on each career's page. The ITBA's mention of the engineering
+faculty "de la Universidad de Buenos Aires" is signed by another.
+
 None of this is read off a page that is not the career's: the title or the
 main heading has to name the career (`es_la_pagina_de`). Favaloro's
 "Bioquímica" links to its page of short courses.
@@ -49,7 +54,8 @@ _TIPOS = {
 # Artes Dramáticas", "Instituto de Ciencias de la Salud". The name runs until
 # the sign or the word that ends it in a title or a breadcrumb.
 _UNA_UNIDAD = re.compile(
-    r"\b(Facultad|Escuela|Departamento|Instituto)\s+(?:de\s+(?:la\s+|las\s+|los\s+)?|del\s+|en\s+)"
+    r"\b(Facultad|Escuela|Departamento|Instituto)(?:\s+Superior)?\s+"
+    r"(?:de\s+(?:la\s+|las\s+|los\s+)?|del\s+|en\s+)"
     r"([A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚÑáéíóúñü]*(?:[ ,]+(?:y|e|de|del|la|las|los|en|para|[A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚÑáéíóúñü]*))*)"
 )
 # What cannot be the unit a career belongs to, although it is written like one.
@@ -122,9 +128,10 @@ def _lugares(html: str) -> tuple[list[str], list[str], str]:
     return propios, titulos, cuerpo.get_text("\n") if cuerpo else ""
 
 
-def unidad_de_la_pagina(html: str, conocidas: list[str]) -> Unidad | None:
+def unidad_de_la_pagina(html: str, conocidas: list[str],
+                        universidad: tuple[str, ...] = ()) -> Unidad | None:
     """The unit a career page places the career in, or None when it does not
-    say, or says two."""
+    say, or says two. `universidad` are the names the university signs with."""
     if not html:
         return None
     propios, titulos, cuerpo = _lugares(html)
@@ -132,7 +139,7 @@ def unidad_de_la_pagina(html: str, conocidas: list[str]) -> Unidad | None:
     candidatas += [u for texto in titulos for u in _unidades_en(texto)
                    if conocida(u, conocidas)]
     if not candidatas:
-        return _del_cuerpo(cuerpo, conocidas)
+        return _del_cuerpo(cuerpo, conocidas) or _firmada(cuerpo, conocidas, universidad)
 
     elegidas: dict[str, Unidad] = {}
     for unidad in candidatas:
@@ -171,3 +178,21 @@ def es_la_pagina_de(html: str, carrera: str) -> bool:
     texto = set(_palabras(" ".join(lugares)))
     propias = [p for p in _palabras(carrera) if p not in _VACIAS] or _palabras(carrera)
     return sum(p in texto for p in propias) * 2 >= len(propias) + (len(propias) > 1)
+
+
+def _firmada(cuerpo: str, conocidas: list[str], universidad: tuple[str, ...]) -> Unidad | None:
+    """The one unit the body names with the university's own name after it."""
+    nombres = [re.escape(clean_text(n)) for n in universidad if n and len(clean_text(n)) > 2]
+    if not nombres:
+        return None
+    firma = re.compile(r"^\s*(?:\(|,|-|–)?\s*(?:de\s+la\s+)?(?:" + "|".join(nombres) + r")\b")
+    firmadas = {}
+    for texto in cuerpo.split("\n"):
+        texto = clean_text(texto)
+        for match in _UNA_UNIDAD.finditer(texto):
+            if not firma.match(texto[match.end():]):
+                continue
+            for unidad in _unidades_en(match.group(0)):
+                nombre = conocida(unidad, conocidas) or unidad.nombre
+                firmadas[comparison_key(nombre)] = Unidad(nombre, unidad.tipo)
+    return next(iter(firmadas.values())) if len(firmadas) == 1 else None

@@ -11,6 +11,11 @@ A unit the university already published is linked; a new one is created
 under the university, with its type. Nothing is overwritten: only careers
 with no unit are touched.
 
+Before the page's text, the page's data: a site built with Gatsby (the UCC's)
+publishes each page's content as JSON, and the career's record there names
+its unit as the university's own CMS holds it (`organizational_unit`). That
+is not read off prose, and it is preferred.
+
 A career taught in a campus that is itself a unit (the UTN's regional
 faculties) is skipped: the export already names it by its campus.
 
@@ -31,7 +36,9 @@ from typing import Any
 
 from rumbo_scraper.database.exportar_catalogo import _urls_de_los_artefactos
 from rumbo_scraper.normalizers.text import comparison_key
-from rumbo_scraper.parsers.unidad import es_la_pagina_de, unidad_de_la_pagina
+from urllib.parse import urlparse
+
+from rumbo_scraper.parsers.unidad import Unidad, es_la_pagina_de, unidad_de_la_pagina
 from rumbo_scraper.spiders.visitante import Visitante
 
 PAUSA = 1.0
@@ -42,6 +49,42 @@ PAUSA = 1.0
 _NO_ES_SU_PAGINA = re.compile(
     r"\?view=article|/p(?:o|os)stgrado|/posgrado|/unidades-de-investigacion/|/tag/|/noticias?/")
 HALLADAS = Path("data/unidades_halladas.json")
+
+
+_TIPOS = {"facultad": "Facultad", "escuela": "Escuela",
+          "departamento": "Departamento", "instituto": "Instituto"}
+
+
+def _unidad_en(datos: Any) -> str | None:
+    if isinstance(datos, dict):
+        unidad = datos.get("organizational_unit")
+        if isinstance(unidad, dict) and isinstance(unidad.get("name"), str):
+            return unidad["name"]
+        valores = datos.values()
+    elif isinstance(datos, list):
+        valores = datos
+    else:
+        return None
+    for valor in valores:
+        if nombre := _unidad_en(valor):
+            return nombre
+    return None
+
+
+def unidad_de_los_datos(visitante: Visitante, url: str, html: str) -> Unidad | None:
+    """The unit a Gatsby site's data for the page names, if it is one."""
+    if "/page-data/" not in html and "gatsby" not in html.lower():
+        return None
+    partes = urlparse(url)
+    datos = f"{partes.scheme}://{partes.netloc}/page-data{partes.path.rstrip('/')}/page-data.json"
+    try:
+        respuesta = visitante.client.get(datos)
+        respuesta.raise_for_status()
+        nombre = _unidad_en(respuesta.json())
+    except Exception:
+        return None
+    tipo = _TIPOS.get((nombre or "").split(" ")[0].lower())
+    return Unidad(nombre, tipo) if nombre and tipo else None
 
 
 def leer(client: Any, solo: str | None) -> list[dict[str, Any]]:
@@ -85,9 +128,18 @@ def leer(client: Any, solo: str | None) -> list[dict[str, Any]]:
                 continue
             html = visitante.get(url)
             time.sleep(PAUSA)
+            unidad = unidad_de_los_datos(visitante, url, html)
+            if unidad:
+                print(f"{corto:9} | {carrera['nombre_carrera'][:50]:50} | {unidad.nombre}",
+                      flush=True)
+                halladas.append({"carrera_id": carrera["id"], "universidad_id": uid,
+                                 "universidad": corto, "carrera": carrera["nombre_carrera"],
+                                 "unidad": unidad.nombre, "tipo": unidad.tipo, "url": url})
+                continue
             if not es_la_pagina_de(html, carrera["nombre_carrera"]):
                 continue
-            unidad = unidad_de_la_pagina(html, unidades_de[uid])
+            firma = (universidades[uid]["nombre_oficial"], corto)
+            unidad = unidad_de_la_pagina(html, unidades_de[uid], firma)
             if not unidad:
                 continue
             print(f"{corto:9} | {carrera['nombre_carrera'][:50]:50} | {unidad.nombre}", flush=True)
