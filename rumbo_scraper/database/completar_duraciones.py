@@ -28,6 +28,62 @@ from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
 PAUSA = 0.8
+
+
+# --- The duration its plan of studies gives a grado career -----------------
+#
+# A plan that lists every year from the first to the Nth, the last a full
+# year, is a career of N years: it is the university's own plan saying it.
+# Where the database also has a stated duration the two agree 95 times in a
+# hundred; where they differ by two years or more the stated one is the
+# mistake (Farmacia and Arquitectura stored as two-year careers, with five
+# and six full years of subjects). A tecnicatura is left out: one of two
+# and a half years has subjects in its "third year". So is a last year with
+# far fewer subjects than the others, which is a thesis or a closing block,
+# not a year of classes.
+
+ULTIMO_ANIO_COMPLETO = 0.6
+
+
+def duracion_del_plan(por_anio: dict[int, int]) -> int | None:
+    """The years a grado plan runs, from how many subjects each year has."""
+    import statistics
+
+    if not por_anio:
+        return None
+    ultimo = max(por_anio)
+    if not 4 <= ultimo <= 6 or any(not por_anio.get(anio) for anio in range(1, ultimo + 1)):
+        return None
+    tipico = statistics.median(por_anio[anio] for anio in range(1, ultimo))
+    return ultimo if por_anio[ultimo] >= ULTIMO_ANIO_COMPLETO * tipico else None
+
+
+def desde_los_planes(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
+    """The careers whose duration their plan gives: those with none, and
+    those whose stored one the plan contradicts by two years or more."""
+    from rumbo_scraper.database.supabase import select_all
+
+    universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))
+                     if not solo or u.get("nombre_corto") in solo}
+    carreras = {c["id"]: c for c in select_all(client.table("carreras").select(
+        "id,universidad_id,nombre_carrera,nivel,duracion_anios"))
+        if c["universidad_id"] in universidades and c["nivel"] == "Grado"}
+    por_carrera: dict[str, Counter] = {}
+    for materia in select_all(client.table("materias").select("carrera_id,anio_cursada")):
+        if materia["carrera_id"] in carreras and materia["anio_cursada"]:
+            por_carrera.setdefault(materia["carrera_id"], Counter())[materia["anio_cursada"]] += 1
+    halladas = []
+    for carrera_id, por_anio in por_carrera.items():
+        carrera = carreras[carrera_id]
+        duracion = duracion_del_plan(por_anio)
+        guardada = carrera["duracion_anios"]
+        if duracion is None or (guardada and abs(float(guardada) - duracion) < 2):
+            continue
+        halladas.append({"carrera_id": carrera_id,
+                         "universidad": universidades[carrera["universidad_id"]].get("nombre_corto"),
+                         "carrera": carrera["nombre_carrera"], "duracion": duracion,
+                         "antes": guardada, "url": "plan de estudios"})
+    return halladas
 HALLADAS = Path("data/duraciones_halladas.json")
 
 
@@ -71,6 +127,8 @@ def main() -> None:
     parser.add_argument("--apply", action="store_true",
                         help=f"Escribir en Supabase lo que dejó la vista previa en {HALLADAS}")
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
+    parser.add_argument("--desde-el-plan", action="store_true",
+                        help="La duración que da el plan de estudios, no la página")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
@@ -78,12 +136,21 @@ def main() -> None:
     if args.apply:
         halladas = json.loads(HALLADAS.read_text())
         for h in halladas:
-            client.table("carreras").update({"duracion_anios": h["duracion"]}).eq(
-                "id", h["carrera_id"]).is_("duracion_anios", "null").execute()
+            cambio = client.table("carreras").update({"duracion_anios": h["duracion"]}).eq(
+                "id", h["carrera_id"])
+            # Only a duration the plan contradicts by two years is replaced.
+            if h.get("antes") is None:
+                cambio = cambio.is_("duracion_anios", "null")
+            cambio.execute()
         print(f"Carreras con duración: {len(halladas)}")
         return
 
-    halladas = leer(client, set(args.universidades))
+    if args.desde_el_plan:
+        halladas = desde_los_planes(client, set(args.universidades))
+        for h in halladas:
+            print(f"{h['universidad']:9} | {h['carrera'][:55]:55} | {h['antes']} → {h['duracion']}")
+    else:
+        halladas = leer(client, set(args.universidades))
     HALLADAS.write_text(json.dumps(halladas, ensure_ascii=False, indent=1) + "\n")
     print(f"Con duración: {len(halladas)} {dict(Counter(h['universidad'] for h in halladas))}"
           f" — vista previa en {HALLADAS}", flush=True)
