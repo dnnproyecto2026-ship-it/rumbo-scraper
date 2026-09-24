@@ -135,6 +135,13 @@ def _de_la_pagina(html: str) -> list[tuple[str, int | None]]:
     return materias
 
 
+def _de_la_pagina_del_plan(html: str) -> list[tuple[str, int | None]]:
+    """A page that is the plan itself: by code (the UNC's engineering) or
+    in tables. Read as bare lines year by year, the UNC's Nutrición came out
+    with "Ingreso" and "Page load link" in its fifth year: not read so."""
+    return leer_plan_fcefyn(html) or _de_la_pagina(html)
+
+
 def _documento_con_su_nombre(html: str, pagina: str, carrera: str) -> str | None:
     """The one PDF the page links whose file name has all the career's words."""
     from bs4 import BeautifulSoup
@@ -189,11 +196,13 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # A page that links its plans as pages of their own, by year
             # ("Plan de estudios 2025", the UNC's engineering faculty): the
             # newest is read.
-            nuevo = plan_mas_nuevo(html, url)
+            # Or links one page as its plan ("plan de estudios", Sociales and
+            # the FAUD of the UNC), which says it the way a page does.
+            nuevo = plan_mas_nuevo(html, url) or _enlace_al_plan(html, url, dominios)
             if nuevo:
                 html_del_plan = visitante.get(nuevo)
                 time.sleep(PAUSA)
-                del_plan = leer_plan_fcefyn(html_del_plan) or _de_la_pagina(html_del_plan)
+                del_plan = _de_la_pagina_del_plan(html_del_plan)
                 if del_plan:
                     de_la_pagina[carrera["id"]] = del_plan
                     pagina_del_plan[carrera["id"]] = nuevo

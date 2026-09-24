@@ -195,7 +195,8 @@ def leer_guia_upc(html: str, pagina: str = GUIA_UPC) -> list[CarreraDeLaGuia]:
 # ("Nivelación") comes before the first year and is the entry course, not
 # the plan.
 
-_PLAN_CON_ANIO = re.compile(r"(?i)^plan de estudios?\s+(\d{4})\b")
+# "Plan de estudios 2025", "Plan de Estudio 2024", "Plan 2015".
+_PLAN_CON_ANIO = re.compile(r"(?i)^plan(?: de estudios?)?\s+(\d{4})\b")
 _ANIO_DEL_PLAN = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
 _ANIO = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o$")
 _CON_CODIGO = re.compile(r"^\(\d{2}-\d{4,6}\)\s+(.+)$")
