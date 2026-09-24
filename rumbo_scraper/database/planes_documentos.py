@@ -19,7 +19,13 @@ when everything says it is this career's whole plan:
 - no subject name starts in lower case, which is a piece of a name the cell
   wrapped ("social", "de Argentina");
 - a plan that does not say the year has at least twenty subjects: fewer is
-  the first cycle alone.
+  the first cycle alone;
+- a plan that says the year reaches at least the year before the career's
+  last: a five-year career whose plan stops in the third is missing a cycle.
+
+Before the document, the career's own page: UNQ lays its plans out in HTML
+tables, with the terms as rows ("Segundo Cuatrimestre") or each cycle
+announced with its count ("Núcleo Básico Obligatorio: 12 asignaturas").
 
 Optional subjects ("(optativa)") and the degree's title are not the plan's
 sequence and are left out. A career gets subjects only if it has none.
@@ -42,7 +48,9 @@ from urllib.parse import urlparse
 
 from rumbo_scraper.database.exportar_catalogo import _urls_de_los_artefactos
 from rumbo_scraper.normalizers.text import comparison_key
-from rumbo_scraper.parsers import plan_por_columnas, plan_por_cuatrimestre
+import math
+
+from rumbo_scraper.parsers import plan_por_ciclos, plan_por_columnas, plan_por_cuatrimestre
 from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -81,7 +89,8 @@ def _texto(archivo: Path) -> str:
         return ""
 
 
-def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]]) -> bool:
+def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
+                           duracion: float | None = None) -> bool:
     if len(materias) < 10 or any(nombre[:1].islower() for nombre, _ in materias):
         return False
     anios = [anio for _, anio in materias if anio]
@@ -89,7 +98,21 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]])
         return len(materias) >= MINIMO_SIN_ANIO
     if comparison_key(carrera).startswith("tecnicatura") and max(anios) > 3:
         return False
+    if duracion and max(anios) < math.ceil(duracion) - 1:
+        return False
+    # Without a duration, a degree (not a cycle, not a tecnicatura) runs at
+    # least four years: UNQ's Informática page lists the first three alone.
+    clave = comparison_key(carrera)
+    if not duracion and not clave.startswith(("ciclo", "tecnicatura")) and max(anios) < 4:
+        return False
     return True
+
+
+def _de_la_pagina(html: str) -> list[tuple[str, int | None]]:
+    materias: list[tuple[str, int | None]] = list(plan_por_columnas.leer_html(html))
+    if not materias:
+        materias = [(m, None) for m in plan_por_ciclos.leer_tablas_html(html)]
+    return materias
 
 
 def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
@@ -100,7 +123,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                      if u.get("tipo_gestion") == "Estatal"
                      and (not solo or u.get("nombre_corto") in solo)}
     carreras = [c for c in select_all(client.table("carreras").select(
-        "id,universidad_id,nombre_carrera,nivel")) if c["universidad_id"] in universidades]
+        "id,universidad_id,nombre_carrera,nivel,duracion_anios"))
+        if c["universidad_id"] in universidades]
     con_materias = {m["carrera_id"] for m in select_all(
         client.table("materias").select("carrera_id")) if m["carrera_id"]}
     artefactos = _urls_de_los_artefactos()
@@ -111,6 +135,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             url_de[oferta["carrera_id"]] = oferta["url_oficial"]
 
     documento_de: dict[str, str] = {}
+    de_la_pagina: dict[str, list[tuple[str, int | None]]] = {}
     CACHE.mkdir(parents=True, exist_ok=True)
     with Visitante(timeout=30) as visitante:
         for carrera in carreras:
@@ -121,6 +146,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             dominios = (host, host.split(".", 1)[-1]) if host.count(".") > 2 else (host,)
             html = visitante.get(url)
             time.sleep(PAUSA)
+            en_la_pagina = _de_la_pagina(html)
+            if en_la_pagina:
+                de_la_pagina[carrera["id"]] = en_la_pagina
+                continue
             documento = _documento_del_plan(html, url, dominios)
             if not documento:
                 enlace = _enlace_al_plan(html, url, dominios)
@@ -142,6 +171,14 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
     usos = Counter(documento_de.values())
     planes: dict[str, dict[str, Any]] = {}
     for carrera in carreras:
+        materias = de_la_pagina.get(carrera["id"])
+        if materias and _parece_el_plan_entero(carrera["nombre_carrera"], materias,
+                                               carrera.get("duracion_anios")):
+            planes[carrera["id"]] = {
+                "carrera": carrera, "materias": materias, "documento": url_de[carrera["id"]],
+                "universidad": universidades[carrera["universidad_id"]].get("nombre_corto"),
+            }
+            continue
         documento = documento_de.get(carrera["id"])
         if not documento or usos[documento] > 1:
             continue
@@ -149,7 +186,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         if archivo.stat().st_size < 1000 or not _nombra(_texto(archivo), carrera["nombre_carrera"]):
             continue
         materias = _leer(archivo)
-        if _parece_el_plan_entero(carrera["nombre_carrera"], materias):
+        if _parece_el_plan_entero(carrera["nombre_carrera"], materias,
+                                  carrera.get("duracion_anios")):
             planes[carrera["id"]] = {
                 "carrera": carrera, "materias": materias, "documento": documento,
                 "universidad": universidades[carrera["universidad_id"]].get("nombre_corto"),

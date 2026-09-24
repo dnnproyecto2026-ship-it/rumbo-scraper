@@ -29,5 +29,18 @@ class LeerPorCiclos(unittest.TestCase):
         ]), [])
 
 
+    def test_un_ciclo_obligatorio_sin_su_lista_deja_el_plan_vacio(self):
+        self.assertEqual(leer([
+            "Núcleo Básico Obligatorio: 2 asignaturas", "Contabilidad I Básica", "Matemáticas",
+            "Núcleo Profesional Obligatorio: 3 asignaturas", "Marketing",
+        ]), [])
+
+    def test_el_nucleo_electivo_no_es_del_plan(self):
+        self.assertEqual(leer([
+            "Núcleo Básico Obligatorio: 2 asignaturas", "Contabilidad I Básica", "Matemáticas",
+            "Núcleo Electivo: 2 asignaturas", "Negocios Digitales", "Comercio Exterior",
+        ]), ["Contabilidad I Básica", "Matemáticas"])
+
+
 if __name__ == "__main__":
     unittest.main()

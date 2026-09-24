@@ -43,6 +43,9 @@ _CUATRIMESTRE = re.compile(r"^(cuat\.?|cuatr\.?|cuatrimestre|semestre|periodo)$"
 _ORDINAL = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
             "quinto": 5, "sexto": 6, "septimo": 7}
 _ANIO_EN_FILA = re.compile(r"^(" + "|".join(_ORDINAL) + r")\s+ano$|^(\d)\s*[°º]?\s*ano$")
+_ORDINAL_TERMINO = {**_ORDINAL, "octavo": 8, "noveno": 9, "decimo": 10, "undecimo": 11}
+# A row that only says which term follows: "Segundo Cuatrimestre" (UNQ).
+_TERMINO_EN_FILA = re.compile(r"^(" + "|".join(_ORDINAL_TERMINO) + r")\s+(cuatrimestre|semestre)$")
 _NO_ES_MATERIA = re.compile(r"^(total|subtotal|carga horaria|horas|creditos|optativ|electiv|"
                             r"seminarios? optativ|ciclo|nucleo|bloque|area)\b")
 
@@ -79,6 +82,7 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
     columnas: tuple[int, int | None, int | None] | None = None
     ancho = 0
     anio_de_fila: int | None = None
+    termino_de_fila: int | None = None
 
     for tabla in tablas:
         tabla = [[" ".join((c or "").split()) for c in fila] for fila in tabla]
@@ -98,6 +102,12 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
 
         materia, anio, termino = columnas
         for fila in tabla[inicio:]:
+            llenas = [c for c in fila if c]
+            if len(llenas) == 1:
+                en_termino = _TERMINO_EN_FILA.match(_plano(llenas[0]))
+                if en_termino:
+                    termino_de_fila = _ORDINAL_TERMINO[en_termino.group(1)]
+                    continue
             if len(fila) <= materia:
                 continue
             nombre = fila[materia]
@@ -116,7 +126,7 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
                              if termino is not None and termino < len(fila) else None)
             if anio is not None and valor_anio is None and anio_de_fila is None:
                 continue  # an optional seminar, outside the sequence
-            filas.append((nombre, valor_anio or anio_de_fila, valor_termino))
+            filas.append((nombre, valor_anio or anio_de_fila, valor_termino or termino_de_fila))
 
     # A term column that runs past two counts terms from the start.
     terminos = [t for _, _, t in filas if t]
@@ -146,3 +156,36 @@ def leer_pdf(ruta: str) -> list[tuple[str, int | None]]:
     with pdfplumber.open(ruta) as pdf:
         tablas = [tabla for pagina in pdf.pages for tabla in pagina.extract_tables()]
     return leer_tablas(tablas)
+
+
+def tablas_html(html: str) -> list[list[list[str]]]:
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html or "", "html.parser")
+    return [[[" ".join(celda.get_text(" ").split()) for celda in fila.find_all(["td", "th"])]
+             for fila in tabla.find_all("tr")] for tabla in soup.find_all("table")]
+
+
+def leer_html(html: str) -> list[tuple[str, int]]:
+    """The plan a page lays out in several tables, each with its header, the
+    terms as rows between the subjects (UNQ's career pages).
+
+    Each table is read on its own, and only the subjects with a year are
+    kept: the tables without one are the electives, the workshops and the
+    language requirement, which are not the sequence. The whole has to look
+    like a plan: at least ten subjects.
+    """
+    materias: list[tuple[str, int]] = []
+    vistas: set[str] = set()
+    for tabla in tablas_html(html):
+        global MINIMO
+        minimo, MINIMO = MINIMO, 0
+        try:
+            leidas = leer_tablas([tabla])
+        finally:
+            MINIMO = minimo
+        for nombre, anio in leidas:
+            if anio and _plano(nombre) not in vistas:
+                vistas.add(_plano(nombre))
+                materias.append((nombre, anio))
+    return materias if len(materias) >= MINIMO else []

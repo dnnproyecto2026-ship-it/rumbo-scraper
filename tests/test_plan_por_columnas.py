@@ -54,5 +54,14 @@ class LeerPorColumnas(unittest.TestCase):
         self.assertEqual(leer_tablas([materias(20)]), [])
 
 
+    def test_el_cuatrimestre_como_fila_entre_las_materias(self):
+        filas = [["Núcleo", "Asignatura", "Créditos"]]
+        for termino, nombre in ((2, "Segundo"), (5, "Quinto"), (7, "Séptimo")):
+            filas.append([f"{nombre} Cuatrimestre"])
+            filas += [["Básico", f"Materia {termino}-{i} de Programación", "16"] for i in range(4)]
+        plan = leer_tablas([filas])
+        self.assertEqual((plan[0][1], plan[4][1], plan[-1][1]), (1, 3, 4))
+
+
 if __name__ == "__main__":
     unittest.main()
