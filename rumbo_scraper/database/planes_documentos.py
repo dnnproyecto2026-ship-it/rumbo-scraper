@@ -16,12 +16,17 @@ when everything says it is this career's whole plan:
   cycle (UNMdP's agronomies) or a degree's plan linked from its
   intermediate title;
 - a tecnicatura does not run past its third year, for the same reason;
-- no subject name starts in lower case, which is a piece of a name the cell
-  wrapped ("social", "de Argentina");
+- no subject name starts in lower case or ends on a connecting word: both
+  are pieces of a name the cell wrapped ("social", "Comprensión y
+  Producción de" over "Textos en Artes");
 - a plan that does not say the year has at least twenty subjects: fewer is
   the first cycle alone;
 - a plan that says the year reaches at least the year before the career's
   last: a five-year career whose plan stops in the third is missing a cycle.
+
+A document is the one the page calls a plan of studies, or, failing that,
+a PDF the page links whose file is named after the career: UNAHUR links
+"Ingenieria-Metalurgica.pdf" with no word around it.
 
 Before the document, the career's own page: UNQ lays its plans out in HTML
 tables, with the terms as rows ("Segundo Cuatrimestre") or each cycle
@@ -69,6 +74,11 @@ def _nombra(texto: str, carrera: str) -> bool:
     return all(p in palabras for p in propias)
 
 
+# A word the PDF broke at the end of a line: "Alimen- tos".
+_PALABRA_PARTIDA = re.compile(r"(\w)- (?=[a-záéíóúñ])")
+_TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|por|a|al)$")
+
+
 def _leer(archivo: Path) -> list[tuple[str, int | None]]:
     try:
         materias = plan_por_columnas.leer_pdf(str(archivo))
@@ -76,7 +86,8 @@ def _leer(archivo: Path) -> list[tuple[str, int | None]]:
             materias = plan_por_cuatrimestre.leer_pdf(str(archivo))
     except Exception:
         return []
-    return [(nombre, anio) for nombre, anio in materias if not _FUERA_DEL_PLAN.search(nombre)]
+    return [(_PALABRA_PARTIDA.sub(r"\1", nombre), anio) for nombre, anio in materias
+            if not _FUERA_DEL_PLAN.search(nombre)]
 
 
 def _texto(archivo: Path) -> str:
@@ -91,7 +102,8 @@ def _texto(archivo: Path) -> str:
 
 def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
                            duracion: float | None = None) -> bool:
-    if len(materias) < 10 or any(nombre[:1].islower() for nombre, _ in materias):
+    if len(materias) < 10 or any(nombre[:1].islower() or _TERMINA_CORTADA.search(nombre)
+                                 for nombre, _ in materias):
         return False
     anios = [anio for _, anio in materias if anio]
     if not anios:
@@ -115,13 +127,28 @@ def _de_la_pagina(html: str) -> list[tuple[str, int | None]]:
     return materias
 
 
+def _documento_con_su_nombre(html: str, pagina: str, carrera: str) -> str | None:
+    """The one PDF the page links whose file name has all the career's words."""
+    from bs4 import BeautifulSoup
+    from urllib.parse import unquote, urljoin
+
+    candidatos = set()
+    for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
+        url = urljoin(pagina, enlace["href"])
+        archivo = unquote(urlparse(url).path.rsplit("/", 1)[-1])
+        if not archivo.lower().endswith(".pdf") or urlparse(url).netloc != urlparse(pagina).netloc:
+            continue
+        if _nombra(re.sub(r"[-_.]+", " ", archivo), carrera):
+            candidatos.add(url)
+    return candidatos.pop() if len(candidatos) == 1 else None
+
+
 def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
     """For each career that has no subjects, the plan its document gives."""
     from rumbo_scraper.database.supabase import select_all
 
     universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))
-                     if u.get("tipo_gestion") == "Estatal"
-                     and (not solo or u.get("nombre_corto") in solo)}
+                     if not solo or u.get("nombre_corto") in solo}
     carreras = [c for c in select_all(client.table("carreras").select(
         "id,universidad_id,nombre_carrera,nivel,duracion_anios"))
         if c["universidad_id"] in universidades]
@@ -150,7 +177,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             if en_la_pagina:
                 de_la_pagina[carrera["id"]] = en_la_pagina
                 continue
-            documento = _documento_del_plan(html, url, dominios)
+            documento = (_documento_del_plan(html, url, dominios)
+                         or _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
             if not documento:
                 enlace = _enlace_al_plan(html, url, dominios)
                 if enlace:

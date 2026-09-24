@@ -42,7 +42,9 @@ _ANIO = re.compile(r"^(ano|anio|ano de cursada|nivel)$")
 _CUATRIMESTRE = re.compile(r"^(cuat\.?|cuatr\.?|cuatrimestre|semestre|periodo)$")
 _ORDINAL = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
             "quinto": 5, "sexto": 6, "septimo": 7}
-_ANIO_EN_FILA = re.compile(r"^(" + "|".join(_ORDINAL) + r")\s+ano$|^(\d)\s*[°º]?\s*ano$")
+# "PRIMER AÑO", "1° año", "1er. Año", "2do año".
+_ANIO_EN_FILA = re.compile(
+    r"^(" + "|".join(_ORDINAL) + r")\s+ano$|^(\d)\s*(?:[°º]|er|do|ro|to)?\.?\s*ano$")
 _ORDINAL_TERMINO = {**_ORDINAL, "octavo": 8, "noveno": 9, "decimo": 10, "undecimo": 11}
 # A row that only says which term follows: "Segundo Cuatrimestre" (UNQ).
 _TERMINO_EN_FILA = re.compile(r"^(" + "|".join(_ORDINAL_TERMINO) + r")\s+(cuatrimestre|semestre)$")
