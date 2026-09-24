@@ -106,3 +106,20 @@ class VerificacionTest(unittest.TestCase):
             ]}}}))
             self.assertEqual(materias_corregidas(ruta),
                              {("Universidad X", "Agronomía", "Agroecología CFB"): "Agroecología"})
+
+    def test_el_veredicto_sobre_lo_que_el_export_ya_saco_no_se_olvida(self):
+        from rumbo_scraper.database.verificar_catalogo import _veredictos_que_siguen
+
+        anterior = {"materias": [
+            {"carrera": "Obstetricia", "materia": "norma.htm Ley", "estado": "no_lo_dice"},
+            {"carrera": "Agronomía", "materia": "Agroecología CFB", "estado": "verificado",
+             "como_la_dice_la_fuente": "Agroecología"},
+            {"carrera": "Agronomía", "materia": "Botánica", "estado": "verificado"},
+            {"carrera": "Agronomía", "materia": "Química", "estado": "sin_fuente"},
+        ]}
+        hallado = {"materias": [
+            {"carrera": "Agronomía", "materia": "Agroecología", "estado": "verificado"},
+            {"carrera": "Agronomía", "materia": "Química", "estado": "verificado"},
+        ]}
+        self.assertEqual([f["materia"] for f in _veredictos_que_siguen(anterior, hallado)],
+                         ["norma.htm Ley", "Agroecología CFB"])

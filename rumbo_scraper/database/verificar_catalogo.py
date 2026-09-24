@@ -55,11 +55,30 @@ class Fuentes:
     def close(self) -> None:
         self.visitante.close()
 
+    def registro(self, url: str, clave: str, valor: str) -> dict[str, Any]:
+        """The records of an official JSON source whose ``clave`` is
+        ``valor``, read as a source of their own: a catalogue lists every
+        career, and only the record of this one says what this one is."""
+        leida = self.leer(url)
+        try:
+            datos = json.loads(leida.get("crudo") or "[]")
+        except ValueError:
+            datos = []
+        filas = [d for d in datos if isinstance(d, dict) and str(d.get(clave)) == valor] \
+            if isinstance(datos, list) else []
+        return {"ok": bool(filas), "html": "",
+                "texto": v.plano(f" {v.CORTE} ".join(_textos_del_json(filas)))}
+
     def leer(self, url: str, avalada: bool = False) -> dict[str, Any]:
         """``{"ok": bool, "html": str, "texto": plain text}`` of an official
         source; one outside the university's domain is not fetched, unless
         an official page links it as its plan (``avalada``)."""
         if url in self.leidas:
+            return self.leidas[url]
+        if "#registro:" in url:
+            base, filtro = url.split("#registro:", 1)
+            clave, valor = filtro.split("=", 1)
+            self.leidas[url] = self.registro(base, clave, valor)
             return self.leidas[url]
         archivo = CACHE / (hashlib.md5(url.encode()).hexdigest() + ".json")
         if archivo.exists():
@@ -192,7 +211,11 @@ def _fuentes_utn(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[
         plan = utn.plan_document_url(json.loads(documentos.get("crudo") or "[]"))
     except ValueError:
         plan = None
-    return [utn.offers_url(carrera)] + ([plan] if plan else [])
+    # The career's record in each of the catalogue's listings, as a source
+    # of its own (`Fuentes.registro`): "#registro:id_carreras=801".
+    registros = [f"{utn.catalogue_url(consulta)}#registro:id_carreras={carrera}"
+                 for consulta, _ in utn.CAREER_KINDS]
+    return registros + ([plan] if plan else [])
 
 
 def _fuentes_uba(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[str]:
@@ -262,7 +285,9 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
                                  if propias and not dice else []):
                         propia = fuentes.leer(otra, avalada=True)
                         if propia["ok"] and v.dice(propia["texto"], carrera):
-                            dice, fuente = True, otra
+                            # A catalogue's record is data, not a page: the
+                            # seal links the career's page it fills.
+                            dice, fuente = True, url if "#registro:" in otra else otra
                             break
                     estado = v.VERIFICADO if dice else v.NO_LO_DICE
                 resultado["ofertas"].append({"carrera": carrera, "url": url, "estado": estado,
@@ -336,6 +361,21 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
     return resultado
 
 
+def _veredictos_que_siguen(anterior: dict[str, Any] | None,
+                           hallado: dict[str, Any]) -> list[dict[str, Any]]:
+    """The earlier verdicts the export acted on, which this run cannot see.
+
+    The export leaves out a subject its plan contradicts and renames one the
+    plan writes without a glued code. The next run reads that export, so it
+    no longer sees either, and forgetting them would bring both back on the
+    export after it.
+    """
+    vistas = {(fila["carrera"], fila["materia"]) for fila in hallado["materias"]}
+    return [fila for fila in (anterior or {}).get("materias") or []
+            if (fila["carrera"], fila["materia"]) not in vistas
+            and (fila["estado"] == v.NO_LO_DICE or fila.get("como_la_dice_la_fuente"))]
+
+
 def resumen(universidad: dict[str, Any]) -> str:
     partes = []
     for tipo in ("ofertas", "materias", "docentes"):
@@ -371,6 +411,8 @@ def main() -> None:
         print(f"{ficha.get('nombre_corto'):9} | {time.monotonic() - inicio:5.0f}s | "
               f"{resumen(hallado)}", flush=True)
         with escritura:
+            hallado["materias"] += _veredictos_que_siguen(
+                (anterior.get("universidades") or {}).get(ficha["nombre_oficial"]), hallado)
             universidades[ficha["nombre_oficial"]] = hallado
             RESULTADO.write_text(json.dumps({"fecha": date.today().isoformat(),
                                              "universidades": universidades},

@@ -181,9 +181,32 @@ def _materia_sin_mayusculas(nombre: str) -> str:
     return " ".join(palabras)
 
 
+# What a plan's document has around its subjects and the reader took for
+# one: an address, a link, a file, a bibliography entry ("Ed. Trillas",
+# "Recuperado de"), a letter repeated down a column ("c c c c").
+_NO_ES_UN_NOMBRE = re.compile(
+    r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|editorial|ediciones)\b"
+    r"|\b(?:ed|pp|vol)\.|recuperado de|\bet al\b|(?:\b\w\b\s+){3}", re.I)
+# The mark that sends a subject to a footnote: "(**) Análisis Político".
+_LLAMADA = re.compile(r"^\(\*+\)\s*")
+# A bullet or dash before the name, a period after it: "-Cambio climático."
+_VINETA = re.compile(r"^[-–—•·>]+\s*")
+MAS_LARGO = 150
+
+
 def nombre_de_la_materia(nombre: str | None) -> str | None:
     """The subject a plan line names, or None when the line names none."""
     n = _CODIGO_DE_MATERIA.split(" ".join((nombre or "").split()), maxsplit=1)[0].strip()
+    # A footnote of the plan ("* a partir del plan 2017...", "(***) La carga
+    # horaria...") is not a subject; a bullet in front of one is not its name.
+    n = _LLAMADA.sub("", n)
+    if n.startswith(("*", "(")):
+        return None
+    n = _VINETA.sub("", n).rstrip(" .;,:")
+    # A name the page cut in two starts with the piece's first word in lower
+    # case ("de Carga", "sector"); a subject's name starts with a capital.
+    if n[:1].islower() or len(n) > MAS_LARGO or _NO_ES_UN_NOMBRE.search(n):
+        return None
     # A question is a FAQ entry, unless it is the title of a seminar that
     # asks one halfway: "Derechos Humanos ¿paradigma vigente ...?".
     if len(n) < 3 or n.startswith("¿") or n.endswith("?") and "¿" not in n[1:] \

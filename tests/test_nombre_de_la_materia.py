@@ -71,3 +71,30 @@ class UnaMateria(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+    def test_lo_que_rodea_al_plan_en_el_documento_no_sale(self):
+        for linea in (
+            "clorenzano@untref.edu.ar",
+            "de Carga",
+            "sector",
+            "Rios Cañavate JL. Fitoterapia Reproexpres ediciones",
+            "norma.htm Ley",
+            "Manual de Medicina Legal. Buenos Aires Ed Akadia Ed. Trillas",
+            "https reis.cis.es REIS PDF",
+            "UNAJ c c c c c c c c c c",
+            "* a partir del plan de estudios 2017, todos los alumnos ingresantes",
+            "(***) La carga horaria total mínima que el alumno deberá acreditar",
+            "Electiva VI LIBERTAD DE ELEGIR Opciones de orientación profesional y creativa "
+            "Electiva VI LIBERTAD DE ELEGIR Opciones de orientación profesional y creativa extra",
+        ):
+            self.assertIsNone(nombre_de_la_materia(linea), linea)
+
+    def test_la_vineta_y_el_punto_final_no_son_del_nombre(self):
+        self.assertEqual(nombre_de_la_materia("-Cambio climático."), "Cambio climático")
+        self.assertEqual(nombre_de_la_materia("• Derecho Ambiental"), "Derecho Ambiental")
+        self.assertEqual(nombre_de_la_materia("Seminario I: Temas de Actualidad"),
+                         "Seminario I: Temas de Actualidad")
+        self.assertEqual(nombre_de_la_materia("(**) Análisis Político"), "Análisis Político")
+        self.assertEqual(nombre_de_la_materia("Desarrollo de proyectos culturales, audiovisuales y "
+                                              "editoriales"),
+                         "Desarrollo de proyectos culturales, audiovisuales y editoriales")
