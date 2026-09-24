@@ -250,6 +250,25 @@ def materias_contradichas(ruta: Path = VERIFICACIONES) -> set[tuple[str, str, st
             for universidad, fila in _verificadas(ruta) if fila["estado"] == "no_lo_dice"}
 
 
+# More subjects than this in one year of a plan is not a year: it is the
+# pool of electives listed under the last year as if it were taken whole
+# (UNAHUR's Enfermería, 45 in the fifth), or a whole plan filed under one
+# year (the UCC's Computación, 21 in the fifth and none before). The plan
+# reader refuses these now; this keeps the ones read before it out too.
+MAS_POR_ANIO = 20
+
+
+def sin_planes_amontonados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The subjects, without the plans that have a year with more than
+    ``MAS_POR_ANIO``: a wrong plan is worse than none."""
+    por_anio: dict[tuple[str, Any], int] = defaultdict(int)
+    for m in materias:
+        if m["anio_cursada"] is not None:
+            por_anio[(m["carrera_o_programa"], m["anio_cursada"])] += 1
+    amontonados = {programa for (programa, _), n in por_anio.items() if n > MAS_POR_ANIO}
+    return [m for m in materias if m["carrera_o_programa"] not in amontonados]
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -384,6 +403,8 @@ def exportar(client: Any) -> dict[str, Any]:
             "nombre_materia": materia, "carrera_o_programa": programa,
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
         })
+    for datos in por_uni.values():
+        datos["materias"] = sin_planes_amontonados(datos["materias"])
 
     for b in becas:
         por_uni[b["universidad_id"]]["becas"].append({

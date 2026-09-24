@@ -98,3 +98,14 @@ if __name__ == "__main__":
         self.assertEqual(nombre_de_la_materia("Desarrollo de proyectos culturales, audiovisuales y "
                                               "editoriales"),
                          "Desarrollo de proyectos culturales, audiovisuales y editoriales")
+
+
+class PlanesAmontonados(unittest.TestCase):
+    def test_el_plan_con_un_anio_de_mas_de_veinte_materias_no_sale(self):
+        from rumbo_scraper.database.exportar_catalogo import sin_planes_amontonados
+
+        amontonado = [{"carrera_o_programa": "Enfermería", "anio_cursada": 5} for _ in range(21)]
+        normal = [{"carrera_o_programa": "Abogacía", "anio_cursada": a % 5 + 1} for a in range(50)]
+        sin_anio = [{"carrera_o_programa": "Medicina", "anio_cursada": None} for _ in range(60)]
+        quedan = sin_planes_amontonados(amontonado + normal + sin_anio)
+        self.assertEqual({m["carrera_o_programa"] for m in quedan}, {"Abogacía", "Medicina"})
