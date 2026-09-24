@@ -48,16 +48,11 @@ POR_CICLOS = {
 }
 
 
-def planes_de_ingenieria(visitante: Visitante) -> dict[str, list[tuple[str, int]]]:
-    """Each Engineering career's plan, by the name the index gives it.
-
-    The index lists a career, then its resolution and, when there is one,
-    the resolution that modified it; the last one listed is the plan in
-    force, and it is the one read.
-    """
-    soup = BeautifulSoup(visitante.get(INGENIERIA), "html.parser")
+def documentos_de_ingenieria(html: str) -> dict[str, str]:
+    """The plan in force of each Engineering career, by the name the index
+    gives it: the last resolution listed beside the career."""
     documento_de: dict[str, str] = {}
-    for enlace in soup.find_all("a", href=True):
+    for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
         url = urljoin(INGENIERIA, enlace["href"])
         if not url.lower().endswith(".pdf"):
             continue
@@ -66,7 +61,17 @@ def planes_de_ingenieria(visitante: Visitante) -> dict[str, list[tuple[str, int]
         carrera = texto.split(" Resoluci")[0].strip()
         if carrera:
             documento_de[carrera] = url
+    return documento_de
 
+
+def planes_de_ingenieria(visitante: Visitante) -> dict[str, list[tuple[str, int]]]:
+    """Each Engineering career's plan, by the name the index gives it.
+
+    The index lists a career, then its resolution and, when there is one,
+    the resolution that modified it; the last one listed is the plan in
+    force, and it is the one read.
+    """
+    documento_de = documentos_de_ingenieria(visitante.get(INGENIERIA))
     planes = {}
     CACHE.mkdir(parents=True, exist_ok=True)
     for carrera, url in documento_de.items():

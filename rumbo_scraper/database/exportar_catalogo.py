@@ -28,6 +28,7 @@ from typing import Any
 from rumbo_scraper.normalizers.text import comparison_key
 
 SALIDA = Path("data/catalogo_depurado.json")
+VERIFICACIONES = Path("data/verificaciones.json")
 
 
 def _urls_de_los_artefactos() -> dict[tuple[str, str], str]:
@@ -193,6 +194,37 @@ def nombre_de_la_materia(nombre: str | None) -> str | None:
     return _materia_sin_mayusculas(n)
 
 
+def _verificadas(ruta: Path) -> list[tuple[str, dict[str, Any]]]:
+    if not ruta.exists():
+        return []
+    return [(universidad, fila)
+            for universidad, hallado in (json.loads(ruta.read_text()).get("universidades") or {}).items()
+            for fila in hallado.get("materias") or []]
+
+
+def materias_corregidas(ruta: Path = VERIFICACIONES) -> dict[tuple[str, str, str], str]:
+    """The name the plan gives a subject the reader glued a code to
+    ("Agroecología CFB" is "Agroecología" in the plan), by (university,
+    career, subject as read)."""
+    return {(universidad, fila["carrera"], fila["materia"]): fila["como_la_dice_la_fuente"]
+            for universidad, fila in _verificadas(ruta) if fila.get("como_la_dice_la_fuente")}
+
+
+def materias_contradichas(ruta: Path = VERIFICACIONES) -> set[tuple[str, str, str]]:
+    """The subjects the career's own plan, found on the university's site,
+    does not have: (university, career, subject).
+
+    The verifier (`database.verificar_catalogo`) says a subject is not in the
+    plan only when it found the plan: at least half of the career's subjects
+    are in it, word for word. What is left out is what the reader took for a
+    subject and the plan does not list: a bibliography entry, a column's
+    heading, a name with a code glued to it. A wrong subject is worse than a
+    missing one, so they are not exported.
+    """
+    return {(universidad, fila["carrera"], fila["materia"])
+            for universidad, fila in _verificadas(ruta) if fila["estado"] == "no_lo_dice"}
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -311,11 +343,18 @@ def exportar(client: Any) -> dict[str, Any]:
             "facultad_nombre": facultad["nombre_facultad"] if facultad else None,
         })
 
+    contradichas = materias_contradichas()
+    corregidas = materias_corregidas()
+    nombre_oficial = {u["id"]: u["nombre_oficial"] for u in universidades}
     for m in materias:
         programa = carrera_nombre.get(m["carrera_id"]) or posgrado_nombre.get(m["posgrado_id"])
         materia = nombre_de_la_materia(m["nombre_materia"])
         if not programa or not materia:
             continue
+        clave = (nombre_oficial.get(m["universidad_id"]), programa, materia)
+        if clave in contradichas:
+            continue
+        materia = corregidas.get(clave, materia)
         por_uni[m["universidad_id"]]["materias"].append({
             "nombre_materia": materia, "carrera_o_programa": programa,
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
