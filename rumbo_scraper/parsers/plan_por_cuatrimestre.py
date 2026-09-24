@@ -28,6 +28,9 @@ _ORDINAL = {
 _TILDES = str.maketrans("áéíóúÁÉÍÓÚ", "aeiouAEIOU")
 _TERMINO = re.compile(r"^(" + "|".join(_ORDINAL) + r")\s+(?:y\s+\w+\s+)?cuatrimestre$")
 _TERMINO_NUMERO = re.compile(r"^(\d{1,2})\s*(?:°|º|er|do|ro|to|vo|mo|no)?\s+cuatrimestre$")
+# Plans laid out by year rather than by term: "PRIMER AÑO", "1° Año", "Año 2".
+_ANIO = re.compile(r"^(" + "|".join(_ORDINAL) + r")\s+ano$")
+_ANIO_NUMERO = re.compile(r"^(?:(\d)\s*(?:°|º|er|do|ro|to)?\s+ano|ano\s+(\d))$")
 _CBC = re.compile(r"^ciclo basico comun")
 _CODIGO = re.compile(r"^\d{2}$")
 _CREDITOS = re.compile(r"^\d+(?: de \d+)?$")
@@ -42,7 +45,7 @@ _NO_ES_MATERIA = re.compile(
 
 
 def _plano(texto: str) -> str:
-    return " ".join(texto.translate(_TILDES).lower().split())
+    return " ".join(texto.translate(_TILDES).replace("ñ", "n").replace("Ñ", "n").lower().split())
 
 
 def leer_filas(filas: Iterable[list[str | None]]) -> list[tuple[str, int]]:
@@ -71,6 +74,16 @@ def leer_filas(filas: Iterable[list[str | None]]) -> list[tuple[str, int]]:
         primera = _plano(llenas[0])
         if _CBC.match(primera):
             en_cbc, anio, continuable = True, 1, False
+            continue
+        de_anio = _ANIO.match(primera) or _ANIO_NUMERO.match(primera)
+        if de_anio:
+            numero = next(g for g in de_anio.groups() if g)
+            a = int(numero) if numero.isdigit() else _ORDINAL[numero]
+            if 2 * a <= ultimo_termino:
+                break
+            # A year is two terms: the next heading has to come after both.
+            ultimo_termino = 2 * a
+            en_cbc, anio, continuable, tras_subtotal = False, a, False, False
             continue
         termino = _TERMINO.match(primera) or _TERMINO_NUMERO.match(primera)
         if termino:

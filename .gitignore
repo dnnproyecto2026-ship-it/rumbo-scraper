@@ -17,3 +17,4 @@ build/
 data/*.json
 !data/.gitkeep
 data/planes_uba/
+data/planes_documentos/
