@@ -255,6 +255,7 @@ def _planes_publicados() -> dict[tuple[str, str], str]:
 def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], str]) -> dict[str, Any]:
     from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
     from rumbo_scraper.database.planes_documentos import _documento_con_su_nombre
+    from rumbo_scraper.parsers.unc import plan_mas_nuevo
 
     ficha = datos["universidades"][0]
     sitio_web = ficha.get("sitio_web")
@@ -319,7 +320,9 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
                         continue
                     dominios = _dominios(url)
                     enlace = _enlace_al_plan(html, url, dominios)
-                    otras = [_documento_del_plan(html, url, dominios),
+                    # The newest of the plans a page links by year ("Plan de
+                    # estudios 2025" beside "2005"): the one the plan was read from.
+                    otras = [plan_mas_nuevo(html, url), _documento_del_plan(html, url, dominios),
                              _documento_con_su_nombre(html, url, carrera), enlace]
                     if enlace and fuentes.leer(enlace)["html"]:
                         otras.append(_documento_del_plan(fuentes.leer(enlace)["html"], enlace,

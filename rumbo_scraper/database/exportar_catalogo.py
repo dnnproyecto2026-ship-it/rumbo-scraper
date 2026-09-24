@@ -39,7 +39,9 @@ def _urls_de_los_artefactos() -> dict[tuple[str, str], str]:
     them, under the same name the database gives them.
     """
     urls: dict[tuple[str, str], str] = {}
-    for archivo in glob.glob("data/*_completo.json"):
+    # A university's official guide of careers (``*_guia_completo.json``)
+    # goes first: its link is the university's, a crawl's is a guess.
+    for archivo in sorted(glob.glob("data/*_completo.json"), key=lambda a: "_guia_" not in a):
         try:
             datos = json.loads(Path(archivo).read_text(encoding="utf-8"))["datos"]
             universidad = datos["universidades"][0]["nombre_oficial"]

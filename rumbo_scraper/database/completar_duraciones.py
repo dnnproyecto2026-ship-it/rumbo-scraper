@@ -31,12 +31,13 @@ PAUSA = 0.8
 HALLADAS = Path("data/duraciones_halladas.json")
 
 
-def leer(client: Any) -> list[dict[str, Any]]:
+def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
     from rumbo_scraper.database.supabase import select_all
 
-    universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))}
-    carreras = select_all(client.table("carreras").select(
-        "id,universidad_id,nombre_carrera,duracion_anios"))
+    universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))
+                     if not solo or u.get("nombre_corto") in solo}
+    carreras = [c for c in select_all(client.table("carreras").select(
+        "id,universidad_id,nombre_carrera,duracion_anios")) if c["universidad_id"] in universidades]
     artefactos = _urls_de_los_artefactos()
     url_de = {c["id"]: artefactos.get((universidades[c["universidad_id"]]["nombre_oficial"],
                                        c["nombre_carrera"])) for c in carreras}
@@ -69,6 +70,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Completar la duración de las carreras")
     parser.add_argument("--apply", action="store_true",
                         help=f"Escribir en Supabase lo que dejó la vista previa en {HALLADAS}")
+    parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
@@ -81,7 +83,7 @@ def main() -> None:
         print(f"Carreras con duración: {len(halladas)}")
         return
 
-    halladas = leer(client)
+    halladas = leer(client, set(args.universidades))
     HALLADAS.write_text(json.dumps(halladas, ensure_ascii=False, indent=1) + "\n")
     print(f"Con duración: {len(halladas)} {dict(Counter(h['universidad'] for h in halladas))}"
           f" — vista previa en {HALLADAS}", flush=True)

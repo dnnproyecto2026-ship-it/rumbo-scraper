@@ -21,6 +21,8 @@ when everything says it is this career's whole plan:
   Producción de" over "Textos en Artes");
 - a plan that does not say the year has at least twenty subjects: fewer is
   the first cycle alone;
+- no year has more than twenty: that is the pool of electives listed under
+  the last year as if it were taken whole;
 - a plan that says the year reaches at least the year before the career's
   last: a five-year career whose plan stops in the third is missing a cycle.
 
@@ -56,6 +58,7 @@ from rumbo_scraper.normalizers.text import comparison_key
 import math
 
 from rumbo_scraper.parsers import plan_por_ciclos, plan_por_columnas, plan_por_cuatrimestre
+from rumbo_scraper.parsers.unc import leer_plan_fcefyn, plan_mas_nuevo
 from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -63,6 +66,7 @@ CACHE = Path("data/planes_documentos")
 HALLADOS = Path("data/planes_documentos.json")
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
+MAS_POR_ANIO = 20
 _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tecnicatura "
                     "universitaria carrera profesorado ingenieria ciclo".split())
 _FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:")
@@ -108,6 +112,10 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
     anios = [anio for _, anio in materias if anio]
     if not anios:
         return len(materias) >= MINIMO_SIN_ANIO
+    # More than twenty subjects in one year is the pool of electives listed
+    # under the last year (Río Cuarto's Psicopedagogía: 52 in the fourth).
+    if max(Counter(anios).values()) > MAS_POR_ANIO:
+        return False
     if comparison_key(carrera).startswith("tecnicatura") and max(anios) > 3:
         return False
     if duracion and max(anios) < math.ceil(duracion) - 1:
@@ -163,6 +171,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
 
     documento_de: dict[str, str] = {}
     de_la_pagina: dict[str, list[tuple[str, int | None]]] = {}
+    pagina_del_plan: dict[str, str] = {}
     CACHE.mkdir(parents=True, exist_ok=True)
     with Visitante(timeout=30) as visitante:
         for carrera in carreras:
@@ -177,6 +186,18 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             if en_la_pagina:
                 de_la_pagina[carrera["id"]] = en_la_pagina
                 continue
+            # A page that links its plans as pages of their own, by year
+            # ("Plan de estudios 2025", the UNC's engineering faculty): the
+            # newest is read.
+            nuevo = plan_mas_nuevo(html, url)
+            if nuevo:
+                html_del_plan = visitante.get(nuevo)
+                time.sleep(PAUSA)
+                del_plan = leer_plan_fcefyn(html_del_plan) or _de_la_pagina(html_del_plan)
+                if del_plan:
+                    de_la_pagina[carrera["id"]] = del_plan
+                    pagina_del_plan[carrera["id"]] = nuevo
+                    continue
             documento = (_documento_del_plan(html, url, dominios)
                          or _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
             if not documento:
@@ -203,7 +224,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         if materias and _parece_el_plan_entero(carrera["nombre_carrera"], materias,
                                                carrera.get("duracion_anios")):
             planes[carrera["id"]] = {
-                "carrera": carrera, "materias": materias, "documento": url_de[carrera["id"]],
+                "carrera": carrera, "materias": materias,
+                "documento": pagina_del_plan.get(carrera["id"]) or url_de[carrera["id"]],
                 "universidad": universidades[carrera["universidad_id"]].get("nombre_corto"),
             }
             continue
