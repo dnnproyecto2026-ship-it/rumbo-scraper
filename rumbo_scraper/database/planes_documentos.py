@@ -23,14 +23,16 @@ when everything says it is this career's whole plan:
 
 Optional subjects ("(optativa)") and the degree's title are not the plan's
 sequence and are left out. A career gets subjects only if it has none.
-Downloads are kept in ``data/planes_documentos/``. Preview by default;
-``--apply`` writes.
+Downloads are kept in ``data/planes_documentos/``. Reading every career's
+page takes a while, so the preview keeps what it found in
+``data/planes_documentos.json`` and ``--apply`` writes from that file.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import re
 import time
 from collections import Counter, defaultdict
@@ -45,6 +47,7 @@ from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
 from rumbo_scraper.spiders.visitante import Visitante
 
 CACHE = Path("data/planes_documentos")
+HALLADOS = Path("data/planes_documentos.json")
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tecnicatura "
@@ -159,13 +162,18 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar los planes publicados como documento")
-    parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    parser.add_argument("--apply", action="store_true",
+                        help=f"Escribir en Supabase lo que dejó la vista previa en {HALLADOS}")
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
     client = get_supabase_client()
-    planes = leer(client, set(args.universidades))
+    if args.apply:
+        planes = json.loads(HALLADOS.read_text())
+    else:
+        planes = leer(client, set(args.universidades))
+        HALLADOS.write_text(json.dumps(planes, ensure_ascii=False, indent=1) + "\n")
 
     filas = []
     por_universidad: dict[str, int] = defaultdict(int)
@@ -173,7 +181,7 @@ def main() -> None:
         carrera = plan["carrera"]
         por_anio = dict(Counter(anio for _, anio in plan["materias"]))
         print(f"{plan['universidad']:8} {carrera['nombre_carrera'][:48]:48} "
-              f"{len(plan['materias']):3} {por_anio}")
+              f"{len(plan['materias']):3} {por_anio}", flush=True)
         por_universidad[plan["universidad"]] += 1
         vistas: set[str] = set()
         for materia, anio in plan["materias"]:
@@ -187,7 +195,7 @@ def main() -> None:
         for inicio in range(0, len(filas), 500):
             client.table("materias").insert(filas[inicio:inicio + 500]).execute()
     print(f"Planes: {len(planes)} {dict(por_universidad)}; materias "
-          f"{'cargadas' if args.apply else 'a cargar'}: {len(filas)}")
+          f"{'cargadas' if args.apply else 'a cargar'}: {len(filas)}", flush=True)
 
 
 if __name__ == "__main__":
