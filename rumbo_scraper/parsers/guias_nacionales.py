@@ -92,6 +92,11 @@ def _carrera(nombre: str, unidad: str, url: str, sede: str | None = None,
     unidad = re.sub(r"\bCs\.\s*", "Ciencias ", unidad)
     if not nombre or es_ciclo(nombre):
         return None
+    # A grado career of under three years is a completion cycle for those who
+    # hold a degree already (the Delta's "Licenciatura en Gestión de
+    # Instituciones Educativas", 2 years): not a career to start.
+    if (nivel_dicho or nivel(nombre)) == "Grado" and duracion and duracion < 3:
+        return None
     return CarreraDeLaGuia(nombre, unidad, _tipo(unidad) if unidad else "Facultad", url,
                            nivel_dicho or nivel(nombre), sede, duracion)
 
@@ -1445,4 +1450,251 @@ def leer_unpa(html: str, pagina: str = UNPA) -> list[CarreraDeLaGuia]:
         carrera = _carrera(nombre, "", pagina)
         if carrera:
             carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Católica de Cuyo ---------------------------------------------------------------
+# The home carries its data as the page's JSON (data-page): each campus
+# (San Juan, Mendoza, San Luis), its faculties and their careers, each with its
+# kind (Grado, Pregrado, Post-Grado, Curso...). "duracion" has no unit and is
+# left out.
+
+UCCUYO = "https://uccuyo.edu.ar/"
+
+
+def leer_uccuyo(html: str, pagina: str = UCCUYO) -> list[CarreraDeLaGuia]:
+    import html as entidades
+
+    datos = re.search(r'data-page="([^"]+)"', html or "")
+    if not datos:
+        return []
+    try:
+        sedes = json.loads(entidades.unescape(datos.group(1)))["props"].get("universidades") or []
+    except (ValueError, KeyError):
+        return []
+    carreras = []
+    for sede in sedes:
+        for facultad in sede.get("facultades") or []:
+            unidad = re.sub(r"\bCs\.\s*", "Ciencias ", clean_text(facultad.get("nombre") or ""))
+            unidad = unidad if unidad.lower().startswith(("facultad", "escuela", "instituto")) else f"Facultad de {unidad}"
+            for item in facultad.get("carreras") or []:
+                if item.get("tipo_titulo") not in ("Grado", "Pregrado") or str(item.get("disable")) == "0":
+                    continue
+                lugar = clean_text((sede.get("nombre") or "").split(" - ")[-1])
+                carrera = _carrera(item.get("nombre") or "", unidad, pagina, lugar or None,
+                                   None, item["tipo_titulo"])
+                if carrera:
+                    carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional de Luján ---------------------------------------------------------------
+# One table page per level; each row a career and its page.
+
+UNLU_GRADO = "https://www.unlu.edu.ar/grado.html"
+UNLU_PREGRADO = "https://www.unlu.edu.ar/pregrado.html"
+
+
+def leer_unlu(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for enlace in _soup(html).select("td a[href]"):
+        nombre = _texto(enlace)
+        if not nombre or not enlace["href"].endswith(".html"):
+            continue
+        carrera = _carrera(nombre, "", urljoin(pagina, enlace["href"].replace("-pre.html", ".html")), None, None,
+                           "Pregrado" if "pregrado" in pagina else "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional de Chilecito ---------------------------------------------------------------
+# Each school's heading and its careers' headings.
+
+UNDEC = "https://www.undec.edu.ar/oferta-academica/"
+
+
+def leer_undec(html: str, pagina: str = UNDEC) -> list[CarreraDeLaGuia]:
+    carreras, unidad = [], ""
+    for elemento in _soup(html).find_all(["h1", "h3"]):
+        if elemento.name == "h1":
+            texto = _texto(elemento)
+            if texto.lower().startswith("escuela"):
+                unidad = con_tildes(texto) if texto.isupper() else texto
+            continue
+        enlace = elemento.find("a", href=True)
+        if enlace and unidad:
+            carrera = _carrera(_texto(enlace), unidad, enlace["href"])
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Escuela Argentina de Negocios ------------------------------------------------------------
+# A page per level listing each programme ("Grado en Contador Público").
+
+UEAN_GRADO = "https://www.uean.edu.ar/carreras-universitarias/"
+UEAN_PREGRADO = "https://www.uean.edu.ar/pregrados/"
+
+
+def leer_uean(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for enlace in _soup(html).select("article.programa-item h3 a[href]"):
+        nombre = re.sub(r"(?i)^(?:grado|pregrado)\s+en\s+", "", _texto(enlace))
+        carrera = _carrera(nombre, "", enlace["href"], None, None, "Pregrado" if "pregrado" in pagina else None)
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Pedagógica Nacional ------------------------------------------------------------------------
+# A panel per campus, its careers as links.
+
+UNIPE = "https://unipe.edu.ar/carreras/oferta-academica"
+
+
+def leer_unipe(html: str, pagina: str = UNIPE) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for panel in _soup(html).select("div.panel"):
+        sede = _texto(panel.select_one(".panel-title"))
+        if not sede or "ciclo" in sede.lower() or "distancia" in sede.lower():
+            continue
+        for enlace in panel.select(".panel-body a[href]"):
+            carrera = _carrera(_texto(enlace), "", urljoin(pagina, enlace["href"]), sede)
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional del Noroeste de la Provincia de Buenos Aires ------------------------------------
+# An accordion per school, each career a button to its page.
+
+UNNOBA = "https://www.unnoba.edu.ar/ensenanza-carreras/"
+
+
+def leer_unnoba(html: str, pagina: str = UNNOBA) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for bloque in _soup(html).find_all("details"):
+        escuela = _texto(bloque.find("summary"))
+        unidad = con_tildes(escuela) if escuela.isupper() else escuela
+        for enlace in bloque.select("a.eb-button-anchor[href]"):
+            carrera = _carrera(_texto(enlace), unidad if unidad.lower().startswith("escuela") else "", enlace["href"])
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional del Delta -------------------------------------------------------------------------
+# A card per career: its kind ("Licenciatura en") over its name, and "4 años ·
+# Presencial · Sede a definir".
+
+UNDELTA = "https://undelta.edu.ar/carreras/"
+
+
+def leer_undelta(html: str, pagina: str = UNDELTA) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for tarjeta in _soup(html).select("a.orbe"):
+        tipo, nombre = _texto(tarjeta.select_one(".nivel")), _texto(tarjeta.select_one(".nom-o"))
+        meta = _texto(tarjeta.select_one(".meta-o"))
+        sede = next((clean_text(p) for p in meta.split("·")[2:] if "definir" not in p.lower()), None)
+        carrera = _carrera(f"{tipo} {nombre}".strip(), "", urljoin(pagina, tarjeta.get("href") or ""), sede,
+                           anios(meta))
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional de San Antonio de Areco ------------------------------------------------------------
+# Each school's heading, each career "Name | 5 años".
+
+UNSADA = "https://www.unsada.edu.ar/academico/oferta-academica"
+
+
+def leer_unsada(html: str, pagina: str = UNSADA) -> list[CarreraDeLaGuia]:
+    carreras, unidad = [], ""
+    cuerpo = _soup(html).select_one("[itemprop=articleBody]") or _soup(html)
+    for elemento in cuerpo.find_all(["h4", "div"]):
+        clases = elemento.get("class") or []
+        if elemento.name == "h4":
+            texto = _texto(elemento)
+            if texto.lower().startswith("escuela"):
+                unidad = con_tildes(texto) if texto.isupper() else texto
+            continue
+        if "caption" not in clases or not elemento.find("strong"):
+            continue
+        texto = _texto(elemento.find("strong"))
+        partes = [clean_text(p) for p in texto.split("|")]
+        # An area's heading ("PRODUCCIÓN AGROPECUARIA") is in capitals and has
+        # no duration after it.
+        if len(partes) == 1 and texto.isupper():
+            continue
+        enlace = elemento.find_next("a", href=True)
+        carrera = _carrera(partes[0], unidad, urljoin(pagina, enlace["href"]) if enlace else pagina, None,
+                           anios(partes[1]) if len(partes) > 1 else None)
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad Nacional Raúl Scalabrini Ortiz --------------------------------------------------------------
+# Its public service lists each department and its careers.
+
+UNSO = "https://api.unsanisidro.edu.ar/resumenes?tipo=3&idioma=es&cat=%7B%7D&fd=&fh=&cant=9999&una=false"
+
+
+def leer_unso(html: str, pagina: str = UNSO) -> list[CarreraDeLaGuia]:
+    try:
+        datos = json.loads(html or "[]")
+    except ValueError:
+        return []
+    carreras = []
+    for bloque in datos if isinstance(datos, list) else []:
+        for departamento in (bloque.get("resultado") or {}).get("dato_js") or []:
+            unidad = re.sub(r"^CS\.\s*", "Ciencias ", clean_text(departamento.get("pubdepartamento_i_de") or ""))
+            for item in departamento.get("carreras_js") or []:
+                carrera = _carrera(item.get("pubcarreraresumen_titulo_i_de") or "",
+                                   f"Departamento de {unidad}" if unidad else "", "https://www.unso.edu.ar/carreras")
+                if carrera:
+                    carreras.append(carrera)
+    return carreras
+
+
+# --- Villa Mercedes and Comechingones: the careers are the menu -----------------------------------------------
+
+UNVIME = "https://www.unvime.edu.ar/"
+UNLC = "https://unlc.edu.ar/"
+_ESCUELAS_UNVIME = ("/ecs/", "/ecse/", "/egee/", "/eica/", "/em/")
+
+
+def leer_unvime(html: str, pagina: str = UNVIME) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for item in _soup(html).select("li.menu-item-has-children"):
+        escuela = item.find("a", href=True, recursive=False)
+        if not escuela or not any(e in escuela["href"] for e in _ESCUELAS_UNVIME):
+            continue
+        unidad = clean_text(re.sub(r"\s*Ampliar$", "", _texto(escuela)))
+        for enlace in item.select("ul.sub-menu a[href]"):
+            if enlace["href"] in vistas or enlace["href"].rstrip("/") == escuela["href"].rstrip("/"):
+                continue
+            vistas.add(enlace["href"])
+            carrera = _carrera(_texto(enlace), unidad, enlace["href"])
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_unlc(html: str, pagina: str = UNLC) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for item in _soup(html).select("li.dropdown"):
+        grupo = _texto(item.find("a", recursive=False)).lower()
+        if grupo not in ("tecnicaturas", "licenciaturas", "ingenierías", "ingenierias"):
+            continue
+        for enlace in item.select("ul.dropdown-menu a[href]"):
+            if enlace["href"] in vistas or enlace["href"] == "#":
+                continue
+            vistas.add(enlace["href"])
+            carrera = _carrera(_texto(enlace), "", enlace["href"], None, None,
+                               "Pregrado" if grupo == "tecnicaturas" else "Grado")
+            if carrera:
+                carreras.append(carrera)
     return carreras
