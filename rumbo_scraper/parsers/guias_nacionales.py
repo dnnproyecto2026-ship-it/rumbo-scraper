@@ -2128,30 +2128,8 @@ def leer_hiba(html: str, pagina: str = HIBA, traer=None) -> list[CarreraDeLaGuia
     return carreras
 
 
-UNPAZ = "https://unpaz.edu.ar/carreras"
-UMSA = "https://www.umsa.edu.ar/carreras-de-grado/"
 ABARBANEL = "https://abarbanel.edu.ar/"
 CEMIC = "https://cemic.edu.ar/instituto-universitario.php"
-
-
-def leer_unpaz(html: str, pagina: str = UNPAZ) -> list[CarreraDeLaGuia]:
-    return _por_enlaces(html, pagina, r"^/index%2Ephp/(?!carreras|posgrado|estudia|ingreso)")
-
-
-def leer_umsa(html: str, pagina: str = UMSA) -> list[CarreraDeLaGuia]:
-    # "Abogacía presencial o virtual": the ways it is taught follow the name.
-    carreras, vistas = [], set()
-    for enlace in _soup(html).select("a[href*='/carrera/']"):
-        nombre = re.sub(r"(?i)\s+(?:presencial|virtual)(?:\s+o\s+(?:presencial|virtual))?$", "", _texto(enlace))
-        carrera = _carrera(nombre, "", enlace["href"])
-        # "Profesorado Universitario", with no subject: the teaching degree for
-        # those who hold another already.
-        if carrera and carrera.nombre == "Profesorado Universitario":
-            continue
-        if carrera and _NOMBRA_UN_TITULO.match(carrera.nombre) and carrera.nombre not in vistas:
-            vistas.add(carrera.nombre)
-            carreras.append(carrera)
-    return carreras
 
 
 def leer_abarbanel(html: str, pagina: str = ABARBANEL) -> list[CarreraDeLaGuia]:

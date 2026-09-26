@@ -305,10 +305,6 @@ GUIAS.update({
 
 
 GUIAS.update({
-    "UNPAZ": Guia("Universidad Nacional de José C. Paz", "UNPAZ", "Estatal", "https://unpaz.edu.ar",
-                  ((gn.UNPAZ, gn.leer_unpaz),), "José C. Paz", "", 15),
-    "UMSA": Guia("Universidad del Museo Social Argentino", "UMSA", "Privada", "https://www.umsa.edu.ar",
-                 ((gn.UMSA, gn.leer_umsa),), _SIN_SEDE, "", 12),
     "IUIA": Guia("Instituto Universitario Isaac Abarbanel", "IUIA", "Privada", "https://abarbanel.edu.ar",
                  ((gn.ABARBANEL, gn.leer_abarbanel),), _SIN_SEDE, "", 1),
     "CEMIC": Guia("Instituto Universitario CEMIC", "CEMIC", "Privada", "https://cemic.edu.ar",
@@ -502,6 +498,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar carreras desde la guía oficial")
     parser.add_argument("universidades", nargs="+", choices=sorted(GUIAS))
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    parser.add_argument("--reemplazar", action="store_true",
+                        help="Aplicar la guía a una universidad cuyas carreras vinieron de otra fuente")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client, select_all
@@ -514,11 +512,21 @@ def main() -> None:
         if len(carreras) < guia.minimo:
             print(f"{sigla}: la guía trajo {len(carreras)} carreras; no se aplica nada.")
             continue
-        escribir_artefacto(guia, carreras)
-        universidad_id = universidad(client, guia, crear=args.apply)
+        universidad_id = universidad(client, guia, crear=False)
         guardadas = [c for c in select_all(client.table("carreras").select(
             "id,nombre_carrera,nivel").eq("universidad_id", universidad_id))
             if c["nivel"] in guia.niveles] if universidad_id else []
+        # A university whose careers came from another source (its own
+        # spider, with units, plans and subjects) is not the guide's to
+        # replace: the guide would retire what it does not list and the
+        # units it does not name.
+        if guardadas and not guia.artefacto.exists() and not args.reemplazar:
+            print(f"{sigla}: ya tiene {len(guardadas)} carreras de otra fuente; no se aplica "
+                  "(--reemplazar para hacerlo).")
+            continue
+        if args.apply:
+            escribir_artefacto(guia, carreras)
+            universidad_id = universidad(client, guia, crear=True)
         cambios = plan_de_cambios(carreras, guardadas)
         for carrera, guardada in cambios["iguales"]:
             print(f"  = {guardada['nombre_carrera']}  →  {carrera.nombre}")
