@@ -324,6 +324,12 @@ GUIAS.update({
 })
 
 
+GUIAS.update({
+    "UNCAUS": Guia("Universidad Nacional del Chaco Austral", "UNCAUS", "Estatal", "https://uncaus.edu.ar",
+                   ((gn.UNCAUS, gn.leer_uncaus),), "Presidencia Roque Sáenz Peña", "", 15),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""
@@ -346,7 +352,15 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
             # A reader that needs a career's own page (the unit or the name the
             # list does not give) asks for it here, once each, unhurried.
             if url not in leidas:
-                leidas[url] = visitante.get(url)
+                # A script or a data file is read as it comes: the visitor
+                # takes pages only.
+                if re.search(r"\.(?:js|json)(?:\?|$)", url):
+                    try:
+                        leidas[url] = visitante.client.get(url).text
+                    except Exception:
+                        leidas[url] = ""
+                else:
+                    leidas[url] = visitante.get(url)
                 time.sleep(0.5)
             return leidas[url]
 

@@ -2240,3 +2240,41 @@ def leer_ucine(html: str, pagina: str = UCINE, traer=None) -> list[CarreraDeLaGu
         if carrera:
             carreras.append(carrera)
     return carreras
+
+
+# --- Universidad Nacional del Chaco Austral: the catalogue its site is built from ------------------
+# The site is built in the browser; its careers are data in one of the
+# script's pieces: {slug:"contador-publico", title:"Contador Público",
+# level:"grado", durationYears:5, ...}. Which piece it is changes with each
+# publication: it is the one that has them.
+
+UNCAUS = "https://uncaus.edu.ar/"
+_CARRERA_UNCAUS = re.compile(
+    r'slug:"([a-z0-9-]+)",title:"([^"]+)"(?:(?!slug:").)*?level:"(grado|pregrado)",durationYears:([\d.]+)', re.S)
+
+
+def catalogo_uncaus(traer, portada: str = UNCAUS) -> str | None:
+    """The address of the script piece that holds the careers."""
+    principal = re.search(r'src="(/_nuxt/[A-Za-z0-9_-]+\.js)"', traer(portada) or "")
+    if not principal:
+        return None
+    base = urljoin(portada, principal.group(1))
+    for pieza in sorted(set(re.findall(r"\./([A-Za-z0-9_-]{6,}\.js)", traer(base) or ""))):
+        url = urljoin(base, pieza)
+        if "degreeTitle:" in (traer(url) or ""):
+            return url
+    return None
+
+
+def leer_uncaus(html: str, pagina: str = UNCAUS, traer=None) -> list[CarreraDeLaGuia]:
+    catalogo = catalogo_uncaus(traer, pagina) if traer else None
+    carreras, vistas = [], set()
+    for slug, nombre, nivel_dicho, anios_ in _CARRERA_UNCAUS.findall(traer(catalogo) if catalogo else ""):
+        if slug in vistas:
+            continue
+        vistas.add(slug)
+        carrera = _carrera(nombre, "", urljoin(pagina, f"carreras/{slug}"), None, float(anios_),
+                           nivel_dicho.title())
+        if carrera:
+            carreras.append(carrera)
+    return carreras

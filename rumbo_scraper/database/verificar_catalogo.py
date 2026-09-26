@@ -248,8 +248,14 @@ def _del_catalogo(guia: str):
     return lambda fuentes, url, html, carrera: [guia + "#catalogo"]
 
 
+def _fuentes_uncaus(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[str]:
+    """The Chaco Austral's careers are data in a piece of its site's script."""
+    catalogo = gn.catalogo_uncaus(lambda u: fuentes.leer(u, avalada=True)["html"])
+    return [catalogo + "#catalogo"] if catalogo else []
+
+
 _FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba,
-                    "UNSO": _del_catalogo(gn.UNSO)}
+                    "UNSO": _del_catalogo(gn.UNSO), "UNCAUS": _fuentes_uncaus}
 
 
 def _planes_publicados() -> dict[tuple[str, str], str]:
