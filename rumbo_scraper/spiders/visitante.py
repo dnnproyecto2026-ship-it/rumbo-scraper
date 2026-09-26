@@ -53,7 +53,12 @@ class Visitante:
             response.raise_for_status()
             if "html" not in response.headers.get("content-type", ""):
                 return ""
-            return response.text
+            try:
+                return response.text
+            except (UnicodeDecodeError, LookupError):
+                # A server that declares an encoding its page is not in (the
+                # IUSM says UTF-32): the page is read as the UTF-8 it is.
+                return response.content.decode("utf-8", errors="replace")
         except Exception:
             return ""
 

@@ -30,7 +30,7 @@ of its offers.
 The link of each career goes to ``data/<sigla>_guia_completo.json``, where
 the export and the duration and plan readers look for a career's page.
 
-    python -m rumbo_scraper.database.carreras_de_guias UNC UNRC UPC UNL UNCuyo UNT [--apply]
+    python -m rumbo_scraper.database.carreras_de_guias UNC UNRC UPC UNL UNCuyo UNT UNR [--apply]
 """
 
 from __future__ import annotations
@@ -44,7 +44,8 @@ from typing import Any, Callable
 
 from rumbo_scraper.database.exportar_catalogo import clave_de_carrera
 from rumbo_scraper.parsers import unc as guias
-from rumbo_scraper.parsers import uncuyo, unl, unt
+from rumbo_scraper.parsers import guias_nacionales as gn
+from rumbo_scraper.parsers import uncuyo, unl, unr, unt
 from rumbo_scraper.parsers.unc import CarreraDeLaGuia
 
 
@@ -62,6 +63,9 @@ class Guia:
     # Fewer careers than this is a guide that came back short, not a
     # university that closed most of them.
     minimo: int
+    # The levels the guide lists: a career of another level is not retired
+    # for being absent (the UNR's page lists grado only).
+    niveles: tuple[str, ...] = ("Grado", "Pregrado")
 
     @property
     def artefacto(self) -> Path:
@@ -101,6 +105,12 @@ GUIAS = {
         "Universidad Nacional de Tucumán", "UNT", "Estatal", "https://www.unt.edu.ar",
         tuple((unt.INDICE + slug + "/", unt.leer_unidad) for slug in unt.UNIDADES),
         "Sede no informada", "", 60),
+    # The UNR's grado careers by faculty, each with the address it is taught
+    # at: Rosario, Zavalla (Agrarias) or Casilda (Veterinarias).
+    "UNR": Guia(
+        "Universidad Nacional de Rosario", "UNR", "Estatal", "https://unr.edu.ar",
+        ((unr.GUIA, unr.leer_guia),),
+        "Rosario", "", 40, ("Grado",)),
     # "Universidad Nacional de Río Cuarto Ruta Nac. 36 - KM. 601 - Río Cuarto -
     # Córdoba - Argentina", on the foot of every page of unrc.edu.ar.
     "UNRC": Guia(
@@ -108,6 +118,40 @@ GUIAS = {
         ((guias.GUIA_UNRC, guias.leer_guia_unrc),),
         "Campus Río Cuarto", "Ruta Nac. 36 - KM. 601", 40),
 }
+
+# Universities whose list does not say where each career is taught go under
+# the campus the application does not place on the map.
+_SIN_SEDE = "Sede no informada"
+GUIAS.update({
+    "UADER": Guia("Universidad Autónoma de Entre Ríos", "UADER", "Estatal", "https://uader.edu.ar",
+                  ((gn.UADER, gn.leer_uader),), "Paraná", "", 60),
+    "UNComa": Guia("Universidad Nacional del Comahue", "UNComa", "Estatal", "https://uncoma.edu.ar",
+                   ((gn.COMAHUE_GRADO, gn.leer_comahue), (gn.COMAHUE_PREGRADO, gn.leer_comahue)),
+                   "Neuquén", "", 50),
+    "UNTDF": Guia("Universidad Nacional de Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+                  "UNTDF", "Estatal", "https://www.untdf.edu.ar", ((gn.UNTDF, gn.leer_untdf),),
+                  "Ushuaia", "", 15),
+    "UMendoza": Guia("Universidad de Mendoza", "UMendoza", "Privada", "https://um.edu.ar",
+                     ((gn.UM_MENDOZA, gn.leer_um_mendoza),), _SIN_SEDE, "", 20),
+    "CAECE": Guia("Universidad CAECE", "CAECE", "Privada", "https://www.ucaece.edu.ar",
+                  ((gn.CAECE, gn.leer_caece),), _SIN_SEDE, "", 10),
+    "UCH": Guia("Universidad Champagnat", "UCH", "Privada", "https://www.uch.edu.ar",
+                ((gn.CHAMPAGNAT, gn.leer_champagnat),), _SIN_SEDE, "", 8),
+    "IUCBC": Guia("Instituto Universitario de Ciencias Biomédicas de Córdoba", "IUCBC", "Privada",
+                  "https://www.iucbc.edu.ar",
+                  ((gn.IUCBC_GRADO, gn.leer_iucbc), (gn.IUCBC_PREGRADO, gn.leer_iucbc)), _SIN_SEDE, "", 6),
+    "UNRT": Guia("Universidad Nacional de Río Tercero", "UNRT", "Estatal", "https://unrt.edu.ar",
+                 ((gn.UNRT, gn.leer_unrt),), _SIN_SEDE, "", 4),
+    "UNMa": Guia("Universidad Nacional Madres de Plaza de Mayo", "UNMa", "Estatal", "https://unma.edu.ar",
+                 ((gn.UNMA, gn.leer_unma),), _SIN_SEDE, "", 5),
+    "Maimónides": Guia("Universidad Maimónides", "Maimónides", "Privada", "https://www.maimonides.edu",
+                       ((gn.MAIMONIDES, gn.leer_maimonides),), _SIN_SEDE, "", 15),
+    # The Universidad Evangélica answers this reader with a 403: not read.
+    "UCAMI": Guia("Universidad Católica de las Misiones", "UCAMI", "Privada", "https://www.ucami.edu.ar",
+                  ((gn.UCAMI, gn.leer_ucami),), _SIN_SEDE, "", 6),
+    "IUSM": Guia("Instituto Universitario de Seguridad Marítima", "IUSM", "Estatal", "https://iusm.edu.ar",
+                 ((gn.IUSM, gn.leer_iusm),), _SIN_SEDE, "", 6),
+})
 
 
 def clave(nombre: str) -> str:
@@ -121,10 +165,26 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
     comes once per campus."""
     from rumbo_scraper.spiders.visitante import Visitante
 
+    import inspect
+    import time
+
     carreras: list[CarreraDeLaGuia] = []
     with Visitante(timeout=30) as visitante:
+        leidas: dict[str, str] = {}
+
+        def traer(url: str) -> str:
+            # A reader that needs a career's own page (the unit or the name the
+            # list does not give) asks for it here, once each, unhurried.
+            if url not in leidas:
+                leidas[url] = visitante.get(url)
+                time.sleep(0.5)
+            return leidas[url]
+
         for pagina, lector in guia.paginas:
-            carreras += lector(visitante.get(pagina), pagina)
+            if len(inspect.signature(lector).parameters) >= 3:
+                carreras += lector(visitante.get(pagina), pagina, traer)
+            else:
+                carreras += lector(visitante.get(pagina), pagina)
     return carreras
 
 
@@ -287,7 +347,7 @@ def main() -> None:
         universidad_id = universidad(client, guia, crear=args.apply)
         guardadas = [c for c in select_all(client.table("carreras").select(
             "id,nombre_carrera,nivel").eq("universidad_id", universidad_id))
-            if c["nivel"] in ("Grado", "Pregrado")] if universidad_id else []
+            if c["nivel"] in guia.niveles] if universidad_id else []
         cambios = plan_de_cambios(carreras, guardadas)
         for carrera, guardada in cambios["iguales"]:
             print(f"  = {guardada['nombre_carrera']}  →  {carrera.nombre}")

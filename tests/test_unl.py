@@ -100,3 +100,25 @@ class ExpoUNT(unittest.TestCase):
             ("Licenciatura en Letras", "Facultad de Filosofía y Letras", "Grado", 5.0),
             ("Licenciatura en Historia", "Facultad de Filosofía y Letras", "Grado", 5.0),
             ("Tecnicatura en Algo", "Facultad de Filosofía y Letras", "Pregrado", 2.5)])
+
+
+UNR = """
+<main><h2 class="elementor-heading-title">Ciencias Agrarias</h2>
+<div class="elementor-toggle-item"><div class="elementor-tab-title"><a class="elementor-toggle-title">Ingeniería Agronómica</a></div>
+<div class="elementor-tab-content"><p><a href="https://fcagr.unr.edu.ar/plan/">Plan de Estudios</a><br/>Duración: 5 años<br/>Campo Experimental – C.C. 14 – (2123) Zavalla<br/><a href="https://fcagr.unr.edu.ar/">https://fcagr.unr.edu.ar/</a></p></div></div>
+<h2 class="elementor-heading-title">Ciencias Económicas y Estadística</h2>
+<div class="elementor-toggle-item"><div class="elementor-tab-title"><a class="elementor-toggle-title">Contador Público​</a></div>
+<div class="elementor-tab-content"><p><a href="https://www.fcecon.unr.edu.ar/cp">Plan de Estudios</a><br/>Duración: 5 años<br/>Bv Oroño 1261</p></div></div></main>
+"""
+
+
+class GuiaDeLaUNR(unittest.TestCase):
+    def test_carrera_facultad_duracion_y_localidad(self):
+        from rumbo_scraper.parsers.unr import leer_guia
+
+        carreras = leer_guia(UNR)
+        self.assertEqual([(c.nombre, c.unidad, c.sede, c.duracion, c.url) for c in carreras], [
+            ("Ingeniería Agronómica", "Facultad de Ciencias Agrarias", "Zavalla", 5.0,
+             "https://fcagr.unr.edu.ar/plan/"),
+            ("Contador Público", "Facultad de Ciencias Económicas y Estadística", "Rosario", 5.0,
+             "https://www.fcecon.unr.edu.ar/cp")])
