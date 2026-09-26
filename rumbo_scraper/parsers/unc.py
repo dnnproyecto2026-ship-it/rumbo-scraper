@@ -38,6 +38,8 @@ class CarreraDeLaGuia:
     nivel: str
     # The campus the guide lists the career at, when it lists campuses.
     sede: str | None = None
+    # The years the guide says the career takes, when it says.
+    duracion: float | None = None
 
 
 # "Contador/a Público/a": the guide writes both genders; the catalogue names

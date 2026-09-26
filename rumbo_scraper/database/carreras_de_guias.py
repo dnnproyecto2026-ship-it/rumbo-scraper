@@ -30,7 +30,7 @@ of its offers.
 The link of each career goes to ``data/<sigla>_guia_completo.json``, where
 the export and the duration and plan readers look for a career's page.
 
-    python -m rumbo_scraper.database.carreras_de_guias UNC UNRC UPC [--apply]
+    python -m rumbo_scraper.database.carreras_de_guias UNC UNRC UPC UNL UNCuyo UNT [--apply]
 """
 
 from __future__ import annotations
@@ -44,6 +44,7 @@ from typing import Any, Callable
 
 from rumbo_scraper.database.exportar_catalogo import clave_de_carrera
 from rumbo_scraper.parsers import unc as guias
+from rumbo_scraper.parsers import uncuyo, unl, unt
 from rumbo_scraper.parsers.unc import CarreraDeLaGuia
 
 
@@ -80,6 +81,26 @@ GUIAS = {
         "Universidad Provincial de Córdoba", "UPC", "Estatal", "https://www.upc.edu.ar",
         ((guias.GUIA_UPC, guias.leer_guia_upc),),
         guias.SEDE_UPC, "", 40),
+    # The UNL's catalogue by academic unit; its main campus is the city of
+    # Santa Fe, where the rest of its cards say it teaches.
+    "UNL": Guia(
+        "Universidad Nacional del Litoral", "UNL", "Estatal", "https://www.unl.edu.ar",
+        tuple((unl.CATALOGO.format(ua), (lambda s: lambda h, p: unl.leer_unidad(h, p, s))(sigla))
+              for ua, sigla in unl.UNIDADES.items()),
+        "Santa Fe", "", 60),
+    # The UNCuyo's catalogue does not say where each career is taught (the
+    # Facultad de Ciencias Aplicadas a la Industria is in San Rafael): its
+    # campus is the one the application does not place on the map.
+    "UNCuyo": Guia(
+        "Universidad Nacional de Cuyo", "UNCuyo", "Estatal", "https://www.uncuyo.edu.ar",
+        ((uncuyo.CATALOGO, uncuyo.leer_catalogo),),
+        "Sede no informada", "", 60),
+    # Expo UNT, faculty by faculty; the UNT teaches in several parts of
+    # Tucumán, and the page ties no career to one.
+    "UNT": Guia(
+        "Universidad Nacional de Tucumán", "UNT", "Estatal", "https://www.unt.edu.ar",
+        tuple((unt.INDICE + slug + "/", unt.leer_unidad) for slug in unt.UNIDADES),
+        "Sede no informada", "", 60),
     # "Universidad Nacional de Río Cuarto Ruta Nac. 36 - KM. 601 - Río Cuarto -
     # Córdoba - Argentina", on the foot of every page of unrc.edu.ar.
     "UNRC": Guia(
@@ -186,12 +207,14 @@ def aplicar(client: Any, carreras: list[CarreraDeLaGuia], cambios: dict[str, Any
         client.table("carreras").update({
             "nombre_carrera": carrera.nombre, "denominacion_canonica": carrera.nombre,
             "nivel": carrera.nivel, "facultad_id": unidades[carrera.unidad],
+            # The duration the guide states, when it states one.
+            **({"duracion_anios": carrera.duracion} if carrera.duracion else {}),
         }).eq("id", guardada["id"]).execute()
     for carrera in cambios["nuevas"]:
         client.table("carreras").insert({
             "universidad_id": universidad_id, "facultad_id": unidades[carrera.unidad],
             "nombre_carrera": carrera.nombre, "denominacion_canonica": carrera.nombre,
-            "nivel": carrera.nivel,
+            "nivel": carrera.nivel, "duracion_anios": carrera.duracion,
         }).execute()
     retiradas = [c["id"] for c in cambios["retiradas"]]
     for inicio in range(0, len(retiradas), 50):

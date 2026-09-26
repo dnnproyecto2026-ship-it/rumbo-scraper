@@ -58,6 +58,7 @@ from rumbo_scraper.normalizers.text import comparison_key
 import math
 
 from rumbo_scraper.parsers import plan_por_ciclos, plan_por_columnas, plan_por_cuatrimestre
+from rumbo_scraper.parsers import uncuyo, unl
 from rumbo_scraper.parsers.unc import leer_plan_fcefyn, plan_mas_nuevo
 from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
 from rumbo_scraper.spiders.visitante import Visitante
@@ -190,6 +191,12 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             html = visitante.get(url)
             time.sleep(PAUSA)
             en_la_pagina = _de_la_pagina(html)
+            # The UNL lays its plan out as a list of bullets, without years.
+            if not en_la_pagina and host.endswith("unl.edu.ar"):
+                en_la_pagina = [(materia, None) for materia in unl.leer_plan(html)]
+            # The UNCuyo, year by year and term by term.
+            if not en_la_pagina and host.endswith("uncuyo.edu.ar"):
+                en_la_pagina = uncuyo.leer_plan(html)
             if en_la_pagina:
                 de_la_pagina[carrera["id"]] = en_la_pagina
                 continue
