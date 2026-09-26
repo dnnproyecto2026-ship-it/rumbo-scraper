@@ -166,9 +166,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LOMAS DE ZAMORA - UNZ",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "Lista por facultad en acordeones: falta el lector."
+   "en_rumbo": "Universidad Nacional de Lomas de Zamora",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LOS COMECHINGONES",
@@ -653,9 +652,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD EMPRESARIAL SIGLO 21",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "La lista de carreras se arma en el navegador (HubSpot)."
+   "en_rumbo": "Universidad Siglo 21",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ESCUELA ARGENTINA DE NEGOCIOS (entonces INSTITUTO UNIVERSITARIO ESCUELA ARGENTINA DE NEGOCIOS)",
