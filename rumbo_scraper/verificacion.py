@@ -80,10 +80,32 @@ def texto_de_html(html: str) -> str:
     return soup.get_text(" ") + " " + " ".join(datos)
 
 
+# A guide that writes the degree short ("Lic. en Kinesiología", "Tec.
+# Universitaria en Museología") names the career the export spells out.
+_ABREVIADAS = (
+    (re.compile(r"^licenciatura en "), ("lic en ", "lic ")),
+    (re.compile(r"^tecnicatura universitaria en "), ("tec universitaria en ", "tec univ en ", "tecn univ en ")),
+    (re.compile(r"^tecnicatura en "), ("tec en ", "tec ")),
+    (re.compile(r"^profesorado en "), ("prof en ", "prof ")),
+    (re.compile(r"^ingenieria en "), ("ing en ",)),
+)
+
+
+_PALABRAS_ABREVIADAS = ((" administracion ", " adm "), (" organizacion ", " org "),
+                        (" recursos humanos ", " rr hh "))
+
+
 def dice(fuente_plana: str, nombre: str | None) -> bool:
     """Whether the source, already made plain, has the name as whole words."""
     nombre = plano(nombre)
-    return bool(nombre) and f" {nombre} " in f" {fuente_plana} "
+    if not nombre:
+        return False
+    formas = [nombre] + [patron.sub(corta, nombre) for patron, cortas in _ABREVIADAS
+                         if patron.match(nombre) for corta in cortas]
+    for largo, corto in _PALABRAS_ABREVIADAS:
+        formas += [f" {forma} ".replace(largo, corto).strip() for forma in formas if largo in f" {forma} "]
+    fuente = f" {fuente_plana} "
+    return any(f" {forma} " in fuente for forma in formas)
 
 
 _VACIAS = frozenset(

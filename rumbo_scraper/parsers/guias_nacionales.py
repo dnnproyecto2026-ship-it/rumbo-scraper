@@ -87,6 +87,11 @@ def expandir(nombre: str) -> str:
 def _carrera(nombre: str, unidad: str, url: str, sede: str | None = None,
              duracion: float | None = None, nivel_dicho: str | None = None) -> CarreraDeLaGuia | None:
     nombre = expandir(clean_text(nombre).strip(" *-–"))
+    # "Ceremonial, Imagen y Org. de Eventos", "Gestión de la Adm. Pública",
+    # "RR HH y Relaciones Laborales": the words the guide shortens.
+    nombre = re.sub(r"\bOrg\.\s*", "Organización ", nombre)
+    nombre = re.sub(r"\bAdm\.\s*", "Administración ", nombre)
+    nombre = re.sub(r"\bRR\.?\s?HH\.?(?=\s|$)", "Recursos Humanos", nombre)
     # "Instrumentación QUirúrgica": a slip of the shift key.
     nombre = re.sub(r"\b([A-ZÁÉÍÓÚ])([A-ZÁÉÍÓÚ])(?=[a-záéíóúñ]{2})", lambda m: m.group(1) + m.group(2).lower(), nombre)
     # The way it is taught is the offer's, not the career's name.
@@ -2164,8 +2169,9 @@ def leer_unlz(html: str, pagina: str = UNLZ) -> list[CarreraDeLaGuia]:
         unidad = clean_text(_texto(encabezado))
         if not unidad.lower().startswith("facultad"):
             continue
-        enlace = encabezado.find("a", href=True)
-        url = enlace["href"] if enlace else pagina
+        # The faculty's own site does not list them: the careers' source is
+        # this page.
+        url = pagina
         # (item's text, kind of the fold it is in)
         items: list[tuple[str, str]] = []
         for bloque in columna.select(".la-headings"):
