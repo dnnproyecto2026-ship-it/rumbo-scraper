@@ -267,7 +267,7 @@ GUIAS.update({
     "UDC": Guia("Universidad del Chubut", "UDC", "Estatal", "https://udc.edu.ar",
                 ((gn.UDC, gn.leer_udc),), _SIN_SEDE, "", 10),
     "IUCSB": Guia("Instituto Universitario de Ciencias de la Salud", "IUCSB", "Privada",
-                         "https://barcelo.edu.ar", ((gn.BARCELO_GRADO, gn.leer_barcelo),), _SIN_SEDE, "", 5,
+                         "https://barcelo.edu.ar", ((gn.BARCELO_GRADO, gn.leer_barcelo),), _SIN_SEDE, "", 4,
                          ("Grado",)),
     "UPE": Guia("Universidad Provincial de Ezeiza", "UPE", "Estatal", "https://web.upe.edu.ar",
                 ((gn.UPE, gn.leer_upe),), _SIN_SEDE, "", 8),

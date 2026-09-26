@@ -1865,7 +1865,9 @@ def leer_barcelo(html: str, pagina: str, traer=None) -> list[CarreraDeLaGuia]:
     contenido = _soup(html).select_one("div.content") or _soup(html)
     for enlace in contenido.select("h4 a[href]"):
         url = enlace["href"].replace("http://", "https://")
-        if url in vistas or not traer:
+        # "Instrumentación Quirúrgica a distancia (Ciclo de complementación)":
+        # the list says it, the career's page does not.
+        if url in vistas or not traer or es_ciclo(_texto(enlace)):
             continue
         vistas.add(url)
         nombre = next((re.sub(r"(?i)^bienvenidos?\s+a\s+(?:la\s+)?(?:carrera\s+de\s+)?", "", _texto(h))
