@@ -304,6 +304,18 @@ GUIAS.update({
 })
 
 
+GUIAS.update({
+    "UNPAZ": Guia("Universidad Nacional de José C. Paz", "UNPAZ", "Estatal", "https://unpaz.edu.ar",
+                  ((gn.UNPAZ, gn.leer_unpaz),), "José C. Paz", "", 15),
+    "UMSA": Guia("Universidad del Museo Social Argentino", "UMSA", "Privada", "https://www.umsa.edu.ar",
+                 ((gn.UMSA, gn.leer_umsa),), _SIN_SEDE, "", 12),
+    "IUIA": Guia("Instituto Universitario Isaac Abarbanel", "IUIA", "Privada", "https://abarbanel.edu.ar",
+                 ((gn.ABARBANEL, gn.leer_abarbanel),), _SIN_SEDE, "", 1),
+    "CEMIC": Guia("Instituto Universitario CEMIC", "CEMIC", "Privada", "https://cemic.edu.ar",
+                  ((gn.CEMIC, gn.leer_cemic),), _SIN_SEDE, "", 4),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""

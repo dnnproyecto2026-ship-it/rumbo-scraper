@@ -69,9 +69,9 @@ def _tipo(unidad: str) -> str:
 # en ...", "Prof. de ...", "Ing. ..."), written out.
 _ABREVIATURAS = (
     (re.compile(r"^Lic\.\s*(?:en\s+)?", re.I), "Licenciatura en "),
-    (re.compile(r"^Tecn?\.\s*Univ\.\s*(?:en\s+)?", re.I), "Tecnicatura Universitaria en "),
+    (re.compile(r"^Tecn?\.\s*Univ(?:\.|ersitaria)\s*(?:en\s+)?", re.I), "Tecnicatura Universitaria en "),
     (re.compile(r"^Tecn?\.\s*(?:en\s+)?", re.I), "Tecnicatura en "),
-    (re.compile(r"^Prof\.\s*(?=(?:de|en)\s)", re.I), "Profesorado "),
+    (re.compile(r"^Prof\.\s*(?=(?:de|en|universitario)\s)", re.I), "Profesorado "),
     (re.compile(r"^Prof\.\s*", re.I), "Profesorado en "),
     (re.compile(r"^Ing\.\s*(?:en\s+)?", re.I), "Ingeniería en "),
 )
@@ -2031,7 +2031,7 @@ def leer_upatagonia(html: str, pagina: str = UPATAGONIA) -> list[CarreraDeLaGuia
 # --- Lists of links: the career's name is the link's text ------------------------------------------
 
 _NOMBRA_UN_TITULO = re.compile(
-    r"(?i)^(?:lic(?:enciatura)?\.?|tec(?:n(?:icatura)?)?\.?|ingenier[íi]a|bioingenier[íi]a|profesor(?:ado)?|abogac[íi]a|"
+    r"(?i)^(?:lic(?:enciatura)?\.?|tec(?:n(?:icatura)?)?\.?|ingenier[íi]a|bioingenier[íi]a|prof(?=\.)|profesor(?:ado)?|abogac[íi]a|"
     r"contador|medicina|odontolog[íi]a|traductor(?:ado)?|arquitectura|enfermer[íi]a|farmacia|bioqu[íi]mica|"
     r"escriban[íi]a|martillero|analista|psicolog[íi]a|nutrici[óo]n|kinesiolog[íi]a|obstetricia|veterinaria|"
     r"m[ée]dico veterinario|dise[ñn]o)\b")
@@ -2124,5 +2124,49 @@ def leer_hiba(html: str, pagina: str = HIBA, traer=None) -> list[CarreraDeLaGuia
         duracion = re.search(r"(?i)duraci[óo]n\s+(\d[^A-Z]{0,20}a[ñn]os(?:\s+y\s+medio)?)", texto)
         carrera = _carrera(titulo, "", url, None, anios(duracion.group(1)) if duracion else None, "Grado")
         if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+UNPAZ = "https://unpaz.edu.ar/carreras"
+UMSA = "https://www.umsa.edu.ar/carreras-de-grado/"
+ABARBANEL = "https://abarbanel.edu.ar/"
+CEMIC = "https://cemic.edu.ar/instituto-universitario.php"
+
+
+def leer_unpaz(html: str, pagina: str = UNPAZ) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"^/index%2Ephp/(?!carreras|posgrado|estudia|ingreso)")
+
+
+def leer_umsa(html: str, pagina: str = UMSA) -> list[CarreraDeLaGuia]:
+    # "Abogacía presencial o virtual": the ways it is taught follow the name.
+    carreras, vistas = [], set()
+    for enlace in _soup(html).select("a[href*='/carrera/']"):
+        nombre = re.sub(r"(?i)\s+(?:presencial|virtual)(?:\s+o\s+(?:presencial|virtual))?$", "", _texto(enlace))
+        carrera = _carrera(nombre, "", enlace["href"])
+        # "Profesorado Universitario", with no subject: the teaching degree for
+        # those who hold another already.
+        if carrera and carrera.nombre == "Profesorado Universitario":
+            continue
+        if carrera and _NOMBRA_UN_TITULO.match(carrera.nombre) and carrera.nombre not in vistas:
+            vistas.add(carrera.nombre)
+            carreras.append(carrera)
+    return carreras
+
+
+def leer_abarbanel(html: str, pagina: str = ABARBANEL) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"abarbanel\.edu\.ar/.+")
+
+
+def leer_cemic(html: str, pagina: str = CEMIC) -> list[CarreraDeLaGuia]:
+    """Each career is a heading; the headings of its documents ("Medicina -
+    Programa") repeat it after a dash."""
+    carreras = []
+    for titulo in _soup(html).find_all(["h2", "h3", "h4", "h5"]):
+        nombre = _texto(titulo).replace("\xa0", " ")
+        if " - " in nombre or not _NOMBRA_UN_TITULO.match(nombre):
+            continue
+        carrera = _carrera(nombre, "", pagina)
+        if carrera and carrera.nombre not in [c.nombre for c in carreras]:
             carreras.append(carrera)
     return carreras
