@@ -2026,3 +2026,103 @@ def leer_upatagonia(html: str, pagina: str = UPATAGONIA) -> list[CarreraDeLaGuia
         if carrera and _ES_DE_GRADO.match(carrera.nombre):
             carreras.append(carrera)
     return carreras
+
+
+# --- Lists of links: the career's name is the link's text ------------------------------------------
+
+_NOMBRA_UN_TITULO = re.compile(
+    r"(?i)^(?:lic(?:enciatura)?\.?|tec(?:n(?:icatura)?)?\.?|ingenier[íi]a|bioingenier[íi]a|profesor(?:ado)?|abogac[íi]a|"
+    r"contador|medicina|odontolog[íi]a|traductor(?:ado)?|arquitectura|enfermer[íi]a|farmacia|bioqu[íi]mica|"
+    r"escriban[íi]a|martillero|analista|psicolog[íi]a|nutrici[óo]n|kinesiolog[íi]a|obstetricia|veterinaria|"
+    r"m[ée]dico veterinario|dise[ñn]o)\b")
+
+
+def _por_enlaces(html: str, pagina: str, patron: str) -> list[CarreraDeLaGuia]:
+    """Every link whose address matches ``patron`` and whose text names a
+    degree, once per name."""
+    carreras, vistas = [], set()
+    for enlace in _soup(html).find_all("a", href=True):
+        texto = re.sub(r"(?i)\s*\((?:presencial|a distancia|virtual)\)$", "", _texto(enlace).split("|")[0].strip())
+        texto = _titulo_si_mayusculas(texto)
+        if not re.search(patron, enlace["href"]) or not _NOMBRA_UN_TITULO.match(texto) or len(texto) > 120:
+            continue
+        carrera = _carrera(texto, "", urljoin(pagina, enlace["href"]))
+        if carrera and clave_sin_tildes(carrera.nombre) not in vistas:
+            vistas.add(clave_sin_tildes(carrera.nombre))
+            carreras.append(carrera)
+    return carreras
+
+
+def _por_paginas(html: str, pagina: str, patron: str, traer) -> list[CarreraDeLaGuia]:
+    """The list gives only a link ("+ INFO"): each career's own page names it
+    in its heading."""
+    carreras, vistas = [], set()
+    for enlace in _soup(html).find_all("a", href=True):
+        url = urljoin(pagina, enlace["href"])
+        if not re.search(patron, url) or url in vistas or not traer:
+            continue
+        vistas.add(url)
+        titulo = next((_texto(h) for h in _soup(traer(url)).find_all(["h1", "h2"])
+                       if _NOMBRA_UN_TITULO.match(_texto(h)) and len(_texto(h)) < 120), "")
+        carrera = _carrera(_titulo_si_mayusculas(titulo), "", url)
+        if carrera and carrera.nombre not in [c.nombre for c in carreras]:
+            carreras.append(carrera)
+    return carreras
+
+
+def clave_sin_tildes(nombre: str) -> str:
+    from rumbo_scraper.normalizers.text import comparison_key
+
+    return comparison_key(nombre)
+
+
+UDA = "https://www.uda.edu.ar/index.php/estudios"
+IUSE = "https://iuse.edu.ar/ofertaacademica/"
+UNDEC = "https://www.undec.edu.ar/index.php/oferta-academica/"
+UNAB = ("https://www.unab.edu.ar/licenciaturas/", "https://www.unab.edu.ar/tecnicaturas/")
+UNICABA = "https://www.udelaciudad.edu.ar/ensenanza/"
+EUT = "https://eut.edu.ar/carreras/"
+HIBA = "https://carreras.hospitalitaliano.edu.ar/"
+
+
+def leer_uda(html: str, pagina: str = UDA) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"/carreras-de-(?:pre)?grado/")
+
+
+def leer_iuse(html: str, pagina: str = IUSE) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"iuse\.edu\.ar/")
+
+
+def leer_undec(html: str, pagina: str = UNDEC) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"undec\.edu\.ar/")
+
+
+def leer_unab(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"unab\.edu\.ar/")
+
+
+def leer_unicaba(html: str, pagina: str = UNICABA) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"udelaciudad\.edu\.ar/(?!ensenanza|escuelas|ingreso)")
+
+
+def leer_eut(html: str, pagina: str = EUT) -> list[CarreraDeLaGuia]:
+    return _por_enlaces(html, pagina, r"eut\.edu\.ar/carrera/")
+
+
+def leer_hiba(html: str, pagina: str = HIBA, traer=None) -> list[CarreraDeLaGuia]:
+    """Each career's page heads it by its field ("Enfermería", "Kinesiología y
+    Fisiatría") and gives its length under "DURACIÓN"."""
+    carreras, vistas = [], set()
+    for enlace in _soup(html).find_all("a", href=True):
+        url = enlace["href"]
+        if not re.search(r"carreras\.hospitalitaliano\.edu\.ar/(?!ciclo)[a-z]+$", url) or url in vistas or not traer:
+            continue
+        vistas.add(url)
+        soup = _soup(traer(url))
+        titulo = _texto(soup.find("h1"))
+        texto = soup.get_text(" ", strip=True)
+        duracion = re.search(r"(?i)duraci[óo]n\s+(\d[^A-Z]{0,20}a[ñn]os(?:\s+y\s+medio)?)", texto)
+        carrera = _carrera(titulo, "", url, None, anios(duracion.group(1)) if duracion else None, "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras

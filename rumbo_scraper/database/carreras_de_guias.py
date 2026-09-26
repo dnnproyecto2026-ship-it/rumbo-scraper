@@ -195,8 +195,6 @@ GUIAS.update({
                   "IUDPT", "Privada", "https://iudpt.edu.ar", ((gn.IUDPT, gn.leer_iudpt),), _SIN_SEDE, "", 5),
     "IUCE": Guia("Instituto Universitario de Ciencias Empresariales", "IUCE", "Privada", "https://i-uce.edu.ar",
                  ((gn.IUCE, gn.leer_iuce),), _SIN_SEDE, "", 4),
-    "EUT": Guia("Escuela Universitaria de Teología", "EUT", "Privada", "https://eut.edu.ar",
-                ((gn.EUT, gn.leer_eut),), _SIN_SEDE, "", 2),
     "IUYMCA": Guia("Instituto Universitario YMCA", "IUYMCA", "Privada", "https://iuymca.edu.ar",
                    ((gn.IUYMCA, gn.leer_iuymca),), _SIN_SEDE, "", 2),
     "USBA": Guia("Universidad del Sur de Buenos Aires", "USBA", "Privada", "https://usba.edu.ar",
@@ -235,8 +233,6 @@ GUIAS.update({
                    ((gn.UCCUYO, gn.leer_uccuyo),), "San Juan", "", 40),
     "UNLu": Guia("Universidad Nacional de Luján", "UNLu", "Estatal", "https://www.unlu.edu.ar",
                  ((gn.UNLU_GRADO, gn.leer_unlu), (gn.UNLU_PREGRADO, gn.leer_unlu)), _SIN_SEDE, "", 20),
-    "UNdeC": Guia("Universidad Nacional de Chilecito", "UNdeC", "Estatal", "https://www.undec.edu.ar",
-                  ((gn.UNDEC, gn.leer_undec),), _SIN_SEDE, "", 15),
     "UEAN": Guia("Universidad Escuela Argentina de Negocios", "UEAN", "Privada", "https://www.uean.edu.ar",
                  ((gn.UEAN_GRADO, gn.leer_uean), (gn.UEAN_PREGRADO, gn.leer_uean)), _SIN_SEDE, "", 12),
     "UNIPE": Guia("Universidad Pedagógica Nacional", "UNIPE", "Estatal", "https://unipe.edu.ar",
@@ -291,6 +287,20 @@ GUIAS.update({
                    ((gn.UNISUD, gn.leer_unisud),), _SIN_SEDE, "", 3),
     "UPatagonia": Guia("Universidad Patagonia Argentina", "UPatagonia", "Privada", "https://upatagonia.edu.ar",
                        ((gn.UPATAGONIA, gn.leer_upatagonia),), _SIN_SEDE, "", 5),
+})
+
+
+GUIAS.update({
+    "UDA": Guia("Universidad del Aconcagua", "UDA", "Privada", "https://www.uda.edu.ar",
+                ((gn.UDA, gn.leer_uda),), _SIN_SEDE, "", 20),
+    "IUSE": Guia("Instituto Universitario de Seguridad Pública", "IUSE", "Privada", "https://iuse.edu.ar",
+                 ((gn.IUSE, gn.leer_iuse),), _SIN_SEDE, "", 6),
+    "UNAB": Guia("Universidad Nacional Guillermo Brown", "UNAB", "Estatal", "https://www.unab.edu.ar",
+                 tuple((pagina, gn.leer_unab) for pagina in gn.UNAB), _SIN_SEDE, "", 10),
+    "UNICABA": Guia("Universidad de la Ciudad de Buenos Aires", "UNICABA", "Estatal", "https://www.udelaciudad.edu.ar",
+                    ((gn.UNICABA, gn.leer_unicaba),), _SIN_SEDE, "", 2),
+    "UHIBA": Guia("Universidad Hospital Italiano de Buenos Aires", "UHIBA", "Privada",
+                  "https://www.hospitalitaliano.edu.ar", ((gn.HIBA, gn.leer_hiba),), _SIN_SEDE, "", 6),
 })
 
 
