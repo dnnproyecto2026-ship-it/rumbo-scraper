@@ -6,19 +6,20 @@
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE GENDARMERÍA NACIONAL - IUGNA",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "El sitio no publica la lista de carreras en HTML."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE LA POLICÍA FEDERAL ARGENTINA - IUPFA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de la Policía Federal Argentina",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE SEGURIDAD MARÍTIMA - IUSM",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de Seguridad Marítima",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE BUENOS AIRES - UBA",
@@ -29,8 +30,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA DEFENSA NACIONAL – UNDEF (conformada por: ex Instituto Universitario Aeronáutico; ex Instituto Universitario Ejército –IESE; ex Instituto Universitario Naval)",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de la Defensa Nacional",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL ARTURO JAURETCHE",
@@ -47,14 +48,15 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE CATAMARCA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Catamarca",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE CHILECITO - UNdeC",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde 403 a nuestro visitante (protección del hosting)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE CÓRDOBA - UNC",
@@ -71,20 +73,22 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE ENTRE RÍOS",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Entre Ríos",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE FORMOSA - UNF",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "caida",
+   "motivo": "El sitio no responde."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SAN MARTÍN - UNSAM",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde con un desafío anti-bot."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SARMIENTO - UNGS",
@@ -107,8 +111,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE JUJUY - UNJu",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Jujuy",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA MATANZA - UNLaM",
@@ -119,20 +123,20 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA PAMPA - UNLPam",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de La Pampa",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA PATAGONIA AUSTRAL – UNPA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de la Patagonia Austral",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA PATAGONIA SAN JUAN BOSCO",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de la Patagonia San Juan Bosco",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA PLATA",
@@ -144,7 +148,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA RIOJA - UNLaR",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "caida",
+   "motivo": "El sitio no responde."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LANÚS - UNLa",
@@ -162,19 +167,20 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LOMAS DE ZAMORA - UNZ",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "Lista por facultad en acordeones: falta el lector."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LOS COMECHINGONES",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de los Comechingones",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LUJÁN",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Luján",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE MAR DEL PLATA",
@@ -185,8 +191,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE MISIONES - UM",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Misiones",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE MORENO",
@@ -203,8 +209,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE RAFAELA - UNRaf",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Rafaela",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE RÍO CUARTO - UNRC",
@@ -215,14 +221,14 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE RÍO NEGRO",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Río Negro",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE RÍO TERCERO",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Río Tercero",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE ROSARIO - UNR",
@@ -233,38 +239,39 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SALTA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Salta",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SAN ANTONIO DE ARECO - UNSAdA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de San Antonio de Areco",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SAN JUAN",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de San Juan",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SAN LUIS",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde con un desafío anti-bot."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SANTIAGO DEL ESTERO - UNSE",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Santiago del Estero",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE TIERRA DEL FUEGO ANTÁRTIDA E ISLAS DEL ATLÁNTICO SUR - UNTDF",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE TRES DE FEBRERO - UNTREF",
@@ -281,44 +288,45 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE VILLA MARÍA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Villa María",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE VILLA MERCEDES - UNViMe",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Villa Mercedes",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL ALTO URUGUAY - UNAU",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Alto Uruguay",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL CENTRO DE LA PROVINCIA DE BUENOS AIRES",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Centro de la Provincia de Buenos Aires",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL CHACO AUSTRAL - UNCAUS",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "La lista de carreras se arma en el navegador."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL COMAHUE",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Comahue",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL DELTA - UNDelta",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Delta",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL LITORAL - UNL",
@@ -329,14 +337,14 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL NORDESTE - UNNE",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Nordeste",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL NOROESTE DE LA PROVINCIA DE BUENOS AIRES - UNNOBA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Noroeste de la Provincia de Buenos Aires",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL OESTE - UNO",
@@ -347,38 +355,38 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL SUR - UNS",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional del Sur",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL GUILLERMO BROWN – UNAB",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional Guillermo Brown",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL MADRES DE PLAZA DE MAYO - UNMa (2010 UNIVERSIDAD POPULAR MADRES DE PLAZA DE MAYO; 2014 INSTITUTO UNIVERSITARIO NACIONAL DDHH “MADRES DE PLAZA DE MAYO”)",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional Madres de Plaza de Mayo",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE PILAR",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional de Pilar",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL RAÚL SCALABRINI ORTIZ",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Nacional Raúl Scalabrini Ortiz",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PEDAGÓGICA NACIONAL – UNIPE (entonces UNIVERSIDAD PEDAGÓGICA DE LA PROVINCIA DE BUENOS AIRES)",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Pedagógica Nacional",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD TECNOLÓGICA NACIONAL - UTN con Autorización Definitiva",
@@ -390,7 +398,8 @@
    "nombre_oficial_ministerio": "ESCUELA UNIVERSITARIA DE TEOLOGÍA",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde 403 a nuestro visitante (protección del hosting)."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO TECNOLÓGICO DE BUENOS AIRES",
@@ -401,32 +410,32 @@
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO CEMIC",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario CEMIC",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE CIENCIAS BIOMÉDICAS DE CÓRDOBA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de Ciencias Biomédicas de Córdoba",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE CIENCIAS DE LA SALUD",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de Ciencias de la Salud",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO ITALIANO DE ROSARIO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario Italiano de Rosario",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO RIVER PLATE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario River Plate",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "PONTIFICIA UNIVERSIDAD CATÓLICA ARGENTINA \"SANTA MARÍA DE LOS BUENOS AIRES\"",
@@ -443,8 +452,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ADVENTISTA DEL PLATA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Adventista del Plata",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ARGENTINA DE LA EMPRESA",
@@ -461,8 +470,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ATLÁNTIDA ARGENTINA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Atlántida Argentina",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD AUSTRAL",
@@ -479,8 +488,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CAECE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad CAECE",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE CÓRDOBA",
@@ -491,44 +500,45 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE CUYO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de Cuyo",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE LA PLATA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de La Plata",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE SALTA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de Salta",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE SANTA FE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de Santa Fe",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE SANTIAGO DEL ESTERO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de Santiago del Estero",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CHAMPAGNAT",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Champagnat",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA FRATERNIDAD DE AGRUPACIONES DE SANTO TOMÁS DE AQUINO",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde con un desafío anti-bot."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE BELGRANO",
@@ -545,14 +555,14 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE CONCEPCIÓN DEL URUGUAY",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de Concepción del Uruguay",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE CONGRESO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de Congreso",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE FLORES",
@@ -563,20 +573,20 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA CUENCA DEL PLATA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de la Cuenca del Plata",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA MARINA MERCANTE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de la Marina Mercante",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE MENDOZA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de Mendoza",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE MORÓN",
@@ -599,8 +609,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL ACONCAGUA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Aconcagua",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CEMA",
@@ -612,25 +622,27 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CENTRO EDUCATIVO LATINOAMERICANO",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde con un desafío anti-bot."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CINE",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "Nombra sus carreras por especialidad («Dirección»), no por título: falta leer el título de cada una."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL GRAN ROSARIO (entonces Instituto Universitario del Gran Rosario)",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Gran Rosario",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL NORTE SANTO TOMÁS DE AQUINO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Norte Santo Tomás de Aquino",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL SALVADOR",
@@ -642,13 +654,14 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD EMPRESARIAL SIGLO 21",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "La lista de carreras se arma en el navegador (HubSpot)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ESCUELA ARGENTINA DE NEGOCIOS (entonces INSTITUTO UNIVERSITARIO ESCUELA ARGENTINA DE NEGOCIOS)",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Escuela Argentina de Negocios",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD FAVALORO (entonces INSTITUTO UNIVERSITARIO DE CIENCIAS BIOMÉDICAS DE LA FUNDACIÓN FAVALORO)",
@@ -659,44 +672,46 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD GASTÓN DACHARY (entonces INSTITUTO UNIVERSITARIO GASTÓN DACHARY)",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Gastón Dachary",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD HOSPITAL ITALIANO DE BUENOS AIRES - (entonces INSTITUTO UNIVERSITARIO ESCUELA DE MEDICINA DEL HOSPITAL ITALIANO)",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Hospital Italiano de Buenos Aires",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ISALUD",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "La página de carreras no trae la lista en el HTML."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD JUAN AGUSTÍN MAZA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Juan Agustín Maza",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD MAIMÓNIDES",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Maimónides",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NOTARIAL ARGENTINA",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "No dicta carreras de grado ni pregrado."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD SAN PABLO - TUCUMÁN",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad San Pablo - Tucumán",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD TORCUATO DI TELLA",
@@ -714,145 +729,150 @@
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO CIAS",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "No dicta carreras de grado ni pregrado."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE CIENCIAS EMPRESARIALES",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de Ciencias Empresariales",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO ESEADE (entonces INSTITUTO UNIVERSITARIO \"ESCUELA SUPERIOR DE ECONOMÍA Y ADMINISTRACIÓN DE EMPRESAS)",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "El menú de carreras no trae enlaces."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE SALUD MENTAL DE LA ASOCIACIÓN PSICOANALÍTICA DE BUENOS AIRES.",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "No dicta carreras de grado ni pregrado."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DEL AGUA Y EL SANEAMIENTO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario del Agua y el Saneamiento",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DEL IBERÁ",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_sitio",
+   "motivo": "No se encontró un sitio oficial."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO ISAAC ABARBANEL",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario Isaac Abarbanel",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO PARA EL DESARROLLO PRODUCTIVO Y TECNOLÓGICO EMPRESARIAL DE LA ARGENTINA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario para el Desarrollo Productivo y Tecnológico Empresarial de la Argentina",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO YMCA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario YMCA",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD CATÓLICA DE LAS MISIONES",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Católica de las Misiones",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE INNOVACIÓN Y TECNOLOGÍA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de Innovación y Tecnología",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA INTEGRACIÓN SUDAMERICANA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de la Integración Sudamericana",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE SAN ISIDRO “DR. PLÁCIDO MARÍN”",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de San Isidro \"Dr. Plácido Marín\"",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL ESTE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Este",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL SUR DE BUENOS AIRES",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Sur de Buenos Aires",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD EVANGÉLICA",
    "tipo": "privada",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "bloqueada",
+   "motivo": "El sitio responde 403 a nuestro visitante."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD METROPOLITANA PARA LA EDUCACIÓN Y EL TRABAJO",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Metropolitana para la Educación y el Trabajo",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PATAGONIA ARGENTINA",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Patagonia Argentina",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD SALESIANA ORGANISMO INTERNACIONAL FLACSO - Facultad Latinoamericana de Ciencias Sociales - Sede Argentina UNIVERSIDAD EXTRANJERA UNIVERSIDAD DE BOLOGNA - Representación en la República Argentina",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Salesiana",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE SEGURIDAD - (CABA)",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario de Seguridad",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO PATAGÓNICO DE LAS ARTES - IUPA",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Instituto Universitario Patagónico de las Artes",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD AUTÓNOMA DE ENTRE RÍOS - UADER",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Autónoma de Entre Ríos",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA CIUDAD AUTÓNOMA DE BUENOS AIRES – UNICABA",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad de la Ciudad de Buenos Aires",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CHUBUT",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad del Chubut",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DE CÓRDOBA - UPC",
@@ -863,50 +883,56 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DE EZEIZA",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Provincial de Ezeiza",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DE LAGUNA BLANCA - UPLaB",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "La página de carreras no trae la lista."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DEL SUDOESTE",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente"
+   "en_rumbo": "Universidad Provincial del Sudoeste",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO PROVINCIAL DE SEGURIDAD – IUPS (Provincia de Jujuy) CENTROS DE INVESTIGACIÓN e INSTITUCIONES DE FORMACIÓN PROFESIONAL SUPERIOR Inscripción de la:",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "pendiente",
+   "motivo": "Sin sitio con lista de carreras."
   },
   {
    "nombre_oficial_ministerio": "ASOCIACIÓN MÉDICA ARGENTINA - AMA",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "Centro de formación de posgrado."
   },
   {
    "nombre_oficial_ministerio": "ASOCIACIÓN ODONTOLÓGICA ARGENTINA",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "Centro de formación de posgrado; el título lo da la USAL."
   },
   {
    "nombre_oficial_ministerio": "SOCIEDAD ARGENTINA ORTODONCIA",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "Centro de formación de posgrado."
   },
   {
    "nombre_oficial_ministerio": "CIENCIAS JURÍDICAS Y SOCIALES - CIJUSO",
    "tipo": "provincial",
    "en_rumbo": null,
-   "estado": "pendiente"
+   "estado": "sin_grado",
+   "motivo": "Centro de formación de posgrado."
   }
  ]
 }

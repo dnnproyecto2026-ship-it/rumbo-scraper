@@ -293,7 +293,7 @@ GUIAS.update({
 GUIAS.update({
     "UDA": Guia("Universidad del Aconcagua", "UDA", "Privada", "https://www.uda.edu.ar",
                 ((gn.UDA, gn.leer_uda),), _SIN_SEDE, "", 20),
-    "IUSE": Guia("Instituto Universitario de Seguridad Pública", "IUSE", "Privada", "https://iuse.edu.ar",
+    "IUSE": Guia("Instituto Universitario de Seguridad", "IUSE", "Privada", "https://iuse.edu.ar",
                  ((gn.IUSE, gn.leer_iuse),), _SIN_SEDE, "", 6),
     "UNAB": Guia("Universidad Nacional Guillermo Brown", "UNAB", "Estatal", "https://www.unab.edu.ar",
                  tuple((pagina, gn.leer_unab) for pagina in gn.UNAB), _SIN_SEDE, "", 10),
