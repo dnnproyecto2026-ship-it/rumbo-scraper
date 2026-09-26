@@ -311,9 +311,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL CHACO AUSTRAL - UNCAUS",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "La lista de carreras se arma en el navegador."
+   "en_rumbo": "Universidad Nacional del Chaco Austral",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DEL COMAHUE",
@@ -627,9 +626,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CINE",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "Nombra sus carreras por especialidad («Dirección»), no por título: falta leer el título de cada una."
+   "en_rumbo": "Universidad del Cine",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL GRAN ROSARIO (entonces Instituto Universitario del Gran Rosario)",
