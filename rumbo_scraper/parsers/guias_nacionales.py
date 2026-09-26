@@ -2212,3 +2212,31 @@ def leer_unlz(html: str, pagina: str = UNLZ) -> list[CarreraDeLaGuia]:
             if carrera:
                 carreras.append(carrera)
     return carreras
+
+
+# --- Universidad del Cine: each career's page says what it is ---------------------------------------
+# "La carrera de Dirección (pregrado) dura tres años y medio, al cabo de los
+# cuales obtenés el título de Director/a": the licenciatura and the
+# profesorado that follow are cycles for those who hold it.
+
+UCINE = "https://www.ucine.edu.ar/carreras"
+_NUMEROS = {"dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6}
+_CARRERA_UCINE = re.compile(
+    r"La carrera de (.+?) \(pregrado\) dura (\d|dos|tres|cuatro|cinco|seis) años( y medio)?")
+
+
+def leer_ucine(html: str, pagina: str = UCINE, traer=None) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for item in _soup(html).select("div.carrera-item"):
+        enlace = item.select_one("a.button[href]")
+        if not enlace or not traer:
+            continue
+        url = urljoin(pagina, enlace["href"])
+        dicho = _CARRERA_UCINE.search(_soup(traer(url)).get_text(" ", strip=True))
+        if not dicho:
+            continue
+        anios_ = float(_NUMEROS.get(dicho.group(2)) or dicho.group(2)) + (0.5 if dicho.group(3) else 0)
+        carrera = _carrera(dicho.group(1), "", url, None, anios_, "Pregrado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras

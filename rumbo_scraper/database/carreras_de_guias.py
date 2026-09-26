@@ -318,6 +318,12 @@ GUIAS.update({
 })
 
 
+GUIAS.update({
+    "UCINE": Guia("Universidad del Cine", "UCINE", "Privada", "https://www.ucine.edu.ar",
+                  ((gn.UCINE, gn.leer_ucine),), _SIN_SEDE, "", 5, ("Pregrado",)),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""
