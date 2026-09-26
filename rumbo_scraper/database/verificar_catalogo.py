@@ -34,6 +34,7 @@ from urllib.parse import urlparse
 
 from rumbo_scraper import verificacion as v
 from rumbo_scraper.normalizers.text import comparison_key
+from rumbo_scraper.parsers import guias_nacionales as gn
 
 CATALOGO = Path("data/catalogo_depurado.json")
 CACHE = Path("data/verificacion")
@@ -74,6 +75,9 @@ class Fuentes:
         source; one outside the university's domain is not fetched, unless
         an official page links it as its plan (``avalada``)."""
         if url in self.leidas:
+            return self.leidas[url]
+        if url.endswith("#catalogo"):
+            self.leidas[url] = self.leer(url.removesuffix("#catalogo"), avalada=True)
             return self.leidas[url]
         if "#registro:" in url:
             base, filtro = url.split("#registro:", 1)
@@ -237,7 +241,15 @@ def _fuentes_uba(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[
 
 # Where a university keeps a career's data apart from its page, the way its
 # own reader found it: a plan service, a catalogue's public API.
-_FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba}
+def _del_catalogo(guia: str):
+    """A university whose pages are built in the browser from its own
+    public catalogue: the catalogue says the career ("#catalogo": the whole
+    list, read as one source; the seal links the career's page)."""
+    return lambda fuentes, url, html, carrera: [guia + "#catalogo"]
+
+
+_FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba,
+                    "UNSO": _del_catalogo(gn.UNSO)}
 
 
 def _planes_publicados() -> dict[tuple[str, str], str]:
@@ -288,7 +300,7 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
                         if propia["ok"] and v.dice(propia["texto"], carrera):
                             # A catalogue's record is data, not a page: the
                             # seal links the career's page it fills.
-                            dice, fuente = True, url if "#registro:" in otra else otra
+                            dice, fuente = True, url if "#registro:" in otra or otra.endswith("#catalogo") else otra
                             break
                     estado = v.VERIFICADO if dice else v.NO_LO_DICE
                 resultado["ofertas"].append({"carrera": carrera, "url": url, "estado": estado,

@@ -71,6 +71,9 @@ def texto_de_html(html: str) -> str:
     built in the browser (Gatsby, Next) has its plan in a JSON blob."""
     soup = BeautifulSoup(html or "", "html.parser")
     datos = [s.string or "" for s in soup.find_all("script")]
+    # An Inertia page carries its data in an attribute (the Católica de Cuyo's
+    # careers, in its home's data-page).
+    datos += [str(e["data-page"]) for e in soup.find_all(attrs={"data-page": True})]
     for parte in soup.find_all(["script", "style"]):
         parte.decompose()
     datos = [_JSON_ESCAPE.sub(lambda m: chr(int(m.group(1), 16)), d) for d in datos]
