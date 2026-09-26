@@ -312,6 +312,12 @@ GUIAS.update({
 })
 
 
+GUIAS.update({
+    "UNLZ": Guia("Universidad Nacional de Lomas de Zamora", "UNLZ", "Estatal", "https://www.unlz.edu.ar",
+                 ((gn.UNLZ, gn.leer_unlz),), "Lomas de Zamora", "", 30),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""

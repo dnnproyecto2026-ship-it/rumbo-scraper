@@ -2148,3 +2148,59 @@ def leer_cemic(html: str, pagina: str = CEMIC) -> list[CarreraDeLaGuia]:
         if carrera and carrera.nombre not in [c.nombre for c in carreras]:
             carreras.append(carrera)
     return carreras
+
+
+# --- Universidad Nacional de Lomas de Zamora: a column per faculty ---------------------------------
+# Its main careers under the faculty's heading, and the rest in folds by
+# kind ("Tecnicaturas", "Licenciaturas", "Ciclos de Complementación").
+
+UNLZ = "https://www.unlz.edu.ar/?page_id=2363"
+
+
+def leer_unlz(html: str, pagina: str = UNLZ) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for columna in _soup(html).select("div.vc_column-inner"):
+        encabezado = columna.find("h2")
+        unidad = clean_text(_texto(encabezado))
+        if not unidad.lower().startswith("facultad"):
+            continue
+        enlace = encabezado.find("a", href=True)
+        url = enlace["href"] if enlace else pagina
+        # (item's text, kind of the fold it is in)
+        items: list[tuple[str, str]] = []
+        for bloque in columna.select(".la-headings"):
+            en_ciclos = False
+            for item in bloque.find_all("li"):
+                # "Abogacía <em>Ciclos de Complementación Curricular</em>": the
+                # items after that heading are the cycles.
+                aviso = item.find("em")
+                if aviso and re.search(r"(?i)ciclo", _texto(aviso)):
+                    aviso.extract()
+                    if not en_ciclos:
+                        items.append((_texto(item), ""))
+                    en_ciclos = True
+                    continue
+                if not en_ciclos:
+                    items.append((_texto(item), ""))
+        for panel in columna.select(".vc_tta-panel"):
+            titulo = _texto(panel.select_one(".vc_tta-title-text"))
+            if not re.search(r"(?i)ciclo", titulo):
+                items += [(_texto(li), titulo) for li in panel.find_all("li")]
+        for texto, tipo in items:
+            nombre = texto.split("*")[0].strip()
+            # "Periodismo (Tecnicatura y Licenciatura)": the licenciatura is
+            # "Licenciatura en Periodismo"; how the site calls the other two
+            # it does not say.
+            partes = re.match(r"^(.+?)\s*\(([^)]*)\)$", nombre)
+            if partes:
+                if "licenciatura" not in partes.group(2).lower():
+                    continue
+                nombre = f"Licenciatura en {partes.group(1)}"
+            nombre = re.sub(r"^Licenciado en ", "Licenciatura en ", nombre).replace("Mecátrónica", "Mecatrónica")
+            if not (_NOMBRA_UN_TITULO.match(nombre) or re.match(r"(?i)^(t[ée]cnico|corredor|despachante)", nombre)):
+                continue
+            nivel_dicho = "Pregrado" if re.match(r"(?i)^tecnicatura", tipo) else None
+            carrera = _carrera(nombre, unidad, url, None, None, nivel_dicho)
+            if carrera:
+                carreras.append(carrera)
+    return carreras
