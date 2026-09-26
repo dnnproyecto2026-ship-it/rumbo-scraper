@@ -203,6 +203,34 @@ GUIAS.update({
                  ((gn.USBA, gn.leer_usba),), _SIN_SEDE, "", 2),
     "UDE": Guia("Universidad del Este", "UDE", "Privada", "https://www.ude.edu.ar",
                 ((gn.UDE, gn.leer_ude),), _SIN_SEDE, "", 10),
+    "UCASAL": Guia("Universidad Católica de Salta", "UCASAL", "Privada", "https://www.ucasal.edu.ar",
+                   ((gn.UCASAL_GRADO, gn.leer_ucasal), (gn.UCASAL_PREGRADO, gn.leer_ucasal)), _SIN_SEDE, "", 40),
+    "UNaM": Guia("Universidad Nacional de Misiones", "UNaM", "Estatal", "https://www.unam.edu.ar",
+                 ((gn.UNAM, gn.leer_unam),), "Posadas", "", 40),
+    "UNCA": Guia("Universidad Nacional de Catamarca", "UNCA", "Estatal", "https://www.unca.edu.ar",
+                 ((gn.UNCA, gn.leer_unca),), _SIN_SEDE, "", 40),
+    "UCALP": Guia("Universidad Católica de La Plata", "UCALP", "Privada", "https://www.ucalp.edu.ar",
+                  ((gn.UCALP, gn.leer_ucalp),), _SIN_SEDE, "", 40),
+    "UNNE": Guia("Universidad Nacional del Nordeste", "UNNE", "Estatal", "https://www.unne.edu.ar",
+                 ((gn.UNNE, gn.leer_unne),), _SIN_SEDE, "", 40),
+    "UNDEF": Guia("Universidad de la Defensa Nacional", "UNDEF", "Estatal", "https://undef.edu.ar",
+                  tuple((u, gn.leer_undef) for u in gn.UNDEF), _SIN_SEDE, "", 20),
+    "UNJu": Guia("Universidad Nacional de Jujuy", "UNJu", "Estatal", "https://unju.edu.ar",
+                 tuple((u, gn.leer_unju) for u in gn.UNJU), "San Salvador de Jujuy", "", 30),
+    "UNLPam": Guia("Universidad Nacional de La Pampa", "UNLPam", "Estatal", "https://www.unlpam.edu.ar",
+                   ((gn.UNLPAM, gn.leer_unlpam),), _SIN_SEDE, "", 30),
+    "UNSa": Guia("Universidad Nacional de Salta", "UNSa", "Estatal", "https://www.unsa.edu.ar",
+                 ((gn.UNSA, gn.leer_unsa),), "Salta", "", 30),
+    "USPT": Guia("Universidad San Pablo - Tucumán", "USPT", "Privada", "https://www.uspt.edu.ar",
+                 ((gn.USPT, gn.leer_uspt),), "Sede Centro", "", 20),
+    "UCU": Guia("Universidad de Concepción del Uruguay", "UCU", "Privada", "https://ucu.edu.ar",
+                ((gn.UCU, gn.leer_ucu),), "Concepción del Uruguay", "", 20),
+    "UNVM": Guia("Universidad Nacional de Villa María", "UNVM", "Estatal", "https://www.unvm.edu.ar",
+                 ((gn.UNVM, gn.leer_unvm),), "Villa María", "", 25),
+    "UCongreso": Guia("Universidad de Congreso", "UCongreso", "Privada", "https://www.ucongreso.edu.ar",
+                      ((gn.UCONGRESO, gn.leer_ucongreso),), _SIN_SEDE, "", 20),
+    "UNPA": Guia("Universidad Nacional de la Patagonia Austral", "UNPA", "Estatal", "https://www.unpa.edu.ar",
+                 ((gn.UNPA, gn.leer_unpa),), _SIN_SEDE, "", 20),
 })
 
 
@@ -233,10 +261,19 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
             return leidas[url]
 
         for pagina, lector in guia.paginas:
-            if len(inspect.signature(lector).parameters) >= 3:
-                carreras += lector(visitante.get(pagina), pagina, traer)
+            # A university's public service answers JSON, which the visitor
+            # (made for pages) does not take: it is read as it comes.
+            if re.search(r"/apis?[/.]|/api\.", pagina):
+                try:
+                    html = visitante.client.get(pagina).text
+                except Exception:
+                    html = ""
             else:
-                carreras += lector(visitante.get(pagina), pagina)
+                html = visitante.get(pagina)
+            if len(inspect.signature(lector).parameters) >= 3:
+                carreras += lector(html, pagina, traer)
+            else:
+                carreras += lector(html, pagina)
     return carreras
 
 
