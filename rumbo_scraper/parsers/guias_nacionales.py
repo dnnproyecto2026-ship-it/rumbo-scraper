@@ -2278,3 +2278,30 @@ def leer_uncaus(html: str, pagina: str = UNCAUS, traer=None) -> list[CarreraDeLa
         if carrera:
             carreras.append(carrera)
     return carreras
+
+
+_PLANES_UNCAUS = re.compile(r'"([a-z0-9-]+)":\{plans:\[')
+_ANIO_UNCAUS = re.compile(r'\{id:"anio-(\d+)",label:"[^"]*",subjects:\[(.*?)\]\}(?=,\{id:"|\])', re.S)
+
+
+def planes_uncaus(js: str) -> dict[str, list[tuple[str, int]]]:
+    """The subjects of each career's plan in force, by year, keyed by the
+    career's slug; the electives (their programme under "optativa-") are a
+    pool to choose from, not the plan."""
+    inicios = [(m.group(1), m.end()) for m in _PLANES_UNCAUS.finditer(js or "")]
+    planes = {}
+    for posicion, (slug, inicio) in enumerate(inicios):
+        fin = inicios[posicion + 1][1] if posicion + 1 < len(inicios) else len(js)
+        bloque = js[inicio:fin]
+        # The first plan listed is the one in force; the next plans are older.
+        vigente = re.split(r'\},\{id:"plan-', bloque, maxsplit=1)[0]
+        if 'status:"vigente"' not in vigente:
+            continue
+        materias = []
+        for anio, sujetos in _ANIO_UNCAUS.findall(vigente):
+            for nombre, resto in re.findall(r'\{name:"([^"]+)"(.*?)(?=\{name:"|$)', sujetos, re.S):
+                if "/optativa" not in resto and (nombre, int(anio)) not in materias:
+                    materias.append((clean_text(nombre), int(anio)))
+        if materias:
+            planes[slug] = materias
+    return planes
