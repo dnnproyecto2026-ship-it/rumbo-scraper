@@ -256,6 +256,44 @@ GUIAS.update({
 })
 
 
+# Grupo D.
+GUIAS.update({
+    "UNSJ": Guia("Universidad Nacional de San Juan", "UNSJ", "Estatal", "https://www.unsj.edu.ar",
+                 tuple((pagina, gn.leer_unsj) for pagina in gn.UNSJ), _SIN_SEDE, "", 45),
+    "USI": Guia("Universidad de San Isidro \"Dr. Plácido Marín\"", "USI", "Privada", "https://usi.edu.ar",
+                ((gn.USI, gn.leer_usi),), _SIN_SEDE, "", 8),
+    "UGD": Guia("Universidad Gastón Dachary", "UGD", "Privada", "https://ugd.edu.ar",
+                ((gn.UGD, gn.leer_ugd),), _SIN_SEDE, "", 10, ("Grado",)),
+    "UMET": Guia("Universidad Metropolitana para la Educación y el Trabajo", "UMET", "Privada",
+                 "https://umet.edu.ar", ((gn.UMET, gn.leer_umet),), _SIN_SEDE, "", 8),
+    "UNPilar": Guia("Universidad Nacional de Pilar", "UNPilar", "Estatal", "https://unpilar.edu.ar",
+                    ((gn.UNPILAR, gn.leer_unpilar),), _SIN_SEDE, "", 8),
+    "UDC": Guia("Universidad del Chubut", "UDC", "Estatal", "https://udc.edu.ar",
+                ((gn.UDC, gn.leer_udc),), _SIN_SEDE, "", 10),
+    "IUCSB": Guia("Instituto Universitario de Ciencias de la Salud", "IUCSB", "Privada",
+                         "https://barcelo.edu.ar", ((gn.BARCELO_GRADO, gn.leer_barcelo),), _SIN_SEDE, "", 5,
+                         ("Grado",)),
+    "UPE": Guia("Universidad Provincial de Ezeiza", "UPE", "Estatal", "https://web.upe.edu.ar",
+                ((gn.UPE, gn.leer_upe),), _SIN_SEDE, "", 8),
+    "IURP": Guia("Instituto Universitario River Plate", "IURP", "Privada", "https://iuriverplate.edu.ar",
+                 ((gn.RIVER, gn.leer_river),), _SIN_SEDE, "", 5),
+    "UIT": Guia("Universidad de Innovación y Tecnología", "UIT", "Privada", "https://www.uit.edu.ar",
+                ((gn.UIT, gn.leer_uit),), _SIN_SEDE, "", 3),
+    "IUNIR": Guia("Instituto Universitario Italiano de Rosario", "IUNIR", "Privada", "https://www.iunir.edu.ar",
+                  ((gn.IUNIR, gn.leer_iunir),), "Rosario", "", 5),
+    "UNISAL": Guia("Universidad Salesiana", "UNISAL", "Privada", "https://www.unisal.edu.ar",
+                   ((gn.UNISAL, gn.leer_unisal),), _SIN_SEDE, "", 3),
+    "UNAU": Guia("Universidad Nacional del Alto Uruguay", "UNAU", "Estatal", "https://unau.edu.ar",
+                 ((gn.UNAU, gn.leer_unau),), _SIN_SEDE, "", 4),
+    "IUAS": Guia("Instituto Universitario del Agua y el Saneamiento", "IUAS", "Privada", "https://www.iuas.edu.ar",
+                 ((gn.IUAS, gn.leer_iuas),), _SIN_SEDE, "", 4),
+    "UNISUD": Guia("Universidad de la Integración Sudamericana", "UNISUD", "Privada", "https://unisud.edu.ar",
+                   ((gn.UNISUD, gn.leer_unisud),), _SIN_SEDE, "", 3),
+    "UPatagonia": Guia("Universidad Patagonia Argentina", "UPatagonia", "Privada", "https://upatagonia.edu.ar",
+                       ((gn.UPATAGONIA, gn.leer_upatagonia),), _SIN_SEDE, "", 5),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""

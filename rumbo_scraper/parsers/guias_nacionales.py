@@ -69,8 +69,8 @@ def _tipo(unidad: str) -> str:
 # en ...", "Prof. de ...", "Ing. ..."), written out.
 _ABREVIATURAS = (
     (re.compile(r"^Lic\.\s*(?:en\s+)?", re.I), "Licenciatura en "),
-    (re.compile(r"^Tec\.\s*Univ\.\s*(?:en\s+)?", re.I), "Tecnicatura Universitaria en "),
-    (re.compile(r"^Tec\.\s*(?:en\s+)?", re.I), "Tecnicatura en "),
+    (re.compile(r"^Tecn?\.\s*Univ\.\s*(?:en\s+)?", re.I), "Tecnicatura Universitaria en "),
+    (re.compile(r"^Tecn?\.\s*(?:en\s+)?", re.I), "Tecnicatura en "),
     (re.compile(r"^Prof\.\s*(?=(?:de|en)\s)", re.I), "Profesorado "),
     (re.compile(r"^Prof\.\s*", re.I), "Profesorado en "),
     (re.compile(r"^Ing\.\s*(?:en\s+)?", re.I), "Ingeniería en "),
@@ -87,6 +87,8 @@ def expandir(nombre: str) -> str:
 def _carrera(nombre: str, unidad: str, url: str, sede: str | None = None,
              duracion: float | None = None, nivel_dicho: str | None = None) -> CarreraDeLaGuia | None:
     nombre = expandir(clean_text(nombre).strip(" *-–"))
+    # "Instrumentación QUirúrgica": a slip of the shift key.
+    nombre = re.sub(r"\b([A-ZÁÉÍÓÚ])([A-ZÁÉÍÓÚ])(?=[a-záéíóúñ]{2})", lambda m: m.group(1) + m.group(2).lower(), nombre)
     # The way it is taught is the offer's, not the career's name.
     nombre = re.sub(r"(?i)\s*[-–(]?\s*(?:modalidad\s+)?(?:a\s+)?(?:distancia|presencial|virtual|semipresencial|h[ií]brida)\)?$", "", nombre)
     unidad = re.sub(r"\bCs\.\s*", "Ciencias ", unidad)
@@ -1697,4 +1699,330 @@ def leer_unlc(html: str, pagina: str = UNLC) -> list[CarreraDeLaGuia]:
                                "Pregrado" if grupo == "tecnicaturas" else "Grado")
             if carrera:
                 carreras.append(carrera)
+    return carreras
+
+
+# --- Grupo D: the remaining lists, most of them a menu or a grid ------------------------------------
+
+# Universidad Nacional de San Juan: a page per faculty, its heading and the
+# list of its careers, in capitals, without links: the faculty's page is the
+# careers' source.
+UNSJ = tuple("https://www.unsj.edu.ar/facultades/" + f for f in (
+    "facultadingenieria", "facultadcienciasexactas", "facultadfilosofia", "facultadcienciasociales",
+    "facultadarquitectura", "facultadescuelasalud", "facultadvalle"))
+
+
+def leer_unsj(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    soup = _soup(html)
+    boton = soup.select_one("a.btn-faculty")
+    titulo = _texto(boton.find_previous("h2")) if boton else ""
+    lista = boton.find_next("ul") if boton else None
+    if not lista or not titulo:
+        return []
+    unidad = con_tildes(titulo) if titulo.isupper() else titulo
+    if not unidad.lower().startswith(("facultad", "escuela", "instituto", "delegaci")):
+        unidad = f"Facultad de {unidad}"
+    unidad = re.sub(r"(?i)^facultad de (delegaci)", r"\1", unidad)
+    carreras = []
+    for item in lista.find_all("li"):
+        nombre = _texto(item)
+        if not nombre or item.find("a"):
+            continue
+        nombre = expandir(con_tildes(nombre) if nombre.isupper() else nombre)
+        # "Licenciatura en Sistemas de Información Título Intermedio Téc.
+        # Universitario en Programación": the intermediate degree is not the name.
+        nombre = re.split(r"(?i)\s+t[íi]tulo intermedio", nombre)[0]
+        nombre = re.sub(r"(?i)^(licenciatura en )+(licenciatura en )", r"\2", nombre)
+        nombre = re.sub(r"(?i)^tecnicatura en universitaria en", "Tecnicatura Universitaria en", nombre)
+        # Some faculties list their fields ("Ciencias Económicas", "Enfermería"),
+        # not the careers: a name must say the degree.
+        if not re.match(r"(?i)^(licenciatura|profesorado|tecnicatura|ingenier[íi]a|bioingenier[íi]a)\b", nombre):
+            continue
+        carrera = _carrera(nombre, unidad, pagina)
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# Universidad de San Isidro "Dr. Plácido Marín": the "Carreras de Grado" menu.
+USI = "https://usi.edu.ar/"
+
+
+def leer_usi(html: str, pagina: str = USI) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for enlace in _soup(html).select("a[href^='https://usi.edu.ar/carreras/']"):
+        if "ingreso" in enlace["href"] or enlace["href"] in vistas:
+            continue
+        vistas.add(enlace["href"])
+        carrera = _carrera(_texto(enlace), "", enlace["href"], None, None, "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# Universidad Gastón Dachary: the careers are data in the page (CAREERS = [...]).
+UGD = "https://ugd.edu.ar/landing-carreras/carreras-de-grado.html"
+
+
+def leer_ugd(html: str, pagina: str = UGD) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for nombre, url in re.findall(r'name:"([^"]+)",[^}]*?url:"([^"]+)"', html or ""):
+        carrera = _carrera(nombre, "", url)
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# Universidad Metropolitana para la Educación y el Trabajo: the home's carousel
+# of careers, each under its faculty.
+UMET = "https://umet.edu.ar/"
+
+
+def leer_umet(html: str, pagina: str = UMET) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for bloque in _soup(html).select("div.themeum-course-content"):
+        enlace = bloque.select_one("h3 a[href]")
+        if not enlace or enlace["href"] in vistas:
+            continue
+        vistas.add(enlace["href"])
+        carrera = _carrera(_texto(enlace), _texto(bloque.find("span")), enlace["href"])
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# Universidad Nacional de Pilar: the "PROPUESTA ACADÉMICA" menu names each career
+# by its field; its page heads it by its name.
+UNPILAR = "https://unpilar.edu.ar/"
+
+
+def leer_unpilar(html: str, pagina: str = UNPILAR, traer=None) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for item in _soup(html).select("li.menu-item-has-children"):
+        enlace = item.find("a", recursive=False)
+        if not enlace or "propuesta acad" not in _texto(enlace).lower():
+            continue
+        for hijo in item.select("ul.sub-menu a[href]"):
+            nombre = _texto(hijo)
+            if traer:
+                encabezado = next((h for h in _soup(traer(hijo["href"])).find_all(["h1", "h2"])
+                                   if re.match(r"(?i)^(licenciatura|tecnicatura|ingenier|profesorado)", _texto(h))), None)
+                nombre = _texto(encabezado) or nombre
+            carrera = _carrera(_titulo_si_mayusculas(nombre), "", hijo["href"])
+            if carrera:
+                carreras.append(carrera)
+        break
+    return carreras
+
+
+# Universidad del Chubut: a card per career, its towns as classes.
+UDC = "https://udc.edu.ar/propuesta-academica/"
+_LOCALIDADES_UDC = {"puerto-madryn": "Puerto Madryn", "esquel": "Esquel", "trelew": "Trelew",
+                    "rawson": "Rawson", "comodoro-rivadavia": "Comodoro Rivadavia", "lago-puelo": "Lago Puelo",
+                    "sarmiento": "Sarmiento", "gaiman": "Gaiman", "el-hoyo": "El Hoyo"}
+
+
+def leer_udc(html: str, pagina: str = UDC) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for tarjeta in _soup(html).select("div.udc-card-item"):
+        enlace = tarjeta.select_one("a.udc-card-link[href]")
+        titulo = tarjeta.select_one(".udc-card-info h3")
+        if not enlace or not titulo:
+            continue
+        clases = tarjeta.get("class") or []
+        sedes = [nombre for slug, nombre in _LOCALIDADES_UDC.items() if slug in clases]
+        # "Lic. y Tec. Univ. en ...": two careers in one card.
+        nombre = _texto(titulo)
+        doble = re.match(r"(?i)^lic(?:enciatura)?\.?\s+y\s+tec(?:n(?:icatura)?)?\.?\s*(?:univ(?:ersitaria)?\.?\s*)?en\s+(.+)$", nombre)
+        partes = re.match(r"(?i)^(lic(?:enciatura)?\.?\s+en\s+.+?)\s+y\s+(tec(?:n(?:icatura)?)?\.?\s*(?:univ(?:ersitaria)?\.?)?\s*(?:en\s+)?.+)$", nombre)
+        if doble:
+            nombres = [f"Licenciatura en {doble.group(1)}", f"Tecnicatura Universitaria en {doble.group(1)}"]
+        elif partes:
+            tecnicatura = re.sub(r"(?i)^tec(?:n(?:icatura)?)?\.?\s*(?:univ(?:ersitaria)?\.?)?\s*(?:en\s+)?", "", partes.group(2))
+            nombres = [partes.group(1), f"Tecnicatura Universitaria en {tecnicatura}"]
+        else:
+            nombres = [nombre]
+        for cada in nombres:
+            for sede in sedes or [None]:
+                carrera = _carrera(cada, "", enlace["href"], sede)
+                if carrera:
+                    carreras.append(carrera)
+    return carreras
+
+
+# Instituto Universitario de Ciencias de la Salud (Fundación Barceló): a page per level.
+BARCELO_GRADO = "https://barcelo.edu.ar/carreras-de-grado"
+BARCELO_PREGRADO = "https://barcelo.edu.ar/carreras-de-pregrado"
+
+
+def leer_barcelo(html: str, pagina: str, traer=None) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    contenido = _soup(html).select_one("div.content") or _soup(html)
+    for enlace in contenido.select("h4 a[href]"):
+        url = enlace["href"].replace("http://", "https://")
+        if url in vistas or not traer:
+            continue
+        vistas.add(url)
+        nombre = next((re.sub(r"(?i)^bienvenidos?\s+a\s+(?:la\s+)?(?:carrera\s+de\s+)?", "", _texto(h))
+                       for h in _soup(traer(url)).find_all(["h1", "h2"]) if re.match(r"(?i)^bienvenid", _texto(h))), "")
+        carrera = _carrera(nombre, "", url, None, None, "Pregrado" if "pregrado" in pagina else "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# Universidad Provincial de Ezeiza: a card per field; its page names the
+# licenciatura and the tecnicatura it gives.
+UPE = "https://web.upe.edu.ar/carreras-de-grado/"
+
+
+def leer_upe(html: str, pagina: str = UPE, traer=None) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for enlace in _soup(html).select("h2 a[href]"):
+        if enlace["href"] in vistas or not traer:
+            continue
+        vistas.add(enlace["href"])
+        for titulo in _soup(traer(enlace["href"])).find_all(["h1", "h2", "h3"]):
+            texto = _texto(titulo)
+            if re.match(r"(?i)^(licenciatura|tecnicatura)\s+(universitaria\s+)?en\s", texto) and len(texto) < 110:
+                nombre, _, duracion = texto.partition("|")
+                carrera = _carrera(nombre, "", enlace["href"], None, anios(duracion))
+                if carrera and carrera.nombre not in [c.nombre for c in carreras]:
+                    carreras.append(carrera)
+    return carreras
+
+
+# Instituto Universitario River Plate, UIT, IUNIR, Universidad del Cine, Salesiana,
+# Alto Uruguay, IUAS, UNISUD, Universidad Patagonia Argentina: lists and menus.
+RIVER = "https://iuriverplate.edu.ar/courses"
+UIT = "https://www.uit.edu.ar/carreras"
+IUNIR = "https://www.iunir.edu.ar/"
+UCINE = "https://www.ucine.edu.ar/carreras"
+UNISAL = "https://www.unisal.edu.ar/"
+UNAU = "https://unau.edu.ar/carreras"
+IUAS = "https://www.iuas.edu.ar/todas-las-carreras/"
+UNISUD = "https://unisud.edu.ar/oferta-academica/"
+UPATAGONIA = "https://upatagonia.edu.ar/nuestra-oferta-academica/"
+
+
+def leer_river(html: str, pagina: str = RIVER) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for enlace in _soup(html).select("a[href^='/courses/']"):
+        nombre = _texto(enlace)
+        if not nombre or enlace["href"] in vistas or len(nombre) > 120:
+            continue
+        vistas.add(enlace["href"])
+        carrera = _carrera(nombre, "", urljoin(pagina, enlace["href"]))
+        if carrera and _ES_DE_GRADO.match(carrera.nombre):
+            carreras.append(carrera)
+    return carreras
+
+
+def leer_uit(html: str, pagina: str = UIT) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for enlace in _soup(html).select("a[href^='/carreras/']"):
+        titulo = enlace.find("h3")
+        if not titulo or enlace["href"] in vistas:
+            continue
+        vistas.add(enlace["href"])
+        carrera = _carrera(_texto(titulo), "", urljoin(pagina, enlace["href"]))
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+def leer_iunir(html: str, pagina: str = IUNIR) -> list[CarreraDeLaGuia]:
+    carreras = []
+    panel = _soup(html).select_one("#mm-facultad")
+    for lista in (panel.select("ul.menu") if panel else []):
+        etiqueta = _texto(lista.find("label")).lower()
+        if etiqueta not in ("grado", "pregrado"):
+            continue
+        for enlace in lista.select("a[href]"):
+            carrera = _carrera(_texto(enlace), "", urljoin(pagina, enlace["href"]), None, None, etiqueta.title())
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_ucine(html: str, pagina: str = UCINE) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for item in _soup(html).select("div.carrera-item"):
+        titulo, enlace = item.find("h2"), item.select_one("a.button[href]")
+        if titulo and enlace:
+            carrera = _carrera(_texto(titulo), "", urljoin(pagina, enlace["href"]))
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_unisal(html: str, pagina: str = UNISAL) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for item in _soup(html).select("li.menu-item-has-children"):
+        facultad = item.find("a", recursive=False)
+        unidad = _texto(facultad)
+        if not unidad.lower().startswith("facultad"):
+            continue
+        for enlace in item.select("ul.sub-menu a[href*='/carreras/']"):
+            if enlace["href"] in vistas:
+                continue
+            vistas.add(enlace["href"])
+            carrera = _carrera(_texto(enlace), unidad, enlace["href"])
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_unau(html: str, pagina: str = UNAU) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for articulo in _soup(html).select("article.swiper-slide"):
+        titulo, enlace = articulo.find("h3"), articulo.find("a", href=True)
+        if titulo and enlace:
+            carrera = _carrera(_texto(titulo), "", enlace["href"])
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_iuas(html: str, pagina: str = IUAS) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for item in _soup(html).select("div.jet-listing-grid__item"):
+        titulos = [a for a in item.select("h2.elementor-heading-title a[href]")]
+        if len(titulos) < 2:
+            continue
+        tipo, nombre = _texto(titulos[0]), _texto(titulos[1])
+        carrera = _carrera(nombre if nombre.lower().startswith(tipo.lower()) else f"{tipo} en {nombre}", "",
+                           titulos[1]["href"])
+        if carrera and _ES_DE_GRADO.match(carrera.nombre):
+            carreras.append(carrera)
+    return carreras
+
+
+_ES_DE_GRADO = re.compile(r"(?i)^(?:licenciatura|tecnicatura|ingenier[íi]a|profesorado|abogac[íi]a|contador|medicina)\b"
+                          r"|^(?:psicolog[íi]a|odontolog[íi]a|arquitectura|nutrici[óo]n|kinesiolog[íi]a y fisiatr[íi]a)$")
+
+
+def leer_unisud(html: str, pagina: str = UNISUD) -> list[CarreraDeLaGuia]:
+    seccion = _soup(html).find(id="carreras_grado")
+    carreras = []
+    for enlace in (seccion.find_all_next("a", class_="fusion-button") if seccion else []):
+        if "/avada_portfolio/" not in enlace.get("href", "") or not _ES_DE_GRADO.match(_texto(enlace)):
+            continue
+        carrera = _carrera(_texto(enlace), "", enlace["href"], None, None, "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+def leer_upatagonia(html: str, pagina: str = UPATAGONIA) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for titulo in _soup(html).select("div.gva-element-gva-heading-block h2.title"):
+        bloque = titulo.find_parent("div", class_="elementor-column") or titulo.find_parent("section")
+        enlace = bloque.find("a", href=True) if bloque else None
+        texto = _texto(bloque) if bloque else ""
+        if not enlace:
+            continue
+        carrera = _carrera(_texto(titulo), "", enlace["href"], None, anios(texto))
+        if carrera and _ES_DE_GRADO.match(carrera.nombre):
+            carreras.append(carrera)
     return carreras
