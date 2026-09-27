@@ -574,3 +574,43 @@ def _plan_ucalp(html: str) -> list[tuple[str, int]]:
 
 def plan_ucalp(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_ucalp(html))
+
+
+def _plan_unlpam(html: str) -> list[tuple[str, int]]:
+    """UNLPam, two faculties' layouts: Humanas' tab "Asignaturas", a bold row
+    per year ("Primer Año") and a cell per subject beside its programme's
+    link; Exactas' plan pages, a heading per year ("PRIMER AÑO"), a label
+    per term and the subjects one per line, a resolution sometimes after
+    one ("– (Res N° 110/2025 Dc.)")."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    pestania = soup.select_one("#v-pills-asignaturas")
+    if pestania:
+        anio = None
+        for celda in pestania.select("div.col-12, div.col-6"):
+            texto = _texto(celda)
+            if "col-12" in (celda.get("class") or []):
+                anio = anio_de(texto)
+            elif anio and not celda.find("a") and not re.match(r"(?i)^descargar", texto) \
+                    and not re.match(r"(?i)^esp\. curricular|^espacio curricular", texto):
+                _agregar(materias, texto, anio)
+        return materias
+    contenido = soup.select_one(".entry-content")
+    anio = None
+    for elemento in (contenido.find_all(["h4", "p"]) if contenido else []):
+        texto = _texto(elemento)
+        if elemento.name == "h4":
+            anio = anio_de(texto.lstrip("*"))
+            continue
+        if not anio or not elemento.find("i", class_=re.compile("fa-file")):
+            continue
+        for salto in elemento.find_all("br"):
+            salto.replace_with("\n")
+        for linea in elemento.get_text("").split("\n"):
+            linea = re.sub(r"\s*[–-]\s*\(?\s*res\.?\b.*$", "", clean_text(linea), flags=re.I)
+            _agregar(materias, linea, anio)
+    return materias
+
+
+def plan_unlpam(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unlpam(html))
