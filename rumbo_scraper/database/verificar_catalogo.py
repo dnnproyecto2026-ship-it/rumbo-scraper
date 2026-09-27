@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from rumbo_scraper import verificacion as v
 from rumbo_scraper.normalizers.text import comparison_key
@@ -355,6 +355,12 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
             publicada = planes.get((corto, comparison_key(carrera)))
             if publicada and publicada not in candidatas:
                 candidatas.append(publicada)
+            # A page that shows its plan in a frame (UNJu's Humanidades):
+            # the frame's page is the plan's source.
+            for url in list(candidatas):
+                marco = BeautifulSoup(fuentes.leer(url)["html"] or "", "html.parser").find("iframe", src=True)
+                if marco and v.es_oficial(urljoin(url, marco["src"]), sitio_web):
+                    candidatas.append(urljoin(url, marco["src"]))
             textos = {}
             for url in candidatas:
                 leida = fuentes.leer(url)
