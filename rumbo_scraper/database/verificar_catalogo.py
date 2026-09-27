@@ -32,6 +32,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
+from bs4 import BeautifulSoup
+
 from rumbo_scraper import verificacion as v
 from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.parsers import guias_nacionales as gn
