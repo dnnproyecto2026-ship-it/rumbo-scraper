@@ -249,7 +249,47 @@ def ingenieria_mdp(texto: str) -> list[tuple[str, str, str]]:
     return filas
 
 
-# Sigla -> [(page, reader)]
+_CARGO_CATEDRA = re.compile(r"(?i)^(titular|profesor(?:a|es|as)?|jef[ea]s?|ayudantes?|auxiliar(?:es)?|adscript[oa]s?|docentes?)\b[^:]{0,60}:?$")
+_NO_ES_PERSONA = re.compile(r"(?i)\b(c[áa]tedra|contacto|informaci[óo]n|aula|programa|horarios?|planta|docente|virtual)\b")
+_PERSONA = re.compile(r"^(?:(?:Dr|Dra|Lic|Mg|Ing|Prof|Arq|Biól|Geól|Antr|Mus|Esp)\.\s*)*"
+                      r"[A-ZÁÉÍÓÚÑ][a-záéíóúñü]+(?:[ -][A-ZÁÉÍÓÚÑa-záéíóúñü'.]+){1,5}$")
+
+
+def catedra_fcnym(html: str) -> list[tuple[str, str, str]]:
+    """UNLP, Ciencias Naturales y Museo: a page per chair, its title the
+    subject and, after the course's data, each role ("Profesor Titular",
+    "Profesores Adjuntos") with its people one per line."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materia = _texto(soup.find("h1")).replace("\xad", "")
+    for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):
+        parte.decompose()
+    filas, rol = [], None
+    for linea in (clean_text(l) for l in soup.get_text("\n").split("\n")):
+        if not linea or re.match(r"(?i)^ver cv$", linea):
+            continue
+        cargo = _CARGO_CATEDRA.match(linea)
+        if cargo and len(linea.split()) <= 8:
+            rol = linea.rstrip(":")
+            continue
+        palabras = re.sub(r"^(?:[A-Za-zÁÉÍÓÚáéíóú]+\.\s*)+", "", linea).split()
+        es_persona = _PERSONA.match(linea) and all(
+            p[:1].isupper() or p in ("de", "del", "la", "las", "los", "y", "van", "von", "da", "di") for p in palabras)
+        if rol and es_persona and not _NO_ES_PERSONA.search(linea):
+            filas.append((materia, linea, rol))
+        elif rol:
+            rol = None
+    return filas if materia else []
+
+
+def paginas_fcnym(visitante) -> list[tuple[str, object]]:
+    indice = visitante.get("https://www.fcnym.unlp.edu.ar/buscarCatedras/?q=emptyAllxxxyyyy")
+    enlaces = sorted({a["href"] for a in BeautifulSoup(indice or "", "html.parser").find_all("a", href=True)
+                      if "/grado/catedras/" in a["href"]})
+    return [("https://www.fcnym.unlp.edu.ar" + e.replace("/grado/", "/grado_/").rstrip("/") + "/", catedra_fcnym)
+            for e in enlaces]
+
+
+# Sigla -> [(page, reader)], or a function that lists them from an index.
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
            for pagina in ("psicologia", "periodismo", "relaciones_internacionales", "arte",
@@ -260,6 +300,7 @@ FUENTES = {
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UNGS": [("https://www.ungs.edu.ar/wp-content/uploads/2018/07/COMISIONES-DE-UN-PERIODO-2_2026-ANUAL_2026-v17-CON-AULAS-22026-ANUAL2026.pdf", comisiones_ungs)],
     "UNMdP": [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)],
+    "UNLP": paginas_fcnym,
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
 }
 
@@ -273,7 +314,8 @@ def main() -> None:
 
     comisiones: dict[str, dict] = {}
     with Visitante(timeout=40) as visitante:
-        for pagina, lector in FUENTES[args.universidad]:
+        fuentes = FUENTES[args.universidad]
+        for pagina, lector in (fuentes(visitante) if callable(fuentes) else fuentes):
             if pagina.lower().endswith((".pdf", "/download")):
                 import subprocess
                 import tempfile
