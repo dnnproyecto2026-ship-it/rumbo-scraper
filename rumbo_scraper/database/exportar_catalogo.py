@@ -39,6 +39,12 @@ def _urls_de_los_artefactos() -> dict[tuple[str, str], str]:
     them, under the same name the database gives them.
     """
     urls: dict[tuple[str, str], str] = {}
+    # A career's own page found in its faculty's list (`paginas_propias`)
+    # goes before any reading's.
+    propias = Path("data/urls_propias.json")
+    for universidad, carreras in (json.loads(propias.read_text()) if propias.exists() else {}).items():
+        for carrera, url in carreras.items():
+            urls[(universidad, carrera)] = url
     # A university's official guide of careers (``*_guia_completo.json``)
     # goes first: its link is the university's, a crawl's is a guess.
     for archivo in sorted(glob.glob("data/*_completo.json"), key=lambda a: "_guia_" not in a):
