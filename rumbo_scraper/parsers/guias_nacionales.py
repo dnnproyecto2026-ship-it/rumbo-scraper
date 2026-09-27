@@ -2309,6 +2309,52 @@ def leer_unlz(html: str, pagina: str = UNLZ, traer=None) -> list[CarreraDeLaGuia
     return carreras
 
 
+# --- Universidad Nacional de La Plata: its search of careers --------------------------------------------
+# unlp.edu.ar searches its 150 careers by faculty, duration and kind; each
+# result is the career's name linking the faculty's page for it. A search
+# per faculty gives each career its faculty; one per duration, its duration;
+# the tecnicaturas' search, its level.
+
+UNLP = ("https://unlp.edu.ar/?areadisciplinarbuscadorcgyp=all&duracionbuscadorcgyp=all"
+        "&facultadbuscadorcgyp=all&post_type=carrera&s=&tipobuscadorcgyp=all")
+
+
+def _busqueda_unlp(traer, filtro: str, valor: str) -> list[tuple[str, str]]:
+    import time
+
+    resultados: list[tuple[str, str]] = []
+    for pagina in range(1, 15):
+        # The site answers 403 after some sixty quick searches: unhurried.
+        time.sleep(3)
+        url = UNLP.replace(f"{filtro}=all", f"{filtro}={valor}") + (f"&paged={pagina}" if pagina > 1 else "")
+        nuevos = [(_texto(h2), h2.find_parent("a")["href"]) for h2 in _soup(traer(url)).select("article h2")
+                  if h2.find_parent("a", href=True)]
+        nuevos = [r for r in nuevos if r not in resultados]
+        if not nuevos:
+            break
+        resultados += nuevos
+    return resultados
+
+
+def leer_unlp(html: str, pagina: str = UNLP, traer=None) -> list[CarreraDeLaGuia]:
+    if not traer:
+        return []
+    select = _soup(html).find("select", attrs={"name": "facultadbuscadorcgyp"})
+    facultades = [(o["value"], _texto(o)) for o in (select.find_all("option") if select else [])
+                  if o.get("value") and o["value"] != "all"]
+    duracion_de = {nombre: float(anios) for anios in ("3", "4", "5", "6")
+                   for nombre, _ in _busqueda_unlp(traer, "duracionbuscadorcgyp", anios)}
+    tecnicaturas = {nombre for nombre, _ in _busqueda_unlp(traer, "tipobuscadorcgyp", "tecnicatura")}
+    carreras = []
+    for valor, facultad in facultades:
+        for nombre, url in _busqueda_unlp(traer, "facultadbuscadorcgyp", valor):
+            carrera = _carrera(nombre, f"Facultad de {facultad}", url, None, duracion_de.get(nombre),
+                               "Pregrado" if nombre in tecnicaturas else None)
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
 # --- Universidad del Cine: each career's page says what it is ---------------------------------------
 # "La carrera de Dirección (pregrado) dura tres años y medio, al cabo de los
 # cuales obtenés el título de Director/a": the licenciatura and the
