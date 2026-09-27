@@ -151,6 +151,59 @@ def profesores_palermo(html: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+def comisiones_ungs(texto: str) -> list[tuple[str, str, str]]:
+    """UNGS: the PDF of a term's commissions, as ``pdftotext -layout`` gives
+    it, a row per commission and slot:
+
+        A0574   ADOLESCENCIA Y EDUCACIÓN SECUNDARIA (A0574)   A0574 COM-03   10/08/2026 ...  Jueves  13:00 a 15:59   Sburlatti Santiago Esteban, Toscano Ana Gracia   AULA 7173
+
+    A long name wraps: above the row (the building's column beside it), and
+    "(A0075)" below. A subject is its code, named as a row writes it whole
+    when one does. The teachers come "Apellido Nombre" without a comma, so
+    they are kept as written; the role is the term the dates fall in."""
+    nombres: dict[str, str] = {}
+    envueltos: dict[str, str] = {}
+    completos: set[str] = set()
+    docentes_de: dict[str, list[tuple[str, str]]] = {}
+    arriba = ""
+    for linea in (texto or "").splitlines():
+        partes = re.split(r"\s{2,}", linea.strip())
+        comision = next((i for i, p in enumerate(partes) if re.match(r"^[A-Z]\d{4} COM-\d+$", p)), None)
+        if comision is None or not re.match(r"^[A-Z]\d{4}$", partes[0]):
+            primero = clean_text(partes[0]) if partes else ""
+            # The rest of a wrapped name, beside its code: "PÚBLICO (A0154)".
+            cola = re.match(r"^(.*?)\s*\(([A-Z]\d{4})\)$", primero)
+            if cola and cola.group(2) in envueltos and cola.group(2) not in completos:
+                envueltos[cola.group(2)] = clean_text(f"{envueltos[cola.group(2)]} {cola.group(1)}")
+                completos.add(cola.group(2))
+                continue
+            if primero and primero.isupper() and not re.match(r"^(\(|MODULO|AULA|SEDE|COMISIONES)", primero) \
+                    and not re.search(r"\d", primero):
+                arriba = primero
+            continue
+        codigo = partes[0]
+        if comision == 2:
+            nombres.setdefault(codigo, re.sub(rf"\s*\({codigo}\)\s*$", "", partes[1]).strip())
+        elif arriba:
+            envueltos.setdefault(codigo, arriba)
+        if len(partes) <= comision + 5:
+            continue
+        termino = "1° cuatrimestre" if re.match(r"\d\d/0[1-6]/", partes[comision + 1]) else "2° cuatrimestre"
+        for docente in partes[comision + 5].split(","):
+            docente = clean_text(docente)
+            if docente and not re.search(r"\d|AULA|VT ASINC", docente):
+                docentes_de.setdefault(codigo, [])
+                if (docente, termino) not in docentes_de[codigo]:
+                    docentes_de[codigo].append((docente, termino))
+    filas = []
+    for codigo, docentes in docentes_de.items():
+        nombre = nombres.get(codigo) or envueltos.get(codigo)
+        # A name the wrap cut at its start leaves its parentheses unbalanced.
+        if nombre and nombre.count("(") == nombre.count(")"):
+            filas += [(nombre, docente, termino) for docente, termino in docentes]
+    return filas
+
+
 # Sigla -> [(page, reader)]
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
@@ -160,6 +213,7 @@ FUENTES = {
             ("https://www.derecho.uba.ar/academica/profesores/Profesores-Regulares-ABRIL-2026.pdf", derecho_uba)],
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
+    "UNGS": [("https://www.ungs.edu.ar/wp-content/uploads/2018/07/COMISIONES-DE-UN-PERIODO-2_2026-ANUAL_2026-v17-CON-AULAS-22026-ANUAL2026.pdf", comisiones_ungs)],
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
 }
 
@@ -200,6 +254,10 @@ def main() -> None:
                 comision = comisiones.setdefault(clave, {
                     "materia": materia, "codigo": "web-" + (fuente + "-" + comparison_key(materia).replace(" ", "-"))[:120],
                     "anio": 2026, "seccion": "Cátedra", "fuente_url": pagina, "docentes": []})
+                # A reader that knows the term, not the role, says it there.
+                termino = re.match(r"^([12])° cuatrimestre$", rol or "")
+                if termino:
+                    comision["semestre"], rol = int(termino.group(1)), ""
                 if all(comparison_key(d["nombre"]) != comparison_key(docente) for d in comision["docentes"]):
                     comision["docentes"].append({"nombre": docente, "rol": rol})
     Path(f"data/docentes_{args.universidad.lower()}.json").write_text(json.dumps(
