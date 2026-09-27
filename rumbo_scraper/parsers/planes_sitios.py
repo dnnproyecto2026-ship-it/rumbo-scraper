@@ -411,3 +411,26 @@ def _plan_en_lista(html: str) -> list[tuple[str, int]]:
 
 def plan_en_lista(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_en_lista(html))
+
+
+def _plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
+    """A heading per year ("Primer Año") and, under it, a table of one
+    subject per row (the UNR's Ciencia Política): a table under any other
+    heading (electives, seminars) is not the plan."""
+    materias: list[tuple[str, int]] = []
+    for titulo in BeautifulSoup(html or "", "html.parser").find_all(["h2", "h3", "h4", "h5"]):
+        anio = anio_de(_texto(titulo))
+        tabla = titulo.find_next("table")
+        siguiente = titulo.find_next(["h2", "h3", "h4", "h5"])
+        if not anio or not tabla or (siguiente and siguiente.sourceline and tabla.sourceline
+                                     and siguiente.sourceline < tabla.sourceline):
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"]) if _texto(c)]
+            if celdas:
+                _agregar(materias, celdas[0], anio)
+    return materias
+
+
+def plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_tablas_por_anio(html))

@@ -16,7 +16,7 @@ Casilda, the rest in Rosario.
 from __future__ import annotations
 
 import re
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -53,9 +53,12 @@ def leer_guia(html: str, pagina: str = GUIA) -> list[CarreraDeLaGuia]:
         if not nombre or _CICLO.search(nombre):
             continue
         texto = clean_text(detalle.get_text(" "))
-        plan = next((a["href"] for a in detalle.find_all("a", href=True)
-                     if "plan" in clean_text(a.get_text(" ")).lower()), None)
-        sitio = next((a["href"] for a in detalle.find_all("a", href=True)
+        # Only the university's own domains: the Odontología link went to
+        # fodontounr.info, a lapsed domain now serving a gambling site.
+        enlaces = [a for a in detalle.find_all("a", href=True)
+                   if urlparse(urljoin(pagina, a["href"].strip())).netloc.endswith("unr.edu.ar")]
+        plan = next((a["href"] for a in enlaces if "plan" in clean_text(a.get_text(" ")).lower()), None)
+        sitio = next((a["href"] for a in enlaces
                       if a["href"].startswith("http") and "plan" not in a.get_text(" ").lower()), None)
         duracion = _DURACION.search(texto)
         anios = None

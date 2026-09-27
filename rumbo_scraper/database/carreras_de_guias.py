@@ -39,8 +39,9 @@ import argparse
 import json
 import re
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
+from urllib.parse import urljoin
 from typing import Any, Callable
 
 from rumbo_scraper.database.exportar_catalogo import clave_de_carrera
@@ -414,9 +415,12 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
             else:
                 html = visitante.get(pagina)
             if len(inspect.signature(lector).parameters) >= 3:
-                carreras += lector(html, pagina, traer)
+                leidas_de_la_pagina = lector(html, pagina, traer)
             else:
-                carreras += lector(html, pagina)
+                leidas_de_la_pagina = lector(html, pagina)
+            # A link the page gives relative ("/tecnicatura-en-meteorologia/")
+            # is the page's: the catalogue shows it as a link.
+            carreras += [replace(c, url=urljoin(pagina, c.url)) for c in leidas_de_la_pagina]
     return carreras
 
 

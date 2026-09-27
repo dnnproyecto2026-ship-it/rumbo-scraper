@@ -1343,7 +1343,7 @@ def leer_unsa(html: str, pagina: str = UNSA) -> list[CarreraDeLaGuia]:
         duracion = duracion.replace("1/2", "y medio")
         for sede in [clean_text(s) for s in re.split(r"\s*[–-]\s*|,\s*", lugares) if clean_text(s)] or [None]:
             carrera = _carrera(_texto(elemento), unidad if unidad.lower().startswith("facultad") else "",
-                               enlace["href"] if enlace else pagina, sede,
+                               urljoin(pagina, enlace["href"]) if enlace else pagina, sede,
                                anios(re.sub(r"(\d)\s+y medio años", r"\1 años y medio", duracion)), nivel_dicho)
             if carrera:
                 carreras.append(carrera)
@@ -1712,7 +1712,7 @@ def leer_unlc(html: str, pagina: str = UNLC) -> list[CarreraDeLaGuia]:
             if enlace["href"] in vistas or enlace["href"] == "#":
                 continue
             vistas.add(enlace["href"])
-            carrera = _carrera(_texto(enlace), "", enlace["href"], None, None,
+            carrera = _carrera(_texto(enlace), "", urljoin(pagina, enlace["href"]), None, None,
                                "Pregrado" if grupo == "tecnicaturas" else "Grado")
             if carrera:
                 carreras.append(carrera)
