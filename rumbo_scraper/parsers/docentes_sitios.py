@@ -52,9 +52,58 @@ def sistemas_frc(html: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+def fau_unt(html: str) -> list[tuple[str, str, str]]:
+    """UNT, Arquitectura: a row of one cell names the subject, and the rows
+    after it its teachers (APELLIDO | Nombre | Cargo)."""
+    filas, materia = [], None
+    for fila in BeautifulSoup(html or "", "html.parser").select("table tr"):
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        llenas = [c for c in celdas if c]
+        if len(llenas) == 1:
+            materia = llenas[0]
+        elif len(celdas) >= 3 and materia and celdas[0] and celdas[0].lower() != "apellido":
+            filas.append((materia, f"{celdas[0]}, {celdas[1]}", celdas[2]))
+    return filas
+
+
+_ROL_ENTRE_PARENTESIS = re.compile(r"^\(([A-ZÁÉÍÓÚ. ]+)\)\s*(.+)$")
+
+
+def asignaturas_facet(html: str) -> list[tuple[str, str, str]]:
+    """UNT, FACET career sites: AÑO | MÓDULO | ASIGNATURA | ... | DOCENTES,
+    the first teacher on the subject's row and the rest on rows of their own
+    ("(ADJ) COPA OCAMPO, Marina")."""
+    filas, materia, columna = [], None, None
+    for fila in BeautifulSoup(html or "", "html.parser").select("table tr"):
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        mayusculas = [c.upper() for c in celdas]
+        if "ASIGNATURA" in mayusculas and "DOCENTES" in mayusculas:
+            columna = (mayusculas.index("ASIGNATURA"), mayusculas.index("DOCENTES"), len(celdas))
+            continue
+        if not columna:
+            continue
+        if len(celdas) == 1:
+            docente = celdas[0]
+        elif len(celdas) >= 3:
+            # The year and module cells span their rows: a subject's row
+            # may come without them, its cells shifted to the left.
+            corrida = columna[2] - len(celdas)
+            if columna[0] - corrida < 0:
+                continue
+            materia, docente = celdas[columna[0] - corrida], celdas[-1]
+        else:
+            continue
+        rol = _ROL_ENTRE_PARENTESIS.match(docente)
+        if materia and rol:
+            filas.append((materia, rol.group(2), rol.group(1)))
+    return filas
+
+
 # Sigla -> [(page, reader)]
 FUENTES = {
     "UBA": [("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba)],
+    "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
+            ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
 }
 
@@ -72,6 +121,12 @@ def main() -> None:
             html = visitante.get(pagina)
             time.sleep(0.6)
             for materia, docente, rol in lector(html):
+                materia = re.sub(r"(?i)\s*\(\s*m[áa]s informaci[óo]n\s*\)", "", materia).strip()
+                if materia.isupper():
+                    from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+                    materia = re.sub(r"\b(i{1,3}|iv|vi{0,3}|ix|x)\b", lambda m: m.group(1).upper(),
+                                     con_tildes(materia), flags=re.I)
                 clave = comparison_key(materia)
                 comision = comisiones.setdefault(clave, {
                     "materia": materia, "codigo": "web-" + clave.replace(" ", "-")[:80],
