@@ -77,6 +77,19 @@ class PlanesSitios(unittest.TestCase):
         <p class="cr-materia"><b>7.</b> Derecho Civil I <span>· 64 hs</span></p></div></details>"""
         self.assertEqual(p.plan_cr_year(html), [("Introducción al Derecho", 1), ("Derecho Civil I", 2)])
 
+    def test_unam_humanidades_anio_y_su_lista(self):
+        html = """<table><tr><td>PRIMER AÑO</td></tr><tr><td><ul><li>Introducción a la Historia.</li></ul></td></tr>
+        <tr><td>SEGUNDO AÑO</td></tr><tr><td><ul><li>Economía.</li><li>Asignatura Optativa.</li></ul></td></tr></table>"""
+        self.assertEqual(p.plan_anio_y_lista(html), [("Introducción a la Historia", 1), ("Economía", 2)])
+
+    def test_unam_economicas_el_plan_mas_nuevo(self):
+        html = """<div class="elementor-tab-title">Plan de estudios 2008</div>
+        <div><p>Primer Año</p><p>Contabilidad I</p><p>CP101</p></div>
+        <div class="elementor-tab-title">Plan de estudios 2020</div>
+        <div><p>Primer Año</p><p>Álgebra</p><p>CR103</p><p>Crédito para Optativas</p><p>CR509</p>
+        <p>Requisitos extracurriculares</p><p>Idioma Inglés</p><p>CR810</p></div>"""
+        self.assertEqual(p.plan_fce_unam(html), [("Álgebra", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()

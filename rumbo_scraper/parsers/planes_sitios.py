@@ -765,3 +765,61 @@ def _plan_cr_year(html: str) -> list[tuple[str, int]]:
 
 def plan_cr_year(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_cr_year(html))
+
+
+def _plan_anio_y_lista(html: str) -> list[tuple[str, int]]:
+    """UNaM, Humanidades: a table whose rows alternate a year ("PRIMER
+    AÑO") and a list of its subjects. An elective's slot ("Asignatura
+    Optativa") is not a subject."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            items = fila.find_all("li")
+            if not items:
+                texto = _texto(fila)
+                anio = anio_de(texto) if re.fullmatch(r"(?i)\w+\s+año", texto) else None
+                continue
+            for item in items if anio else []:
+                if not re.search(r"(?i)optativ|electiv", _texto(item)):
+                    _agregar(materias, _texto(item), anio)
+    return materias
+
+
+def plan_anio_y_lista(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_anio_y_lista(html))
+
+
+def _plan_fce_unam(html: str) -> list[tuple[str, int]]:
+    """UNaM, Económicas: a fold per plan ("Plan de estudios 2020"), the
+    newest the career's, or the plan alone; in it, a heading per year ("Segundo Año") and a
+    row per subject: its name, its code (CR201) and its term. An elective's
+    credit ("Crédito para Optativas") is not a subject."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    pliegues = [(int(re.search(r"20\d\d", _texto(t)).group()), t) for t in soup.select(".elementor-tab-title")
+                if re.fullmatch(r"(?i)plan de estudios? (20\d\d)", _texto(t))]
+    if pliegues:
+        contenido = max(pliegues, key=lambda p: p[0])[1].find_next_sibling("div")
+    else:
+        # A career with one plan shows it without a fold.
+        for parte in soup.find_all(["script", "style", "nav", "header", "footer", "aside"]):
+            parte.decompose()
+        contenido = soup.find("article") or soup.find("main") or soup.body
+    materias: list[tuple[str, int]] = []
+    anio, anterior = None, ""
+    for linea in (clean_text(l) for l in (contenido.get_text("\n") if contenido else "").split("\n")):
+        if not linea:
+            continue
+        # The language tests after the plan ("Requisitos extracurriculares").
+        if re.match(r"(?i)requisitos", linea):
+            break
+        if re.fullmatch(r"(?i)\w+\s+año", linea) and anio_de(linea):
+            anio = anio_de(linea)
+        elif anio and re.fullmatch(r"[A-Z]{1,3}\d{3}", linea) and not re.search(r"(?i)optativ|electiv", anterior):
+            _agregar(materias, anterior, anio)
+        anterior = linea
+    return materias
+
+
+def plan_fce_unam(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_fce_unam(html))
