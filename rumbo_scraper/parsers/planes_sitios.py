@@ -96,8 +96,14 @@ def _plan_uns(html: str) -> list[tuple[str, int]]:
             celdas = [_texto(td) for td in fila.find_all(["td", "th"])]
             celdas = [c for c in celdas if c] or [""]
             if len(celdas) == 1:
+                # The electives listed after a year are a pool, not that
+                # year's subjects: skipped until the next year's heading.
+                # ("G2347 Optativa de Abogacía" is an elective's slot in its
+                # year: a row to skip, not the pool.)
                 if re.search(r"(?i)optativa", celdas[0]):
-                    return materias
+                    if not re.match(r"^[A-Z]{0,2}\d{3,6}\s", celdas[0]):
+                        anio = None
+                    continue
                 encabezado = _ANIO_UNS.search(celdas[0])
                 if encabezado:
                     anio = _ORDINALES.get((encabezado.group(1) or "").lower()) or int(encabezado.group(2))

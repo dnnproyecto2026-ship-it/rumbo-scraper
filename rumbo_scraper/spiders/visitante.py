@@ -54,7 +54,15 @@ class Visitante:
             if "html" not in response.headers.get("content-type", ""):
                 return ""
             try:
-                return response.text
+                texto = response.text
+                # A page in Latin-1 that does not say so (the UNS's plans)
+                # comes out of a UTF-8 reading with replacement marks.
+                if "\ufffd" in texto:
+                    try:
+                        return response.content.decode("utf-8")
+                    except UnicodeDecodeError:
+                        return response.content.decode("cp1252", errors="replace")
+                return texto
             except (UnicodeDecodeError, LookupError):
                 # A server that declares an encoding its page is not in (the
                 # IUSM says UTF-32): the page is read as the UTF-8 it is.
