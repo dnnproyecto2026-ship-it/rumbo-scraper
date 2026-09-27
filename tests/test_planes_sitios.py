@@ -52,6 +52,14 @@ class PlanesSitios(unittest.TestCase):
         <tr><td>132</td><td>TP</td><td>Optativa</td><td>56</td></tr></table>"""
         self.assertEqual(p.plan_eco_unsa(html), [("Introducción a la Contabilidad", 1)])
 
+    def test_unsa_ingenieria_termina_en_los_requisitos(self):
+        html = """<table><tr><td>PRIMER AÑO</td></tr>
+        <tr><td>1</td><td>I</td><td>Análisis Matemático I</td><td>Ciencias Básicas</td></tr>
+        <tr><td>2</td><td>I</td><td>Electiva</td><td>Tecnologías Aplicadas</td></tr>
+        <tr><td>REQUISITOS CURRICULARES</td></tr>
+        <tr><td>39</td><td></td><td>Inglés I</td><td>Complementarias</td></tr></table>"""
+        self.assertEqual(p.plan_ing_unsa(html), [("Análisis Matemático I", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()

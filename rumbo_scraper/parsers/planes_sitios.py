@@ -703,3 +703,25 @@ def _plan_eco_unsa(html: str) -> list[tuple[str, int]]:
 
 def plan_eco_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_eco_unsa(html))
+
+
+def _plan_ing_unsa(html: str) -> list[tuple[str, int]]:
+    """UNSa, Ingeniería: a row per year ("PRIMER AÑO") and a row per
+    subject (code, term, name, area...). Another heading ("REQUISITOS
+    CURRICULARES", "ELECTIVAS") ends the plan, and an elective's slot
+    ("Electiva") is not a subject."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) == 1:
+                anio = anio_de(celdas[0]) if re.fullmatch(r"(?i)\w+\s+año", celdas[0]) else None
+            elif anio and len(celdas) >= 3 and re.fullmatch(r"\d{1,3}", celdas[0]) \
+                    and not re.match(r"(?i)electiva|optativa", celdas[2]):
+                _agregar(materias, celdas[2], anio)
+    return materias
+
+
+def plan_ing_unsa(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_ing_unsa(html))

@@ -1320,23 +1320,28 @@ def leer_unlpam(html: str, pagina: str = UNLPAM) -> list[CarreraDeLaGuia]:
 # faculty, the duration ("2 1/2 años de duración"), the towns and the plan.
 
 UNSA = "https://www.unsa.edu.ar/carreras/"
-# Exactas moved its careers from "/carreras/info/<n>" (now 404) to a page per
-# career ("/lic-en-matematicas"); its list names them.
-UNSA_EXACTAS = "https://exactas.unsa.edu.ar/carreras"
+# Faculties that moved their careers to new pages, the old links now 404
+# ("exactas.unsa.edu.ar/carreras/info/3", Ingeniería's Joomla articles): the
+# faculty's list gives each career's new page by name.
+UNSA_MUDADAS = ((re.compile(r"https?://exactas\.unsa\.edu\.ar/carreras/info/\d+"),
+                 "https://exactas.unsa.edu.ar/", ("https://exactas.unsa.edu.ar/carreras",)),
+                (re.compile(r"https?://(?:www\.)?ing\.unsa\.edu\.ar/index\.php/oferta/"),
+                 "https://ing.unsa.edu.ar/", ("https://ing.unsa.edu.ar/oferta/grado",
+                                              "https://ing.unsa.edu.ar/oferta/pregrado")))
 
 
-def _paginas_de_exactas_unsa(html: str) -> dict[str, str]:
+def _paginas_nuevas_unsa(html: str, sitio: str) -> dict[str, str]:
     paginas = {}
     for a in _soup(html).find_all("a", href=True):
-        if a["href"].startswith("https://exactas.unsa.edu.ar/") and re.match(
-                r"(?i)(lic|tecnicatura|profesorado|analista)", _texto(a)):
+        if a["href"].startswith(sitio) and re.match(
+                r"(?i)(lic|tecnicatura|profesorado|analista|ingenier)", _texto(a)):
             paginas.setdefault(re.sub(r"(?i)^lic\.?\s+en\b", "Licenciatura en", _texto(a)), a["href"])
     return paginas
 
 
-def _pagina_nueva_de_exactas(nombre: str, paginas: dict[str, str]) -> str | None:
-    """The page Exactas' list gives the career's name, if exactly one is that
-    name ("Licenciatura en Matemática" is its "Licenciatura en Matemáticas")."""
+def _pagina_nueva_unsa(nombre: str, paginas: dict[str, str]) -> str | None:
+    """The page the faculty's list gives the career's name, if exactly one is
+    that name ("Licenciatura en Matemática" is its "Licenciatura en Matemáticas")."""
     from difflib import SequenceMatcher
 
     parecidas = {url for dicho, url in paginas.items()
@@ -1346,7 +1351,7 @@ def _pagina_nueva_de_exactas(nombre: str, paginas: dict[str, str]) -> str | None
 
 def leer_unsa(html: str, pagina: str = UNSA, traer=None) -> list[CarreraDeLaGuia]:
     carreras, nivel_dicho = [], None
-    exactas: dict[str, str] | None = None
+    nuevas: dict[str, dict[str, str]] = {}
     for elemento in _soup(html).find_all(["h2", "h3", "span", "div"]):
         clases = elemento.get("class") or []
         if elemento.name in ("h2", "h3"):
@@ -1366,13 +1371,16 @@ def leer_unsa(html: str, pagina: str = UNSA, traer=None) -> list[CarreraDeLaGuia
                         and re.search(r"[A-ZÁÉÍÓÚ]", i)), "")
         enlace = contenido.find("a", href=True) if contenido else None
         url = urljoin(pagina, enlace["href"]) if enlace else pagina
-        if traer and re.match(r"https?://exactas\.unsa\.edu\.ar/carreras/info/\d+", url):
-            if exactas is None:
-                exactas = _paginas_de_exactas_unsa(traer(UNSA_EXACTAS))
-            url = _pagina_nueva_de_exactas(_texto(elemento), exactas) or url
+        for vieja, sitio, listas in UNSA_MUDADAS if traer else ():
+            if vieja.match(url):
+                if sitio not in nuevas:
+                    nuevas[sitio] = {k: v for lista in listas for k, v in _paginas_nuevas_unsa(traer(lista), sitio).items()}
+                url = _pagina_nueva_unsa(_texto(elemento), nuevas[sitio]) or url
         duracion = duracion.replace("1/2", "y medio")
         for sede in [clean_text(s) for s in re.split(r"\s*[–-]\s*|,\s*", lugares) if clean_text(s)] or [None]:
-            carrera = _carrera(_texto(elemento), unidad if unidad.lower().startswith("facultad") else "", url, sede,
+            # The list misspells one ("Tecnicatura Electónica"); its faculty's page does not.
+            carrera = _carrera(_texto(elemento).replace("Electónica", "Electrónica"),
+                               unidad if unidad.lower().startswith("facultad") else "", url, sede,
                                anios(re.sub(r"(\d)\s+y medio años", r"\1 años y medio", duracion)), nivel_dicho)
             if carrera:
                 carreras.append(carrera)
