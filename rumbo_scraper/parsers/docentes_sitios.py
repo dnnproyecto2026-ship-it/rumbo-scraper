@@ -204,6 +204,51 @@ def comisiones_ungs(texto: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+_FILA_FI_MDP = re.compile(r"^(?P<materia>\S.*?)?\s{2,}(?P<codigo>[A-Z0-9-]+)\s+(?P<cuatr>1|2|Ambos)\s+"
+                         r"(?P<docente>\S.*?)\s{2,}\S+@\S+\s*$")
+# ("ÁLGEBRA A" ends on its letter, not on a preposition.)
+_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|en|con|para|por)$")
+
+
+def ingenieria_mdp(texto: str) -> list[tuple[str, str, str]]:
+    """UNMdP, Ingeniería: "Docentes por Asignaturas", as ``pdftotext -layout``
+    gives it: ASIGNATURA | Cód. | Cuatr. | DOCENTE | MAIL, the person in
+    charge. A code that wraps leaves the subject's name on the line above;
+    a name that wraps goes on in the line below. The mail only marks the row."""
+    filas, pendiente = [], None
+    lineas = (texto or "").splitlines()
+    for posicion, linea in enumerate(lineas):
+        encontrada = re.search(r"\s{2,}(?P<codigo>[A-Z0-9-]+)\s+(?P<cuatr>1|2|Ambos)\s+(?P<docente>\S.*?)\s{2,}\S+@\S+\s*$", linea)
+        if not encontrada:
+            limpia = clean_text(linea)
+            if linea[:1].strip() and limpia and not re.search(r"@|ASIGNATURA|NO SE DICTA", limpia):
+                # "ÁLGEBRA I-B    4": a subject whose code goes on below.
+                pendiente = re.sub(r"\s+\d+$", "", limpia)
+            continue
+        materia = clean_text(linea[:encontrada.start()])
+        if not materia:
+            materia, pendiente = pendiente, None
+        if not materia:
+            continue
+        # The rest of a wrapped name, alone on the next line ("TECNOLÓGICA");
+        # a rest that comes garbled ("COMPUTADORASDE COMPUTADORAS") leaves
+        # the subject out.
+        siguiente = lineas[posicion + 1] if posicion + 1 < len(lineas) else ""
+        resto = clean_text(siguiente)
+        if siguiente[:1].strip() and resto.isupper() and not re.search(r"\d|@", resto) \
+                and not re.search(r"\s{2,}\S", siguiente.strip()):
+            palabras = re.findall(r"\w+", resto)
+            if len(palabras) != len(set(palabras)) or any(p.endswith(("DE", "DEL")) and len(p) > 5 for p in palabras):
+                continue
+            materia = f"{materia} {resto}"
+        if _CORTADA.search(materia):
+            continue
+        materia = re.sub(r"(?i)\s*\(alias \d+\)$", "", materia)
+        termino = {"1": "1° cuatrimestre", "2": "2° cuatrimestre"}.get(encontrada.group("cuatr"), "")
+        filas.append((materia, clean_text(encontrada.group("docente")), termino))
+    return filas
+
+
 # Sigla -> [(page, reader)]
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
@@ -214,6 +259,7 @@ FUENTES = {
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UNGS": [("https://www.ungs.edu.ar/wp-content/uploads/2018/07/COMISIONES-DE-UN-PERIODO-2_2026-ANUAL_2026-v17-CON-AULAS-22026-ANUAL2026.pdf", comisiones_ungs)],
+    "UNMdP": [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)],
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
 }
 
@@ -228,7 +274,7 @@ def main() -> None:
     comisiones: dict[str, dict] = {}
     with Visitante(timeout=40) as visitante:
         for pagina, lector in FUENTES[args.universidad]:
-            if pagina.lower().endswith(".pdf"):
+            if pagina.lower().endswith((".pdf", "/download")):
                 import subprocess
                 import tempfile
 
