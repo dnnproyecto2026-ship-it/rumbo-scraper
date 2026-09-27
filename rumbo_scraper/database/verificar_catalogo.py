@@ -157,13 +157,27 @@ def _texto_del_pdf(contenido: bytes) -> str:
     partes = []
     try:
         with pdfplumber.open(io.BytesIO(contenido)) as pdf:
-            for pagina in pdf.pages[:60]:
+            # (The UNGS's list of commissions runs to 78 pages.)
+            for pagina in pdf.pages[:200]:
                 partes.append(pagina.extract_text() or "")
                 for tabla in pagina.extract_tables():
                     for fila in tabla:
                         partes.append(f" {v.CORTE} ".join(" ".join((c or "").split())
                                                           for c in fila))
                         partes.append(v.CORTE)
+    except Exception:
+        pass
+    # And the text as laid out: a name pdfplumber glues to the next column
+    # comes apart there.
+    import subprocess
+    import tempfile
+
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".pdf") as archivo:
+            archivo.write(contenido)
+            archivo.flush()
+            partes.append(subprocess.run(["pdftotext", "-layout", archivo.name, "-"], capture_output=True,
+                                         text=True, timeout=120).stdout)
     except Exception:
         pass
     return " ".join(partes)
