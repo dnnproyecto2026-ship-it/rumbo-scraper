@@ -25,7 +25,8 @@ from rumbo_scraper.normalizers.text import clean_text
 _ORDINALES = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
               "quinto": 5, "sexto": 6}
 _ANIO = re.compile(r"(?i)^\s*(primer|primero|segundo|tercer|tercero|cuarto|quinto|sexto)\s*(?:a[ñn]o)?\s*:?\s*$")
-_ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*[°ºo]?\s*a[ñn]o\s*:?\s*$")
+# "1° Año", "1er AÑO", "2do. Año", "1.er AÑO"
+_ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*\.?\s*(?:er|ro|do|to|vo|mo|[°ºo])?\s*\.?\s*a[ñn]o\s*:?\s*$")
 # Not subjects: an elective's slot, a heading that ends in a colon.
 _NO_ES_MATERIA = re.compile(
     r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
@@ -55,8 +56,11 @@ def anio_de(texto: str) -> int | None:
 
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
-    # "Algebra I (anual)", "Rítmica (Cuatr.)": how long it runs, not its name.
-    nombre = re.sub(r"(?i)\s*\((?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*cuatr\.?)\)\s*$", "", nombre)
+    # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
+    # "(1° Cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
+    nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
+    nombre = re.sub(r"(?i)\s*\((?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\)\s*$", "", nombre)
+    nombre = re.sub(r"(?i)\s+(?:anual|cuatrimestral|\d\s*[°º]\s*c)$", "", nombre)
     if nombre.isupper():
         from rumbo_scraper.parsers.guias_nacionales import con_tildes
 
@@ -434,3 +438,138 @@ def _plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
 
 def plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_tablas_por_anio(html))
+
+
+_INICIALES = re.compile(r"\s+(?!(?:I{1,3}|IV|VI{0,3}|IX|X)\b)(?:[A-Z]\.?){1,4}\.?$")
+
+
+def _plan_upso(html: str) -> list[tuple[str, int]]:
+    """UPSO: "PLAN DE ESTUDIOS", then each year ("PRIMER AÑO"), its terms and
+    the subjects one per line, until the page's other sections. A subject
+    shared by careers carries their initials ("Estadística DLR")."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    contenido = soup.select_one(".entry-content") or soup.body or soup
+    lineas = [clean_text(l) for l in contenido.get_text("\n").split("\n") if clean_text(l)]
+    inicio = next((i for i, l in enumerate(lineas) if re.match(r"(?i)^plan de estudios?:?$", l)), None)
+    if inicio is None:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[inicio + 1:]:
+        nuevo = anio_de(linea)
+        if nuevo:
+            anio = nuevo
+            continue
+        if re.match(r"(?i)^([12]\s*[º°]|primer|segundo)\s*cuatrimestre", linea):
+            continue
+        if anio and (len(linea) > 90 or re.match(
+                r"(?i)^(requisitos|inscrip|documentaci|informaci|condiciones|t[íi]tulo|alcances|perfil|"
+                r"materias optativas|optativas|asignaturas optativas|preinscrip)", linea)):
+            break
+        if anio and not re.match(r"(?i)^prueba de suficiencia", linea):
+            _agregar(materias, _INICIALES.sub("", linea), anio)
+    return materias
+
+
+def plan_upso(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_upso(html))
+
+
+_ANIO_EN = re.compile(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s*a[ñn]o")
+_PARTICULAS = {"a", "al", "de", "del", "la", "las", "los", "el", "y", "e", "en", "con", "para", "por", "o", "u"}
+
+
+def _sin_mayuscula_en_cada_palabra(nombre: str) -> str:
+    """"Introducción A Las Problemáticas Sociales Y Territoriales" -> "...a las ... y ..."."""
+    palabras = nombre.split()
+    if len(palabras) > 2 and all(p[:1].isupper() for p in palabras if p[:1].isalpha()):
+        return " ".join(p.lower() if i and p.lower() in _PARTICULAS else p for i, p in enumerate(palabras))
+    return nombre
+
+
+def _plan_unvm(html: str) -> list[tuple[str, int]]:
+    """UNVM, two layouts: Básicas' tabs, a year each ("PRIMER AÑO") over a
+    table whose column "Espacios curriculares" names the subjects (the first
+    grid is the plan in force); Sociales' and Humanas' boxes, a year heading
+    and the subjects one per line. The "C.T.F.C. ... E.C.E." lines are elective
+    credits, not subjects."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    secciones = soup.select("section.av_tab_section")
+    if secciones:
+        pares = [par for seccion in secciones for par in zip(seccion.select(".tab"), seccion.select(".tab_content"))]
+        vistos: set[int] = set()
+        for pestania, contenido in pares:
+            encontrado = _ANIO_EN.search(_texto(pestania))
+            tabla = contenido.find("table")
+            if not encontrado or not tabla:
+                continue
+            anio = _ORDINALES[encontrado.group(1).lower()]
+            # A year again is the older plan's grid (Veterinaria's 2017 under its 2022).
+            if anio in vistos:
+                break
+            vistos.add(anio)
+            columna = None
+            for fila in tabla.find_all("tr"):
+                celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+                if columna is None:
+                    columna = next((i for i, c in enumerate(celdas) if re.match(r"(?i)espacios? curricular|asignatura|materia", c)), None)
+                    continue
+                if len(celdas) > columna and celdas[columna] and not re.match(r"(?i)^c\.?\s*t\.?\s*f\.?\s*c", celdas[columna]):
+                    _agregar(materias, _sin_mayuscula_en_cada_palabra(celdas[columna]), anio)
+        return materias
+    for caja in soup.select(".et_pb_text_inner"):
+        encabezado = caja.find(["h4", "h5"])
+        encontrado = _ANIO_EN.search(_texto(encabezado)) if encabezado else None
+        if not encontrado:
+            continue
+        anio = _ORDINALES[encontrado.group(1).lower()]
+        encabezado.extract()
+        # A subject per line of the box, the lines broken by <br> or
+        # paragraphs; a name's inline markup is not a break.
+        for salto in caja.find_all("br"):
+            salto.replace_with("\n")
+        for parrafo in caja.find_all(["p", "li", "div"]):
+            parrafo.insert_after("\n")
+        for linea in caja.get_text("").split("\n"):
+            linea = clean_text(linea).lstrip("–- ")
+            if linea and not re.search(r"(?i)c\.?\s*t\.?\s*f\.?\s*c|e\.?\s*c\.?\s*e\.|cuatrimestre", linea) \
+                    and not _ANIO_EN.search(linea):
+                _agregar(materias, _sin_mayuscula_en_cada_palabra(linea), anio)
+    return materias
+
+
+def plan_unvm(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unvm(html))
+
+
+def _plan_ucalp(html: str) -> list[tuple[str, int]]:
+    """UCALP, two layouts: its plan pages (/plan-de-estudio/<slug>/), a fold
+    per year ("1er. Año") with each subject in a bullet's span; or a career
+    page's "Plan de Estudios" section, a heading per year ("1er AÑO") and
+    the subjects as bullets. "(A)", "(C)" say annual or by term."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    paneles = soup.select("#plan-de-estudio .panel")
+    if paneles:
+        for panel in paneles:
+            anio = anio_de(_texto(panel.select_one(".panel-heading")))
+            for li in panel.select("li"):
+                _agregar(materias, _texto(li.find("span") or li), anio)
+        return materias
+    titulo = next((h for h in soup.find_all("h2") if "plan de estudio" in _texto(h).lower()), None)
+    anio = None
+    for elemento in (titulo.find_all_next(["h2", "h4", "h5", "h6", "strong", "li"]) if titulo else []):
+        if elemento.name == "h2":
+            break
+        texto = _texto(elemento)
+        nuevo = anio_de(texto)
+        if nuevo:
+            anio = nuevo
+        elif elemento.name == "li":
+            _agregar(materias, re.sub(r"\s*\((?:A|C|\d)\)\s*$", "", texto), anio)
+    return materias
+
+
+def plan_ucalp(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_ucalp(html))

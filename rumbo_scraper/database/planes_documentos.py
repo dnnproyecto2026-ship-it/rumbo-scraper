@@ -73,7 +73,9 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("fcyt.uader.edu.ar", planes_sitios.plan_fcyt_uader),
                         ("uncoma.edu.ar", planes_sitios.plan_uncoma),
                         ("unt.edu.ar", planes_sitios.plan_tabla_con_anios),
-                        ("fcpolit.unr.edu.ar", planes_sitios.plan_tablas_por_anio))
+                        ("fcpolit.unr.edu.ar", planes_sitios.plan_tablas_por_anio),
+                        ("upso.edu.ar", planes_sitios.plan_upso), ("unvm.edu.ar", planes_sitios.plan_unvm),
+                        ("ucalp.edu.ar", planes_sitios.plan_ucalp))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -93,7 +95,8 @@ _PALABRA_PARTIDA = re.compile(r"(\w)- (?=[a-záéíóúñ])")
 _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|por|a|al)$")
 
 
-_PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),)
+_PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),
+                        ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp))
 
 
 def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
