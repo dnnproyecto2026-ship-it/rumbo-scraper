@@ -2217,8 +2217,8 @@ UNLZ_FACULTADES = {
     "Facultad de Derecho": ("https://derecho.unlz.edu.ar/carreras-2/",),
     "Facultad de Ciencias Económicas": ("https://www.economicas.unlz.edu.ar/nuevosite/",),
     "Facultad de Ciencias Agrarias": ("https://agrarias.unlz.edu.ar/oferta-academica/",),
-    "Facultad de Ingeniería": ("https://ingenieria.unlz.edu.ar/oferta-academica/grado",
-                               "https://ingenieria.unlz.edu.ar/oferta-academica/pre-grado"),
+    # Ingeniería links its plans as scanned PDFs, which do not say whose
+    # they are: its careers keep this page.
 }
 
 
