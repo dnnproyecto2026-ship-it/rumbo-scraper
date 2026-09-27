@@ -1320,10 +1320,33 @@ def leer_unlpam(html: str, pagina: str = UNLPAM) -> list[CarreraDeLaGuia]:
 # faculty, the duration ("2 1/2 años de duración"), the towns and the plan.
 
 UNSA = "https://www.unsa.edu.ar/carreras/"
+# Exactas moved its careers from "/carreras/info/<n>" (now 404) to a page per
+# career ("/lic-en-matematicas"); its list names them.
+UNSA_EXACTAS = "https://exactas.unsa.edu.ar/carreras"
 
 
-def leer_unsa(html: str, pagina: str = UNSA) -> list[CarreraDeLaGuia]:
+def _paginas_de_exactas_unsa(html: str) -> dict[str, str]:
+    paginas = {}
+    for a in _soup(html).find_all("a", href=True):
+        if a["href"].startswith("https://exactas.unsa.edu.ar/") and re.match(
+                r"(?i)(lic|tecnicatura|profesorado|analista)", _texto(a)):
+            paginas.setdefault(re.sub(r"(?i)^lic\.?\s+en\b", "Licenciatura en", _texto(a)), a["href"])
+    return paginas
+
+
+def _pagina_nueva_de_exactas(nombre: str, paginas: dict[str, str]) -> str | None:
+    """The page Exactas' list gives the career's name, if exactly one is that
+    name ("Licenciatura en Matemática" is its "Licenciatura en Matemáticas")."""
+    from difflib import SequenceMatcher
+
+    parecidas = {url for dicho, url in paginas.items()
+                 if SequenceMatcher(None, clave_sin_tildes(nombre), clave_sin_tildes(dicho)).ratio() >= 0.93}
+    return parecidas.pop() if len(parecidas) == 1 else None
+
+
+def leer_unsa(html: str, pagina: str = UNSA, traer=None) -> list[CarreraDeLaGuia]:
     carreras, nivel_dicho = [], None
+    exactas: dict[str, str] | None = None
     for elemento in _soup(html).find_all(["h2", "h3", "span", "div"]):
         clases = elemento.get("class") or []
         if elemento.name in ("h2", "h3"):
@@ -1342,10 +1365,14 @@ def leer_unsa(html: str, pagina: str = UNSA) -> list[CarreraDeLaGuia]:
         lugares = next((i for i in items if i not in (unidad, duracion) and not i.lower().startswith(("plan", "facultad"))
                         and re.search(r"[A-ZÁÉÍÓÚ]", i)), "")
         enlace = contenido.find("a", href=True) if contenido else None
+        url = urljoin(pagina, enlace["href"]) if enlace else pagina
+        if traer and re.match(r"https?://exactas\.unsa\.edu\.ar/carreras/info/\d+", url):
+            if exactas is None:
+                exactas = _paginas_de_exactas_unsa(traer(UNSA_EXACTAS))
+            url = _pagina_nueva_de_exactas(_texto(elemento), exactas) or url
         duracion = duracion.replace("1/2", "y medio")
         for sede in [clean_text(s) for s in re.split(r"\s*[–-]\s*|,\s*", lugares) if clean_text(s)] or [None]:
-            carrera = _carrera(_texto(elemento), unidad if unidad.lower().startswith("facultad") else "",
-                               urljoin(pagina, enlace["href"]) if enlace else pagina, sede,
+            carrera = _carrera(_texto(elemento), unidad if unidad.lower().startswith("facultad") else "", url, sede,
                                anios(re.sub(r"(\d)\s+y medio años", r"\1 años y medio", duracion)), nivel_dicho)
             if carrera:
                 carreras.append(carrera)

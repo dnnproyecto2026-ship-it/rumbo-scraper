@@ -631,3 +631,75 @@ def _plan_list_group(html: str) -> list[tuple[str, int]]:
 
 def plan_list_group(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_list_group(html))
+
+
+def _plan_exa_unsa(html: str) -> list[tuple[str, int]]:
+    """UNSa, Exactas: the plan's table, a row per year ("Primer año") and a
+    row per subject under it."""
+    materias: list[tuple[str, int]] = []
+    tabla = BeautifulSoup(html or "", "html.parser").select_one("table.exa-plan-table")
+    anio = None
+    for fila in tabla.select("tr") if tabla else []:
+        if "exa-plan-yrow" in (fila.get("class") or []):
+            anio = anio_de(_texto(fila))
+            continue
+        nombre = fila.select_one("td.exa-plan-tname")
+        if anio and nombre:
+            _agregar(materias, _texto(nombre), anio)
+    return materias
+
+
+def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_exa_unsa(html))
+
+
+_REGIMEN = re.compile(r"(?i)^(i{1,2}|a|anual|\d\s*°?\s*c(uat)?\.?)$")
+
+
+def _plan_natura_unsa(html: str) -> list[tuple[str, int]]:
+    """UNSa, Ciencias Naturales: a table per plan, a row per year ("Primer
+    Año", alone or before the year's first subject) and a row per subject:
+    number, name, its chair's contact (✉) and the term (I, II, A). A table
+    with no year (the electives') is not the plan."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            dicho = next((anio_de(c) for c in celdas if re.fullmatch(r"(?i)\w+\s+año", c) and anio_de(c)), None)
+            if dicho:
+                anio = dicho
+                celdas = celdas[[i for i, c in enumerate(celdas) if anio_de(c) == dicho][0] + 1:]
+            if len(celdas) == 1 and re.match(r"(?i)optativ|electiv", celdas[0]):
+                anio = None
+            celdas = [c for c in celdas if not c.startswith("✉")]
+            if anio and len(celdas) >= 2 and _REGIMEN.match(celdas[-1]):
+                _agregar(materias, celdas[-2], anio)
+    return materias
+
+
+def plan_natura_unsa(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_natura_unsa(html))
+
+
+def _plan_eco_unsa(html: str) -> list[tuple[str, int]]:
+    """UNSa, Económicas: the plan's table, a row per year ("Primer Año") and
+    per term, and a row per subject: its number, its kind (T, TP, P) and its
+    name with the campuses giving it ("Contabilidad I - Sede Central - Sede
+    Norte"). A parallel chair (no number) is not another subject."""
+    materias: list[tuple[str, int]] = []
+    tabla = BeautifulSoup(html or "", "html.parser").find("table")
+    anio = None
+    for fila in tabla.find_all("tr") if tabla else []:
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        if len(celdas) < 3:
+            continue
+        if not celdas[0] and re.fullmatch(r"(?i)\w+\s+año", celdas[2]):
+            anio = anio_de(celdas[2])
+        elif anio and re.fullmatch(r"\d{1,4}", celdas[0]) and not re.search(r"(?i)optativ|electiv", celdas[2]):
+            _agregar(materias, re.sub(r"(?i)\s*-\s*sede\b.*$", "", celdas[2]), anio)
+    return materias
+
+
+def plan_eco_unsa(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_eco_unsa(html))

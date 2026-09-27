@@ -75,7 +75,9 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("unt.edu.ar", planes_sitios.plan_tabla_con_anios),
                         ("fcpolit.unr.edu.ar", planes_sitios.plan_tablas_por_anio),
                         ("upso.edu.ar", planes_sitios.plan_upso), ("unvm.edu.ar", planes_sitios.plan_unvm),
-                        ("ucalp.edu.ar", planes_sitios.plan_ucalp), ("unlpam.edu.ar", planes_sitios.plan_unlpam))
+                        ("ucalp.edu.ar", planes_sitios.plan_ucalp), ("unlpam.edu.ar", planes_sitios.plan_unlpam),
+                        ("exactas.unsa.edu.ar", planes_sitios.plan_exa_unsa),
+                        ("natura.unsa.edu.ar", planes_sitios.plan_natura_unsa))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -97,7 +99,9 @@ _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|
 
 _PLAN_EN_UN_MARCO = (("fhycs.unju.edu.ar", planes_sitios.plan_list_group),)
 _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),
-                        ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp))
+                        ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp),
+                        # UNSa's Económicas: the career's first plan listed, its newest.
+                        ("economicas.unsa.edu.ar", re.compile(r"/carreras/[^/]+/item/\d+$"), planes_sitios.plan_eco_unsa))
 
 
 def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
@@ -109,8 +113,11 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
             continue
         for _ in range(2):
             enlaces = BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
+            # The link is named by its text, or by its address (a pattern).
             pagina = next((urljoin(url, a["href"]) for a in enlaces
-                           if clean_text(a.get_text(" ")).lower().startswith(texto)), None)
+                           if (texto.search(a["href"]) and urljoin(url, a["href"]).startswith(url.rstrip("/") + "/")
+                               if isinstance(texto, re.Pattern)
+                               else clean_text(a.get_text(" ")).lower().startswith(texto))), None)
             if pagina:
                 materias = lector(visitante.get(pagina))
                 time.sleep(PAUSA)
@@ -398,8 +405,27 @@ def main() -> None:
     if args.apply and filas:
         for inicio in range(0, len(filas), 500):
             client.table("materias").insert(filas[inicio:inicio + 500]).execute()
+    if args.apply:
+        guardar_las_fuentes(planes.values())
     print(f"Planes: {len(planes)} {dict(por_universidad)}; materias "
           f"{'cargadas' if args.apply else 'a cargar'}: {len(filas)}", flush=True)
+
+
+def guardar_las_fuentes(planes: Any) -> None:
+    """The page or document each plan was read from, kept where the
+    verifier looks for it (``data/<university>_planes.json``): a plan read
+    from a page the career's own does not link directly (a menu's) is
+    verified there."""
+    por_universidad: dict[str, dict[str, str]] = defaultdict(dict)
+    for plan in planes:
+        if plan.get("documento"):
+            por_universidad[plan["universidad"].lower()][plan["carrera"]["nombre_carrera"]] = plan["documento"]
+    for corto, fuentes in por_universidad.items():
+        archivo = Path("data") / f"{corto}_planes.json"
+        datos = json.loads(archivo.read_text()) if archivo.exists() else {}
+        otros = [p for p in datos.get("planes") or [] if p.get("nombre") not in fuentes]
+        datos["planes"] = otros + [{"nombre": nombre, "url": url} for nombre, url in sorted(fuentes.items())]
+        archivo.write_text(json.dumps(datos, ensure_ascii=False, indent=1) + "\n")
 
 
 if __name__ == "__main__":

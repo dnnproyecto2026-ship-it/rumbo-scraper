@@ -29,6 +29,29 @@ class PlanesSitios(unittest.TestCase):
         p._agregar(materias, "Optativa II", 5)
         self.assertEqual(materias, [])
 
+    def test_unsa_exactas_lee_la_tabla_por_anio(self):
+        html = """<table class="exa-plan-table"><tr class="exa-plan-yrow"><td colspan="6">Primer año</td></tr>
+        <tr><td class="exa-plan-tcod">1</td><td class="exa-plan-tname">Taller Informático</td><td>I</td></tr>
+        <tr class="exa-plan-yrow"><td colspan="6">Segundo año</td></tr>
+        <tr><td class="exa-plan-tcod">6</td><td class="exa-plan-tname">Programación</td><td>I</td></tr></table>"""
+        self.assertEqual(p.plan_exa_unsa(html), [("Taller Informático", 1), ("Programación", 2)])
+
+    def test_unsa_naturales_deja_el_contacto_y_las_optativas(self):
+        html = """<table><tr><td>N°</td><td>Asignatura</td><td>Contacto</td><td>Régimen</td></tr>
+        <tr><td>Primer Año</td></tr>
+        <tr><td>1</td><td>Botánica</td><td>✉ Dra. Carla Gómez</td><td>II</td></tr>
+        <tr><td>PRIMER AÑO</td><td>Matemáticas</td><td>I</td></tr>
+        <tr><td>OPTATIVAS</td></tr>
+        <tr><td>32</td><td>Anatomía Comparada</td><td>✉ Dr. Fernando Lobo</td><td>II</td></tr></table>"""
+        self.assertEqual(p.plan_natura_unsa(html), [("Botánica", 1), ("Matemáticas", 1)])
+
+    def test_unsa_economicas_quita_las_sedes(self):
+        html = """<table><tr><td></td><td></td><td>Primer Año</td><td>588</td></tr>
+        <tr><td>101</td><td>TP</td><td>Introducción a la Contabilidad - Sede Central - Sede Norte</td><td>56</td></tr>
+        <tr><td></td><td></td><td>Economia II - Catedra paralela - Sede Central</td><td></td></tr>
+        <tr><td>132</td><td>TP</td><td>Optativa</td><td>56</td></tr></table>"""
+        self.assertEqual(p.plan_eco_unsa(html), [("Introducción a la Contabilidad", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()
