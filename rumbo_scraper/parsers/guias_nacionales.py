@@ -69,6 +69,7 @@ def _tipo(unidad: str) -> str:
 # en ...", "Prof. de ...", "Ing. ..."), written out.
 _ABREVIATURAS = (
     (re.compile(r"^Lic\.\s*(?:en\s+)?", re.I), "Licenciatura en "),
+    (re.compile(r"^Lic\s+en\s+", re.I), "Licenciatura en "),
     (re.compile(r"^Tecn?\.\s*Univ(?:\.|ersitaria)\s*(?:en\s+)?", re.I), "Tecnicatura Universitaria en "),
     (re.compile(r"^Tecn?\.\s*(?:en\s+)?", re.I), "Tecnicatura en "),
     (re.compile(r"^Prof\.\s*(?=(?:de|en|universitario)\s)", re.I), "Profesorado "),

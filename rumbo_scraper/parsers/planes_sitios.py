@@ -1,0 +1,198 @@
+"""The plan of studies as some universities lay it out on the career's page.
+
+Each reader returns ``[(subject, year)]`` in the order the page gives them,
+or an empty list when the page does not have the plan the way it expects;
+`database.planes_documentos` checks that what comes out is the whole plan.
+
+- UPC: an accordion per year ("Primer año"), the subjects as bullets.
+- UNS: ``servicios.uns.edu.ar/grado/plan.asp``: a one-row table per subject
+  ("9001 INTRODUCCION AL DERECHO | 64hs. | ..."), a one-cell table per year
+  ("PRIMER AÑO"), and the electives after "MATERIAS OPTATIVAS".
+- UNICEN: the "Plan de estudios" section, a heading per year ("Primer Año:")
+  and the subjects as bullets or paragraphs.
+- UNPSJB: a table whose year cell spans the year's rows ("PRIMERO"), or a
+  table per year after its heading ("1° Año"), or year rows inside the table.
+"""
+
+from __future__ import annotations
+
+import re
+
+from bs4 import BeautifulSoup, Tag
+
+from rumbo_scraper.normalizers.text import clean_text
+
+_ORDINALES = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
+              "quinto": 5, "sexto": 6}
+_ANIO = re.compile(r"(?i)^\s*(primer|primero|segundo|tercer|tercero|cuarto|quinto|sexto)\s*(?:a[ñn]o)?\s*:?\s*$")
+_ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*[°ºo]?\s*a[ñn]o\s*:?\s*$")
+# Not subjects: an elective's slot, a heading that ends in a colon.
+_NO_ES_MATERIA = re.compile(
+    r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
+    r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$")
+
+
+def _texto(elemento: Tag | None) -> str:
+    return clean_text(elemento.get_text(" ")).replace("\xa0", " ").strip() if elemento else ""
+
+
+def desde_el_primero(materias: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """A plan whose first year, or any year between, is missing is not the
+    whole plan."""
+    anios = {a for _, a in materias}
+    return materias if anios and anios == set(range(1, max(anios) + 1)) else []
+
+
+def anio_de(texto: str) -> int | None:
+    """"Primer año", "PRIMERO", "1° Año", "Segundo Año:" -> the year."""
+    texto = clean_text(texto).replace("\xa0", " ")
+    ordinal = _ANIO.match(texto)
+    if ordinal:
+        return _ORDINALES[ordinal.group(1).lower()]
+    numero = _ANIO_NUMERO.match(texto)
+    return int(numero.group(1)) if numero else None
+
+
+def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
+    nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    if nombre.isupper():
+        from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+        nombre = con_tildes(nombre)
+    # "Anatomía Ii": the numeral of a subject's part is written in capitals.
+    nombre = re.sub(r"(?i)\b(i{1,3}|iv|vi{0,3}|ix|x)\b(?=\s*$|\s*[:(-])", lambda m: m.group(1).upper(), nombre)
+    nombre = re.sub(r"\s+", " ", nombre.replace("\u200b", "")).strip()
+    if len(re.findall(r"[^\W\d_]", nombre)) < 3:
+        return
+    # A sentence ("El alumno debe aprobar 2 asignaturas electivas...") is a
+    # rule of the plan, not a subject.
+    if len(nombre.split()) > 14 or re.search(r"(?i)\bdebe\b|\bpromovido\b", nombre):
+        return
+    if anio and nombre and len(nombre) <= 150 and not _NO_ES_MATERIA.search(nombre) \
+            and (nombre, anio) not in materias:
+        materias.append((nombre, anio))
+
+
+def _plan_upc(html: str) -> list[tuple[str, int]]:
+    materias: list[tuple[str, int]] = []
+    for item in BeautifulSoup(html or "", "html.parser").select(".jet-accordion__item"):
+        anio = anio_de(_texto(item.select_one(".jet-toggle__label-text")).lower().replace("año", "").strip() + " año")
+        for li in item.select(".jet-toggle__content li"):
+            _agregar(materias, _texto(li), anio)
+    return materias
+
+
+_MATERIA_UNS = re.compile(r"^(\d{3,6})\s+(.+)$")
+_ANIO_UNS = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto|sexto) a[ñn]o$|a[ñn]os?\s+(\d)\s*[ºo°]")
+
+
+def _plan_uns(html: str) -> list[tuple[str, int]]:
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        if tabla.find("table"):
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(td) for td in fila.find_all(["td", "th"])]
+            celdas = [c for c in celdas if c] or [""]
+            if len(celdas) == 1:
+                if re.search(r"(?i)optativa", celdas[0]):
+                    return materias
+                encabezado = _ANIO_UNS.search(celdas[0])
+                if encabezado:
+                    anio = _ORDINALES.get((encabezado.group(1) or "").lower()) or int(encabezado.group(2))
+                continue
+            materia = _MATERIA_UNS.match(celdas[0])
+            if materia and len(celdas) > 1 and "hs" in celdas[1].lower():
+                _agregar(materias, materia.group(2), anio)
+    return materias
+
+
+def _plan_unicen(html: str) -> list[tuple[str, int]]:
+    soup = BeautifulSoup(html or "", "html.parser")
+    seccion = next((s for s in soup.select("div.seccion-carrera")
+                    if "plan de estudio" in _texto(s.select_one("h3.titulo")).lower()), None)
+    cuerpo = seccion.select_one("div.cuerpo") if seccion else None
+    if not cuerpo:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for elemento in cuerpo.find_all(["h3", "h4", "p", "strong", "li"]):
+        texto = _texto(elemento)
+        nuevo = anio_de(texto)
+        if nuevo:
+            anio = nuevo
+            continue
+        # A module's sub-items (a list under the module's paragraph, or
+        # inside its bullet) are part of it, not subjects of their own.
+        if elemento.name == "li":
+            lista = elemento.find_parent(["ul", "ol"])
+            previo = lista.find_previous_sibling() if lista else None
+            if elemento.find_parent("li") or (previo is not None and previo.name == "p"
+                                               and not anio_de(_texto(previo))):
+                continue
+        if elemento.name in ("p", "li") and not elemento.find(["ul", "ol"]) \
+                and not re.match(r"(?i)^(ciclo|otros requisitos|requisitos)", texto):
+            _agregar(materias, re.sub(r"\s*\((?:CB|CP|CO)\)$", "", texto), anio)
+    return materias
+
+
+def _plan_unpsjb(html: str) -> list[tuple[str, int]]:
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    # FCN: Año | # | Código | Materia | ..., the year cell spanning its rows.
+    tabla = soup.select_one("table.is-style-stripes")
+    if tabla:
+        encabezado = [_texto(c).lower() for c in tabla.find("tr").find_all(["th", "td"])]
+        if "materia" in encabezado:
+            columna = encabezado.index("materia")
+            anio = None
+            for fila in tabla.find_all("tr")[1:]:
+                celdas = fila.find_all(["td", "th"])
+                if len(celdas) == len(encabezado):
+                    anio = anio_de(_texto(celdas[0])) or anio
+                    nombre = _texto(celdas[columna])
+                else:
+                    nombre = _texto(celdas[columna - 1]) if len(celdas) >= columna else ""
+                _agregar(materias, nombre, anio)
+            return materias
+    # FHCS: COD | ASIGNATURAS | ..., the years as rows of their own.
+    for tabla in soup.select("table.advgb-table-frontend"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            llenas = [c for c in celdas if c]
+            if len(llenas) == 1 and anio_de(llenas[0].replace("AÑO", "año")):
+                anio = anio_de(llenas[0])
+                continue
+            if len(celdas) >= 2 and re.match(r"^\d", celdas[0]) and celdas[1]:
+                _agregar(materias, celdas[1], anio)
+        if materias:
+            return materias
+    # Ingeniería: a table per year, after its heading.
+    for tabla in soup.find_all("table"):
+        titulo = tabla.find_previous(["h2", "h3", "h4", "p", "strong"])
+        anio = anio_de(_texto(titulo)) if titulo else None
+        if not anio:
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) >= 2 and re.match(r"^[A-Z]{0,3}\d{2,}", celdas[0]):
+                _agregar(materias, celdas[1], anio)
+    return materias
+
+
+def plan_upc(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_upc(html))
+
+
+def plan_uns(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_uns(html))
+
+
+def plan_unicen(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unicen(html))
+
+
+def plan_unpsjb(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unpsjb(html))
