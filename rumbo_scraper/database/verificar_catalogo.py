@@ -125,6 +125,14 @@ class Fuentes:
             return {"ok": True, "html": "", "crudo": respuesta.text,
                     "texto": v.plano(f" {v.CORTE} ".join(_textos_del_json(datos)))}
         html = respuesta.text
+        # A page that carries its PDF as base64 (the UNPA's plans) says what
+        # the PDF says.
+        if "pdfAsDataUri" in html:
+            from rumbo_scraper.database.planes_unpa import pdf_de_la_pagina
+
+            contenido = pdf_de_la_pagina(html)
+            if contenido:
+                return {"ok": True, "html": "", "texto": v.plano(_texto_del_pdf(contenido))}
         if not _tiene_contenido(html):
             html = self.visitante.get(url) or html
         return {"ok": True, "html": html, "texto": v.plano(v.texto_de_html(html))}
