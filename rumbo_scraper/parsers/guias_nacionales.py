@@ -2379,3 +2379,59 @@ def leer_iugna(html: str, pagina: str = IUGNA, traer=None) -> list[CarreraDeLaGu
                 and carrera.nombre not in [c.nombre for c in carreras]:
             carreras.append(carrera)
     return carreras
+
+
+# --- Institutos terciarios de las policías provinciales --------------------------------------------
+# Their cadets graduate as "Técnico Superior" (a non-university tertiary
+# title). Each lists its careers its own way.
+
+POLICIA_SANTA_CRUZ = "https://policiadesantacruz.gob.ar/index.php/es/tecnicaturas"
+ISS_NEUQUEN = "https://www.iss.edu.ar/"
+IESP_SALTA = "https://ies6045-sal.infd.edu.ar/sitio/"
+ISEP_SANTA_FE = "https://isepsantafe.edu.ar/index.php/institucional/oferta-educativa"
+POLICIAL_LA_PAMPA = ("https://recursos.lapampa.edu.ar/educacion-superior/"
+                     "tecnicatura-superior-en-seguridad-publica-y-ciudadana-orientada-a-la-formacion-policial")
+ISSP_CHACO = "https://isspchaco.edu.ar/formacion-de-oficiales-de-policia/"
+_TECNICO_SUPERIOR = re.compile(r"(?i)^(t[ée]cnico|tecnicatura)\s+superior\s+(en|para)\s+.{4,}$")
+
+
+def _terciaria(nombre: str, pagina: str) -> CarreraDeLaGuia | None:
+    nombre = clean_text(nombre).rstrip(".")
+    return _carrera(_titulo_si_mayusculas(nombre), "", pagina, None, None, "Pregrado")
+
+
+def leer_policia_santa_cruz(html: str, pagina: str = POLICIA_SANTA_CRUZ) -> list[CarreraDeLaGuia]:
+    """A heading in bold per title: "TÉCNICO SUPERIOR EN CRIMINALÍSTICA."."""
+    carreras = []
+    for negrita in _soup(html).find_all("strong"):
+        texto = _texto(negrita).rstrip(".")
+        if _TECNICO_SUPERIOR.match(texto) and texto.isupper():
+            carrera = _terciaria(texto, pagina)
+            if carrera and carrera.nombre not in [c.nombre for c in carreras]:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_menu_terciario(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    """A menu or list of links, one per career ("Tecnicatura Superior en
+    Seguridad Vial"): Neuquén's ISS, Salta's IES 6.045."""
+    carreras = []
+    for enlace in _soup(html).find_all("a", href=True):
+        texto = _texto(enlace)
+        if _TECNICO_SUPERIOR.match(texto):
+            carrera = _terciaria(texto, urljoin(pagina, enlace["href"]))
+            if carrera and carrera.nombre not in [c.nombre for c in carreras]:
+                carreras.append(carrera)
+    return carreras
+
+
+def leer_titulo_terciario(html: str, pagina: str) -> list[CarreraDeLaGuia]:
+    """A page of one career, its title written whole in a heading or as
+    "Título que otorga: Tecnicatura Superior en ..."."""
+    soup = _soup(html)
+    for elemento in soup.find_all(["h1", "h2", "h3", "h4", "p", "strong", "li"]):
+        texto = re.sub(r"(?i)^t[íi]tulo que otorga:\s*", "", _texto(elemento))
+        if _TECNICO_SUPERIOR.match(texto) and len(texto) < 120:
+            carrera = _terciaria(texto, pagina)
+            return [carrera] if carrera else []
+    return []

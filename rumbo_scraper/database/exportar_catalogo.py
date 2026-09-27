@@ -281,6 +281,18 @@ def sin_planes_salteados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]
     return [m for m in materias if m["carrera_o_programa"] not in salteados]
 
 
+def tipo_de_institucion(nombre_oficial: str) -> str:
+    """"instituto_terciario" as the guide that read it says (a police cadet
+    school); otherwise "instituto_universitario" by its name, or "universidad"."""
+    from rumbo_scraper.database.carreras_de_guias import GUIAS
+
+    dicho = next((g.tipo_institucion for g in GUIAS.values() if g.nombre_oficial == nombre_oficial), None)
+    if dicho:
+        return dicho
+    return "instituto_universitario" if comparison_key(nombre_oficial).startswith("instituto universitario") \
+        else "universidad"
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -516,6 +528,7 @@ def exportar(client: Any) -> dict[str, Any]:
                 "nombre_oficial": u["nombre_oficial"], "nombre_corto": u["nombre_corto"],
                 "tipo_gestion": u["tipo_gestion"], "sitio_web": u["sitio_web"],
                 "anio_fundacion": u["anio_fundacion"],
+                "tipo_institucion": tipo_de_institucion(u["nombre_oficial"]),
             }],
             **{seccion: list(datos.get(seccion, [])) for seccion in
                ("sedes", "facultades", "carreras", "ofertas", "materias", "posgrados", "becas",

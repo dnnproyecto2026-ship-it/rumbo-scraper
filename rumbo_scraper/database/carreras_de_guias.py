@@ -38,6 +38,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -66,10 +67,15 @@ class Guia:
     # The levels the guide lists: a career of another level is not retired
     # for being absent (the UNR's page lists grado only).
     niveles: tuple[str, ...] = ("Grado", "Pregrado")
+    # What kind of institution it is, when it is not a university:
+    # "instituto_terciario" (a police cadet school's "Técnico Superior").
+    tipo_institucion: str | None = None
 
     @property
     def artefacto(self) -> Path:
-        return Path(f"data/{self.nombre_corto.lower()}_guia_completo.json")
+        # "ISS Neuquén" -> data/iss_neuquen_guia_completo.json
+        corto = unicodedata.normalize("NFKD", self.nombre_corto.lower()).encode("ascii", "ignore").decode()
+        return Path(f"data/{re.sub(r'[^a-z0-9]+', '_', corto).strip('_')}_guia_completo.json")
 
 
 GUIAS = {
@@ -335,6 +341,31 @@ GUIAS.update({
                   ((gn.IUGNA, gn.leer_iugna),), _SIN_SEDE, "", 8),
     "IUPS": Guia("Instituto Universitario Provincial de Seguridad", "IUPS", "Estatal", "https://iups.jujuy.gob.ar",
                  ((gn.IUPS, gn.leer_iups),), "San Salvador de Jujuy", "", 4),
+})
+
+
+# The provinces' police institutes: non-university tertiary titles.
+_TERCIARIO = "instituto_terciario"
+GUIAS.update({
+    "ECP Santa Cruz": Guia("Escuela de Cadetes de la Policía de Santa Cruz", "ECP Santa Cruz", "Estatal",
+                           "https://policiadesantacruz.gob.ar",
+                           ((gn.POLICIA_SANTA_CRUZ, gn.leer_policia_santa_cruz),), _SIN_SEDE, "", 4,
+                           ("Pregrado",), _TERCIARIO),
+    "ISS Neuquén": Guia("Instituto Superior en Seguridad", "ISS Neuquén", "Estatal", "https://www.iss.edu.ar",
+                        ((gn.ISS_NEUQUEN, gn.leer_menu_terciario),), "Neuquén", "", 3, ("Pregrado",), _TERCIARIO),
+    "IESP Salta": Guia("Instituto Superior de Educación Policial N° 6.045", "IESP Salta", "Estatal",
+                       "https://ies6045-sal.infd.edu.ar",
+                       ((gn.IESP_SALTA, gn.leer_menu_terciario),), "Salta", "", 1, ("Pregrado",), _TERCIARIO),
+    "ISeP Santa Fe": Guia("Instituto de Seguridad Pública de Santa Fe", "ISeP Santa Fe", "Estatal",
+                          "https://isepsantafe.edu.ar",
+                          ((gn.ISEP_SANTA_FE, gn.leer_titulo_terciario),), _SIN_SEDE, "", 1, ("Pregrado",), _TERCIARIO),
+    "ISP La Pampa": Guia("Instituto Superior Policial de La Pampa", "ISP La Pampa", "Estatal",
+                         "https://recursos.lapampa.edu.ar",
+                         ((gn.POLICIAL_LA_PAMPA, gn.leer_titulo_terciario),), _SIN_SEDE, "", 1,
+                         ("Pregrado",), _TERCIARIO),
+    "ISSP Chaco": Guia("Instituto Superior de Seguridad Pública del Chaco", "ISSP Chaco", "Estatal",
+                       "https://isspchaco.edu.ar",
+                       ((gn.ISSP_CHACO, gn.leer_titulo_terciario),), _SIN_SEDE, "", 1, ("Pregrado",), _TERCIARIO),
 })
 
 
