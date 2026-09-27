@@ -61,7 +61,8 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
     nombre = re.sub(r"(?i)\s*\((?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\)\s*$", "", nombre)
     nombre = re.sub(r"(?i)\s+(?:anual|cuatrimestral|\d\s*[°º]\s*c)$", "", nombre)
-    if nombre.isupper():
+    # (An acronym stays one: "TFG", "PPS".)
+    if nombre.isupper() and len(nombre) > 5:
         from rumbo_scraper.parsers.guias_nacionales import con_tildes
 
         nombre = con_tildes(nombre)
