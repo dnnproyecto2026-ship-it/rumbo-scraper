@@ -823,3 +823,38 @@ def _plan_fce_unam(html: str) -> list[tuple[str, int]]:
 
 def plan_fce_unam(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_fce_unam(html))
+
+
+# The term may be on the line above ("1ºC" over "IC411   SISTEMAS DIGITALES");
+# the code is in the first column (a code far right is a correlative).
+_FILA_CON_CODIGO = re.compile(
+    r"^\s{0,12}[A-Z]{2,3}\d{3}\s+(?:(?:ANUAL|\d\s*[º°o]\s*C\.?|\d\s*[º°o]\s*CUAT\S*)\s+)?([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
+
+
+def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
+    """UNaM, Ingeniería: the plan's PDF as ``pdftotext -layout`` gives it, a
+    heading per year ("SEGUNDO AÑO") and a row per subject: its code, its
+    term and its name ("CI211   1º C.   CÁLCULO 2"). The code does not give
+    the year (Probabilidad, CI213, is in the third)."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto.split("\n"):
+        limpia = clean_text(linea)
+        if re.fullmatch(r"(?i)\w+\s+año", limpia):
+            anio = anio_de(limpia)
+            continue
+        if re.match(r"(?i)(asignaturas\s+)?(optativ|electiv)", limpia):
+            anio = None
+        fila = _FILA_CON_CODIGO.match(linea)
+        if anio and fila:
+            # A row whose name went to another line leaves its correlatives
+            # ("EM111-EM112") where the name was: the plan read so would
+            # miss that subject, and is not read.
+            if re.match(r"[A-Z]{2,3}\d{3}\b", fila.group(1)):
+                return []
+            _agregar(materias, fila.group(1), anio)
+    return materias
+
+
+def plan_fio_unam(texto: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_fio_unam(texto))

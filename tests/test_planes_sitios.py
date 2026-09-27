@@ -90,6 +90,22 @@ class PlanesSitios(unittest.TestCase):
         <p>Requisitos extracurriculares</p><p>Idioma Inglés</p><p>CR810</p></div>"""
         self.assertEqual(p.plan_fce_unam(html), [("Álgebra", 1)])
 
+    def test_unam_ingenieria_lee_el_pdf_por_codigo(self):
+        texto = """PRIMER AÑO
+     CI111          ANUAL           ÁLGEBRA Y GEOMETRÍA ANALÍTICA          -
+                     1ºC
+     IC411                        SISTEMAS DIGITALES
+TERCER AÑO
+     CI213           1º C.       PROBABILIDAD Y ESTADÍSTICA 1           CI211
+                                                          IC412      IC422"""
+        self.assertEqual(p._plan_fio_unam(texto), [("Álgebra y Geometría Analítica", 1),
+                                                   ("Sistemas Digitales", 1), ("Probabilidad y Estadística 1", 3)])
+
+    def test_unam_ingenieria_sin_el_nombre_en_su_fila_no_se_lee(self):
+        texto = """PRIMER AÑO
+     EM211           1º C.       EM111-EM112          -"""
+        self.assertEqual(p._plan_fio_unam(texto), [])
+
 
 if __name__ == "__main__":
     unittest.main()

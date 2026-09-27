@@ -139,7 +139,18 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
-_DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse),)
+_DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam))
+# Sites that link the plan's document by a word of their own (UNaM's
+# Ingeniería: "Plan de Estudios: Resumido | Completo").
+_DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),)
+
+
+def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
+    for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
+        if host.endswith(dominio):
+            return next((urljoin(url, a["href"]) for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
+                         if clean_text(a.get_text(" ")).lower() == texto), None)
+    return None
 
 
 def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None]]:
@@ -330,7 +341,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                     pagina_del_plan[carrera["id"]] = nuevo
                     continue
             documento = (_documento_del_plan(html, url, dominios)
-                         or _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
+                         or _documento_con_su_nombre(html, url, carrera["nombre_carrera"])
+                         or _documento_por_su_enlace(html, url, host))
             if not documento:
                 enlace = _enlace_al_plan(html, url, dominios)
                 if enlace:
