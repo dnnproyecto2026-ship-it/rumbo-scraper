@@ -83,7 +83,8 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("huma.unca.edu.ar", planes_sitios.plan_filas_numeradas),
                         ("derecho.unlz.edu.ar", planes_sitios.plan_cr_year),
                         ("fhycs.unam.edu.ar", planes_sitios.plan_anio_y_lista),
-                        ("fce.unam.edu.ar", planes_sitios.plan_fce_unam))
+                        ("fce.unam.edu.ar", planes_sitios.plan_fce_unam),
+                        ("unq.edu.ar", planes_sitios.plan_unq))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -191,6 +192,10 @@ def _texto(archivo: Path) -> str:
 
 def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
                            duracion: float | None = None) -> bool:
+    # A completion cycle ("Licenciatura en Administración (CCC)") is part of
+    # a degree: UNQ's page for it shows the whole degree's plan.
+    if re.search(r"(?i)\(ccc\)|complementaci[óo]n curricular", carrera):
+        return False
     if len(materias) < 10 or any(nombre[:1].islower() or _TERMINA_CORTADA.search(nombre)
                                  for nombre, _ in materias):
         return False

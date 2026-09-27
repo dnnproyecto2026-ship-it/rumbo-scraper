@@ -106,6 +106,15 @@ TERCER AÑO
      EM211           1º C.       EM111-EM112          -"""
         self.assertEqual(p._plan_fio_unam(texto), [])
 
+    def test_unq_los_nucleos_obligatorios_con_su_cuenta(self):
+        html = """<table><tr><td>Núcleo Básico Obligatorio: 2 asignaturas</td><td></td></tr>
+        <tr><td>Contabilidad I Básica</td><td>A distancia</td></tr><tr><td>Matemáticas</td><td>A distancia</td></tr>
+        <tr><td>Núcleo Profesional Electivo: 1 Asignaturas</td><td></td></tr>
+        <tr><td>Impuestos I</td><td>A distancia</td></tr></table>"""
+        self.assertEqual(p.plan_unq(html), [("Contabilidad I Básica", None), ("Matemáticas", None)])
+        # A núcleo whose rows are not the number it says is not read.
+        self.assertEqual(p.plan_unq(html.replace("2 asignaturas", "3 asignaturas")), [])
+
 
 if __name__ == "__main__":
     unittest.main()

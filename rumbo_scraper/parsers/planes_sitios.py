@@ -858,3 +858,41 @@ def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
 
 def plan_fio_unam(texto: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_fio_unam(texto))
+
+
+def _plan_unq(html: str) -> list[tuple[str, None]]:
+    """UNQ: a plan of credits, without years: a table with a row per
+    núcleo that says how many subjects it has ("Núcleo Básico Obligatorio:
+    12 asignaturas") and a row per subject after it. The obligatory núcleos
+    are the plan; the elective and oriented ones are pools to choose from.
+    A núcleo whose rows are not the number it says is not read, nor the
+    plan."""
+    materias: list[tuple[str, None]] = []
+    tabla = BeautifulSoup(html or "", "html.parser").find("table")
+    nucleos: list[tuple[int | None, list[str]]] = []
+    obligatorio = False
+    for fila in tabla.find_all("tr") if tabla else []:
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        if not celdas or not celdas[0]:
+            continue
+        if not any(celdas[1:]) and re.match(r"(?i)(n[úu]cleo|ciclo|trayecto|[áa]rea)\b", celdas[0]):
+            obligatorio = bool(re.search(r"(?i)obligatori", celdas[0]))
+            cuantas = re.search(r"(\d+)\s+asignaturas", celdas[0], re.I)
+            if obligatorio:
+                nucleos.append((int(cuantas.group(1)) if cuantas else None, []))
+            continue
+        if obligatorio and any(celdas[1:]):
+            nucleos[-1][1].append(celdas[0])
+    leidas: list[tuple[str, int]] = []
+    for cuantas, nombres in nucleos:
+        if cuantas is None or cuantas != len(nombres):
+            return []
+        for nombre in nombres:
+            # (_agregar keeps a subject with its year; these have none.)
+            _agregar(leidas, nombre, -1)
+    materias += [(nombre, None) for nombre, _ in leidas]
+    return materias
+
+
+def plan_unq(html: str) -> list[tuple[str, None]]:
+    return _plan_unq(html)
