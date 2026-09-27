@@ -7,6 +7,9 @@ without trouble:
 - a site whose certificate is installed without its chain (UNAJ's): a fault
   of the server's setup, not a door it closed, and the general reader reads
   those sites too;
+- a server that still offers an old key exchange (UNCA's Exactas: "dh key
+  too small"), which browsers and curl accept and the default context
+  refuses: the context accepts it, as it accepts an incomplete chain;
 - a home page that only sends the reader elsewhere with a line of script
   (UNDAV's, Morón's), which is followed;
 - a page the server sends as an empty shell for the browser to fill (UCA's,
@@ -19,6 +22,7 @@ returned empty.
 
 from __future__ import annotations
 
+import ssl
 from typing import Any
 
 import httpx
@@ -29,10 +33,18 @@ from rumbo_scraper.spiders.generico import Navegador, _tiene_contenido
 USER_AGENT = "RumboScraper/0.4 (+catalogo educativo publico)"
 
 
+def _contexto_tolerante() -> ssl.SSLContext:
+    contexto = ssl.create_default_context()
+    contexto.check_hostname = False
+    contexto.verify_mode = ssl.CERT_NONE
+    contexto.set_ciphers("DEFAULT:@SECLEVEL=1")
+    return contexto
+
+
 class Visitante:
     def __init__(self, timeout: float = 30) -> None:
         self.client = httpx.Client(headers={"User-Agent": USER_AGENT},
-                                   follow_redirects=True, timeout=timeout, verify=False)
+                                   follow_redirects=True, timeout=timeout, verify=_contexto_tolerante())
         self._navegador: Navegador | None = None
         self._sin_navegador = False
 

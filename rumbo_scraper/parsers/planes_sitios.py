@@ -725,3 +725,25 @@ def _plan_ing_unsa(html: str) -> list[tuple[str, int]]:
 
 def plan_ing_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_ing_unsa(html))
+
+
+def _plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
+    """UNCA, Humanidades: a table with a row per year ("Primer año") and a
+    row per subject, numbered in its first cell ("1. Introducción a la
+    Filosofía") beside its programme. Another heading ends the year."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            celdas = [c for c in (_texto(c) for c in fila.find_all(["td", "th"])) if c]
+            if len(celdas) == 1 and not re.match(r"\d+\s*[.)-]", celdas[0]):
+                anio = anio_de(celdas[0]) if re.fullmatch(r"(?i)\w+\s+año", celdas[0]) else None
+                continue
+            numerada = re.match(r"\d{1,3}\s*[.)-]\s*(\S.*)", celdas[0]) if celdas else None
+            if anio and numerada:
+                _agregar(materias, numerada.group(1), anio)
+    return materias
+
+
+def plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_filas_numeradas(html))

@@ -60,6 +60,16 @@ class PlanesSitios(unittest.TestCase):
         <tr><td>39</td><td></td><td>Inglés I</td><td>Complementarias</td></tr></table>"""
         self.assertEqual(p.plan_ing_unsa(html), [("Análisis Matemático I", 1)])
 
+    def test_filas_numeradas_por_anio(self):
+        html = """<table><tr><td>Espacio curricular</td><td>Programa</td></tr>
+        <tr><td>Primer año</td></tr>
+        <tr><td>1. Introducción a la Filosofía</td><td>Descargar</td></tr>
+        <tr><td>Segundo año</td></tr>
+        <tr><td>9. Didáctica General</td><td>Descargar</td></tr>
+        <tr><td>Optativas</td></tr>
+        <tr><td>40. Latín</td><td>Descargar</td></tr></table>"""
+        self.assertEqual(p.plan_filas_numeradas(html), [("Introducción a la Filosofía", 1), ("Didáctica General", 2)])
+
 
 if __name__ == "__main__":
     unittest.main()
