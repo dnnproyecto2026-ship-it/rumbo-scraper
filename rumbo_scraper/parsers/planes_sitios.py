@@ -382,3 +382,32 @@ def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
         # The brochure's "fi" ligature comes out split: "Áf rica", "suf iciente".
         _agregar(materias, re.sub(r"(?<=\w)f (?=[a-záéíóúñ]{2,})", "f", nombre), anio_)
     return desde_el_primero(materias)
+
+
+def _plan_en_lista(html: str) -> list[tuple[str, int]]:
+    """A page whose content is the plan as plain lines: a year ("1º Año")
+    and its subjects one per line, until the electives (the FACET's
+    "Programas de materias")."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for parte in soup.find_all(["script", "style", "nav", "header", "footer", "aside"]):
+        parte.decompose()
+    contenido = soup.find("article") or soup.find("main") or soup
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in contenido.get_text("\n").split("\n"):
+        linea = clean_text(linea)
+        if not linea:
+            continue
+        if re.match(r"(?i)^(materias|espacios)?\s*(optativ|electiv)", linea):
+            break
+        nuevo = anio_de(linea)
+        if nuevo:
+            anio = nuevo
+            continue
+        if anio:
+            _agregar(materias, linea, anio)
+    return materias
+
+
+def plan_en_lista(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_en_lista(html))

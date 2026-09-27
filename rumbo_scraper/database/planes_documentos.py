@@ -51,10 +51,12 @@ import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
+
+from bs4 import BeautifulSoup
 
 from rumbo_scraper.database.exportar_catalogo import _urls_de_los_artefactos
-from rumbo_scraper.normalizers.text import comparison_key
+from rumbo_scraper.normalizers.text import clean_text, comparison_key
 import math
 
 from rumbo_scraper.parsers import plan_por_ciclos, plan_por_columnas, plan_por_cuatrimestre, planes_sitios
@@ -88,6 +90,9 @@ def _nombra(texto: str, carrera: str) -> bool:
 # A word the PDF broke at the end of a line: "Alimen- tos".
 _PALABRA_PARTIDA = re.compile(r"(\w)- (?=[a-záéíóúñ])")
 _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|por|a|al)$")
+
+
+_PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),)
 
 
 # Universities whose plan documents are laid out their own way, read from
@@ -243,6 +248,20 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # newest is read.
             # Or links one page as its plan ("plan de estudios", Sociales and
             # the FAUD of the UNC), which says it the way a page does.
+            # A site that lists the plan on a page of its own menu (the
+            # FACET's "Programas").
+            enlazada = next(((a["href"], lector) for dominio, texto, lector in _PLAN_EN_OTRA_PAGINA
+                             if host.endswith(dominio)
+                             for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
+                             if clean_text(a.get_text(" ")).lower() == texto), None)
+            if enlazada:
+                pagina = urljoin(url, enlazada[0])
+                del_plan = enlazada[1](visitante.get(pagina))
+                time.sleep(PAUSA)
+                if del_plan:
+                    de_la_pagina[carrera["id"]] = del_plan
+                    pagina_del_plan[carrera["id"]] = pagina
+                    continue
             nuevo = plan_mas_nuevo(html, url) or _enlace_al_plan(html, url, dominios)
             if nuevo:
                 html_del_plan = visitante.get(nuevo)
