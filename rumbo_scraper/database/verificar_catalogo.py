@@ -125,6 +125,9 @@ class Fuentes:
             return {"ok": True, "html": "", "crudo": respuesta.text,
                     "texto": v.plano(f" {v.CORTE} ".join(_textos_del_json(datos)))}
         html = respuesta.text
+        # A piece of a site's script says its texts with escapes ("P\xfablica").
+        if url.split("?")[0].endswith(".js"):
+            return {"ok": True, "html": html, "texto": v.plano(gn._texto_js(html))}
         # A page that carries its PDF as base64 (the UNPA's plans) says what
         # the PDF says.
         if "pdfAsDataUri" in html:
@@ -276,8 +279,15 @@ def _fuentes_uncaus(fuentes: "Fuentes", url: str, html: str, carrera: str) -> li
     return [catalogo + "#catalogo"] if catalogo else []
 
 
+def _fuentes_iugna(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[str]:
+    """Gendarmería's careers are components of a piece of its site's script."""
+    catalogo = gn.catalogo_iugna(lambda u: fuentes.leer(u, avalada=True)["html"])
+    return [catalogo + "#catalogo"] if catalogo else []
+
+
 _FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba,
-                    "UNSO": _del_catalogo(gn.UNSO), "UNCAUS": _fuentes_uncaus}
+                    "UNSO": _del_catalogo(gn.UNSO), "UNCAUS": _fuentes_uncaus,
+                    "IUGNA": _fuentes_iugna}
 
 
 def _planes_publicados() -> dict[tuple[str, str], str]:

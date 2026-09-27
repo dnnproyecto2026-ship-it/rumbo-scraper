@@ -330,6 +330,14 @@ GUIAS.update({
 })
 
 
+GUIAS.update({
+    "IUGNA": Guia("Instituto Universitario de Gendarmería Nacional", "IUGNA", "Estatal", "https://www.iugna.edu.ar",
+                  ((gn.IUGNA, gn.leer_iugna),), _SIN_SEDE, "", 8),
+    "IUPS": Guia("Instituto Universitario Provincial de Seguridad", "IUPS", "Estatal", "https://iups.jujuy.gob.ar",
+                 ((gn.IUPS, gn.leer_iups),), "San Salvador de Jujuy", "", 4),
+})
+
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""

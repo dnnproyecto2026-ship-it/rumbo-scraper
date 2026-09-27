@@ -2317,3 +2317,65 @@ def planes_uncaus(js: str) -> dict[str, list[tuple[str, int]]]:
         if materias:
             planes[slug] = materias
     return planes
+
+
+# --- Instituto Universitario Provincial de Seguridad (Jujuy) -------------------------------------
+# Its home lists the careers of each orientation ("Orientación Policial",
+# "Orientación Penitenciaria") as items of a list under the heading.
+
+IUPS = "https://iups.jujuy.gob.ar/"
+
+
+def leer_iups(html: str, pagina: str = IUPS) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for item in _soup(html).select(".portal-texto-lista-item"):
+        bloque = item.find_parent(lambda t: t.name in ("section", "div") and t.find("h3"))
+        orientacion = _texto(bloque.find("h3")) if bloque else ""
+        nombre = _texto(item)
+        if not orientacion.lower().startswith("orientaci") or not _NOMBRA_UN_TITULO.match(nombre):
+            continue
+        carrera = _carrera(nombre, "", pagina)
+        if carrera and carrera.nombre not in [c.nombre for c in carreras]:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Instituto Universitario de Gendarmería Nacional ------------------------------------------------
+# The site is built in the browser; each career's page is a component of
+# one of the script's pieces, headed "Carrera: Licenciatura en Seguridad
+# Pública". Which piece it is changes with each publication (the runtime
+# names them): it is the one that has the careers.
+
+IUGNA = "https://www.iugna.edu.ar/"
+
+
+def _texto_js(js: str) -> str:
+    """A script's text with its escapes ("P\\xfablica") as the letters."""
+    return re.sub(r"\\u([0-9a-fA-F]{4})|\\x([0-9a-fA-F]{2})",
+                  lambda m: chr(int(m.group(1) or m.group(2), 16)), js or "")
+
+
+def catalogo_iugna(traer, portada: str = IUGNA) -> str | None:
+    runtime = re.search(r'src="(runtime\.[0-9a-f]+\.js)"', traer(portada) or "")
+    if not runtime:
+        return None
+    for numero, hash_ in re.findall(r'(\d+):"([0-9a-f]{16})"', traer(urljoin(portada, runtime.group(1))) or ""):
+        url = urljoin(portada, f"{numero}.{hash_}.js")
+        if "Carrera: Licenciatura" in _texto_js(traer(url)):
+            return url
+    return None
+
+
+def leer_iugna(html: str, pagina: str = IUGNA, traer=None) -> list[CarreraDeLaGuia]:
+    catalogo = catalogo_iugna(traer, pagina) if traer else None
+    texto = _texto_js(traer(catalogo)) if catalogo else ""
+    carreras = []
+    for nombre in re.findall(r'"Carrera:\s*([^"]+)"', texto):
+        # (The Calígrafo's page misspells it "Califrafo".)
+        nombre = clean_text(nombre).rstrip(".").replace("Califrafo", "Calígrafo")
+        # The Calígrafo is the Escuela Superior's pregrado ("app-escusuper-pregrado").
+        carrera = _carrera(nombre, "", pagina, None, None, "Pregrado" if nombre.startswith("Calígrafo") else None)
+        if carrera and not re.match(r"(?i)^profesorado universitario \(", nombre) \
+                and carrera.nombre not in [c.nombre for c in carreras]:
+            carreras.append(carrera)
+    return carreras
