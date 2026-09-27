@@ -2355,6 +2355,52 @@ def leer_unlp(html: str, pagina: str = UNLP, traer=None) -> list[CarreraDeLaGuia
     return carreras
 
 
+# --- Universidad Nacional de San Luis: its careers site's data -----------------------------------------
+# carreras.unsl.edu.ar draws its cards from an array in the page itself
+# ("const CARRERAS = [...]"): name, page, kind (grado, pregrado,
+# profesorados, otras-profesiones, posgrado), faculty, duration and campus.
+
+UNSL = "https://carreras.unsl.edu.ar/carreras/"
+_UNSL_FACULTADES = {
+    "fqbyf": "Facultad de Química, Bioquímica y Farmacia",
+    "fcfmyn": "Facultad de Ciencias Físico Matemáticas y Naturales",
+    "fica": "Facultad de Ingeniería y Ciencias Agropecuarias",
+    "fcejs": "Facultad de Ciencias Económicas, Jurídicas y Sociales",
+    "fch": "Facultad de Ciencias Humanas", "fapsi": "Facultad de Psicología",
+    "fcs": "Facultad de Ciencias de la Salud", "ftu": "Facultad de Turismo y Urbanismo",
+    "ipau": "Instituto Politécnico y Artístico Universitario",
+}
+
+
+def _duracion_unsl(texto: str) -> float | None:
+    """"5 Años", "3 y medio", "2 Años Y Un Cuatrimestre" (half a year)."""
+    dicho = re.match(r"(?i)\s*(\d+)\s*(?:años?)?\s*(y\s+(?:medio|un\s+cuatrimestre))?\s*$", texto or "")
+    if not dicho:
+        return None
+    return int(dicho.group(1)) + (0.5 if dicho.group(2) else 0)
+
+
+def leer_unsl(html: str, pagina: str = UNSL) -> list[CarreraDeLaGuia]:
+    datos = re.search(r"const CARRERAS\s*=\s*(\[.*?\]);", html or "", re.S)
+    try:
+        carreras_dichas = json.loads(datos.group(1)) if datos else []
+    except ValueError:
+        return []
+    carreras = []
+    for dicha in carreras_dichas:
+        tipo = dicha.get("tipo")
+        if tipo not in ("grado", "pregrado", "profesorados", "otras-profesiones"):
+            continue
+        nombre = con_tildes(dicha["nombre"]) if dicha["nombre"].isupper() else dicha["nombre"]
+        carrera = _carrera(nombre, _UNSL_FACULTADES.get(dicha.get("facultad_slug"), ""),
+                           urljoin(pagina, dicha.get("link") or pagina), dicha.get("sede") or None,
+                           _duracion_unsl(dicha.get("duracion")),
+                           {"grado": "Grado", "pregrado": "Pregrado"}.get(tipo))
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
 # --- Universidad del Cine: each career's page says what it is ---------------------------------------
 # "La carrera de Dirección (pregrado) dura tres años y medio, al cabo de los
 # cuales obtenés el título de Director/a": the licenciatura and the

@@ -324,6 +324,8 @@ GUIAS.update({
                  ((gn.UNLZ, gn.leer_unlz),), "Lomas de Zamora", "", 30),
     # Its spider read faculty menus, courses among them ("Medicina Interna"):
     # the university's own search replaces it (--reemplazar).
+    "UNSL": Guia("Universidad Nacional de San Luis", "UNSL", "Estatal", "https://www.unsl.edu.ar",
+                 ((gn.UNSL, gn.leer_unsl),), "San Luis", "Ejército de los Andes 950", 60),
     "UNLP": Guia("Universidad Nacional de La Plata", "UNLP", "Estatal", "https://unlp.edu.ar",
                  ((gn.UNLP, gn.leer_unlp),), "La Plata", "", 110),
 })
