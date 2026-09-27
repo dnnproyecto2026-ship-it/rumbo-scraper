@@ -953,3 +953,24 @@ def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
 
 def plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_texto_por_anio(html))
+
+
+def _plan_kt_tabs(html: str) -> list[tuple[str, int]]:
+    """UNaF, Recursos Naturales: a tab per year ("AÑO 1") and its content in
+    the same order, the subjects listed under each term's heading."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulos = [anio_de(_texto(t)) or (int(m.group(1)) if (m := re.search(r"(?i)año\s*(\d)", _texto(t))) else None)
+               for t in soup.select("a.kt-tab-title")]
+    contenidos = soup.select("div.kt-tab-inner-content")
+    materias: list[tuple[str, int]] = []
+    if len(titulos) != len(contenidos):
+        return []
+    for anio, contenido in zip(titulos, contenidos):
+        for item in contenido.select("li") if anio else []:
+            if not re.search(r"(?i)optativ|electiv", _texto(item)):
+                _agregar(materias, _texto(item), anio)
+    return materias
+
+
+def plan_kt_tabs(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_kt_tabs(html))

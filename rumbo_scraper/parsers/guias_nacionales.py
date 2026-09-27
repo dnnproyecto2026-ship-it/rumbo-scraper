@@ -2501,6 +2501,33 @@ def leer_isalud(html: str, pagina: str = ISALUD, traer=None) -> list[CarreraDeLa
     return carreras
 
 
+# --- Universidad Nacional de Formosa: Recursos Naturales' menu of careers ---------------------------------
+# The university's site lists no careers, nor do Humanidades', Salud's or
+# Economía's (its service answers an empty list): Recursos Naturales' menu
+# is the one list published, each career's page saying "Duración: 5 años".
+
+UNAF_FRN = "https://frn.unf.edu.ar/"
+
+
+def leer_unaf_frn(html: str, pagina: str = UNAF_FRN, traer=None) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for titulo in _soup(html).select("span.nav-drop-title-wrap"):
+        if not _texto(titulo).upper().startswith("CARRERAS"):
+            continue
+        for enlace in titulo.find_parent("li").select("ul.sub-menu li a[href]"):
+            url = urljoin(pagina, enlace["href"])
+            if url in vistas:
+                continue
+            vistas.add(url)
+            texto = re.sub(r"\s+", " ", _soup(traer(url)).get_text(" ")) if traer else ""
+            dicha = re.search(r"(?i)duraci[óo]n\s*:?\s*(\d+\s*(?:y medio\s*)?años?)", texto)
+            carrera = _carrera(_texto(enlace), "Facultad de Recursos Naturales", url, None,
+                               anios(dicha.group(1)) if dicha else None)
+            if carrera:
+                carreras.append(carrera)
+    return carreras
+
+
 # --- Universidad del Cine: each career's page says what it is ---------------------------------------
 # "La carrera de Dirección (pregrado) dura tres años y medio, al cabo de los
 # cuales obtenés el título de Director/a": the licenciatura and the

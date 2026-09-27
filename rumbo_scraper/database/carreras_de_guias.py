@@ -332,6 +332,8 @@ GUIAS.update({
                    ((gn.ESEADE, gn.leer_eseade),), "Ciudad Autónoma de Buenos Aires", "", 5),
     "ISALUD": Guia("Universidad ISALUD", "ISALUD", "Privada", "https://www.isalud.edu.ar",
                    ((gn.ISALUD, gn.leer_isalud),), "Ciudad Autónoma de Buenos Aires", "Venezuela 925", 8),
+    "UNaF": Guia("Universidad Nacional de Formosa", "UNaF", "Estatal", "https://www.unf.edu.ar",
+                 ((gn.UNAF_FRN, gn.leer_unaf_frn),), "Formosa", "Av. Gutnisky 3200", 4),
     "UNLP": Guia("Universidad Nacional de La Plata", "UNLP", "Estatal", "https://unlp.edu.ar",
                  ((gn.UNLP, gn.leer_unlp),), "La Plata", "", 110),
 })

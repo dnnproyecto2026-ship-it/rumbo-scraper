@@ -87,7 +87,8 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("unq.edu.ar", planes_sitios.plan_unq),
                         ("lenguas.unc.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("carreras.unsl.edu.ar", planes_sitios.plan_titulo_y_lista),
-                        ("go.eseade.edu.ar", planes_sitios.plan_texto_por_anio))
+                        ("go.eseade.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("frn.unf.edu.ar", planes_sitios.plan_kt_tabs))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
