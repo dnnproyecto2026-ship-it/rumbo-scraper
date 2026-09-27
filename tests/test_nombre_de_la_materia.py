@@ -109,3 +109,13 @@ class PlanesAmontonados(unittest.TestCase):
         sin_anio = [{"carrera_o_programa": "Medicina", "anio_cursada": None} for _ in range(60)]
         quedan = sin_planes_amontonados(amontonado + normal + sin_anio)
         self.assertEqual({m["carrera_o_programa"] for m in quedan}, {"Abogacía", "Medicina"})
+
+
+class SinPlanesSalteados(unittest.TestCase):
+    def test_un_plan_sin_primer_anio_no_se_exporta(self):
+        from rumbo_scraper.database.exportar_catalogo import sin_planes_salteados
+
+        materias = [{"carrera_o_programa": "A", "anio_cursada": 2, "nombre_materia": "x"},
+                    {"carrera_o_programa": "B", "anio_cursada": 1, "nombre_materia": "y"},
+                    {"carrera_o_programa": "B", "anio_cursada": 2, "nombre_materia": "z"}]
+        self.assertEqual([m["carrera_o_programa"] for m in sin_planes_salteados(materias)], ["B", "B"])

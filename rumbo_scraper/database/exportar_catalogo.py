@@ -269,6 +269,18 @@ def sin_planes_amontonados(materias: list[dict[str, Any]]) -> list[dict[str, Any
     return [m for m in materias if m["carrera_o_programa"] not in amontonados]
 
 
+def sin_planes_salteados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The subjects, without the plans whose years do not run from the first
+    on (the UNPAZ's Abogacía from its second year, a plan with its third
+    year missing): a part of a plan is not the plan."""
+    anios: dict[Any, set[int]] = defaultdict(set)
+    for m in materias:
+        if m["anio_cursada"] is not None:
+            anios[m["carrera_o_programa"]].add(m["anio_cursada"])
+    salteados = {programa for programa, a in anios.items() if a != set(range(1, max(a) + 1))}
+    return [m for m in materias if m["carrera_o_programa"] not in salteados]
+
+
 def exportar(client: Any) -> dict[str, Any]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -404,7 +416,7 @@ def exportar(client: Any) -> dict[str, Any]:
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
         })
     for datos in por_uni.values():
-        datos["materias"] = sin_planes_amontonados(datos["materias"])
+        datos["materias"] = sin_planes_salteados(sin_planes_amontonados(datos["materias"]))
 
     for b in becas:
         por_uni[b["universidad_id"]]["becas"].append({
