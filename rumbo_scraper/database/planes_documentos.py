@@ -68,7 +68,8 @@ HALLADOS = Path("data/planes_documentos.json")
 _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
-                        ("fcyt.uader.edu.ar", planes_sitios.plan_fcyt_uader))
+                        ("fcyt.uader.edu.ar", planes_sitios.plan_fcyt_uader),
+                        ("uncoma.edu.ar", planes_sitios.plan_uncoma))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20

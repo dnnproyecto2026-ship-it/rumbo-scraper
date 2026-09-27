@@ -303,3 +303,39 @@ def _plan_fcyt_uader(html: str) -> list[tuple[str, int]]:
 
 def plan_fcyt_uader(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_fcyt_uader(html))
+
+
+def plan_uncoma(html: str) -> list[tuple[str, int | None]]:
+    """The Comahue lists a career's subjects under the heading "Materias",
+    numbered ("1- TEORÍA GENERAL DEL DERECHO"), most without the year; some
+    under "PRIMER AÑO – PRIMER CUATRIMESTRE". The electives after
+    "Optativas" and the notes after "Observación" are not the plan."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulo = next((h for h in soup.find_all(["h2", "h3"]) if _texto(h).lower() == "materias"), None)
+    widget = titulo.find_parent(class_="elementor-widget") if titulo else None
+    lista = widget.find_next_sibling() if widget else None
+    if not lista:
+        return []
+    renglones: list[tuple[str, int | None]] = []
+    anio = None
+    for linea in lista.get_text("\n").split("\n"):
+        linea = clean_text(linea).replace("\xa0", " ")
+        if not linea:
+            continue
+        if re.match(r"(?i)^(observaci[óo]n|optativas?|materias optativas|electivas)", linea):
+            break
+        nuevo = anio_de(re.split(r"\s+[–-]\s+", linea)[0])
+        if nuevo:
+            anio = nuevo
+            continue
+        if re.match(r"(?i)^ciclo\b", linea):
+            continue
+        nombre = re.sub(r"^\d+\s*[-–.)]?\s*", "", linea)
+        nombre = nombre.replace("DELDERECHO", "DEL DERECHO")
+        vacias: list[tuple[str, int]] = []
+        _agregar(vacias, nombre, 1)
+        if vacias and all(vacias[0][0] != n for n, _ in renglones):
+            renglones.append((vacias[0][0], anio))
+    if any(a for _, a in renglones):
+        return renglones if all(renglones) and {a for _, a in renglones} == set(range(1, max(a for _, a in renglones) + 1)) else []
+    return renglones
