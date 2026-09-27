@@ -119,3 +119,16 @@ class SinPlanesSalteados(unittest.TestCase):
                     {"carrera_o_programa": "B", "anio_cursada": 1, "nombre_materia": "y"},
                     {"carrera_o_programa": "B", "anio_cursada": 2, "nombre_materia": "z"}]
         self.assertEqual([m["carrera_o_programa"] for m in sin_planes_salteados(materias)], ["B", "B"])
+
+
+class SinPlanesRepartidos(unittest.TestCase):
+    def test_una_lista_de_facultad_no_es_el_plan_de_cada_carrera(self):
+        from rumbo_scraper.database.exportar_catalogo import sin_planes_repartidos
+
+        materias = [{"carrera_o_programa": c, "nombre_materia": f"M{i}", "anio_cursada": 1}
+                    for c in ("Psicología", "Bioquímica", "Maestría en X Bs As", "Maestría en X Rosario")
+                    for i in range(12)]
+        materias = [m if m["carrera_o_programa"].startswith(("Psic", "Bioq")) else {**m, "nombre_materia": "Z" + m["nombre_materia"]}
+                    for m in materias]
+        quedan = {m["carrera_o_programa"] for m in sin_planes_repartidos(materias)}
+        self.assertEqual(quedan, {"Maestría en X Bs As", "Maestría en X Rosario"})

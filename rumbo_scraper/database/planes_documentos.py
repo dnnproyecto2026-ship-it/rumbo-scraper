@@ -282,7 +282,14 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # newest is read.
             # Or links one page as its plan ("plan de estudios", Sociales and
             # the FAUD of the UNC), which says it the way a page does.
-            nuevo = plan_mas_nuevo(html, url) or _enlace_al_plan(html, url, dominios)
+            # The newest plan the page links, if it is this career's: a menu
+            # links every career's plans (the UNLPam's gave Biología the
+            # Química plan of 2023).
+            nuevo = plan_mas_nuevo(html, url)
+            propia = [p for p in urlparse(url).path.split("/") if len(p) > 5]
+            if nuevo and propia and propia[-1] not in nuevo:
+                nuevo = None
+            nuevo = nuevo or _enlace_al_plan(html, url, dominios)
             if nuevo:
                 html_del_plan = visitante.get(nuevo)
                 time.sleep(PAUSA)

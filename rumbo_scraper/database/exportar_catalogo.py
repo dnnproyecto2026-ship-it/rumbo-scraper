@@ -269,6 +269,30 @@ def sin_planes_amontonados(materias: list[dict[str, Any]]) -> list[dict[str, Any
     return [m for m in materias if m["carrera_o_programa"] not in amontonados]
 
 
+def sin_planes_repartidos(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The subjects, without a plan several different careers share whole:
+    one faculty's list handed to each of its careers (the UNLP's Psicología,
+    Obstetricia and Bioquímica with the same subjects), or another career's
+    plan picked from a menu. The same career at two campuses ("... Bs As",
+    "... Rosario") has one plan, and keeps it."""
+    from difflib import SequenceMatcher
+
+    por_programa: dict[Any, set[str]] = defaultdict(set)
+    for m in materias:
+        por_programa[m["carrera_o_programa"]].add(comparison_key(m["nombre_materia"]))
+    grupos: dict[frozenset[str], list[Any]] = defaultdict(list)
+    for programa, nombres in por_programa.items():
+        if len(nombres) >= 10:
+            grupos[frozenset(nombres)].append(programa)
+    repartidos = set()
+    for programas in grupos.values():
+        if len(programas) > 1 and any(
+                SequenceMatcher(None, comparison_key(a), comparison_key(b)).ratio() < 0.8
+                for i, a in enumerate(programas) for b in programas[i + 1:]):
+            repartidos |= set(programas)
+    return [m for m in materias if m["carrera_o_programa"] not in repartidos]
+
+
 def sin_planes_salteados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """The subjects, without the plans whose years do not run from the first
     on (the UNPAZ's Abogacía from its second year, a plan with its third
@@ -430,7 +454,7 @@ def exportar(client: Any) -> dict[str, Any]:
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
         })
     for datos in por_uni.values():
-        datos["materias"] = sin_planes_salteados(sin_planes_amontonados(datos["materias"]))
+        datos["materias"] = sin_planes_repartidos(sin_planes_salteados(sin_planes_amontonados(datos["materias"])))
 
     for b in becas:
         por_uni[b["universidad_id"]]["becas"].append({
