@@ -115,6 +115,12 @@ TERCER AÑO
         # A núcleo whose rows are not the number it says is not read.
         self.assertEqual(p.plan_unq(html.replace("2 asignaturas", "3 asignaturas")), [])
 
+    def test_unc_lenguas_titulo_y_lista(self):
+        html = """<p><b>Ciclo de nivelación</b></p><ul><li>Lengua Castellana</li></ul>
+        <p><b>Primer año</b></p><ul><li>Lengua Inglesa I: <a>Cátedra A</a> - <a>Cátedra B</a></li>
+        <li><a>Lengua y Cultura Latina I</a> (Optativa)</li><li>Práctica Gramatical</li></ul>"""
+        self.assertEqual(p.plan_titulo_y_lista(html), [("Lengua Inglesa I", 1), ("Práctica Gramatical", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()

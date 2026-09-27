@@ -84,7 +84,8 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("derecho.unlz.edu.ar", planes_sitios.plan_cr_year),
                         ("fhycs.unam.edu.ar", planes_sitios.plan_anio_y_lista),
                         ("fce.unam.edu.ar", planes_sitios.plan_fce_unam),
-                        ("unq.edu.ar", planes_sitios.plan_unq))
+                        ("unq.edu.ar", planes_sitios.plan_unq),
+                        ("lenguas.unc.edu.ar", planes_sitios.plan_titulo_y_lista))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -97,6 +98,17 @@ def _nombra(texto: str, carrera: str) -> bool:
     palabras = set(re.findall(r"[a-z0-9]+", comparison_key(texto)))
     propias = [p for p in re.findall(r"[a-z0-9]+", comparison_key(carrera)) if p not in _VACIAS]
     return all(p in palabras for p in propias)
+
+
+_TITULO_DE_CARRERA = re.compile(r"(?i)^(licenciatura|profesorado|traductorado|tecnicatura|ingenier[íi]a|"
+                                r"t[ée]cnic[oa]|analista|contador|abogac[íi]a)\b")
+
+
+def _es_de_otra_carrera(html: str, carrera: str) -> bool:
+    # (UNC's Lenguas titles its pages with an <h1-parallax>.)
+    titulo = BeautifulSoup(html or "", "html.parser").find(re.compile(r"^h1"))
+    texto = clean_text(titulo.get_text(" ")) if titulo else ""
+    return bool(_TITULO_DE_CARRERA.match(texto) and len(texto) < 120 and not _nombra(texto, carrera))
 
 
 # A word the PDF broke at the end of a line: "Alimen- tos".
@@ -287,6 +299,12 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             dominios = (host, host.split(".", 1)[-1]) if host.count(".") > 2 else (host,)
             html = visitante.get(url)
             time.sleep(PAUSA)
+            # A guide that links a career to another's page (UNC's links its
+            # Licenciatura en Lengua y Literatura Italianas to the Inglesas'):
+            # the page's own title names the other one, and its plan is not
+            # this career's.
+            if _es_de_otra_carrera(html, carrera["nombre_carrera"]):
+                continue
             # A page that shows the plan in a frame of another page (UNJu's
             # Humanidades: <iframe src="carreras/LicLetras.html">).
             marco = next((lector for dominio, lector in _PLAN_EN_UN_MARCO if host.endswith(dominio)), None)

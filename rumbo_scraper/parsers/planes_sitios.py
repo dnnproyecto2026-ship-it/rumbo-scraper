@@ -896,3 +896,28 @@ def _plan_unq(html: str) -> list[tuple[str, None]]:
 
 def plan_unq(html: str) -> list[tuple[str, None]]:
     return _plan_unq(html)
+
+
+def _plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
+    """UNC, Lenguas: a line in bold per year ("Primer año") and a list of
+    its subjects after it; a subject taught by two chairs is one ("Lengua
+    Inglesa I: Cátedra A - Cátedra B"), an optional one is not in the plan
+    ("Lengua y Cultura Latina I (Optativa)"). Another bold line ("Ciclo de
+    nivelación", "Seminarios") is not a year."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for elemento in BeautifulSoup(html or "", "html.parser").find_all(["p", "h2", "h3", "h4", "h5", "li"]):
+        if elemento.name == "li":
+            texto = re.sub(r"(?i)\s*:?\s*c[áa]tedra\s+[a-z]\b.*$", "", _texto(elemento))
+            if anio and not re.search(r"(?i)optativ|electiv", texto):
+                _agregar(materias, texto, anio)
+            continue
+        negrita = elemento if elemento.name != "p" else elemento.find(["b", "strong"])
+        texto = _texto(negrita) if negrita else ""
+        if texto and texto == _texto(elemento):
+            anio = anio_de(texto) if re.fullmatch(r"(?i)\w+\s+año", texto) else None
+    return materias
+
+
+def plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_titulo_y_lista(html))
