@@ -353,6 +353,30 @@ def paginas_eco_mdp(visitante) -> list[tuple[str, object]]:
     return [("https://eco.mdp.edu.ar" + e if e.startswith("/") else e, horarios_eco_mdp) for e in enlaces]
 
 
+def optativas_fiq(html: str) -> list[tuple[str, str, str]]:
+    """UNL, Ingeniería Química: its electives, each a heading and then
+    "Docente: Eduardo Adam. Optativa de: IQ, IA. Cuatrimestre de cursado:
+    Primero." ("Docente: -" when none is named)."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):
+        parte.decompose()
+    lineas = [clean_text(l) for l in soup.get_text("\n").split("\n") if clean_text(l)]
+    filas, materia = [], None
+    for posicion, linea in enumerate(lineas):
+        dicho = re.match(r"(?i)^docente[s]?:\s*(.+?)(?:\.\s*optativa.*|\.\s*$|$)", linea)
+        if not dicho:
+            if linea != "MÁS INFO" and not re.match(r"(?i)^(optativa de|cuatrimestre de cursado)", linea):
+                materia = linea
+            continue
+        resto = " ".join(lineas[posicion:posicion + 3])
+        cuando = re.search(r"(?i)cuatrimestre de cursado:\s*(primero|segundo)", resto)
+        termino = {"primero": "1° cuatrimestre", "segundo": "2° cuatrimestre"}.get(cuando.group(1).lower(), "") if cuando else ""
+        for docente in re.split(r"\s*(?:;|\s+y\s+)\s*", dicho.group(1)):
+            if materia and docente.strip(" -") and len(docente.split()) >= 2:
+                filas.append((materia, docente.strip(" ."), termino))
+    return filas
+
+
 # Sigla -> [(page, reader)], or a function that lists them from an index.
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
@@ -367,6 +391,7 @@ FUENTES = {
     "UNMdP": lambda visitante: [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)]
                                + paginas_eco_mdp(visitante),
     "UNLP": paginas_fcnym,
+    "UNL": [("https://fiq.unl.edu.ar/vivilafiq/optativas/", optativas_fiq)],
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc),
             ("https://www.frba.utn.edu.ar/mecanica/cuerpo-docente/", cuerpo_docente_frba)],
 }
