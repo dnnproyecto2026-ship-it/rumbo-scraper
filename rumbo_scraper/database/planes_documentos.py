@@ -95,6 +95,30 @@ _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|
 _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),)
 
 
+def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
+    """The plan a page of the site's menu lists ("Programas", "Programas
+    Analíticos"), from the career's page or from the career's own site it
+    links ("Sitio web de la carrera")."""
+    for dominio, texto, lector in _PLAN_EN_OTRA_PAGINA:
+        if not host.endswith(dominio):
+            continue
+        for _ in range(2):
+            enlaces = BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
+            pagina = next((urljoin(url, a["href"]) for a in enlaces
+                           if clean_text(a.get_text(" ")).lower().startswith(texto)), None)
+            if pagina:
+                materias = lector(visitante.get(pagina))
+                time.sleep(PAUSA)
+                return (materias, pagina) if materias else None
+            sitio = next((urljoin(url, a["href"]) for a in enlaces
+                          if clean_text(a.get_text(" ")).lower() == "sitio web de la carrera"), None)
+            if not sitio:
+                return None
+            url, html = sitio, visitante.get(sitio)
+            time.sleep(PAUSA)
+    return None
+
+
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
 _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse),)
@@ -229,6 +253,12 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             dominios = (host, host.split(".", 1)[-1]) if host.count(".") > 2 else (host,)
             html = visitante.get(url)
             time.sleep(PAUSA)
+            # A site that lists the plan on a page of its own menu (the
+            # FACET's "Programas"), maybe from the career's own site.
+            del_menu = _plan_del_menu(visitante, html, url, host)
+            if del_menu:
+                de_la_pagina[carrera["id"]], pagina_del_plan[carrera["id"]] = del_menu
+                continue
             en_la_pagina = _de_la_pagina(html)
             # The UNL lays its plan out as a list of bullets, without years.
             if not en_la_pagina and host.endswith("unl.edu.ar"):
@@ -248,20 +278,6 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # newest is read.
             # Or links one page as its plan ("plan de estudios", Sociales and
             # the FAUD of the UNC), which says it the way a page does.
-            # A site that lists the plan on a page of its own menu (the
-            # FACET's "Programas").
-            enlazada = next(((a["href"], lector) for dominio, texto, lector in _PLAN_EN_OTRA_PAGINA
-                             if host.endswith(dominio)
-                             for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
-                             if clean_text(a.get_text(" ")).lower() == texto), None)
-            if enlazada:
-                pagina = urljoin(url, enlazada[0])
-                del_plan = enlazada[1](visitante.get(pagina))
-                time.sleep(PAUSA)
-                if del_plan:
-                    de_la_pagina[carrera["id"]] = del_plan
-                    pagina_del_plan[carrera["id"]] = pagina
-                    continue
             nuevo = plan_mas_nuevo(html, url) or _enlace_al_plan(html, url, dominios)
             if nuevo:
                 html_del_plan = visitante.get(nuevo)
