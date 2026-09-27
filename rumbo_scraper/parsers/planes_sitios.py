@@ -921,3 +921,35 @@ def _plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
 
 def plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_titulo_y_lista(html))
+
+
+_FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
+                           r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo)")
+
+
+def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
+    """ESEADE: after "Plan de estudios", a line per year ("1º año") and a
+    line per subject; a term's line ("Primer cuatrimestre") is not one. The
+    plan ends at the first line that is not a subject: the ministry's
+    disposition, the requirements, the degree."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):
+        parte.decompose()
+    lineas = [clean_text(l) for l in soup.get_text("\n").split("\n") if clean_text(l)]
+    inicio = next((i for i, l in enumerate(lineas) if l.lower().startswith("plan de estudio")), None)
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[inicio + 1:] if inicio is not None else []:
+        if re.fullmatch(r"(?i)\d+\s*[º°o]?\s*año|\w+\s+año", linea) and anio_de(linea):
+            anio = anio_de(linea)
+        elif re.search(r"(?i)cuatrimestre|semestre", linea) and len(linea.split()) <= 3:
+            continue
+        elif anio and _FIN_DEL_PLAN.match(linea):
+            break
+        elif anio:
+            _agregar(materias, linea, anio)
+    return materias
+
+
+def plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_texto_por_anio(html))

@@ -2401,6 +2401,56 @@ def leer_unsl(html: str, pagina: str = UNSL) -> list[CarreraDeLaGuia]:
     return carreras
 
 
+# --- Instituto Universitario de la Cooperación: its list of careers -------------------------------------
+# A card per career: its name, linking its page, and its level ("Grado").
+
+IUCOOP = "https://www.iucoop.edu.ar/carreras"
+
+
+def _duracion_de_la_pagina(traer, url: str) -> float | None:
+    """"Duración: 4 años y medio", the label and its value maybe apart."""
+    texto = re.sub(r"\s+", " ", _soup(traer(url)).get_text(" ")) if traer else ""
+    dicha = re.search(r"(?i)duraci[óo]n(?:\s+de\s+cursado)?\s*:?\s*(\d[^.:]{0,30}?(?:años?|cuatrimestres)(?:\s+y\s+medio)?)", texto)
+    return anios(dicha.group(1)) if dicha else None
+
+
+def leer_iucoop(html: str, pagina: str = IUCOOP, traer=None) -> list[CarreraDeLaGuia]:
+    carreras = []
+    for tarjeta in _soup(html).select("div.carrera"):
+        enlace, nivel_dicho = tarjeta.select_one("h3 a[href]"), _texto(tarjeta.find("p"))
+        if not enlace or nivel_dicho not in ("Grado", "Pregrado"):
+            continue
+        url = urljoin(pagina, enlace["href"])
+        carrera = _carrera(_texto(enlace), "", url, None, _duracion_de_la_pagina(traer, url), nivel_dicho)
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Instituto Universitario ESEADE: the licenciaturas of its menu ----------------------------------------
+# The home page's menu links each licenciatura's page on go.eseade.edu.ar,
+# whose title names it ("Licenciatura en Logística Online | ESEADE").
+
+ESEADE = "https://www.eseade.edu.ar/"
+
+
+def leer_eseade(html: str, pagina: str = ESEADE, traer=None) -> list[CarreraDeLaGuia]:
+    carreras, vistas = [], set()
+    for enlace in _soup(html).find_all("a", href=True):
+        url = enlace["href"]
+        if not re.match(r"https://go\.eseade\.edu\.ar/l\w+$", url) or url in vistas or not traer:
+            continue
+        vistas.add(url)
+        titulo = _soup(traer(url)).find("title")
+        nombre = re.sub(r"(?i)\s+online$", "", _texto(titulo).split("|")[0].strip()) if titulo else ""
+        if not nombre.lower().startswith("licenciatura"):
+            continue
+        carrera = _carrera(nombre, "", url, None, _duracion_de_la_pagina(traer, url), "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
 # --- Universidad del Cine: each career's page says what it is ---------------------------------------
 # "La carrera de Dirección (pregrado) dura tres años y medio, al cabo de los
 # cuales obtenés el título de Director/a": the licenciatura and the

@@ -326,6 +326,10 @@ GUIAS.update({
     # the university's own search replaces it (--reemplazar).
     "UNSL": Guia("Universidad Nacional de San Luis", "UNSL", "Estatal", "https://www.unsl.edu.ar",
                  ((gn.UNSL, gn.leer_unsl),), "San Luis", "Ejército de los Andes 950", 60),
+    "IUCOOP": Guia("Instituto Universitario de la Cooperación", "IUCOOP", "Privada", "https://www.iucoop.edu.ar",
+                   ((gn.IUCOOP, gn.leer_iucoop),), "Ciudad Autónoma de Buenos Aires", "", 2),
+    "ESEADE": Guia("Instituto Universitario ESEADE", "ESEADE", "Privada", "https://www.eseade.edu.ar",
+                   ((gn.ESEADE, gn.leer_eseade),), "Ciudad Autónoma de Buenos Aires", "", 5),
     "UNLP": Guia("Universidad Nacional de La Plata", "UNLP", "Estatal", "https://unlp.edu.ar",
                  ((gn.UNLP, gn.leer_unlp),), "La Plata", "", 110),
 })
