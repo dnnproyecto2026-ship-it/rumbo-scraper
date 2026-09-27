@@ -101,9 +101,39 @@ def asignaturas_facet(html: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+_CARGO_DERECHO = re.compile(r"(?i)^(titular|asociad[oa]|adjunt[oa](?:/a)?|asociad[oa]/a|titular/a|em[ée]rit[oa](?:/a)?|consult[oa](?:/a)?)\s*$")
+
+
+def derecho_uba(texto: str) -> list[tuple[str, str, str]]:
+    """UBA, Derecho: the PDF of its regular professors, as ``pdftotext
+    -layout`` gives it: "Asignatura: Derecho Civil", a role ("Titular",
+    "Adjunto/a") and the people under it, indented. Emeritus and consulting
+    professors hold no chair."""
+    filas, materia, rol = [], None, None
+    for linea in (texto or "").splitlines():
+        limpia = clean_text(linea)
+        if not limpia or re.match(r"(?i)^(facultad de derecho|universidad de buenos aires|profesores|- \w+ \d{4} -|\d+)$", limpia):
+            continue
+        asignatura = re.match(r"(?i)^asignatura:\s*(.+)$", limpia)
+        if asignatura:
+            materia, rol = asignatura.group(1), None
+            continue
+        if re.match(r"(?i)^departamento:", limpia):
+            continue
+        cargo = _CARGO_DERECHO.match(limpia)
+        if cargo:
+            rol = cargo.group(1)
+            continue
+        if materia and rol and linea.startswith("  ") and "," in limpia \
+                and not re.match(r"(?i)^(em[ée]rit|consult)", rol):
+            filas.append((materia, limpia.rstrip("."), rol))
+    return filas
+
+
 # Sigla -> [(page, reader)]
 FUENTES = {
-    "UBA": [("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba)],
+    "UBA": [("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba),
+            ("https://www.derecho.uba.ar/academica/profesores/Profesores-Regulares-ABRIL-2026.pdf", derecho_uba)],
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
@@ -120,7 +150,17 @@ def main() -> None:
     comisiones: dict[str, dict] = {}
     with Visitante(timeout=40) as visitante:
         for pagina, lector in FUENTES[args.universidad]:
-            html = visitante.get(pagina)
+            if pagina.lower().endswith(".pdf"):
+                import subprocess
+                import tempfile
+
+                with tempfile.NamedTemporaryFile(suffix=".pdf") as archivo:
+                    archivo.write(visitante.client.get(pagina).content)
+                    archivo.flush()
+                    html = subprocess.run(["pdftotext", "-layout", archivo.name, "-"],
+                                          capture_output=True, text=True, timeout=120).stdout
+            else:
+                html = visitante.get(pagina)
             time.sleep(0.6)
             for materia, docente, rol in lector(html):
                 materia = re.sub(r"(?i)\s*\(\s*m[áa]s informaci[óo]n\s*\)", "", materia).strip()
