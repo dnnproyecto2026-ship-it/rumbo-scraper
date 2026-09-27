@@ -92,8 +92,12 @@ def main() -> None:
                 comisiones.append({"duracion": anual,"materia": materia, "codigo": "fcpolit-" + url.rstrip("/").rsplit("/", 1)[-1],
                                    "anio": 2026, "semestre": semestre, "seccion": "Cátedra",
                                    "fuente_url": url, "docentes": docentes})
-    Path("data/docentes_unr.json").write_text(json.dumps(
-        {"universidad": "UNR", "comisiones": comisiones}, ensure_ascii=False, indent=1) + "\n")
+    # The file also holds the chairs other readers found (`docentes_sitios`).
+    archivo = Path("data/docentes_unr.json")
+    otras = [c for c in (json.loads(archivo.read_text())["comisiones"] if archivo.exists() else [])
+             if not c["codigo"].startswith("fcpolit-")]
+    archivo.write_text(json.dumps(
+        {"universidad": "UNR", "comisiones": otras + comisiones}, ensure_ascii=False, indent=1) + "\n")
     print(f"UNR: {len(paginas)} materias, {len(comisiones)} con docentes")
 
 

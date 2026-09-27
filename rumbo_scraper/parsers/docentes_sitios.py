@@ -377,8 +377,28 @@ def optativas_fiq(html: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+def horarios_fder_unr(texto: str) -> list[tuple[str, str, str]]:
+    """UNR, Derecho: the term's schedule PDF, as ``pdftotext -layout`` gives
+    it: a heading per chair ("16.09.1. ECONOMÍA POLÍTICA - CÁT. A") and the
+    teachers in the last column, "APELLIDO, Nombre"."""
+    filas, materia = [], None
+    for linea in (texto or "").splitlines():
+        encabezado = re.match(r"^\s*\d+\.\d+\.\d+\.\s+(.+?)\s*\*?\s*$", linea)
+        if encabezado:
+            # "- CÁT. A", "– CÁTEDRA B", or the dash alone where the heading wraps.
+            materia = re.split(r"\s*[-–]\s*C[ÁA]T", clean_text(encabezado.group(1)))[0]
+            materia = re.sub(r"\s*[-–]\s*$", "", materia)
+            continue
+        ultimo = re.split(r"\s{2,}", linea.strip())[-1] if linea.strip() else ""
+        if materia and re.match(r"^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ' .-]+,\s*[A-ZÁÉÍÓÚ][\wÁÉÍÓÚáéíóúñ. ]+$", ultimo):
+            filas.append((materia, ultimo, "2° cuatrimestre"))
+    return filas
+
+
 # Sigla -> [(page, reader)], or a function that lists them from an index.
 FUENTES = {
+    "UNR": [("https://www.fder.unr.edu.ar/wp-content/uploads/2026/07/HORARIOS-2do-CUATRIMESTRE-2026-ABOGACIA-4.pdf",
+             horarios_fder_unr)],
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
            for pagina in ("psicologia", "periodismo", "relaciones_internacionales", "arte",
                           "humanidades-ciencias-sociales", "educacion_superior")],
@@ -440,8 +460,13 @@ def main() -> None:
                     comision["semestre"], rol = int(termino.group(1)), ""
                 if all(comparison_key(d["nombre"]) != comparison_key(docente) for d in comision["docentes"]):
                     comision["docentes"].append({"nombre": docente, "rol": rol})
-    Path(f"data/docentes_{args.universidad.lower()}.json").write_text(json.dumps(
-        {"universidad": args.universidad, "comisiones": list(comisiones.values())},
+    # The file may also hold another reader's chairs (the UNR's Ciencia
+    # Política): those stay, these are replaced.
+    archivo = Path(f"data/docentes_{args.universidad.lower()}.json")
+    otras = [c for c in (json.loads(archivo.read_text())["comisiones"] if archivo.exists() else [])
+             if not c["codigo"].startswith("web-")]
+    archivo.write_text(json.dumps(
+        {"universidad": args.universidad, "comisiones": otras + list(comisiones.values())},
         ensure_ascii=False, indent=1) + "\n")
     print(f"{args.universidad}: {len(comisiones)} materias, "
           f"{len({comparison_key(d['nombre']) for c in comisiones.values() for d in c['docentes']})} docentes")
