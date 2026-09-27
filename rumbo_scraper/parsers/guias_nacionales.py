@@ -88,6 +88,8 @@ def expandir(nombre: str) -> str:
 def _carrera(nombre: str, unidad: str, url: str, sede: str | None = None,
              duracion: float | None = None, nivel_dicho: str | None = None) -> CarreraDeLaGuia | None:
     nombre = expandir(clean_text(nombre).strip(" *-–"))
+    # "(Carrera a distancia)", "(Carreras a distancia)": how it is taught.
+    nombre = clean_text(re.sub(r"(?i)\s*\(\s*carreras?\s+a\s+distancia\s*\)", "", nombre))
     # "Ceremonial, Imagen y Org. de Eventos", "Gestión de la Adm. Pública",
     # "RR HH y Relaciones Laborales": the words the guide shortens.
     nombre = re.sub(r"\bOrg\.\s*", "Organización ", nombre)
@@ -99,6 +101,10 @@ def _carrera(nombre: str, unidad: str, url: str, sede: str | None = None,
     nombre = re.sub(r"(?i)\s*[-–(]?\s*(?:modalidad\s+)?(?:a\s+)?(?:distancia|presencial|virtual|semipresencial|h[ií]brida)\)?$", "", nombre)
     unidad = re.sub(r"\bCs\.\s*", "Ciencias ", unidad)
     if not nombre or es_ciclo(nombre):
+        return None
+    # A specialisation, a master's or a doctorate is a posgrado, whatever
+    # heading the page files it under (UNDEF's Rectorado lists them bare).
+    if re.match(r"(?i)^(especializaci[óo]n|maestr[íi]a|doctorado)\b", nombre):
         return None
     # A grado career of under three years is a completion cycle for those who
     # hold a degree already (the Delta's "Licenciatura en Gestión de
@@ -1226,10 +1232,15 @@ def leer_undef(html: str, pagina: str) -> list[CarreraDeLaGuia]:
                 nivel_dicho = texto.title() if texto.upper() != "POSGRADO" else None
             elif texto.lower().startswith(("facultad", "rectorado")):
                 unidad = con_tildes(texto) if texto.isupper() else texto
+                # "FACULTAD DE la DEFENSA NACIONAL": the words the vocabulary
+                # does not know stay in capitals.
+                unidad = " ".join(p.lower() if p.lower() in ("de", "del", "la", "las", "los", "y") and i else
+                                  (p.capitalize() if p.isupper() and len(p) > 3 else p)
+                                  for i, p in enumerate(unidad.split()))
             continue
         if "e-n-accordion-item-title-text" not in (elemento.get("class") or []) or not nivel_dicho:
             continue
-        nombre = clean_text(re.sub(r"\((?:formaci[oó]n militar|militar)\)", "", _texto(elemento), flags=re.I))
+        nombre = clean_text(re.sub(r"\(\s*(?:formaci[oó]n militar|militar)\s*\)", "", _texto(elemento), flags=re.I))
         carrera = _carrera(nombre, unidad if unidad.lower().startswith("facultad") else "", pagina, None, None,
                            nivel_dicho)
         if carrera:
