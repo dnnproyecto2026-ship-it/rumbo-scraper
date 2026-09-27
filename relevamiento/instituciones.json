@@ -5,9 +5,8 @@
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE GENDARMERÍA NACIONAL - IUGNA",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "El sitio no publica la lista de carreras en HTML."
+   "en_rumbo": "Instituto Universitario de Gendarmería Nacional",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE LA POLICÍA FEDERAL ARGENTINA - IUPFA",
@@ -898,9 +897,8 @@
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO PROVINCIAL DE SEGURIDAD – IUPS (Provincia de Jujuy) CENTROS DE INVESTIGACIÓN e INSTITUCIONES DE FORMACIÓN PROFESIONAL SUPERIOR Inscripción de la:",
    "tipo": "provincial",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "Sin sitio con lista de carreras."
+   "en_rumbo": "Instituto Universitario Provincial de Seguridad",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "ASOCIACIÓN MÉDICA ARGENTINA - AMA",
