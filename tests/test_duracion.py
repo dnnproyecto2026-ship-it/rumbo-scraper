@@ -37,6 +37,10 @@ class Duracion(unittest.TestCase):
                 "<main><p>Duración: 5 años</p></main><footer>Duración: 2 años</footer>")
         self.assertEqual(duracion_de_la_pagina(html), 5)
 
+    def test_la_cifra_de_una_tarjeta_sobre_su_rotulo(self):
+        self.assertEqual(duraciones_en("Grado Abogacía 6 años Duración 42 Materias"), {6})
+        self.assertEqual(duraciones_en("Despachante de Aduana 5 cuatrim. Duración 20 Materias"), {2.5})
+
 
 if __name__ == "__main__":
     unittest.main()

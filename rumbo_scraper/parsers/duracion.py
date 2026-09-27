@@ -28,16 +28,17 @@ _PALABRAS = {
 }
 _NUMERO = r"(\d{1,2}(?:[.,]\d)?|" + "|".join(_PALABRAS) + r")"
 _MEDIO = r"(?:\s*(?:y\s+medio|½|1/2))?"
-_UNIDAD = r"(anos|ano|cuatrimestres|semestres)"
+_UNIDAD = r"(anos|ano|cuatrimestres|cuatrim|semestres)"
 _CALIFICA = r"(?:\s+(?:teorica|estimada|total|minima|prevista|aproximada|real|de\s+la\s+carrera|del\s+plan(?:\s+de\s+estudios?)?))*"
 
 # "Duración: 5 años", "duración de la carrera es de 4 años y medio".
 _DURACION_ES = re.compile(
     r"duracion" + _CALIFICA + r"\s*(?:es\s+de|de|:|es|=)?\s*(?:\(|\s)*" + _NUMERO + r"(" + _MEDIO
     + r")\s*" + _UNIDAD + r"(\s+y\s+medio)?")
-# "5 años de duración".
+# "5 años de duración", and a card's figure over its label ("3 años
+# Duración 23 Materias", UNLZ's Derecho; "5 cuatrim. Duración").
 _ANIOS_DE_DURACION = re.compile(
-    _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD + r"(\s+y\s+medio)?\s+de\s+duracion")
+    _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD + r"\.?(\s+y\s+medio)?\s+(?:de\s+)?duracion\b")
 
 
 def _valor(numero: str, medio: str, unidad: str, medio_despues: str | None) -> float | None:
@@ -45,7 +46,7 @@ def _valor(numero: str, medio: str, unidad: str, medio_despues: str | None) -> f
     valor = float(numero) if numero[0].isdigit() else float(_PALABRAS[numero])
     if medio.strip() or medio_despues:
         valor += 0.5
-    if unidad.startswith(("cuatrimestre", "semestre")):
+    if unidad.startswith(("cuatrim", "semestre")):
         valor /= 2
     return valor if 1.5 <= valor <= 7 else None
 

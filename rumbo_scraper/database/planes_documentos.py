@@ -80,7 +80,8 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("natura.unsa.edu.ar", planes_sitios.plan_natura_unsa),
                         ("ing.unsa.edu.ar", planes_sitios.plan_ing_unsa),
                         ("exactas.unca.edu.ar", planes_sitios.plan_tabla_con_anios),
-                        ("huma.unca.edu.ar", planes_sitios.plan_filas_numeradas))
+                        ("huma.unca.edu.ar", planes_sitios.plan_filas_numeradas),
+                        ("derecho.unlz.edu.ar", planes_sitios.plan_cr_year))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -292,10 +293,12 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # The UNCuyo, year by year and term by term.
             if not en_la_pagina and host.endswith("uncuyo.edu.ar"):
                 en_la_pagina = uncuyo.leer_plan(html)
-            # Universities that lay the plan out their own way on the page.
+            # Universities that lay the plan out their own way on the page:
+            # their reader knows it better than the general one (which read
+            # UNLZ Derecho's hours as a plan).
             for dominio, lector in _PLANES_EN_LA_PAGINA:
-                if not en_la_pagina and host.endswith(dominio):
-                    en_la_pagina = lector(html)
+                if host.endswith(dominio):
+                    en_la_pagina = lector(html) or en_la_pagina
             if en_la_pagina:
                 de_la_pagina[carrera["id"]] = en_la_pagina
                 continue

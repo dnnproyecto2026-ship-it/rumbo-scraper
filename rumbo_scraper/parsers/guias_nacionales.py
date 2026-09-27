@@ -2211,10 +2211,52 @@ def leer_cemic(html: str, pagina: str = CEMIC) -> list[CarreraDeLaGuia]:
 # kind ("Tecnicaturas", "Licenciaturas", "Ciclos de Complementación").
 
 UNLZ = "https://www.unlz.edu.ar/?page_id=2363"
+# The faculties' own lists, which link each career's page or plan: this
+# page links none.
+UNLZ_FACULTADES = {
+    "Facultad de Derecho": ("https://derecho.unlz.edu.ar/carreras-2/",),
+    "Facultad de Ciencias Económicas": ("https://www.economicas.unlz.edu.ar/nuevosite/",),
+    "Facultad de Ciencias Agrarias": ("https://agrarias.unlz.edu.ar/oferta-academica/",),
+    "Facultad de Ingeniería": ("https://ingenieria.unlz.edu.ar/oferta-academica/grado",
+                               "https://ingenieria.unlz.edu.ar/oferta-academica/pre-grado"),
+}
 
 
-def leer_unlz(html: str, pagina: str = UNLZ) -> list[CarreraDeLaGuia]:
+def paginas_por_nombre(html: str, pagina: str) -> dict[str, str]:
+    """The pages a faculty's list links, by the career each is for: the
+    link's text ("Contador Público"), the heading of the card it is in
+    ("Abogacía" over "Ver plan de estudios") or its address
+    (".../licenciatura-en-gestion-de-la-informacion.pdf")."""
+    from urllib.parse import unquote, urlparse
+
+    dominio = urlparse(pagina).netloc.removeprefix("www.")
+    paginas: dict[str, str] = {}
+    for a in _soup(html).find_all("a", href=True):
+        url = urljoin(pagina, a["href"]).split("#")[0]
+        if urlparse(url).netloc.removeprefix("www.") != dominio or url.rstrip("/") == pagina.rstrip("/"):
+            continue
+        titulo = a.find_previous(["h2", "h3", "h4", "h5"])
+        archivo = re.sub(r"[-_]+", " ", unquote(urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]).rsplit(".", 1)[0])
+        for nombre in (_texto(a), _texto(titulo) if titulo else "", archivo):
+            nombre = re.sub(r"(?i)^ing\.\s*", "Ingeniería ", re.sub(r"(?i)^lic\.\s*", "Licenciatura ", nombre))
+            if nombre:
+                paginas.setdefault(nombre, url)
+    return paginas
+
+
+def pagina_de_la_carrera(nombre: str, paginas: dict[str, str]) -> str | None:
+    """The one page named as the career ("Licenciatura en Matemática" is
+    "Licenciatura en Matemáticas"); none if no page, or two, are."""
+    from difflib import SequenceMatcher
+
+    parecidas = {url for dicho, url in paginas.items()
+                 if SequenceMatcher(None, clave_sin_tildes(nombre), clave_sin_tildes(dicho)).ratio() >= 0.93}
+    return parecidas.pop() if len(parecidas) == 1 else None
+
+
+def leer_unlz(html: str, pagina: str = UNLZ, traer=None) -> list[CarreraDeLaGuia]:
     carreras = []
+    propias: dict[str, dict[str, str]] = {}
     for columna in _soup(html).select("div.vc_column-inner"):
         encabezado = columna.find("h2")
         unidad = clean_text(_texto(encabezado))
@@ -2257,7 +2299,11 @@ def leer_unlz(html: str, pagina: str = UNLZ) -> list[CarreraDeLaGuia]:
             if not (_NOMBRA_UN_TITULO.match(nombre) or re.match(r"(?i)^(t[ée]cnico|corredor|despachante)", nombre)):
                 continue
             nivel_dicho = "Pregrado" if re.match(r"(?i)^tecnicatura", tipo) else None
-            carrera = _carrera(nombre, unidad, url, None, None, nivel_dicho)
+            if traer and unidad in UNLZ_FACULTADES and unidad not in propias:
+                propias[unidad] = {k: v for lista in UNLZ_FACULTADES[unidad]
+                                   for k, v in paginas_por_nombre(traer(lista), lista).items()}
+            carrera = _carrera(nombre, unidad, pagina_de_la_carrera(nombre, propias.get(unidad, {})) or url,
+                               None, None, nivel_dicho)
             if carrera:
                 carreras.append(carrera)
     return carreras

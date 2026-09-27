@@ -70,6 +70,13 @@ class PlanesSitios(unittest.TestCase):
         <tr><td>40. Latín</td><td>Descargar</td></tr></table>"""
         self.assertEqual(p.plan_filas_numeradas(html), [("Introducción a la Filosofía", 1), ("Didáctica General", 2)])
 
+    def test_unlz_derecho_un_pliegue_por_anio(self):
+        html = """<details class="cr-year"><summary>Primer año</summary><div>
+        <p class="cr-materia"><b>1.</b> Introducción al Derecho <span>· 48 hs</span></p></div></details>
+        <details class="cr-year"><summary>Segundo año</summary><div>
+        <p class="cr-materia"><b>7.</b> Derecho Civil I <span>· 64 hs</span></p></div></details>"""
+        self.assertEqual(p.plan_cr_year(html), [("Introducción al Derecho", 1), ("Derecho Civil I", 2)])
+
 
 if __name__ == "__main__":
     unittest.main()

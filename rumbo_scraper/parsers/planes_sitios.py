@@ -747,3 +747,21 @@ def _plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
 
 def plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_filas_numeradas(html))
+
+
+def _plan_cr_year(html: str) -> list[tuple[str, int]]:
+    """UNLZ, Derecho: a fold per year ("Primer año"), a line per subject in
+    it: its number, its name and its hours ("<b>1.</b> Introducción al
+    Derecho <span>· 48 hs</span>")."""
+    materias: list[tuple[str, int]] = []
+    for pliegue in BeautifulSoup(html or "", "html.parser").select("details.cr-year"):
+        anio = anio_de(_texto(pliegue.find("summary")))
+        for linea in pliegue.select(".cr-materia") if anio else []:
+            for aparte in linea.find_all(["b", "span"]):
+                aparte.decompose()
+            _agregar(materias, _texto(linea), anio)
+    return materias
+
+
+def plan_cr_year(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_cr_year(html))
