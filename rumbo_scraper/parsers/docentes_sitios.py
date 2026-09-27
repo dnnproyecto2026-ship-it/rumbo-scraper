@@ -130,8 +130,32 @@ def derecho_uba(texto: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+def profesores_palermo(html: str) -> list[tuple[str, str, str]]:
+    """Palermo, Ciencias Sociales: a fold per teacher, its content opening
+    with "Área:" and the subject; a fold without it only has a biography."""
+    filas = []
+    for titulo in BeautifulSoup(html or "", "html.parser").select("div.acctitle"):
+        contenido = titulo.find_next_sibling("div", class_="acc_content")
+        lineas = [clean_text(l) for l in (contenido.get_text("\n") if contenido else "").split("\n") if clean_text(l)]
+        texto = " ".join(lineas[:2])
+        area = re.match(r"(?i)^[áa]rea\s*:\s*(.+?)(?:\.\s|\.$|$)", lineas[0] if lineas else "")
+        if not area and lineas and re.match(r"(?i)^[áa]rea\s*:?$", lineas[0]) and len(lineas) > 1:
+            area = re.match(r"(.+?)(?:\.\s|\.$|$)", lineas[1])
+        nombre = _texto(titulo)
+        if area and nombre and len(area.group(1)) < 90 and not re.search(r"(?i)coordinador|director", area.group(1)):
+            # "Cognición, Pensamiento y Lenguaje" is one subject and
+            # "Evolución de la Sociedad Argentina, Historia Contemporánea"
+            # two: a list the page does not tell apart is not taken.
+            if "," not in area.group(1):
+                filas.append((area.group(1).strip(" ."), nombre, ""))
+    return filas
+
+
 # Sigla -> [(page, reader)]
 FUENTES = {
+    "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
+           for pagina in ("psicologia", "periodismo", "relaciones_internacionales", "arte",
+                          "humanidades-ciencias-sociales", "educacion_superior")],
     "UBA": [("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba),
             ("https://www.derecho.uba.ar/academica/profesores/Profesores-Regulares-ABRIL-2026.pdf", derecho_uba)],
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
