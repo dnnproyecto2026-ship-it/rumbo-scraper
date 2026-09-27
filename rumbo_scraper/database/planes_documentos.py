@@ -117,6 +117,10 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
     anios = [anio for _, anio in materias if anio]
     if not anios:
         return len(materias) >= MINIMO_SIN_ANIO
+    # A plan with its first year, or a year between, missing is a part of
+    # the plan (the UNNE's Abogacía from its second year).
+    if set(anios) != set(range(1, max(anios) + 1)):
+        return False
     # More than twenty subjects in one year is the pool of electives listed
     # under the last year (Río Cuarto's Psicopedagogía: 52 in the fourth).
     if max(Counter(anios).values()) > MAS_POR_ANIO:
