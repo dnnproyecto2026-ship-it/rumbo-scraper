@@ -287,9 +287,20 @@ def _fuentes_iugna(fuentes: "Fuentes", url: str, html: str, carrera: str) -> lis
     return [catalogo + "#catalogo"] if catalogo else []
 
 
+def _fuentes_isalud(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[str]:
+    """ISALUD's pages are an app filled from its own service, which answers
+    with a session's ticket: asked afresh each time (a kept one expires)."""
+    try:
+        sesion = fuentes.visitante.client.get(gn.ISALUD).text
+    except Exception:
+        return []
+    listado = gn.listado_isalud(sesion)
+    return [listado + "#catalogo"] if listado else []
+
+
 _FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba,
                     "UNSO": _del_catalogo(gn.UNSO), "UNCAUS": _fuentes_uncaus,
-                    "IUGNA": _fuentes_iugna}
+                    "IUGNA": _fuentes_iugna, "ISALUD": _fuentes_isalud}
 
 
 def _planes_publicados() -> dict[tuple[str, str], str]:

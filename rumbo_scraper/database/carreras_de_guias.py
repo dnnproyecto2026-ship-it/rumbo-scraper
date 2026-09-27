@@ -274,8 +274,8 @@ GUIAS.update({
     "UDC": Guia("Universidad del Chubut", "UDC", "Estatal", "https://udc.edu.ar",
                 ((gn.UDC, gn.leer_udc),), _SIN_SEDE, "", 10),
     "IUCSB": Guia("Instituto Universitario de Ciencias de la Salud", "IUCSB", "Privada",
-                         "https://barcelo.edu.ar", ((gn.BARCELO_GRADO, gn.leer_barcelo),), _SIN_SEDE, "", 4,
-                         ("Grado",)),
+                         "https://barcelo.edu.ar", ((gn.BARCELO_GRADO, gn.leer_barcelo),
+                                                   (gn.BARCELO_PREGRADO, gn.leer_barcelo)), _SIN_SEDE, "", 4),
     "UPE": Guia("Universidad Provincial de Ezeiza", "UPE", "Estatal", "https://web.upe.edu.ar",
                 ((gn.UPE, gn.leer_upe),), _SIN_SEDE, "", 8),
     "IURP": Guia("Instituto Universitario River Plate", "IURP", "Privada", "https://iuriverplate.edu.ar",
@@ -330,6 +330,8 @@ GUIAS.update({
                    ((gn.IUCOOP, gn.leer_iucoop),), "Ciudad Autónoma de Buenos Aires", "", 2),
     "ESEADE": Guia("Instituto Universitario ESEADE", "ESEADE", "Privada", "https://www.eseade.edu.ar",
                    ((gn.ESEADE, gn.leer_eseade),), "Ciudad Autónoma de Buenos Aires", "", 5),
+    "ISALUD": Guia("Universidad ISALUD", "ISALUD", "Privada", "https://www.isalud.edu.ar",
+                   ((gn.ISALUD, gn.leer_isalud),), "Ciudad Autónoma de Buenos Aires", "Venezuela 925", 8),
     "UNLP": Guia("Universidad Nacional de La Plata", "UNLP", "Estatal", "https://unlp.edu.ar",
                  ((gn.UNLP, gn.leer_unlp),), "La Plata", "", 110),
 })
@@ -404,7 +406,7 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
             if url not in leidas:
                 # A script or a data file is read as it comes: the visitor
                 # takes pages only.
-                if re.search(r"\.(?:js|json)(?:\?|$)", url):
+                if re.search(r"\.(?:js|json)(?:\?|$)|/rest/", url):
                     try:
                         leidas[url] = visitante.client.get(url).text
                     except Exception:
@@ -417,7 +419,7 @@ def leer(guia: Guia) -> list[CarreraDeLaGuia]:
         for pagina, lector in guia.paginas:
             # A university's public service answers JSON, which the visitor
             # (made for pages) does not take: it is read as it comes.
-            if re.search(r"/apis?[/.]|/api\.", pagina):
+            if re.search(r"/apis?[/.]|/api\.|/rest/", pagina):
                 try:
                     html = visitante.client.get(pagina).text
                 except Exception:

@@ -1919,8 +1919,13 @@ def leer_barcelo(html: str, pagina: str, traer=None) -> list[CarreraDeLaGuia]:
         if url in vistas or not traer or es_ciclo(_texto(enlace)):
             continue
         vistas.add(url)
+        pagina_propia = _soup(traer(url))
         nombre = next((re.sub(r"(?i)^bienvenidos?\s+a\s+(?:la\s+)?(?:carrera\s+de\s+)?", "", _texto(h))
-                       for h in _soup(traer(url)).find_all(["h1", "h2"]) if re.match(r"(?i)^bienvenid", _texto(h))), "")
+                       for h in pagina_propia.find_all(["h1", "h2"]) if re.match(r"(?i)^bienvenid", _texto(h))), "")
+        # Medicina's page has no welcome: its heading names it.
+        if not nombre and pagina_propia.find("h1"):
+            nombre = _texto(pagina_propia.find("h1"))
+        nombre = nombre.replace("Sist. de Inf.", "Sistemas de Información")
         carrera = _carrera(nombre, "", url, None, None, "Pregrado" if "pregrado" in pagina else "Grado")
         if carrera:
             carreras.append(carrera)
@@ -2446,6 +2451,51 @@ def leer_eseade(html: str, pagina: str = ESEADE, traer=None) -> list[CarreraDeLa
         if not nombre.lower().startswith("licenciatura"):
             continue
         carrera = _carrera(nombre, "", url, None, _duracion_de_la_pagina(traer, url), "Grado")
+        if carrera:
+            carreras.append(carrera)
+    return carreras
+
+
+# --- Universidad ISALUD: its site's own service -----------------------------------------------------------
+# The site is an app that asks its server for a session ticket and then for
+# the pregrado and grado careers (level 5) as JSON: name, duration, the
+# degree. A campus is the name's tail ("LICENCIATURA EN NUTRICIÓN - CABA").
+
+ISALUD = "https://www.isalud.edu.ar/nexus/rest/seguridad/iniciar-aplicacion-web/null"
+_ISALUD_CARRERAS = ("https://www.isalud.edu.ar/nexus/rest/servicio-carrera-de-estudio/particular/"
+                    "listar-publicas/{ticket}/-1/5/false")
+_ISALUD_SEDES = {"CABA": "Ciudad Autónoma de Buenos Aires", "CENTRO UNIVERSITARIO TIGRE": "Tigre",
+                 "RAMOS MEJÍA": "Ramos Mejía"}
+
+
+def listado_isalud(sesion: str) -> str | None:
+    try:
+        ticket = json.loads(sesion or "{}").get("ticketDeAcceso")
+    except ValueError:
+        return None
+    return _ISALUD_CARRERAS.format(ticket=ticket) if ticket else None
+
+
+def leer_isalud(html: str, pagina: str = ISALUD, traer=None) -> list[CarreraDeLaGuia]:
+    listado = listado_isalud(html)
+    try:
+        datos = json.loads(traer(listado)) if listado and traer else []
+    except ValueError:
+        return []
+    carreras = []
+    for dato in datos if isinstance(datos, list) else []:
+        nombre = clean_text(dato.get("nombre") or "")
+        partes = re.match(r"^(.*?)\s+-\s+(.+)$", nombre)
+        sede = None
+        if partes and partes.group(2).upper() in _ISALUD_SEDES:
+            nombre, sede = partes.group(1), _ISALUD_SEDES[partes.group(2).upper()]
+        nombre = con_tildes(nombre).replace("Univeristaria", "Universitaria") if nombre.isupper() else nombre
+        duracion = anios(re.sub(r"(\d)\s*(?:½|1/2)\s*años", r"\1 años y medio", dato.get("duracion") or ""))
+        # "Profesionalización de Auxiliares en Enfermería" gives the three-year
+        # Enfermero Universitario: pregrado, like the tecnicaturas.
+        nivel_dicho = "Pregrado" if duracion and duracion <= 3 and not nombre.lower().startswith("licenciatura") else None
+        carrera = _carrera(nombre, "", f"https://www.isalud.edu.ar/carreras/pregrado-y-grado/{dato.get('codigo')}",
+                           sede, duracion, nivel_dicho)
         if carrera:
             carreras.append(carrera)
     return carreras
