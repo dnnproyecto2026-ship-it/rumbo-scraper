@@ -269,6 +269,10 @@ def _plan_tabla_con_anios(html: str) -> list[tuple[str, int]]:
     for tabla in soup.find_all("table"):
         if tabla.find("table"):
             continue
+        # Or the year is the text just before the table ("PRIMER AÑO", the
+        # UNT's Artes).
+        antes = tabla.find_previous(string=lambda t: t and t.strip())
+        anio = anio_de(antes) if antes and anio_de(antes) else anio
         for fila in tabla.find_all("tr"):
             celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
             llenas = [c for c in celdas if c]
