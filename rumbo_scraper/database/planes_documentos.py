@@ -66,7 +66,9 @@ from rumbo_scraper.spiders.visitante import Visitante
 CACHE = Path("data/planes_documentos")
 HALLADOS = Path("data/planes_documentos.json")
 _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
-                        ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb))
+                        ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
+                        ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
+                        ("fcyt.uader.edu.ar", planes_sitios.plan_fcyt_uader))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -216,6 +218,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                 html_del_plan = visitante.get(nuevo)
                 time.sleep(PAUSA)
                 del_plan = _de_la_pagina_del_plan(html_del_plan)
+                otro_host = urlparse(nuevo).netloc.removeprefix("www.")
+                for dominio, lector in _PLANES_EN_LA_PAGINA:
+                    if not del_plan and otro_host.endswith(dominio):
+                        del_plan = lector(html_del_plan)
                 if del_plan:
                     de_la_pagina[carrera["id"]] = del_plan
                     pagina_del_plan[carrera["id"]] = nuevo

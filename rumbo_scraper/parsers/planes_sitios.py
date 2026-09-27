@@ -55,6 +55,8 @@ def anio_de(texto: str) -> int | None:
 
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    # "Algebra I (anual)", "Rítmica (Cuatr.)": how long it runs, not its name.
+    nombre = re.sub(r"(?i)\s*\((?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*cuatr\.?)\)\s*$", "", nombre)
     if nombre.isupper():
         from rumbo_scraper.parsers.guias_nacionales import con_tildes
 
@@ -202,3 +204,102 @@ def plan_unicen(html: str) -> list[tuple[str, int]]:
 
 def plan_unpsjb(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_unpsjb(html))
+
+
+def _plan_unne(html: str) -> list[tuple[str, int]]:
+    """Each UNNE faculty its own way: Exactas a heading per year
+    (``div.encabezado``) over a table of terms; Económicas a fold per year
+    ("1º AÑO") with the subjects numbered in bold; Medicina a heading per
+    year and each subject's name after the heading "Materia:"."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    encabezados = soup.select("div.encabezado")
+    if encabezados:
+        for encabezado in encabezados:
+            anio = anio_de(_texto(encabezado))
+            tabla = encabezado.find_next("table")
+            for celda in (tabla.find_all("td") if tabla and anio else []):
+                texto = _texto(celda)
+                if celda.find("table") or not texto or re.search(r"(?i)cuatrimestre|anual", texto):
+                    continue
+                _agregar(materias, texto, anio)
+        return materias
+    pliegues = soup.select(".eael-accordion-list")
+    if pliegues:
+        for pliegue in pliegues:
+            anio = anio_de(_texto(pliegue.select_one(".eael-accordion-tab-title")))
+            for negrita in pliegue.select(".eael-accordion-content p strong"):
+                numerada = re.match(r"^\d+\s*\.\s*(.+)$", _texto(negrita))
+                if numerada and anio:
+                    _agregar(materias, numerada.group(1), anio)
+        return materias
+    anio, sigue_materia, dentro = None, False, False
+    for titulo in soup.select(".elementor-heading-title"):
+        texto = _texto(titulo)
+        if re.match(r"(?i)^materias a cursar$", texto):
+            dentro = True
+            continue
+        if not dentro:
+            continue
+        nuevo = anio_de(texto)
+        if nuevo:
+            anio = nuevo
+            continue
+        if re.match(r"(?i)^materia:?$", texto):
+            sigue_materia = True
+            continue
+        if sigue_materia:
+            _agregar(materias, re.sub(r"(?i)\s*\((?:optativa|a partir de[^)]*)\)", "", texto)
+                     if not re.search(r"(?i)\(optativa\)", texto) else "", anio)
+            sigue_materia = False
+    return materias
+
+
+def plan_unne(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unne(html))
+
+
+def _plan_tabla_con_anios(html: str) -> list[tuple[str, int]]:
+    """Tables where a row of one cell says the year ("1° AÑO") and a header
+    row names the column of the subjects ("Asignatura", "Materia"): the
+    UNSE's plans. A yearly subject listed under both terms counts once."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    anio, columna = None, None
+    for tabla in soup.find_all("table"):
+        if tabla.find("table"):
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            llenas = [c for c in celdas if c]
+            if len(llenas) == 1:
+                anio = anio_de(llenas[0]) or anio
+                continue
+            nombres = [c.lower() for c in celdas]
+            titulo = next((i for i, c in enumerate(nombres) if c in ("asignatura", "asignaturas", "materia", "materias")), None)
+            if titulo is not None:
+                columna = titulo
+                continue
+            if anio and columna is not None and len(celdas) > columna and celdas[0]:
+                _agregar(materias, celdas[columna], anio)
+    return materias
+
+
+def plan_tabla_con_anios(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_tabla_con_anios(html))
+
+
+def _plan_fcyt_uader(html: str) -> list[tuple[str, int]]:
+    """UADER's Ciencia y Tecnología: a fold per year, a table of subjects in it."""
+    materias: list[tuple[str, int]] = []
+    for panel in BeautifulSoup(html or "", "html.parser").select("div.vc_tta-panel"):
+        anio = anio_de(_texto(panel.select_one(".vc_tta-title-text")))
+        for fila in panel.select("table tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if anio and celdas and celdas[0].lower() not in ("asignatura", "asignaturas"):
+                _agregar(materias, celdas[0], anio)
+    return materias
+
+
+def plan_fcyt_uader(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_fcyt_uader(html))
