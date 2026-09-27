@@ -78,16 +78,15 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE FORMOSA - UNF",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "caida",
-   "motivo": "El sitio no responde."
+   "en_rumbo": "Universidad Nacional de Formosa",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SAN MARTÍN - UNSAM",
    "tipo": "nacional",
    "en_rumbo": null,
    "estado": "bloqueada",
-   "motivo": "El sitio responde con un desafío anti-bot."
+   "motivo": "El sitio responde con un desafío anti-bot (Cloudflare)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SARMIENTO - UNGS",
@@ -147,8 +146,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA RIOJA - UNLaR",
    "tipo": "nacional",
    "en_rumbo": null,
-   "estado": "caida",
-   "motivo": "El sitio no responde."
+   "estado": "bloqueada",
+   "motivo": "El sitio responde con un desafío anti-bot (Cloudflare)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LANÚS - UNLa",
@@ -255,9 +254,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SAN LUIS",
    "tipo": "nacional",
-   "en_rumbo": null,
-   "estado": "bloqueada",
-   "motivo": "El sitio responde con un desafío anti-bot."
+   "en_rumbo": "Universidad Nacional de San Luis",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE SANTIAGO DEL ESTERO - UNSE",
@@ -396,7 +394,7 @@
    "tipo": "privada",
    "en_rumbo": null,
    "estado": "bloqueada",
-   "motivo": "El sitio responde 403 a nuestro visitante (protección del hosting)."
+   "motivo": "El sitio responde con un desafío anti-bot (Cloudflare)."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO TECNOLÓGICO DE BUENOS AIRES",
@@ -679,9 +677,8 @@
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD ISALUD",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "La página de carreras no trae la lista en el HTML."
+   "en_rumbo": "Universidad ISALUD",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD JUAN AGUSTÍN MAZA",
@@ -700,7 +697,7 @@
    "tipo": "privada",
    "en_rumbo": null,
    "estado": "sin_grado",
-   "motivo": "No dicta carreras de grado ni pregrado."
+   "motivo": "No dicta carreras de grado ni pregrado (solo posgrado)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD SAN PABLO - TUCUMÁN",
@@ -736,9 +733,8 @@
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO ESEADE (entonces INSTITUTO UNIVERSITARIO \"ESCUELA SUPERIOR DE ECONOMÍA Y ADMINISTRACIÓN DE EMPRESAS)",
    "tipo": "privada",
-   "en_rumbo": null,
-   "estado": "pendiente",
-   "motivo": "El menú de carreras no trae enlaces."
+   "en_rumbo": "Instituto Universitario ESEADE",
+   "estado": "cargada"
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO UNIVERSITARIO DE SALUD MENTAL DE LA ASOCIACIÓN PSICOANALÍTICA DE BUENOS AIRES.",
