@@ -20,6 +20,8 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
+from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup
 
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
@@ -127,9 +129,12 @@ def main() -> None:
 
                     materia = re.sub(r"\b(i{1,3}|iv|vi{0,3}|ix|x)\b", lambda m: m.group(1).upper(),
                                      con_tildes(materia), flags=re.I)
-                clave = comparison_key(materia)
+                # A subject of one faculty is not another's of the same name
+                # ("Sistemas de Representación" in Arquitectura and in Civil).
+                fuente = re.sub(r"[^a-z0-9]+", "-", urlparse(pagina).netloc + urlparse(pagina).path).strip("-")[-40:]
+                clave = f"{fuente}:{comparison_key(materia)}"
                 comision = comisiones.setdefault(clave, {
-                    "materia": materia, "codigo": "web-" + clave.replace(" ", "-")[:80],
+                    "materia": materia, "codigo": "web-" + (fuente + "-" + comparison_key(materia).replace(" ", "-"))[:120],
                     "anio": 2026, "seccion": "Cátedra", "fuente_url": pagina, "docentes": []})
                 if all(comparison_key(d["nombre"]) != comparison_key(docente) for d in comision["docentes"]):
                     comision["docentes"].append({"nombre": docente, "rol": rol})

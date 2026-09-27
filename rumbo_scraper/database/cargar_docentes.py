@@ -75,6 +75,25 @@ def main() -> None:
             print("  ", comision["materia"], "·", [nombre_de_persona(d["nombre"]) for d in comision["docentes"]])
         return
 
+    # The file is the whole of what its readers publish: a subject of theirs
+    # that no longer comes (or came under another key) goes, with its chairs.
+    prefijos = tuple({c["codigo"].split("-", 1)[0] + "-" for c in comisiones})
+    nuevas_claves = {c["codigo"] for c in comisiones}
+    sobrantes = [m["id"] for m in select_all(client.table("materias_catalogo").select("id,codigo").eq(
+        "universidad_id", universidad)) if m["codigo"].startswith(prefijos) and m["codigo"] not in nuevas_claves]
+    for inicio in range(0, len(sobrantes), 100):
+        tanda = sobrantes[inicio:inicio + 100]
+        viejas = [c["id"] for c in client.table("comisiones_materia").select("id").in_(
+            "materia_catalogo_id", tanda).execute().data]
+        for sub in range(0, len(viejas), 100):
+            client.table("docentes_comision").delete().in_("comision_id", viejas[sub:sub + 100]).execute()
+            client.table("horarios_comision").delete().in_("comision_id", viejas[sub:sub + 100]).execute()
+            client.table("comisiones_materia").delete().in_("id", viejas[sub:sub + 100]).execute()
+        client.table("materias_catalogo_vinculos").delete().in_("materia_catalogo_id", tanda).execute()
+        client.table("materias_catalogo").delete().in_("id", tanda).execute()
+    if sobrantes:
+        print(f"  materias que ya no vienen: {len(sobrantes)}")
+
     materias = _upsert_chunks(client, "materias_catalogo", [
         {"universidad_id": universidad, "codigo": c["codigo"], "nombre": c["materia"],
          "fuente_url": c["fuente_url"], "activa": True} for c in {c["codigo"]: c for c in comisiones}.values()
