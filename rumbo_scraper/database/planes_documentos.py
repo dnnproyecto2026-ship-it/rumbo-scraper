@@ -89,6 +89,26 @@ _PALABRA_PARTIDA = re.compile(r"(\w)- (?=[a-záéíóúñ])")
 _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|por|a|al)$")
 
 
+# Universities whose plan documents are laid out their own way, read from
+# the text as ``pdftotext -layout`` gives it.
+_DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse),)
+
+
+def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None]]:
+    host = urlparse(documento).netloc.removeprefix("www.")
+    for dominio, lector in _DOCUMENTOS_PROPIOS:
+        if host.endswith(dominio):
+            import subprocess
+
+            try:
+                texto = subprocess.run(["pdftotext", "-layout", str(archivo), "-"], capture_output=True,
+                                       text=True, timeout=60).stdout
+            except Exception:
+                return []
+            return lector(texto)
+    return _leer(archivo)
+
+
 def _leer(archivo: Path) -> list[tuple[str, int | None]]:
     try:
         materias = plan_por_columnas.leer_pdf(str(archivo))
@@ -268,7 +288,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         archivo = CACHE / (hashlib.md5(documento.encode()).hexdigest() + ".pdf")
         if archivo.stat().st_size < 1000 or not _nombra(_texto(archivo), carrera["nombre_carrera"]):
             continue
-        materias = _leer(archivo)
+        materias = _leer_documento(archivo, documento)
         if _parece_el_plan_entero(carrera["nombre_carrera"], materias,
                                   carrera.get("duracion_anios")):
             planes[carrera["id"]] = {

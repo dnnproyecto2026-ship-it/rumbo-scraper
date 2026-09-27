@@ -339,3 +339,42 @@ def plan_uncoma(html: str) -> list[tuple[str, int | None]]:
     if any(a for _, a in renglones):
         return renglones if all(renglones) and {a for _, a in renglones} == set(range(1, max(a for _, a in renglones) + 1)) else []
     return renglones
+
+
+_COLUMNA_UCSE = 50
+
+
+def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The UCSE's brochure, as ``pdftotext -layout`` lays it out: the plan
+    in the left column after "PLAN DE ESTUDIOS", a year per heading
+    ("Primer año") and a subject per bullet ("£ Derecho Romano"); a name
+    that wraps goes on indented; the electives are in the right column."""
+    materias: list[tuple[str, int]] = []
+    renglones: list[list] = []
+    anio, dentro = None, False
+    for linea in (texto_con_columnas or "").splitlines():
+        if "PLAN DE ESTUDIOS" in linea:
+            dentro = True
+            continue
+        if not dentro:
+            continue
+        izquierda = linea[:_COLUMNA_UCSE].rstrip()
+        texto = clean_text(izquierda)
+        if not texto:
+            continue
+        if re.match(r"(?i)^(alcances|optativa|perfil|t[íi]tulo|duraci[óo]n)", texto):
+            if anio:
+                break
+            continue
+        nuevo = anio_de(texto)
+        if nuevo:
+            anio = nuevo
+            continue
+        if texto.startswith("£") and anio:
+            renglones.append([texto.lstrip("£ ").strip(), anio])
+        elif izquierda.startswith("  ") and renglones and renglones[-1][1] == anio:
+            renglones[-1][0] += " " + texto
+    for nombre, anio_ in renglones:
+        # The brochure's "fi" ligature comes out split: "Áf rica", "suf iciente".
+        _agregar(materias, re.sub(r"(?<=\w)f (?=[a-záéíóúñ]{2,})", "f", nombre), anio_)
+    return desde_el_primero(materias)
