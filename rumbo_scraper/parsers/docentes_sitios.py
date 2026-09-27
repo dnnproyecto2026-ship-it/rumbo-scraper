@@ -319,6 +319,40 @@ def materias_dc_uba(html: str) -> list[tuple[str, str, str]]:
     return filas
 
 
+def horarios_eco_mdp(html: str) -> list[tuple[str, str, str]]:
+    """UNMdP, Económicas: a term's schedule, Cód | Asignatura | Com | Docente |
+    Días y Horarios, a subject's further teachers on shorter rows (a
+    commission and its teacher, or the teacher alone). The careers after the
+    name ("(carreras: CP, LA)") are not the name; the page says the term."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulo = _texto(soup.find("title")) + " " + _texto(soup.find("h1")) + " " + _texto(soup.find("h2"))
+    termino = re.search(r"(?i)([12])\s*[º°o]?\s*(?:do|er|ro)?\s*cuatrimestre", titulo)
+    rol = f"{termino.group(1)}° cuatrimestre" if termino else ""
+    filas, materia = [], None
+    for fila in soup.select("table tr"):
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        if len(celdas) >= 5 and re.match(r"^\d+$", celdas[0]):
+            materia, docente = re.sub(r"\s*\(carreras?:[^)]*\)\s*$", "", celdas[1]), celdas[3]
+        elif len(celdas) == 4 and re.match(r"^\d+$", celdas[0]):
+            docente = celdas[1]
+        elif len(celdas) == 3:
+            docente = celdas[0]
+        else:
+            continue
+        if materia and docente and len(docente.split()) >= 2 and not re.search(r"\d", docente) \
+                and not re.match(r"(?i)^(a designar|a confirmar|vacante|sin docente)", docente):
+            filas.append((materia, docente, rol))
+    return filas
+
+
+def paginas_eco_mdp(visitante) -> list[tuple[str, object]]:
+    indice = visitante.get("https://eco.mdp.edu.ar/horarios-de-cursada")
+    enlaces = sorted({a["href"] for a in BeautifulSoup(indice or "", "html.parser").find_all("a", href=True)
+                      if "view=article" in a["href"] and "2026" in a["href"]
+                      and re.search(r"horarios-\d-ano|optativas|electivas", a["href"])})
+    return [("https://eco.mdp.edu.ar" + e if e.startswith("/") else e, horarios_eco_mdp) for e in enlaces]
+
+
 # Sigla -> [(page, reader)], or a function that lists them from an index.
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
@@ -330,7 +364,8 @@ FUENTES = {
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UNGS": [("https://www.ungs.edu.ar/wp-content/uploads/2018/07/COMISIONES-DE-UN-PERIODO-2_2026-ANUAL_2026-v17-CON-AULAS-22026-ANUAL2026.pdf", comisiones_ungs)],
-    "UNMdP": [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)],
+    "UNMdP": lambda visitante: [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)]
+                               + paginas_eco_mdp(visitante),
     "UNLP": paginas_fcnym,
     "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc),
             ("https://www.frba.utn.edu.ar/mecanica/cuerpo-docente/", cuerpo_docente_frba)],
