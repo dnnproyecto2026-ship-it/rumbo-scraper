@@ -128,12 +128,38 @@ def _lugares(html: str) -> tuple[list[str], list[str], str]:
     return propios, titulos, cuerpo.get_text("\n") if cuerpo else ""
 
 
+_ETIQUETA = re.compile(r"(?i)^(?:facultad|unidad acad[ée]mica|dependencia)\s*:$")
+
+
+def _etiquetada(html: str, conocidas: list[str]) -> Unidad | None:
+    """The unit a page gives as a field ("Facultad:" and, next, "Facultad de
+    Ciencias Sociales"): the career's record, not prose that may name
+    another unit in passing."""
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, "html.parser")
+    for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):
+        parte.decompose()
+    lineas = [clean_text(l) for l in soup.get_text("\n").split("\n") if clean_text(l)]
+    halladas = []
+    for etiqueta, valor in zip(lineas, lineas[1:]):
+        if _ETIQUETA.match(etiqueta):
+            unidades = _unidades_en(valor)
+            if len(unidades) == 1:
+                publicada = conocida(unidades[0], conocidas)
+                halladas.append(Unidad(publicada or unidades[0].nombre, unidades[0].tipo))
+    return halladas[0] if len({comparison_key(u.nombre) for u in halladas}) == 1 else None
+
+
 def unidad_de_la_pagina(html: str, conocidas: list[str],
                         universidad: tuple[str, ...] = ()) -> Unidad | None:
     """The unit a career page places the career in, or None when it does not
     say, or says two. `universidad` are the names the university signs with."""
     if not html:
         return None
+    etiquetada = _etiquetada(html, conocidas)
+    if etiquetada:
+        return etiquetada
     propios, titulos, cuerpo = _lugares(html)
     candidatas = [u for texto in propios for u in _unidades_en(texto)]
     candidatas += [u for texto in titulos for u in _unidades_en(texto)
