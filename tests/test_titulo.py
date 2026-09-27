@@ -12,6 +12,9 @@ class Titulo(unittest.TestCase):
     def test_lo_que_no_es_un_titulo_no_cuenta(self):
         self.assertEqual(titulos_en("Título: 2 años de cursada"), [])
 
+    def test_solo_la_clase_de_titulo_no_es_un_titulo(self):
+        self.assertEqual(titulos_en("Título: Licenciado"), [])
+
     def test_la_abreviatura_no_corta_el_titulo(self):
         self.assertEqual(titulos_en("Título: Profesor/a en Cs. Biológicas"), ["Profesor/a en Ciencias Biológicas"])
 

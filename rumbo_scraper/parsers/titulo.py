@@ -46,6 +46,10 @@ def _limpio(texto: str) -> str | None:
     texto = _CORTE.split(texto, maxsplit=1)[0].strip(" .:;,-–\"'“”")
     if not _ES_UN_GRADO.match(texto) or len(texto) > 90 or len(texto.split()) > 12:
         return None
+    # "Licenciado", "Profesor/a", "Técnico" alone say the kind of degree, not
+    # which: cut short.
+    if re.fullmatch(r"(?i)(licenciad|profesor|ingenier|t[ée]cnic|traductor|analista|bachiller)\S*", texto):
+        return None
     if texto.isupper():
         from rumbo_scraper.parsers.guias_nacionales import con_tildes
 
