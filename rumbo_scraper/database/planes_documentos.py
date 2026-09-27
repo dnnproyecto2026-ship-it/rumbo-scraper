@@ -151,6 +151,10 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
         return False
     if duracion and max(anios) < math.ceil(duracion) - 1:
         return False
+    # A short career has no final year of thesis alone: a two-year
+    # tecnicatura whose plan stops in the first is half of it.
+    if duracion and duracion <= 3 and max(anios) < math.ceil(duracion):
+        return False
     # Without a duration, a degree (not a cycle, not a tecnicatura) runs at
     # least four years: UNQ's Informática page lists the first three alone.
     clave = comparison_key(carrera)
