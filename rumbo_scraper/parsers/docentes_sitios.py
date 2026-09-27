@@ -289,19 +289,51 @@ def paginas_fcnym(visitante) -> list[tuple[str, object]]:
             for e in enlaces]
 
 
+def cuerpo_docente_frba(html: str) -> list[tuple[str, str, str]]:
+    """UTN, Buenos Aires: ASIGNATURA | CURSO | DOCENTE, a subject's further
+    courses on rows of two cells. The plan ("(P23)") is not the name."""
+    filas, materia = [], None
+    for fila in BeautifulSoup(html or "", "html.parser").select("table tr"):
+        celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+        if len(celdas) >= 3 and celdas[0].upper() != "ASIGNATURA":
+            materia, docente = re.sub(r"\s*\(P\d+[A-Z]?\)\s*$", "", celdas[0]), celdas[2]
+        elif len(celdas) == 2 and materia:
+            docente = celdas[1]
+        else:
+            continue
+        if docente and "," in docente:
+            filas.append((materia, docente, ""))
+    return filas
+
+
+def materias_dc_uba(html: str) -> list[tuple[str, str, str]]:
+    """UBA, Computación: a term's subjects, each named as every plan calls it
+    ("Introducción a la Programación / Algoritmos y Estructuras de Datos I –
+    Mañana"): the first is the plan in force; the shift is not the name."""
+    filas = []
+    for fila in BeautifulSoup(html or "", "html.parser").select("table tr"):
+        celdas = [_texto(c) for c in fila.find_all("td")]
+        if len(celdas) >= 4 and celdas[3]:
+            materia = re.split(r"\s+/\s+", re.sub(r"\s+[–-]\s+(Mañana|Tarde|Noche|Vespertino)$", "", celdas[0]))[0]
+            filas += [(materia, docente.strip(), "") for docente in celdas[3].split(";") if "," in docente]
+    return filas
+
+
 # Sigla -> [(page, reader)], or a function that lists them from an index.
 FUENTES = {
     "UP": [(f"https://www.palermo.edu/cienciassociales/profesores/{pagina}.html", profesores_palermo)
            for pagina in ("psicologia", "periodismo", "relaciones_internacionales", "arte",
                           "humanidades-ciencias-sociales", "educacion_superior")],
-    "UBA": [("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba),
+    "UBA": [("https://www.dc.uba.ar/ya-se-encuentran-publicadas-las-materias-del-segundo-cuatrimestre-de-2026/", materias_dc_uba),
+            ("https://www.psi.uba.ar/profesores.php?var=profesores/profesores_regulares.php", psicologia_uba),
             ("https://www.derecho.uba.ar/academica/profesores/Profesores-Regulares-ABRIL-2026.pdf", derecho_uba)],
     "UNT": [("https://www.fau.unt.edu.ar/fau/personal-docente/", fau_unt),
             ("https://www.facet.unt.edu.ar/cic/asignaturas/", asignaturas_facet)],
     "UNGS": [("https://www.ungs.edu.ar/wp-content/uploads/2018/07/COMISIONES-DE-UN-PERIODO-2_2026-ANUAL_2026-v17-CON-AULAS-22026-ANUAL2026.pdf", comisiones_ungs)],
     "UNMdP": [("https://owncloud.fi.mdp.edu.ar/index.php/s/2h92ttZzcbjFe5e/download", ingenieria_mdp)],
     "UNLP": paginas_fcnym,
-    "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc)],
+    "UTN": [("https://www.institucional.frc.utn.edu.ar/sistemas/Areas/Academica/Docentes.asp", sistemas_frc),
+            ("https://www.frba.utn.edu.ar/mecanica/cuerpo-docente/", cuerpo_docente_frba)],
 }
 
 
