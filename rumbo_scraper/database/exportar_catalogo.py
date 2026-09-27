@@ -283,14 +283,16 @@ def sin_planes_salteados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]
 
 def tipo_de_institucion(nombre_oficial: str) -> str:
     """"instituto_terciario" as the guide that read it says (a police cadet
-    school); otherwise "instituto_universitario" by its name, or "universidad"."""
+    school); otherwise "instituto_universitario" for an "Instituto", or "universidad"."""
     from rumbo_scraper.database.carreras_de_guias import GUIAS
 
     dicho = next((g.tipo_institucion for g in GUIAS.values() if g.nombre_oficial == nombre_oficial), None)
     if dicho:
         return dicho
-    return "instituto_universitario" if comparison_key(nombre_oficial).startswith("instituto universitario") \
-        else "universidad"
+    # An "Instituto" of the university system is an instituto universitario
+    # even when its name does not say so (the Instituto Tecnológico de Buenos
+    # Aires); the tertiary ones are marked by their guide.
+    return "instituto_universitario" if comparison_key(nombre_oficial).startswith("instituto") else "universidad"
 
 
 def exportar(client: Any) -> dict[str, Any]:
