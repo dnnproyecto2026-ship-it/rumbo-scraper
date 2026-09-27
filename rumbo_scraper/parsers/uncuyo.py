@@ -64,10 +64,13 @@ def leer_catalogo(html: str, pagina: str = CATALOGO) -> list[CarreraDeLaGuia]:
 # subjects one per line, until the degree it awards ("Al finalizar la carrera
 # obtendrás el título de:").
 _INICIO_DEL_PLAN = re.compile(r"(?i)^plan de estudios:?$")
-_ANIO = re.compile(r"(?i)^(primer|segund|tercer|cuart|quint|sext)[oa]?\s+a[ñn]o$")
-_ANIOS = {"primer": 1, "segund": 2, "tercer": 3, "cuart": 4, "quint": 5, "sext": 6}
+# "Primer Año", "Quinta año", "Primer Año:", "1er Año", "2do Año".
+_ANIO = re.compile(r"(?i)^(primer|segund|tercer|cuart|quint|sext|1er|2do|3er|4to|5to|6to|\d)[oa]?\s*[°º]?\s+a[ñn]o\s*:?$")
+_ANIOS = {"primer": 1, "segund": 2, "tercer": 3, "cuart": 4, "quint": 5, "sext": 6,
+          "1er": 1, "2do": 2, "3er": 3, "4to": 4, "5to": 5, "6to": 6}
 _PERIODO = re.compile(r"(?i)^(?:primer|segundo)\s+(?:semestre|cuatrimestre)$|^anual(?:es)?$")
-_FIN_DEL_PLAN = re.compile(r"(?i)^(?:al finalizar|normativa|unidad acad[ée]mica|otras carreras|inscripciones)")
+_FIN_DEL_PLAN = re.compile(r"(?i)^(?:al finalizar|normativa|unidad acad[ée]mica|otras carreras|inscripciones"
+                           r"|\*|(?:materias|espacios curriculares|cursos|asignaturas)\s+optativ|optativas?\b)")
 
 
 def leer_plan(html: str) -> list[tuple[str, int]]:
@@ -89,7 +92,8 @@ def leer_plan(html: str) -> list[tuple[str, int]]:
             break
         encabezado = _ANIO.match(linea)
         if encabezado:
-            anio = _ANIOS[encabezado.group(1).lower()]
+            clave = encabezado.group(1).lower()
+            anio = _ANIOS.get(clave) or int(clave)
             continue
         if _PERIODO.match(linea) or not anio or linea.endswith(":") or len(linea) > 120:
             continue
