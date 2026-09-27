@@ -614,3 +614,20 @@ def _plan_unlpam(html: str) -> list[tuple[str, int]]:
 
 def plan_unlpam(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_unlpam(html))
+
+
+def _plan_list_group(html: str) -> list[tuple[str, int]]:
+    """UNJu, Humanidades: a list per year, its first item the year ("Primer
+    Año") and the subjects after it; the lists of electives or languages
+    are not years."""
+    materias: list[tuple[str, int]] = []
+    for grupo in BeautifulSoup(html or "", "html.parser").select("div.list-group, ul.list-group"):
+        items = grupo.select(".list-group-item")
+        anio = anio_de(_texto(items[0])) if items else None
+        for item in items[1:] if anio else []:
+            _agregar(materias, _texto(item), anio)
+    return materias
+
+
+def plan_list_group(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_list_group(html))

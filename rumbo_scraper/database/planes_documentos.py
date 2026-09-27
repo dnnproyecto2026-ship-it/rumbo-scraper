@@ -95,6 +95,7 @@ _PALABRA_PARTIDA = re.compile(r"(\w)- (?=[a-záéíóúñ])")
 _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|por|a|al)$")
 
 
+_PLAN_EN_UN_MARCO = (("fhycs.unju.edu.ar", planes_sitios.plan_list_group),)
 _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),
                         ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp))
 
@@ -257,6 +258,17 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             dominios = (host, host.split(".", 1)[-1]) if host.count(".") > 2 else (host,)
             html = visitante.get(url)
             time.sleep(PAUSA)
+            # A page that shows the plan in a frame of another page (UNJu's
+            # Humanidades: <iframe src="carreras/LicLetras.html">).
+            marco = next((lector for dominio, lector in _PLAN_EN_UN_MARCO if host.endswith(dominio)), None)
+            iframe = BeautifulSoup(html or "", "html.parser").find("iframe", src=True) if marco else None
+            if iframe:
+                pagina = urljoin(url, iframe["src"])
+                del_marco = marco(visitante.get(pagina))
+                time.sleep(PAUSA)
+                if del_marco:
+                    de_la_pagina[carrera["id"]], pagina_del_plan[carrera["id"]] = del_marco, pagina
+                    continue
             # A site that lists the plan on a page of its own menu (the
             # FACET's "Programas"), maybe from the career's own site.
             del_menu = _plan_del_menu(visitante, html, url, host)

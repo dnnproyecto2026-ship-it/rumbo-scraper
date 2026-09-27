@@ -1274,7 +1274,9 @@ def leer_unju(html: str, pagina: str) -> list[CarreraDeLaGuia]:
                         continue
                     vistas.add(clave)
                     carrera = _carrera(item.get("nombre") or "", clean_text(unidad.get("nombre") or ""),
-                                       item.get("link") or pagina, clean_text(sede.get("nombre") or "") or None,
+                                       # (Humanidades answers only over https.)
+                                       re.sub(r"^http://(www\.fhycs\.unju\.edu\.ar)", r"https://\1", item.get("link") or pagina),
+                                       clean_text(sede.get("nombre") or "") or None,
                                        anios((item.get("duracion") or "").replace("1/2", "y medio").replace(" y medio años", " años y medio")))
                     if carrera:
                         carreras.append(carrera)
