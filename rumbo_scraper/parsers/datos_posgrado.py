@@ -290,7 +290,9 @@ _NO_ES_UN_PLAN = re.compile(
     r"(?i)^(?:nombre|apellido|tel[ée]fono|e-?mail|correo|mensaje|enviar|provincia|pa[íi]s|"
     r"contraste|texto|enlaces|equipo|cursor|tama[ñn]o)\b|solicit|quiero\s+recibir|please|field|"
     r"preinscripci|l[íi]neas\s+de\s+investigaci|[áa]reas\s+estrat[ée]gicas|[áa]reas\s+tem[áa]ticas|"
-    r"^\+\s*info|carta\s+del?|intercambio\s+con|^(?:doctorado|maestr[íi]a|especializaci[óo]n)\s+en\b")
+    r"^\+\s*info|carta\s+del?|intercambio\s+con|^(?:doctorado|maestr[íi]a|especializaci[óo]n)\s+en\b|"
+    # The campuses and their addresses: "Av. Alicia Moreau de Justo 1300".
+    r"^av(?:enida|\.)\s|\(\s*[a-z]?\d{4}[a-z]*\s*\)|\b\d{3,5}\s*,\s*\(")
 
 
 def plan_de_posgrado(html: str) -> list[str]:
