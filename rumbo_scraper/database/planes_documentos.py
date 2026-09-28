@@ -150,7 +150,9 @@ _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tec
                     "universitaria carrera profesorado ingenieria ciclo".split())
 # "Mat. Biológicas": an area heading over a plan's last year (UNT's
 # Enfermería), not a subject.
-_FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s")
+# "(*) Régimen promocional: 9 espacios curriculares", "Anuales", "Acreditación
+# de Inglés" (UDA, UNSL): a note, a heading, a requirement.
+_FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s|^\(\*\)|^anuales$|^acreditaci[óo]n\b")
 
 
 def _nombra(texto: str, carrera: str) -> bool:
