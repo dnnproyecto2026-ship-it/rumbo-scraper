@@ -52,7 +52,8 @@ def _valor(numero: str, medio: str, unidad: str, medio_despues: str | None) -> f
 
 
 def duraciones_en(texto: str) -> set[float]:
-    plano = comparison_key(clean_text(texto))
+    # "3 (tres) años", "5 (CINCO) años": the brackets repeat the figure.
+    plano = comparison_key(clean_text(re.sub(r"(\d)\s*\([^)\d]{2,20}\)", r"\1", texto or "")))
     halladas = set()
     for patron in (_DURACION_ES, _ANIOS_DE_DURACION):
         for match in patron.finditer(plano):
@@ -71,4 +72,12 @@ def duracion_de_la_pagina(html: str) -> float | None:
     if cuerpo is None:
         return None
     halladas = duraciones_en(cuerpo.get_text(" "))
+    # A card's figure in an element of its own over the label "Años"
+    # (UCASAL: "<div> 5</div><h5>Años</h5>").
+    for rotulo in cuerpo.find_all(string=re.compile(r"^\s*A[ñn]os\s*$")):
+        cifra = rotulo.find_previous(string=lambda texto: bool(texto.strip()))
+        if cifra and re.fullmatch(r"\s*\d(?:[.,]5)?\s*", cifra):
+            valor = float(cifra.strip().replace(",", "."))
+            if 1.5 <= valor <= 7:
+                halladas.add(valor)
     return halladas.pop() if len(halladas) == 1 else None

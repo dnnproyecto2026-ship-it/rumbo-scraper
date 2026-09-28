@@ -41,6 +41,13 @@ class Duracion(unittest.TestCase):
         self.assertEqual(duraciones_en("Grado Abogacía 6 años Duración 42 Materias"), {6})
         self.assertEqual(duraciones_en("Despachante de Aduana 5 cuatrim. Duración 20 Materias"), {2.5})
 
+    def test_la_cifra_entre_parentesis_repite_la_palabra(self):
+        self.assertEqual(duraciones_en("Duración estimada\n3 (tres) años"), {3})
+
+    def test_la_cifra_de_una_ficha_sobre_el_rotulo_anios(self):
+        html = "<main><div><div> 5</div><h5>Años</h5></div><div><div> 4400</div><h5>Hs</h5></div></main>"
+        self.assertEqual(duracion_de_la_pagina(html), 5)
+
 
 if __name__ == "__main__":
     unittest.main()
