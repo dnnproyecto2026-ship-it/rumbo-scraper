@@ -239,8 +239,7 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("ude.edu.ar", planes_sitios.plan_ude),
                        # UNLP Ingeniería: the plan its system prints (plan.php?carrera=...).
                        ("ing.unlp.edu.ar", planes_sitios.plan_ing_unlp),
-                       ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
-                       ("exactas.unlp.edu.ar", planes_sitios.plan_exactas_unlp))
+                       ("filo.unt.edu.ar", planes_sitios.plan_filo_unt))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
