@@ -38,6 +38,9 @@ def asignables(client: Any) -> list[tuple[str, str, str, str]]:
     artefactos = _urls_de_los_artefactos()
     facultades_del_sitio: dict[tuple[str, str], Counter] = defaultdict(Counter)
     for carrera in carreras:
+        # An institution loaded while this reads is not in the first query.
+        if carrera["universidad_id"] not in universidades:
+            continue
         url = url_de.get(carrera["id"]) or artefactos.get(
             (universidades[carrera["universidad_id"]]["nombre_oficial"], carrera["nombre_carrera"]))
         if url:
@@ -45,7 +48,7 @@ def asignables(client: Any) -> list[tuple[str, str, str, str]]:
 
     hallados = []
     for posgrado in select_all(client.table("posgrados").select("id,universidad_id,facultad_id,url_oficial")):
-        if posgrado["facultad_id"]:
+        if posgrado["facultad_id"] or posgrado["universidad_id"] not in universidades:
             continue
         universidad = universidades[posgrado["universidad_id"]]
         sitio = _sitio(posgrado["url_oficial"])
