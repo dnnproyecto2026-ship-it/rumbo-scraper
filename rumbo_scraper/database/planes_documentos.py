@@ -180,6 +180,8 @@ _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_
                         ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp),
                         # UNSa's Económicas: the career's first plan listed, its newest.
                         ("economicas.unsa.edu.ar", re.compile(r"/carreras/[^/]+/item/\d+$"), planes_sitios.plan_eco_unsa),
+                        # ISALUD: the career's plan on a page of its own.
+                        ("isalud.edu.ar", "plan de estudios", planes_sitios.plan_isalud),
                         # UNNOBA: its plans system, the Junín campus' whole plan.
                         ("elegi.unnoba.edu.ar", re.compile(r"planesdeestudio\.unnoba\.edu\.ar/\?planversion="),
                          planes_sitios.plan_unnoba))

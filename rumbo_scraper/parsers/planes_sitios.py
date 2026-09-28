@@ -816,6 +816,36 @@ def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
 
 
+def plan_isalud(html: str) -> list[tuple[str, int]]:
+    """ISALUD's plan pages (/pregrado-y-grado/plan-de-estudios/<career>):
+    under "PLAN DE ESTUDIOS", a heading per year ("Primer año") and a
+    paragraph per subject. A year split into options ("OPCIÓN A: ÁREA DE
+    NUTRICIÓN CLÍNICA") is a choice, and a plan without it would read one
+    year short: none. The complementary subjects, of no year, end it."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulo = soup.find(lambda e: e.name in ("h2", "h3") and re.match(r"(?i)plan de estudios", _texto(e)))
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for elemento in titulo.find_all_next(["h2", "h3", "h4", "p"]) if titulo else []:
+        texto = _texto(elemento)
+        if not texto:
+            continue
+        if re.match(r"(?i)opci[óo]n\b", texto):
+            return []
+        # The next heading (the degree, "Título: ...") or the page's form end it.
+        if (elemento.name in ("h2", "h3") and materias) or re.match(
+                r"(?i)asignaturas complementarias|dejanos tu consulta|los alumnos que", texto):
+            break
+        # A year: a heading ("Primer año") or a paragraph of it in bold.
+        negrita = elemento.find(["strong", "b"])
+        if elemento.name == "h4" or (negrita and _texto(negrita) == texto):
+            anio = anio_de(texto) or (anio if elemento.name != "h4" else None)
+            continue
+        if anio:
+            _agregar(materias, texto, anio)
+    return desde_el_primero(materias)
+
+
 _ANIO_IUCBC = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*$")
 _MATERIA_IUCBC = re.compile(r"^(\S.*?)\s{2,}[A-Z/]{2,8}\s+\d+\s*hs\b")
 # Enfermería's: area, number, name ("AP   1   Enfermería Comunitaria I").

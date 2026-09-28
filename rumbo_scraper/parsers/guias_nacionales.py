@@ -2498,7 +2498,7 @@ def leer_isalud(html: str, pagina: str = ISALUD, traer=None) -> list[CarreraDeLa
         # "Profesionalización de Auxiliares en Enfermería" gives the three-year
         # Enfermero Universitario: pregrado, like the tecnicaturas.
         nivel_dicho = "Pregrado" if duracion and duracion <= 3 and not nombre.lower().startswith("licenciatura") else None
-        carrera = _carrera(nombre, "", f"https://www.isalud.edu.ar/carreras/pregrado-y-grado/{dato.get('codigo')}",
+        carrera = _carrera(nombre, "", f"https://www.isalud.edu.ar/pregrado-y-grado/{dato.get('codigo')}",
                            sede, duracion, nivel_dicho)
         if carrera:
             carreras.append(carrera)
