@@ -195,9 +195,84 @@ def institutos_salta(localidades: set[str] | None = None) -> list[dict[str, Any]
     return institutos
 
 
+INFD = "https://mapa.infd.edu.ar/"
+_PROVINCIAS_INFD = {"caba": ("02", "Ciudad Autónoma de Buenos Aires"), "santafe": ("82", "Santa Fe")}
+
+
+def instituto_infd(respuesta: str, url: str) -> dict[str, Any] | None:
+    """An institute's record on INFoD's map (JSON with its panel as HTML):
+    its name, address, town, sector, own site and careers ("Oferta
+    académica → Carreras")."""
+    from bs4 import BeautifulSoup
+
+    try:
+        html = json.loads(respuesta or "{}").get("html") or ""
+    except ValueError:
+        return None
+    soup = BeautifulSoup(html, "html.parser")
+    titulo = soup.select_one("#nombreCentro div")
+    if not titulo:
+        return None
+    datos = {clean_text(p.find("b").get_text()).rstrip(":"): clean_text(p.get_text(" ").split(":", 1)[-1])
+             for p in soup.select("div.info p") if p.find("b")}
+    listas = {clean_text(li.select_one("span.nombre").get_text()): [clean_text(o.get_text()) for o in li.select("span.nombreOpcion")]
+              for li in soup.select("#campos_adicionales li") if li.select_one("span.nombre")}
+    sitio = re.search(r"window\.open\('([^']+)'", html)
+    carreras: list[CarreraDeLaGuia] = []
+    for dada in listas.get("Carreras", []):
+        # INFoD's catalogue labels ("Profesorado de Educación Primaria / Egb").
+        propio = nombre_de_la_carrera(re.sub(r"(?i)\s*/\s*(egb|polimodal|nivel medio)\b.*$", "", dada))
+        # A course for graduates ("con título de base") completes a degree.
+        if propio and re.search(r"(?i)t[íi]tulo de base", propio):
+            continue
+        propio = propio.replace("ConTrabajo", "Contrabajo") if propio else propio
+        carrera = _carrera(propio, "", url) if propio else None
+        if carrera and carrera.nombre not in {c.nombre for c in carreras}:
+            carreras.append(carrera)
+    nombre = clean_text(titulo.get_text(" ")).replace('"', "")
+    gestion = (listas.get("Tipo de gestión") or ["Estatal"])[0]
+    return {"nombre_oficial": nombre, "nombre_corto": siglas(nombre), "gestion": "Privada" if "rivad" in gestion else "Estatal",
+            "localidad": datos.get("Localidad", ""), "distrito": datos.get("Localidad", ""),
+            "calle": datos.get("Dirección", ""), "cue": None, "url": url,
+            "sitio": sitio.group(1) if sitio else None, "titulos": {}, "carreras": carreras}
+
+
+def institutos_infd(jurisdiccion: str, localidades: set[str] | None = None) -> list[dict[str, Any]]:
+    import time
+
+    from bs4 import BeautifulSoup
+    from rumbo_scraper.spiders.visitante import Visitante
+
+    prefijo = _PROVINCIAS_INFD[jurisdiccion][0]
+    institutos = []
+    with Visitante(timeout=30) as visitante:
+        indice = BeautifulSoup(visitante.get(INFD) or "", "html.parser")
+        ids = sorted({a["id"] for a in indice.select("a.link-centro[id]") if a["id"].startswith(prefijo)})
+        for centro in ids:
+            url = f"{INFD}?wAccion=vercentro&idCentro={centro}&wPartial=1"
+            try:
+                respuesta = visitante.client.get(url).text
+            except Exception:
+                continue
+            time.sleep(1)
+            instituto = instituto_infd(respuesta, url)
+            if instituto and instituto["carreras"] and (not localidades or instituto["localidad"] in localidades):
+                instituto["cue"] = centro
+                institutos.append(instituto)
+    # An institute renamed ("Instituto Superior de Formación Artística Jorge
+    # Donn", now "Escuela Superior de Educación Artística Jorge Donn") is
+    # listed under both names with the same careers: once, by its newest id.
+    vistos: dict[tuple[str, frozenset[str]], dict[str, Any]] = {}
+    for instituto in sorted(institutos, key=lambda i: i["cue"], reverse=True):
+        clave = (" ".join(clean_text(instituto["nombre_oficial"]).lower().split()[-2:]),
+                 frozenset(c.nombre for c in instituto["carreras"]))
+        vistos.setdefault(clave, instituto)
+    return list(vistos.values())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta"])
+    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba", "santafe"])
     parser.add_argument("--distritos", default="",
                         help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
@@ -210,6 +285,9 @@ def main() -> None:
     if args.jurisdiccion == "pba":
         institutos, sitio, provincia = institutos_pba(json.loads(SALIDA.read_text()), distritos), \
             "https://mapaescolar.abc.gob.ar", "Buenos Aires"
+    elif args.jurisdiccion in _PROVINCIAS_INFD:
+        institutos, sitio = institutos_infd(args.jurisdiccion, distritos), "https://mapa.infd.edu.ar"
+        provincia = _PROVINCIAS_INFD[args.jurisdiccion][1]
     elif args.jurisdiccion == "salta":
         institutos, sitio, provincia = institutos_salta(distritos), "https://dges-sal.infd.edu.ar", "Salta"
     else:
