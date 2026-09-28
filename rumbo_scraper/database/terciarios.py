@@ -211,7 +211,15 @@ def institutos_salta(localidades: set[str] | None = None) -> list[dict[str, Any]
 
 
 INFD = "https://mapa.infd.edu.ar/"
-_PROVINCIAS_INFD = {"caba": ("02", "Ciudad Autónoma de Buenos Aires"), "santafe": ("82", "Santa Fe")}
+_PROVINCIAS_INFD = {"caba": ("02", "Ciudad Autónoma de Buenos Aires"), "santafe": ("82", "Santa Fe"),
+                    "catamarca": ("10", "Catamarca"), "corrientes": ("18", "Corrientes"), "chaco": ("22", "Chaco"),
+                    "chubut": ("26", "Chubut"), "entrerios": ("30", "Entre Ríos"), "formosa": ("34", "Formosa"),
+                    "jujuy": ("38", "Jujuy"), "lapampa": ("42", "La Pampa"), "larioja": ("46", "La Rioja"),
+                    "mendoza": ("50", "Mendoza"), "misiones": ("54", "Misiones"), "neuquen": ("58", "Neuquén"),
+                    "rionegro": ("62", "Río Negro"), "sanjuan": ("70", "San Juan"), "sanluis": ("74", "San Luis"),
+                    "santacruz": ("78", "Santa Cruz"), "santiago": ("86", "Santiago del Estero"),
+                    "tucuman": ("90", "Tucumán"), "tierradelfuego": ("94", "Tierra del Fuego")}
+INFD_CACHE = Path("data/infd_cache")
 
 
 def instituto_infd(respuesta: str, url: str) -> dict[str, Any] | None:
@@ -265,11 +273,17 @@ def institutos_infd(jurisdiccion: str, localidades: set[str] | None = None) -> l
         ids = sorted({a["id"] for a in indice.select("a.link-centro[id]") if a["id"].startswith(prefijo)})
         for centro in ids:
             url = f"{INFD}?wAccion=vercentro&idCentro={centro}&wPartial=1"
-            try:
-                respuesta = visitante.client.get(url).text
-            except Exception:
-                continue
-            time.sleep(1)
+            guardada = INFD_CACHE / f"{centro}.json"
+            if guardada.exists():
+                respuesta = guardada.read_text()
+            else:
+                try:
+                    respuesta = visitante.client.get(url).text
+                except Exception:
+                    continue
+                time.sleep(1)
+                INFD_CACHE.mkdir(parents=True, exist_ok=True)
+                guardada.write_text(respuesta)
             instituto = instituto_infd(respuesta, url)
             if instituto and instituto["carreras"] and (not localidades or instituto["localidad"] in localidades):
                 instituto["cue"] = centro
@@ -343,7 +357,7 @@ def institutos_caba_ifts() -> list[dict[str, Any]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba", "caba_ifts", "santafe"])
+    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba_ifts", *_PROVINCIAS_INFD])
     parser.add_argument("--distritos", default="",
                         help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
