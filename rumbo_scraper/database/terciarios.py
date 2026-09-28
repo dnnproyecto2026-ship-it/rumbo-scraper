@@ -383,9 +383,56 @@ def institutos_caba_ifts() -> list[dict[str, Any]]:
     return [i for i in institutos.values() if i["carreras"]]
 
 
+# Provinces whose own registry already gives their technical degrees.
+_INET_YA_LEIDAS = {"06", "14", "66"}
+_PROVINCIA_DE_CODIGO = {codigo: nombre for codigo, nombre in _PROVINCIAS_INFD.values()}
+
+
+def cue7(cue: str | None) -> str | None:
+    """The CUE's institution part: 9 digits with the annex ("020219100"),
+    8 when a leading zero was lost ("20025600"), 7 as INFoD gives it."""
+    digitos = re.sub(r"\D", "", cue or "")
+    if len(digitos) in (8, 9):
+        return digitos.zfill(9)[:7]
+    return digitos if len(digitos) == 7 else None
+
+
+def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
+    """INET's technical degrees, grouped by institute (its CUE): an institute
+    of the registry already loaded gets them added; any other is new, with
+    the name, address and site INET gives."""
+    from rumbo_scraper.parsers.terciarios_inet import INET, SALIDA as INET_SALIDA
+
+    estado = json.loads(INET_SALIDA.read_text())
+    institutos: dict[str, dict[str, Any]] = {}
+    for clave, filas in estado["filas"].items():
+        provincia, titulo = clave.split("_")
+        if provincia in _INET_YA_LEIDAS or (provincias and provincia not in provincias):
+            continue
+        url = f"{INET}/instituciones/{titulo}/{int(provincia)}?departamento=0&localidad=0"
+        for fila in filas:
+            cue = cue7(fila.get("CUE"))
+            propio = nombre_de_la_carrera(fila.get("Título") or "")
+            if not cue or not propio:
+                continue
+            web = (fila.get("Página Web") or "").strip()
+            instituto = institutos.setdefault(cue, {
+                "nombre_oficial": prolijo(fila.get("Nombre") or ""), "nombre_corto": siglas(prolijo(fila.get("Nombre") or "")),
+                "gestion": "Privada" if (fila.get("Gestión") or "").startswith("Priv") else "Estatal",
+                "localidad": clean_text(fila.get("Localidad") or ""), "distrito": clean_text(fila.get("Departamento") or ""),
+                "calle": clean_text(fila.get("Dirección") or ""), "cue": cue, "url": url,
+                "sitio": web if web.startswith("http") else (f"https://{web}" if web.startswith("www.") else None),
+                "provincia": _PROVINCIA_DE_CODIGO.get(provincia, provincia), "titulos": {}, "carreras": []})
+            carrera = _carrera(propio, "", url)
+            if carrera and carrera.nombre not in {c.nombre for c in instituto["carreras"]}:
+                instituto["carreras"].append(carrera)
+                instituto["titulos"][carrera.nombre] = clean_text(fila.get("Título") or "")
+    return [i for i in institutos.values() if i["carreras"] and i["nombre_oficial"]]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba_ifts", *_PROVINCIAS_INFD])
+    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba_ifts", "inet", *_PROVINCIAS_INFD])
     parser.add_argument("--distritos", default="",
                         help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
@@ -398,6 +445,8 @@ def main() -> None:
     if args.jurisdiccion == "pba":
         institutos, sitio, provincia = institutos_pba(json.loads(SALIDA.read_text()), distritos), \
             "https://mapaescolar.abc.gob.ar", "Buenos Aires"
+    elif args.jurisdiccion == "inet":
+        institutos, sitio, provincia = institutos_inet(distritos), "https://catalogo-inet.educacion.gob.ar", None
     elif args.jurisdiccion == "caba_ifts":
         institutos, sitio = institutos_caba_ifts(), "https://formacionesagencia.bue.edu.ar"
         provincia = "Ciudad Autónoma de Buenos Aires"
@@ -414,11 +463,16 @@ def main() -> None:
         sitio, provincia = "https://bd.dges-cba.edu.ar", "Córdoba"
     registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
     client = get_supabase_client() if args.apply else None
+    por_cue = {cue7(v.get("cue")): n for n, v in registro.items() if cue7(v.get("cue"))}
+    usados_por_nombre = {u["nombre_oficial"]: u["nombre_corto"] for u in select_all(
+        client.table("universidades").select("nombre_corto,nombre_oficial"))} if client else {}
     # A short name is the institution's address in the app (its slug): two
     # institutes may not share one. The second takes its town.
     usados = {u["nombre_corto"]: u["nombre_oficial"] for u in select_all(
         client.table("universidades").select("nombre_corto,nombre_oficial"))} if client else {}
     for instituto in institutos:
+        if args.jurisdiccion == "inet" and instituto["cue"] in por_cue:
+            continue
         corto = instituto["nombre_corto"]
         if usados.get(corto, instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
             corto = f"{corto} {instituto['localidad']}".strip()
@@ -433,19 +487,37 @@ def main() -> None:
               f"{instituto['localidad']} | {len(instituto['carreras'])} carreras", flush=True)
         if not args.apply:
             continue
+        # INET's degrees for an institute already loaded (by its CUE) are
+        # added to it: its other careers stay, and so do its name and page.
+        existente = por_cue.get(instituto["cue"]) if args.jurisdiccion == "inet" else None
+        if existente:
+            instituto["nombre_oficial"] = existente
+            instituto["nombre_corto"] = usados_por_nombre.get(existente, instituto["nombre_corto"])
         guia = Guia(instituto["nombre_oficial"], instituto["nombre_corto"], instituto["gestion"],
                     instituto.get("sitio") or sitio, ((instituto["url"], None),),
                     instituto["localidad"], instituto["calle"], 1, tipo_institucion="instituto_terciario")
+        anteriores = []
+        if existente and guia.artefacto.exists():
+            anteriores = json.loads(guia.artefacto.read_text())["datos"]["ofertas"]
         escribir_artefacto(guia, instituto["carreras"])
+        if anteriores:
+            datos = json.loads(guia.artefacto.read_text())
+            nombres = {o["carrera_nombre"] for o in datos["datos"]["ofertas"]}
+            datos["datos"]["ofertas"] += [o for o in anteriores if o["carrera_nombre"] not in nombres]
+            guia.artefacto.write_text(json.dumps(datos, ensure_ascii=False, indent=1) + "\n")
         universidad_id = universidad(client, guia, crear=True)
         guardadas = select_all(client.table("carreras").select("id,nombre_carrera,nivel").eq(
             "universidad_id", universidad_id))
-        aplicar(client, instituto["carreras"], plan_de_cambios(instituto["carreras"], guardadas), universidad_id)
+        cambios = plan_de_cambios(instituto["carreras"], guardadas)
+        if existente:
+            cambios["retiradas"] = []
+        aplicar(client, instituto["carreras"], cambios, universidad_id)
         for carrera, titulo in instituto["titulos"].items():
             client.table("carreras").update({"titulo_otorgado": titulo}).eq(
                 "universidad_id", universidad_id).eq("nombre_carrera", carrera).execute()
-        registro[instituto["nombre_oficial"]] = {"jurisdiccion": provincia, "cue": instituto["cue"],
-                                                  "distrito": instituto["distrito"]}
+        if not existente:
+            registro[instituto["nombre_oficial"]] = {"jurisdiccion": instituto.get("provincia") or provincia,
+                                                      "cue": instituto["cue"], "distrito": instituto["distrito"]}
     if args.apply:
         REGISTRO.write_text(json.dumps(registro, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     print(f"{len(institutos)} institutos, {total} carreras{' cargados' if args.apply else ''}")
