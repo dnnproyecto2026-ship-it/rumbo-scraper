@@ -89,7 +89,9 @@ def titulo_de_la_pagina(html: str, carrera: str) -> str | None:
     texto = re.sub(r"(?i)(t[íi]tulos?[^:\n]{0,30}:)\s*\n+\s*", r"\1 ", cuerpo.get_text("\n"))
     # Or a label alone on its line, with no colon (UPC's "Nombre del título
     # a otorgar" over "Técnico/a Universitario/a en ...").
-    texto = re.sub(r"(?im)^\s*(?:nombre del )?t[íi]tulo (?:a otorgar|que otorga|a obtener|de grado|de pregrado)\s*\n+\s*", "Título: ", texto)
+    # Or "TÍTULO" alone (UADER), "Título/s que otorga" (UNER).
+    texto = re.sub(r"(?im)^\s*(?:nombre del )?t[íi]tulo(?:/s|s)?(?: (?:a otorgar|que (?:se )?otorga|a obtener|de grado|"
+                   r"de pregrado))?\s*\n+\s*", "Título: ", texto)
     halladas = titulos_en(texto)
     if len(halladas) == 1:
         return halladas[0]

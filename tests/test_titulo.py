@@ -37,6 +37,10 @@ class Titulo(unittest.TestCase):
         html = "<main><p>Ingeniería en Informática</p><p>Título de Grado</p><p>Ingeniero/a en Informática</p><p>5</p></main>"
         self.assertEqual(titulo_de_la_pagina(html, "Ingeniería en Informática"), "Ingeniero/a en Informática")
 
+    def test_rotulo_solo_en_mayusculas(self):
+        html = "<main><h2>Administración</h2><p>TÍTULO</p><p>Técnico/a en Administración</p><p>Perfil amplio</p></main>"
+        self.assertEqual(titulo_de_la_pagina(html, "Tecnicatura en Administración"), "Técnico/a en Administración")
+
     def test_sin_el_numero_de_la_seccion_siguiente(self):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
                          ["Técnico/a Universitario/a en Guía de Turismo"])
