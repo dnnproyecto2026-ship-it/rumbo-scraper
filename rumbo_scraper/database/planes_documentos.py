@@ -251,7 +251,9 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
     # a degree: UNQ's page for it shows the whole degree's plan.
     if re.search(r"(?i)\(ccc\)|complementaci[óo]n curricular", carrera):
         return False
-    if len(materias) < 10 or any(nombre[:1].islower() or _TERMINA_CORTADA.search(nombre)
+    # ("Seminario A", "Optativa B": a capital alone is a label, not a cut "a".)
+    if len(materias) < 10 or any(nombre[:1].islower() or (_TERMINA_CORTADA.search(nombre)
+                                                          and not re.search(r"\s[A-Z]$", nombre))
                                  for nombre, _ in materias):
         return False
     anios = [anio for _, anio in materias if anio]
