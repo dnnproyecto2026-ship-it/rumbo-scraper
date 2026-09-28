@@ -36,7 +36,7 @@ SITIOS_A_LA_VEZ = 8
 HALLADOS = Path("data/planes_posgrados_hallados.json")
 
 
-def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
+def leer(client: Any, solo: set[str] = frozenset(), documentos: bool = False) -> list[dict[str, Any]]:
     from rumbo_scraper.database.supabase import select_all
 
     corto = {u["id"]: u.get("nombre_corto") or "" for u in select_all(
@@ -68,7 +68,10 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
                                     or nombra_el_programa(html, p["nombre_programa"])):
                     continue
                 materias, fuente = plan_de_posgrado(html), p["url_oficial"]
-                if not materias:
+                # A plan's PDF flattens its table: names run into their
+                # columns and teachers' names in (tried 2026-09-28, 17 plans,
+                # most unusable). Only on request.
+                if not materias and documentos:
                     # The plan the page leaves to a document of its own.
                     for documento, lineas in _documentos(
                             html, p["url_oficial"], visitante,
@@ -109,6 +112,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Leer el plan de cada posgrado sin materias")
     parser.add_argument("--apply", action="store_true",
                         help=f"Escribir en Supabase lo que dejó la vista previa en {HALLADOS}")
+    parser.add_argument("--documentos", action="store_true",
+                        help="Buscar también en los PDF de plan que enlaza la página (poco confiable)")
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
     args = parser.parse_args()
 
@@ -117,7 +122,7 @@ def main() -> None:
     if args.apply:
         print("Materias escritas:", aplicar(client, json.loads(HALLADOS.read_text())))
         return
-    hallados = leer(client, set(args.universidades))
+    hallados = leer(client, set(args.universidades), args.documentos)
     HALLADOS.write_text(json.dumps(hallados, ensure_ascii=False, indent=1) + "\n")
     print(f"Posgrados con plan: {len(hallados)}, materias: {sum(len(h['materias']) for h in hallados)}"
           f" — vista previa en {HALLADOS}", flush=True)
