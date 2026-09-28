@@ -1181,7 +1181,8 @@ def _plan_fba_unlp(html: str) -> list[tuple[str, int]]:
             break
         # A choice among several ("Una MATERIA OPTATIVA A a elegir entre
         # ...", Humanidades) is not a subject of its own.
-        if re.match(r"(?i)^(?:una|dos|tres)\s+(?:materias?\s+)?(?:optativas?|capacitaci)", linea):
+        if re.match(r"(?i)^(?:una|dos|tres)\s+(?:materias?\s+)?(?:optativas?|capacitaci)", linea) \
+                or re.search(r"(?i)\ba\s+elegir\b", linea):
             continue
         _agregar(materias, linea, anio)
     return materias
@@ -1198,4 +1199,9 @@ def plan_fahce_unlp(html: str) -> list[tuple[str, int]]:
     soup = BeautifulSoup(html or "", "html.parser")
     for opciones in soup.select("td ul"):
         opciones.decompose()
-    return plan_fba_unlp(str(soup))
+    materias = plan_fba_unlp(str(soup))
+    # A year of more than twelve is the pool of electives the page lists
+    # under the last year without saying so (the profesorados' fifth).
+    if materias and max(Counter(anio for _, anio in materias).values()) > 12:
+        return []
+    return materias
