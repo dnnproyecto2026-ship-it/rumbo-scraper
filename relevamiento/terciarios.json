@@ -114,6 +114,31 @@
   "distrito": "San Lorenzo",
   "jurisdiccion": "Santa Fe"
  },
+ "Centro Educativo Polimodal": {
+  "cue": "5401593",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Centro Educativo de Nivel Terciario (C.E.N.T.)": {
+  "cue": "9001040",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Centro Educativo de Nivel Terciario (C.E.N.T.) CENT 18": {
+  "cue": "7000305",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
+ },
+ "Centro Educativo de Nivel Terciario (C.E.N.T.) Ciudad de Ushuaia": {
+  "cue": "9400065",
+  "distrito": "Ushuaia",
+  "jurisdiccion": "Tierra del Fuego"
+ },
+ "Centro Educativo de Nivel Terciario (C.E.N.T.) Prof. Julián J. Godoy": {
+  "cue": "9400032",
+  "distrito": "Río Grande",
+  "jurisdiccion": "Tierra del Fuego"
+ },
  "Centro Regional de Educación Artística - Crear": {
   "cue": "4200827",
   "distrito": "Santa Rosa",
@@ -134,6 +159,11 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Centro de Educación para el Trabajo": {
+  "cue": "5401253",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
  "Centro de Estudios Filosóficos y Teológicos": {
   "cue": null,
   "distrito": "Capital",
@@ -149,7 +179,7 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Centro de Innovación Educativa dante Alighieri (cieda)": {
+ "Centro de Innovación Educativa Dante Alighieri (CIEDA)": {
   "cue": "062349300",
   "distrito": "Campana",
   "jurisdiccion": "Buenos Aires"
@@ -169,10 +199,20 @@
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
  },
+ "Colegio Provincial Martín de Moussy": {
+  "cue": "5400637",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
  "Colegio San Carlos Borromeo F-40": {
   "cue": "9000726",
   "distrito": "San Miguel de Tucumán",
   "jurisdiccion": "Tucumán"
+ },
+ "Colegio Superior Florentino Ameghino": {
+  "cue": "8200083",
+  "distrito": "Iriondo",
+  "jurisdiccion": "Santa Fe"
  },
  "Colegio Superior N° 1 Fuerza Aerea Argentina": {
   "cue": "7000179",
@@ -739,6 +779,26 @@
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
+ "Escuela Provincial de Educación Técnica (E.P.E.T.)": {
+  "cue": "5400998",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela Provincial de Educación Técnica (E.P.E.T.) EPET N° 1 UNESCO": {
+  "cue": "5400621",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela Provincial de Educación Técnica (E.P.E.T.) Eva Duarte de Perón": {
+  "cue": "5401044",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela Provincial de Educación Técnica (E.P.E.T.) Fray Luis Beltrán": {
+  "cue": "5400570",
+  "distrito": "Apóstoles",
+  "jurisdiccion": "Misiones"
+ },
  "Escuela Provincial de Teatro N° 3200": {
   "cue": "8203892",
   "distrito": "Santa Fe",
@@ -793,6 +853,11 @@
   "cue": "062300600",
   "distrito": "Lanús",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Escuela Superior de Administración y Produccion Rural": {
+  "cue": "5001263",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
  },
  "Escuela Superior de Arte Folclorico Sisaiani": {
   "cue": "9001661",
@@ -849,15 +914,40 @@
   "distrito": "General San Martín",
   "jurisdiccion": "Córdoba"
  },
+ "Escuela Superior de Comercio Celestino Irineo Marcó": {
+  "cue": "3001110",
+  "distrito": "Gualeguay",
+  "jurisdiccion": "Entre Ríos"
+ },
+ "Escuela Superior de Comercio Dr. Manuel Belgrano": {
+  "cue": "8201811",
+  "distrito": "Belgrano",
+  "jurisdiccion": "Santa Fe"
+ },
  "Escuela Superior de Comercio El Nacional": {
   "cue": null,
   "distrito": "Juárez Celman",
   "jurisdiccion": "Córdoba"
  },
+ "Escuela Superior de Comercio Escuela Superior de Comercio": {
+  "cue": "8202342",
+  "distrito": "General Obligado",
+  "jurisdiccion": "Santa Fe"
+ },
  "Escuela Superior de Comercio General J. de San Martin": {
   "cue": "9000896",
   "distrito": "Monteros",
   "jurisdiccion": "Tucumán"
+ },
+ "Escuela Superior de Comercio Independencia Nacional": {
+  "cue": "5400418",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela Superior de Comercio Mariano Moreno": {
+  "cue": "5400688",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Escuela Superior de Comercio N° 39 Jose Ingenieros": {
   "cue": "8201605",
@@ -909,6 +999,31 @@
   "distrito": "Caballito",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Escuela Superior de Enfermería Escuela Superior de Enfermería SAN JORGE": {
+  "cue": "8204604",
+  "distrito": "San Martín",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Superior de Enfermería M. E. Araya Colombres": {
+  "cue": "8204430",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Superior de Enfermería Rafaela": {
+  "cue": "8204432",
+  "distrito": "Castellanos",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Superior de Enfermería Reconquista": {
+  "cue": "8204431",
+  "distrito": "General Obligado",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Superior de Enfermería Venado Tuerto": {
+  "cue": "8204556",
+  "distrito": "General López",
+  "jurisdiccion": "Santa Fe"
+ },
  "Escuela Superior de Formación en Salud": {
   "cue": "062210300",
   "distrito": "La Plata",
@@ -923,6 +1038,11 @@
   "cue": "5800735a",
   "distrito": "Zapala",
   "jurisdiccion": "Neuquén"
+ },
+ "Escuela Superior de Música Escuela Superior de Musica de la Provincia de Misiones": {
+  "cue": "5400893",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Escuela Superior de Música de Chos Malal": {
   "cue": "5801196",
@@ -958,6 +1078,11 @@
   "cue": "061154100",
   "distrito": "Chivilcoy",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Escuela Vitivinícola Don Bosco": {
+  "cue": "5001146",
+  "distrito": "Maipú",
+  "jurisdiccion": "Mendoza"
  },
  "Escuela de Artes Visuales": {
   "cue": "062084900",
@@ -1004,10 +1129,15 @@
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
  },
- "Escuela de Enfermería Cruz Roja Argentina Filial San Nicolás dr. Pablo Ogallar": {
+ "Escuela de Enfermería Cruz Roja Argentina Filial San Nicolás Dr. Pablo Ogallar": {
   "cue": "060167400",
   "distrito": "San Nicolás",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Escuela de Enfermería Especialidades Paramédicas Cruz Roja Argentina Filial Saavedra": {
+  "cue": "0200531",
+  "distrito": "Comuna N° 13",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Escuela de Enfermería Instituto Cruz Roja Argentina": {
   "cue": "061233400",
@@ -1039,10 +1169,15 @@
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
  },
- "Escuela de Esp.de la Cruz Roja Argentina (filial Quilmes)": {
+ "Escuela de Esp.de la Cruz Roja Argentina (Filial Quilmes)": {
   "cue": "060199500",
   "distrito": "Quilmes",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Escuela de Formación Profesional Escuela Pública de Gestión Social Juan Domingo Perón": {
+  "cue": "2202574",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
  },
  "Escuela de Gestión Pública N° 2 - Nivel Superior": {
   "cue": "2202447",
@@ -1088,6 +1223,31 @@
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Escuela de la Familia Agrícola (E.F.A.) EFA San Vicente de Paúl": {
+  "cue": "5400617",
+  "distrito": "Guaraní",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela de la Familia Agrícola (E.F.A.) Jesús de Galilea": {
+  "cue": "5401262",
+  "distrito": "Cainguás",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela de la Familia Agrícola (E.F.A.) San José Freinademetz": {
+  "cue": "5401314",
+  "distrito": "Montecarlo",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela de la Familia Agrícola (E.F.A.) San Pedro": {
+  "cue": "5400917",
+  "distrito": "San Pedro",
+  "jurisdiccion": "Misiones"
+ },
+ "Escuela de la Familia Agrícola (E.F.A.) Santísima Trinidad": {
+  "cue": "5401338",
+  "distrito": "Veinticinco de Mayo",
+  "jurisdiccion": "Misiones"
  },
  "Extension Aulica Itati del Ifd Dr. Juan Pujol": {
   "cue": "1801411d",
@@ -1264,6 +1424,21 @@
   "distrito": "Chepes",
   "jurisdiccion": "La Rioja"
  },
+ "I.S.F.T. Escuela Municipal de Arboricultura, Jardinería y Ecología Aplicada de Lomas de Zamora": {
+  "cue": "062386100",
+  "distrito": "Lomas de Zamora",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "I.S.F.T. Escuela Municipal de Medios Audiovisuales - Lomas de Zamora": {
+  "cue": "062386500",
+  "distrito": "Lomas de Zamora",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "I.S.F.T.E.A.": {
+  "cue": "062068100",
+  "distrito": "Vicente López",
+  "jurisdiccion": "Buenos Aires"
+ },
  "I.S.P.A. N° 4089 J. E. Pestalozzi": {
   "cue": "8204173",
   "distrito": "Santo Tomé",
@@ -1288,21 +1463,6 @@
   "cue": "9400127",
   "distrito": "Río Grande",
   "jurisdiccion": "Tierra del Fuego"
- },
- "I.s.f.t. escuela Municipal de Arboricultura, Jardinería y Ecología Aplicada de Lomas de Zamora": {
-  "cue": "062386100",
-  "distrito": "Lomas de Zamora",
-  "jurisdiccion": "Buenos Aires"
- },
- "I.s.f.t. escuela Municipal de Medios Audiovisuales - Lomas de Zamora": {
-  "cue": "062386500",
-  "distrito": "Lomas de Zamora",
-  "jurisdiccion": "Buenos Aires"
- },
- "I.s.f.t.e.a.": {
-  "cue": "062068100",
-  "distrito": "Vicente López",
-  "jurisdiccion": "Buenos Aires"
  },
  "IES 9-026 de la Patria Grande": {
   "cue": "5002249",
@@ -1634,7 +1794,7 @@
   "distrito": "Libertador Grl. San Martin",
   "jurisdiccion": "Jujuy"
  },
- "Ifsa (investigación y Formación en Salud)": {
+ "Ifsa (Investigación y Formación en Salud)": {
   "cue": "062417100",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -1659,7 +1819,17 @@
   "distrito": "San Miguel de Tucumán",
   "jurisdiccion": "Tucumán"
  },
- "Instituto Agrotecnológico de Tandil dr. Ramón Santamarina": {
+ "Instituto ALFA": {
+  "cue": "5401784",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Académico Dr. Branemark": {
+  "cue": "5401537",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Agrotecnológico de Tandil Dr. Ramón Santamarina": {
   "cue": "061707500",
   "distrito": "Tandil",
   "jurisdiccion": "Buenos Aires"
@@ -1688,6 +1858,11 @@
   "cue": "0200232",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Argentino de Estudios Superiores": {
+  "cue": "5401219",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Argentino de Prótesis Dental IAPD": {
   "cue": null,
@@ -1738,6 +1913,11 @@
   "cue": "0202241",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Centro Educativo Alas y Raíces": {
+  "cue": "5400062",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Centro de Altos Estudios del Sur": {
   "cue": null,
@@ -1844,7 +2024,7 @@
   "distrito": "Lanús",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Escuela de Enfermería y Espec.paramedicas Cruz Roja": {
+ "Instituto Escuela de Enfermería y Espec.Paramedicas Cruz Roja": {
   "cue": "060652600",
   "distrito": "San Fernando",
   "jurisdiccion": "Buenos Aires"
@@ -1894,6 +2074,16 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Instituto Integral Taller de Arquitectura": {
+  "cue": "0201631",
+  "distrito": "Comuna N° 14",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Integral de Educación": {
+  "cue": "0201888",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Integral de Educación Permanente": {
   "cue": "8601855",
   "distrito": "Santiago del Estero",
@@ -1919,7 +2109,7 @@
   "distrito": "Morón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Juan Pablo Ii": {
+ "Instituto Juan Pablo II": {
   "cue": "062274300",
   "distrito": "Escobar",
   "jurisdiccion": "Buenos Aires"
@@ -1933,6 +2123,11 @@
   "cue": null,
   "distrito": "General San Martín",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Lisandro de la Torre": {
+  "cue": "5401288",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Luis F. Leloir": {
   "cue": "061629900",
@@ -1964,6 +2159,11 @@
   "distrito": "San Miguel de Tucumán",
   "jurisdiccion": "Tucumán"
  },
+ "Instituto Mariano W. Pachecoy": {
+  "cue": "5401623",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Modelo de Educación Física": {
   "cue": "060676400",
   "distrito": "Lomas de Zamora",
@@ -1974,7 +2174,7 @@
   "distrito": "Vicente López",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Municipal Superior de Educación y Tecnología dr. Emilio Mignone": {
+ "Instituto Municipal Superior de Educación y Tecnología Dr. Emilio Mignone": {
   "cue": "060280700",
   "distrito": "Luján",
   "jurisdiccion": "Buenos Aires"
@@ -1994,19 +2194,19 @@
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Municipal de Educación Superior Maestra Pascuala Cueto": {
+  "cue": "062097900",
+  "distrito": "Morón",
+  "jurisdiccion": "Buenos Aires"
+ },
  "Instituto Municipal de Educación Superior Vicente Lopez": {
   "cue": "062337600",
   "distrito": "Vicente López",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Municipal de Educación Superior de Formación Docente (imesfd) C.a.p.a.c. y T.": {
+ "Instituto Municipal de Educación Superior de Formación Docente (IMESFD) C.A.P.A.C. y T.": {
   "cue": "061050400",
   "distrito": "Tres de Febrero",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Municipal de Educación Superior maestra Pascuala Cueto": {
-  "cue": "062097900",
-  "distrito": "Morón",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Municipal de Música": {
@@ -2069,6 +2269,11 @@
   "distrito": "San Pedro",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Nuestro Señor del Milagro": {
+  "cue": "8601856",
+  "distrito": "Capital",
+  "jurisdiccion": "Santiago del Estero"
+ },
  "Instituto Obra Conservacion de la Fe N° 5. Fundacion Macnab Bernal": {
   "cue": "0200641",
   "distrito": "Ciudad de Buenos Aires",
@@ -2114,6 +2319,66 @@
   "distrito": "Vicente López",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Perfeccionamiento Docente": {
+  "cue": "9001673",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Instituto Politécnico Instituto Politécnico Superior General San Martín": {
+  "cue": "8290006",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Politécnico San Arnoldo Janssen": {
+  "cue": "5401071",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado Amado Olmos A.T.S.A.": {
+  "cue": "0200890",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Andes del Sur": {
+  "cue": "0202344",
+  "distrito": "Comuna N° 7",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Argentino de Gastronomía": {
+  "cue": "0202335",
+  "distrito": "Comuna N° 2",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Asociación Biblioteca de Mujeres (A.B.M.)": {
+  "cue": "0200564",
+  "distrito": "Comuna N° 10",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Asociación de Supervisores Metalmecánicos de la República Argentina (A.S.I.M.R.A.)": {
+  "cue": "0201748",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Centro Educativo Integral San Jorge": {
+  "cue": "5400627",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado Centro de Estudios Nueva Vida": {
+  "cue": "0202823",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Centro de Estudios Organizacionales (C.E.O.)": {
+  "cue": "0202193",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Cámara Argentina de Comercio y Servicios (C.A.C.)": {
+  "cue": "0201121",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Privado Diocesano Dr. Alexis Carrel": {
   "cue": null,
   "distrito": "Tercero Arriba",
@@ -2124,9 +2389,144 @@
   "distrito": "Unión",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Privado Educación en Áreas de la Salud": {
+  "cue": "0203049",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Educativo Argentino": {
+  "cue": "0202343",
+  "distrito": "Comuna N° 6",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Argentina de Diseño de Espacios Verdes e Interiores": {
+  "cue": "0202328",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Argentina de Fotografía": {
+  "cue": "0202452",
+  "distrito": "Comuna N° 13",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Argentina de Vinos": {
+  "cue": "0202376",
+  "distrito": "Comuna N° 14",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Central de Especialidades Paramédicas de la Cruz Roja Argentina": {
+  "cue": "0200539",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Metropolitana de Altos Estudios": {
+  "cue": "0200175",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Superior de Arte Multimedial Leonardo Da Vinci": {
+  "cue": "0202115",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela Superior de Seguridad e Higiene Industrial": {
+  "cue": "0200273",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela de Enfermería Fundación Sirio Libanesa para la Salud": {
+  "cue": "0201667",
+  "distrito": "Comuna N° 11",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela de Enfermería Helena Larroque de Roffo": {
+  "cue": "0200969",
+  "distrito": "Comuna N° 15",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Escuela de Enfermería Israelita": {
+  "cue": "0200240",
+  "distrito": "Comuna N° 11",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Fundacion ICBC": {
+  "cue": "0202379",
+  "distrito": "Comuna N° 2",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Fundación Altos Estudios en Ciencias Comerciales": {
+  "cue": "0200704",
+  "distrito": "Comuna N° 10",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Fundación Docencia e Investigación para la Salud": {
+  "cue": "0201932",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Privado General San Martín": {
   "cue": "0202072",
   "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado I.U.C.E - Capacitación y Gestión": {
+  "cue": "5801081",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto Privado Incorporado Instituto Superior de Innovación y Educación Tecnológica": {
+  "cue": "7400762",
+  "distrito": "Juan Martín de Pueyrredón (Capital)",
+  "jurisdiccion": "San Luis"
+ },
+ "Instituto Privado Instituto Superior Combate Mbororé": {
+  "cue": "5401173",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado Instituto Superior de Enfermería Reinalda Balancini": {
+  "cue": "5002389",
+  "distrito": "Godoy Cruz",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto Privado Instituto de Ciencias Biomédicas San Agustín": {
+  "cue": "5001432",
+  "distrito": "Godoy Cruz",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto Privado Instituto de Formación Superior IFSSA": {
+  "cue": "5801194",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto Privado Leonardo Da Vinci": {
+  "cue": "5401284",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado Neocast": {
+  "cue": "5001313",
+  "distrito": "Godoy Cruz",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto Privado Nuevo Cuyo": {
+  "cue": "5001652",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto Privado Potenciar-Educación Superior": {
+  "cue": "5801128",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto Privado Profesional de Enseñanza Superior (I.P.E.S.)": {
+  "cue": "0202191",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Raul Scalabrini Ortiz": {
+  "cue": "0200867",
+  "distrito": "Comuna N° 10",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Privado San Joaquin": {
@@ -2149,15 +2549,160 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Instituto Privado Sudamericano para la Enseñanza de la Comunicación": {
+  "cue": "0202412",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Auxiliares de la Medicina": {
+  "cue": "0202346",
+  "distrito": "Comuna N° 9",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Educativo de la Cámara de Comercio, Industria y Producción de la República Argentina (C.A.C.I.P.R.A.)": {
+  "cue": "0202082",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Formosa": {
+  "cue": "3401112",
+  "distrito": "Pilcomayo",
+  "jurisdiccion": "Formosa"
+ },
+ "Instituto Privado Superior Mitre": {
+  "cue": "0201420",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Nueva Escuela de Diseño y Comunicación": {
+  "cue": "0201175",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Octubre (I.S.O.)": {
+  "cue": "0202242",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Privado Superior Pbro. Manuel Alberti": {
   "cue": "1800698",
   "distrito": "Goya",
   "jurisdiccion": "Corrientes"
  },
+ "Instituto Privado Superior Perito Moreno": {
+  "cue": "0201432",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior Tecnológico Empresarial Argentino": {
+  "cue": "0202951",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior de Electrónica General Manuel Savio": {
+  "cue": "0201453",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior de Especialización Profesional 13 de Julio": {
+  "cue": "0202186",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior de Viajantes": {
+  "cue": "0201853",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Superior del Hospital Italiano": {
+  "cue": "0201224",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Técnico Superior de Sanidad": {
+  "cue": "0202296",
+  "distrito": "Comuna N° 14",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado UOCRA": {
+  "cue": "0202450",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado Universitas Estudios Superiores": {
+  "cue": "0200603",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Privado Virgen Niña": {
   "cue": null,
   "distrito": "Unión",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Privado de Alta Capacitación (I.P.A.C.)": {
+  "cue": "5401335",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Artes Gráficas - Fundación Gutenberg": {
+  "cue": "0200852",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado de Docencia, Investigación y Capacitacion Lab.De la Sanidad": {
+  "cue": "5001804",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto Privado de Educación Superior Conocimientos Estéticos Carola B": {
+  "cue": "5401538",
+  "distrito": "Oberá",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior Cristo Rey": {
+  "cue": "5400568",
+  "distrito": "Apóstoles",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior IAES Fundacion Lapacho": {
+  "cue": "5401221",
+  "distrito": "Libertador General San Martín",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior Incade Argentina": {
+  "cue": "5401290",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior Instituto Superior de Informática": {
+  "cue": "5400885",
+  "distrito": "Montecarlo",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior Instituto de Estudios Integrados Esteban Lugo": {
+  "cue": "5401567",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior Verbo Divino": {
+  "cue": "5400540",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior de Estudios Superiores Argentino": {
+  "cue": "5401291",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior de Gestión Publica y Desarrollo Humano (Imes)": {
+  "cue": "5401533",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Privado de Educación Superior de las Misiones": {
+  "cue": "5400141",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Privado de Enseñanza Dalmacio Vélez Sarsfield": {
   "cue": null,
@@ -2179,10 +2724,45 @@
   "distrito": "Posadas",
   "jurisdiccion": "Misiones"
  },
+ "Instituto Privado de Formación Superior en Turismo": {
+  "cue": "0202858",
+  "distrito": "Comuna N° 10",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado de Medios Avanzados Gráficos y Electrónicos": {
+  "cue": "0202324",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Privado de Merlo": {
   "cue": "061617100",
   "distrito": "Merlo",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Privado de Tecnología ORT": {
+  "cue": "0201139",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado de Tecnología ORT N° 2": {
+  "cue": "0201361",
+  "distrito": "Comuna N° 13",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado de la Rivera": {
+  "cue": "0202089",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado del Profesorado en Enfermería Padre Luis Tezza": {
+  "cue": "0201744",
+  "distrito": "Comuna N° 6",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Privado del S.G.B.A.T.O..S.": {
+  "cue": "0201856",
+  "distrito": "Comuna N° 6",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Profesorado Concordia D-54": {
   "cue": "3001335",
@@ -2193,6 +2773,11 @@
   "cue": "7800102",
   "distrito": "Río Gallegos",
   "jurisdiccion": "Santa Cruz"
+ },
+ "Instituto Provincial de Administración Pública": {
+  "cue": "9001981",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
  },
  "Instituto Provincial de Educación Superior": {
   "cue": "7800253",
@@ -2213,6 +2798,16 @@
   "cue": "9400169",
   "distrito": "Río Grande",
   "jurisdiccion": "Tierra del Fuego"
+ },
+ "Instituto Provincial de Educación Terciaria": {
+  "cue": "5800136",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto Provincial de Educación Terciaria CEI": {
+  "cue": "5801183",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
  },
  "Instituto Provincial de Enseñanza Superior Florentino Ameghino": {
   "cue": "9400088",
@@ -2304,7 +2899,7 @@
   "distrito": "Comandante Fontana",
   "jurisdiccion": "Formosa"
  },
- "Instituto San Martín (profesorado Educación Fisica)": {
+ "Instituto San Martín (Profesorado Educación Fisica)": {
   "cue": "060608500",
   "distrito": "General San Martín",
   "jurisdiccion": "Buenos Aires"
@@ -2369,7 +2964,7 @@
   "distrito": "Azul",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Sup. de Enf.prof.de la Asoc.emp. Comercio": {
+ "Instituto Sup. de Enf.Prof.de la Asoc.Emp. Comercio": {
   "cue": "061103900",
   "distrito": "Bahía Blanca",
   "jurisdiccion": "Buenos Aires"
@@ -2394,7 +2989,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Sup.form.doc. Santa Teresita": {
+ "Instituto Sup.Form.Doc. Santa Teresita": {
   "cue": "060710300",
   "distrito": "Hipólito Yrigoyen",
   "jurisdiccion": "Buenos Aires"
@@ -2403,6 +2998,11 @@
   "cue": "062385400",
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior Adolfo Kolping": {
+  "cue": "5400060",
+  "distrito": "Libertador General San Martín",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Superior Adventista de Misiones N° 110001": {
   "cue": "5400279",
@@ -2454,10 +3054,15 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior C.e.m.": {
+ "Instituto Superior C.E.M.": {
   "cue": "062094700",
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior Capacitar Posadas": {
+  "cue": "5401779",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Superior Carlos Alberto Leguizamón": {
   "cue": null,
@@ -2474,6 +3079,11 @@
   "distrito": "Necochea",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Superior Centro de Estudios Superiores de Misiones": {
+  "cue": "5401605",
+  "distrito": "Eldorado",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Superior Clelia F. Castagnino": {
   "cue": null,
   "distrito": "Juárez Celman",
@@ -2488,6 +3098,11 @@
   "cue": null,
   "distrito": "General Roca",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Comandante Andrés Guacurarí": {
+  "cue": "5401382",
+  "distrito": "General Manuel Belgrano",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Superior Cristo Rey D- 231": {
   "cue": "3003225",
@@ -2513,6 +3128,11 @@
   "cue": "1800675",
   "distrito": "Curuzú Cuatiá",
   "jurisdiccion": "Corrientes"
+ },
+ "Instituto Superior Cuyano": {
+  "cue": "7000811",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
  },
  "Instituto Superior D 259 Juventud Unida": {
   "cue": "3003492",
@@ -2654,15 +3274,50 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Superior Huellas Misioneras": {
+  "cue": "5401866",
+  "distrito": "Eldorado",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Superior Idra": {
   "cue": "061574000",
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior Innovaciones Pedagógicas Siglo Xxi": {
+ "Instituto Superior Innovaciones Pedagógicas Siglo XXI": {
   "cue": "062057600",
   "distrito": "Quilmes",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior Instituto Superior Cultural Latino Americano": {
+  "cue": "5401805",
+  "distrito": "General Manuel Belgrano",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior Instituto Superior Espíritu Santo": {
+  "cue": "5401047",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior Instituto Superior SAN PEDRO": {
+  "cue": "5401241",
+  "distrito": "San Pedro",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior Instituto Superior de Informática Virasoro - ISIV -": {
+  "cue": "5401289",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior Instituto de Estudios Superior Manuel Roberto Giudici": {
+  "cue": "5401394",
+  "distrito": "Concepción",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior Instituto de Superior de Formación Técnica San Isidro": {
+  "cue": "7000404",
+  "distrito": "Jáchal",
+  "jurisdiccion": "San Juan"
  },
  "Instituto Superior Jerónimo Luis de Cabrera": {
   "cue": null,
@@ -2679,6 +3334,11 @@
   "distrito": "Bolívar",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Superior Jesús de Nazareth": {
+  "cue": "5401122",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Superior Jesús, el Maestro": {
   "cue": "86010899",
   "distrito": "-",
@@ -2688,6 +3348,11 @@
   "cue": "1801145",
   "distrito": "Corrientes",
   "jurisdiccion": "Corrientes"
+ },
+ "Instituto Superior José A. Margalot": {
+  "cue": "5400112",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Superior Juan Cinotto": {
   "cue": null,
@@ -2704,12 +3369,17 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior Juan Manuel de Rosas": {
+  "cue": "5401263",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Superior Juan Pascual Pringles": {
   "cue": "7400641",
   "distrito": "San Luis",
   "jurisdiccion": "San Luis"
  },
- "Instituto Superior Juan Xxiii": {
+ "Instituto Superior Juan XXIII": {
   "cue": "060918000",
   "distrito": "Bahía Blanca",
   "jurisdiccion": "Buenos Aires"
@@ -2769,13 +3439,13 @@
   "distrito": "Merlo",
   "jurisdiccion": "San Luis"
  },
- "Instituto Superior Municipal de Formación Docente y Técnica de Escobar": {
-  "cue": "062232101",
+ "Instituto Superior Municipal de Formación Docente y Técnica Julieta Lanteri": {
+  "cue": "062422100",
   "distrito": "Escobar",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior Municipal de Formación Docente y Técnica julieta Lanteri": {
-  "cue": "062422100",
+ "Instituto Superior Municipal de Formación Docente y Técnica de Escobar": {
+  "cue": "062232101",
   "distrito": "Escobar",
   "jurisdiccion": "Buenos Aires"
  },
@@ -2818,6 +3488,11 @@
   "cue": "0201832",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior Nuestra Señora del Carmen": {
+  "cue": "7000860",
+  "distrito": "Angaco",
+  "jurisdiccion": "San Juan"
  },
  "Instituto Superior Nuestra Señora del Cenaculo D-104": {
   "cue": "3001753",
@@ -3099,7 +3774,7 @@
   "distrito": "Azul",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior S.a.f.y.d.": {
+ "Instituto Superior S.A.F.Y.D.": {
   "cue": "061580400",
   "distrito": "Merlo",
   "jurisdiccion": "Buenos Aires"
@@ -3219,6 +3894,11 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Instituto Superior Santa Catalina": {
+  "cue": "5400745",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Superior Santa Cecilia": {
   "cue": "7000808",
   "distrito": "Rivadavia",
@@ -3289,6 +3969,16 @@
   "distrito": "Frías",
   "jurisdiccion": "Santiago del Estero"
  },
+ "Instituto Superior Técnico Profesional Enologia e Industrias Frutihortícolas": {
+  "cue": "7000647",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
+ },
+ "Instituto Superior Técnico Profesional en Redes e Informática - ISRI": {
+  "cue": "7000798",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
+ },
  "Instituto Superior Victoria D-190": {
   "cue": "3003053",
   "distrito": "Victoria",
@@ -3298,6 +3988,11 @@
   "cue": null,
   "distrito": "Unión",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Vida Silvestre, Naturaleza y Aventura": {
+  "cue": "7000847",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
  },
  "Instituto Superior Villa del Rosario": {
   "cue": null,
@@ -3479,10 +4174,65 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Superior de Educación I.o.m.a. N° 6013": {
+ "Instituto Superior de Educación I.O.M.A. N° 6013": {
   "cue": "062220300",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Educación Tecnológica": {
+  "cue": "9000507",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Instituto Superior de Educación Tecnológica (I.S.E.T.)": {
+  "cue": "2600769",
+  "distrito": "Futaleufú",
+  "jurisdiccion": "Chubut"
+ },
+ "Instituto Superior de Educación Tecnológica (I.S.E.T.) Ceret Chubut": {
+  "cue": "2600578",
+  "distrito": "Escalante",
+  "jurisdiccion": "Chubut"
+ },
+ "Instituto Superior de Educación Técnica": {
+  "cue": "2202107",
+  "distrito": "Maipú",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.)": {
+  "cue": "8203877",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) Banco de Santa Fe": {
+  "cue": "8203879",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) Beppo Levi": {
+  "cue": "8202016",
+  "distrito": "San Lorenzo",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) Escuela de Diseño del Paisaje": {
+  "cue": "8203888",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) Gastón Gori": {
+  "cue": "8200509",
+  "distrito": "La Capital",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) ISET 57": {
+  "cue": "8202524",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica Jorge Alejandro Newbery": {
+  "cue": "2202480",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
  },
  "Instituto Superior de Educación Técnica N° 59": {
   "cue": "8203880",
@@ -3494,10 +4244,20 @@
   "distrito": "Buena Esperanza",
   "jurisdiccion": "San Luis"
  },
+ "Instituto Superior de Enfermería Artémides Zatti (Iseaz)": {
+  "cue": "0202994",
+  "distrito": "Comuna N° 2",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Superior de Enseñanza Artística Rubinstein": {
   "cue": "1000614",
   "distrito": "San Fernando del Valle de Catamarca",
   "jurisdiccion": "Catamarca"
+ },
+ "Instituto Superior de Enseñanza Técnica (In.Set.)": {
+  "cue": "7800317",
+  "distrito": "Deseado",
+  "jurisdiccion": "Santa Cruz"
  },
  "Instituto Superior de Enseñanza Técnica en Salud": {
   "cue": "061459800",
@@ -3509,7 +4269,7 @@
   "distrito": "Coronel de Marina L. Rosales",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Estudios Lomas de Zamora (isel)": {
+ "Instituto Superior de Estudios Lomas de Zamora (ISEL)": {
   "cue": "062075600",
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
@@ -3539,7 +4299,7 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Superior de Form. Doc. y Tecn. leopoldo Marechal": {
+ "Instituto Superior de Form. Doc. y Tecn. Leopoldo Marechal": {
   "cue": "060561900",
   "distrito": "San Miguel",
   "jurisdiccion": "Buenos Aires"
@@ -3549,12 +4309,12 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Form.doc. y Tec. del Bicentenario": {
+ "Instituto Superior de Form.Doc. y Tec. del Bicentenario": {
   "cue": "062230500",
   "distrito": "Pilar",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Form.docente Ntra. Sra. de Lujan": {
+ "Instituto Superior de Form.Docente Ntra. Sra. de Lujan": {
   "cue": "061335400",
   "distrito": "Luján",
   "jurisdiccion": "Buenos Aires"
@@ -3609,7 +4369,7 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Superior de Formación Doc. y Tecn. N° 122 pte. A. Illia": {
+ "Instituto Superior de Formación Doc. y Tecn. N° 122 Pte. A. Illia": {
   "cue": "060804700",
   "distrito": "Pergamino",
   "jurisdiccion": "Buenos Aires"
@@ -3638,6 +4398,16 @@
   "cue": "4600467",
   "distrito": "Patquía",
   "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Docente Almirante Guillermo Brown": {
+  "cue": "062085200",
+  "distrito": "Berazategui",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Docente Ana Isler": {
+  "cue": "062390200",
+  "distrito": "San Vicente",
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente Ana Pavlova": {
   "cue": "7000639",
@@ -3693,6 +4463,11 @@
   "cue": "4600482",
   "distrito": "Milagro",
   "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Docente Club Atlético Independiente": {
+  "cue": "062465600",
+  "distrito": "Avellaneda",
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente Continua N° 1 Mons. Dr. Jorge Gottau": {
   "cue": "8601847",
@@ -3769,7 +4544,7 @@
   "distrito": "Gobernador Agr. Valentin Virasoro",
   "jurisdiccion": "Corrientes"
  },
- "Instituto Superior de Formación Docente I.a.p.e.": {
+ "Instituto Superior de Formación Docente I.A.P.E.": {
   "cue": "061021700",
   "distrito": "Lanús",
   "jurisdiccion": "Buenos Aires"
@@ -3909,7 +4684,7 @@
   "distrito": "Santiago del Estero",
   "jurisdiccion": "Santiago del Estero"
  },
- "Instituto Superior de Formación Docente N° 1 abuelas de Plaza de Mayo": {
+ "Instituto Superior de Formación Docente N° 1 Abuelas de Plaza de Mayo": {
   "cue": "061098300",
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
@@ -3944,27 +4719,27 @@
   "distrito": "Quilmes",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 105 dr. Mariano Etchegaray": {
+ "Instituto Superior de Formación Docente N° 105 Dr. Mariano Etchegaray": {
   "cue": "061192500",
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 106 almafuerte": {
+ "Instituto Superior de Formación Docente N° 106 Almafuerte": {
   "cue": "061238100",
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 107 josé Manuel Estrada": {
+ "Instituto Superior de Formación Docente N° 107 José Manuel Estrada": {
   "cue": "061377200",
   "distrito": "Cañuelas",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 108 m. Dorrego": {
+ "Instituto Superior de Formación Docente N° 108 M. Dorrego": {
   "cue": "061118600",
   "distrito": "Morón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 109 juana Azurduy": {
+ "Instituto Superior de Formación Docente N° 109 Juana Azurduy": {
   "cue": "060995700",
   "distrito": "Merlo",
   "jurisdiccion": "Buenos Aires"
@@ -3974,17 +4749,17 @@
   "distrito": "Rincon De los Sauces",
   "jurisdiccion": "Neuquén"
  },
- "Instituto Superior de Formación Docente N° 110 mercedes de Lasala y Riglos": {
+ "Instituto Superior de Formación Docente N° 110 Mercedes de Lasala y Riglos": {
   "cue": "060961900",
   "distrito": "Moreno",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 111 dr. M. Moreno": {
+ "Instituto Superior de Formación Docente N° 111 Dr. M. Moreno": {
   "cue": "061344100",
   "distrito": "Moreno",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 112 domingo F. Sarmiento": {
+ "Instituto Superior de Formación Docente N° 112 Domingo F. Sarmiento": {
   "cue": "060633100",
   "distrito": "San Miguel",
   "jurisdiccion": "Buenos Aires"
@@ -3994,7 +4769,7 @@
   "distrito": "General San Martín",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 115 marcos Sastre": {
+ "Instituto Superior de Formación Docente N° 115 Marcos Sastre": {
   "cue": "061168400",
   "distrito": "Baradero",
   "jurisdiccion": "Buenos Aires"
@@ -4004,7 +4779,7 @@
   "distrito": "Campana",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 117 j.g.artigas": {
+ "Instituto Superior de Formación Docente N° 117 J.G.Artigas": {
   "cue": "060188800",
   "distrito": "San Fernando",
   "jurisdiccion": "Buenos Aires"
@@ -4024,17 +4799,17 @@
   "distrito": "Arrecifes",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 125 nicolás Avellaneda": {
+ "Instituto Superior de Formación Docente N° 125 Nicolás Avellaneda": {
   "cue": "061172600",
   "distrito": "Rojas",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 127 ciudad del Acuerdo": {
+ "Instituto Superior de Formación Docente N° 127 Ciudad del Acuerdo": {
   "cue": "060680000",
   "distrito": "San Nicolás",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 128 r. Obligado": {
+ "Instituto Superior de Formación Docente N° 128 R. Obligado": {
   "cue": "060680100",
   "distrito": "San Nicolás",
   "jurisdiccion": "Buenos Aires"
@@ -4044,17 +4819,17 @@
   "distrito": "Chacabuco",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 133 otto Pascual la Falce": {
+ "Instituto Superior de Formación Docente N° 133 Otto Pascual la Falce": {
   "cue": "060021900",
   "distrito": "General Pinto",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 137 justo José de Urquiza": {
+ "Instituto Superior de Formación Docente N° 137 Justo José de Urquiza": {
   "cue": "060609300",
   "distrito": "Mercedes",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 139 mariano Moreno": {
+ "Instituto Superior de Formación Docente N° 139 Mariano Moreno": {
   "cue": "060056200",
   "distrito": "Carmen de Areco",
   "jurisdiccion": "Buenos Aires"
@@ -4064,7 +4839,7 @@
   "distrito": "Cutral Co",
   "jurisdiccion": "Neuquén"
  },
- "Instituto Superior de Formación Docente N° 140 marie Curie": {
+ "Instituto Superior de Formación Docente N° 140 Marie Curie": {
   "cue": "061823200",
   "distrito": "Tigre",
   "jurisdiccion": "Buenos Aires"
@@ -4084,7 +4859,7 @@
   "distrito": "Trenque Lauquen",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 146 maría Célica Lagouarde de Sanséau": {
+ "Instituto Superior de Formación Docente N° 146 María Célica Lagouarde de Sanséau": {
   "cue": "061375800",
   "distrito": "Salliqueló",
   "jurisdiccion": "Buenos Aires"
@@ -4094,7 +4869,7 @@
   "distrito": "Pehuajó",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 149 general José de San Martín": {
+ "Instituto Superior de Formación Docente N° 149 General José de San Martín": {
   "cue": "061128000",
   "distrito": "Carlos Casares",
   "jurisdiccion": "Buenos Aires"
@@ -4104,12 +4879,12 @@
   "distrito": "Lobos",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 156 palmiro Bogliano": {
+ "Instituto Superior de Formación Docente N° 156 Palmiro Bogliano": {
   "cue": "060956900",
   "distrito": "Azul",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 157 b. Rivadavia": {
+ "Instituto Superior de Formación Docente N° 157 B. Rivadavia": {
   "cue": "061163600",
   "distrito": "Azul",
   "jurisdiccion": "Buenos Aires"
@@ -4124,7 +4899,7 @@
   "distrito": "Riscos Bayos",
   "jurisdiccion": "Neuquén"
  },
- "Instituto Superior de Formación Docente N° 16 juana Paula Manso": {
+ "Instituto Superior de Formación Docente N° 16 Juana Paula Manso": {
   "cue": "060950100",
   "distrito": "Saladillo",
   "jurisdiccion": "Buenos Aires"
@@ -4134,12 +4909,12 @@
   "distrito": "Coronel Suárez",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 163 j. M. Estrada": {
+ "Instituto Superior de Formación Docente N° 163 J. M. Estrada": {
   "cue": "060486300",
   "distrito": "Necochea",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 166 general José de San Martín": {
+ "Instituto Superior de Formación Docente N° 166 General José de San Martín": {
   "cue": "061374000",
   "distrito": "Tandil",
   "jurisdiccion": "Buenos Aires"
@@ -4149,7 +4924,7 @@
   "distrito": "Tres Arroyos",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 168 dr. Victoriano": {
+ "Instituto Superior de Formación Docente N° 168 Dr. Victoriano": {
   "cue": "060777900",
   "distrito": "Dolores",
   "jurisdiccion": "Buenos Aires"
@@ -4159,7 +4934,7 @@
   "distrito": "Villa Gesell",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 169 domingo F. Sarmiento": {
+ "Instituto Superior de Formación Docente N° 169 Domingo F. Sarmiento": {
   "cue": "061158200",
   "distrito": "General Juan Madariaga",
   "jurisdiccion": "Buenos Aires"
@@ -4169,12 +4944,12 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 170 emilio V. Alavedra": {
+ "Instituto Superior de Formación Docente N° 170 Emilio V. Alavedra": {
   "cue": "060199200",
   "distrito": "Maipú",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 174 rosario Vera Peñaloza": {
+ "Instituto Superior de Formación Docente N° 174 Rosario Vera Peñaloza": {
   "cue": "060613100",
   "distrito": "General San Martín",
   "jurisdiccion": "Buenos Aires"
@@ -4199,7 +4974,7 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 2 prof. Marie Dibos de Malere": {
+ "Instituto Superior de Formación Docente N° 2 Prof. Marie Dibos de Malere": {
   "cue": "060957100",
   "distrito": "Azul",
   "jurisdiccion": "Buenos Aires"
@@ -4209,9 +4984,14 @@
   "distrito": "Junín",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 21 dr. Ricardo Rojas": {
+ "Instituto Superior de Formación Docente N° 21 Dr. Ricardo Rojas": {
   "cue": "060643600",
   "distrito": "Moreno",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Docente N° 22 Adolfo Alsina": {
+  "cue": "060998700",
+  "distrito": "Olavarría",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente N° 228": {
@@ -4222,11 +5002,6 @@
  "Instituto Superior de Formación Docente N° 229": {
   "cue": "062403800",
   "distrito": "Vicente López",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente N° 22adolfo Alsina": {
-  "cue": "060998700",
-  "distrito": "Olavarría",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente N° 23": {
@@ -4244,7 +5019,7 @@
   "distrito": "General Lavalle",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 24 dr. B. A. Houssay": {
+ "Instituto Superior de Formación Docente N° 24 Dr. B. A. Houssay": {
   "cue": "061070400",
   "distrito": "Quilmes",
   "jurisdiccion": "Buenos Aires"
@@ -4274,7 +5049,7 @@
   "distrito": "Dolores",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 26 -extensión I de Dolores": {
+ "Instituto Superior de Formación Docente N° 26 -Extensión I de Dolores": {
   "cue": "060778001",
   "distrito": "Castelli",
   "jurisdiccion": "Buenos Aires"
@@ -4299,12 +5074,12 @@
   "distrito": "Merlo",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 3 dr. Julio C. Avanza": {
+ "Instituto Superior de Formación Docente N° 3 Dr. Julio C. Avanza": {
   "cue": "060787700",
   "distrito": "Bahía Blanca",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 30 leonardo Da Vinci": {
+ "Instituto Superior de Formación Docente N° 30 Leonardo Da Vinci": {
   "cue": "061420600",
   "distrito": "Ituzaingó",
   "jurisdiccion": "Buenos Aires"
@@ -4314,12 +5089,12 @@
   "distrito": "Necochea",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 34 prof. Héctor Medici": {
+ "Instituto Superior de Formación Docente N° 34 Prof. Héctor Medici": {
   "cue": "060577400",
   "distrito": "Tres de Febrero",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 35 profesor Vicente D´abramo": {
+ "Instituto Superior de Formación Docente N° 35 Profesor Vicente D´Abramo": {
   "cue": "060903000",
   "distrito": "Esteban Echeverría",
   "jurisdiccion": "Buenos Aires"
@@ -4354,7 +5129,7 @@
   "distrito": "Almirante Brown",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 45 julio Cortázar": {
+ "Instituto Superior de Formación Docente N° 45 Julio Cortázar": {
   "cue": "060620000",
   "distrito": "Morón",
   "jurisdiccion": "Buenos Aires"
@@ -4369,12 +5144,12 @@
   "distrito": "Coronel Suárez",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 49 alcides Villano": {
+ "Instituto Superior de Formación Docente N° 49 Alcides Villano": {
   "cue": "060786800",
   "distrito": "Brandsen",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 50 maría Cristina Davini ": {
+ "Instituto Superior de Formación Docente N° 50 María Cristina Davini": {
   "cue": "061029200",
   "distrito": "Berazategui",
   "jurisdiccion": "Buenos Aires"
@@ -4384,17 +5159,17 @@
   "distrito": "Pilar",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 52 maestro Francisco Isauro Arancibia": {
+ "Instituto Superior de Formación Docente N° 52 Maestro Francisco Isauro Arancibia": {
   "cue": "061228900",
   "distrito": "San Isidro",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 54 srta. Victoria Olga Cossettini": {
+ "Instituto Superior de Formación Docente N° 54 Srta. Victoria Olga Cossettini": {
   "cue": "060852100",
   "distrito": "Florencio Varela",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 55 maría Cristina Betinotti": {
+ "Instituto Superior de Formación Docente N° 55 María Cristina Betinotti": {
   "cue": "061066500",
   "distrito": "Escobar",
   "jurisdiccion": "Buenos Aires"
@@ -4404,7 +5179,7 @@
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 59 dr. Carlos Madariaga": {
+ "Instituto Superior de Formación Docente N° 59 Dr. Carlos Madariaga": {
   "cue": "060442300",
   "distrito": "General Juan Madariaga",
   "jurisdiccion": "Buenos Aires"
@@ -4424,7 +5199,7 @@
   "distrito": "General Viamonte",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 61 perla Albisu de Macazaga": {
+ "Instituto Superior de Formación Docente N° 61 Perla Albisu de Macazaga": {
   "cue": "060630200",
   "distrito": "Carlos Tejedor",
   "jurisdiccion": "Buenos Aires"
@@ -4434,22 +5209,22 @@
   "distrito": "Coronel Dorrego",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 62 iris Alicia Galisteo": {
+ "Instituto Superior de Formación Docente N° 62 Iris Alicia Galisteo": {
   "cue": "060974700",
   "distrito": "Coronel Dorrego",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 63 malvinas Argentinas": {
+ "Instituto Superior de Formación Docente N° 63 Malvinas Argentinas": {
   "cue": "060798600",
   "distrito": "Mar Chiquita",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 64 paulo Freire": {
+ "Instituto Superior de Formación Docente N° 64 Paulo Freire": {
   "cue": "060666600",
   "distrito": "Rivadavia",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 65 juana Azurduy": {
+ "Instituto Superior de Formación Docente N° 65 Juana Azurduy": {
   "cue": "061190700",
   "distrito": "San Cayetano",
   "jurisdiccion": "Buenos Aires"
@@ -4484,7 +5259,7 @@
   "distrito": "Pellegrini",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 73 rosario Vera Peñaloza": {
+ "Instituto Superior de Formación Docente N° 73 Rosario Vera Peñaloza": {
   "cue": "061128600",
   "distrito": "Guaminí",
   "jurisdiccion": "Buenos Aires"
@@ -4509,7 +5284,7 @@
   "distrito": "Monte Hermoso",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 79 nora Electra Santa María": {
+ "Instituto Superior de Formación Docente N° 79 Nora Electra Santa María": {
   "cue": "060547600",
   "distrito": "Coronel de Marina L. Rosales",
   "jurisdiccion": "Buenos Aires"
@@ -4519,7 +5294,7 @@
   "distrito": "Junín de Los Andes",
   "jurisdiccion": "Neuquén"
  },
- "Instituto Superior de Formación Docente N° 80 paulo Freire": {
+ "Instituto Superior de Formación Docente N° 80 Paulo Freire": {
   "cue": "060233900",
   "distrito": "Carlos Casares",
   "jurisdiccion": "Buenos Aires"
@@ -4584,7 +5359,7 @@
   "distrito": "Esquel",
   "jurisdiccion": "Chubut"
  },
- "Instituto Superior de Formación Docente N° 81 jorge Huergo": {
+ "Instituto Superior de Formación Docente N° 81 Jorge Huergo": {
   "cue": "060345800",
   "distrito": "General Alvarado",
   "jurisdiccion": "Buenos Aires"
@@ -4594,7 +5369,7 @@
   "distrito": "Rawson",
   "jurisdiccion": "Chubut"
  },
- "Instituto Superior de Formación Docente N° 82 carlos Fuentealba": {
+ "Instituto Superior de Formación Docente N° 82 Carlos Fuentealba": {
   "cue": "060865600",
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
@@ -4609,7 +5384,7 @@
   "distrito": "Zárate",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 86 cacique Valentín Sayhueque": {
+ "Instituto Superior de Formación Docente N° 86 Cacique Valentín Sayhueque": {
   "cue": "061131100",
   "distrito": "Bahía Blanca",
   "jurisdiccion": "Buenos Aires"
@@ -4619,7 +5394,7 @@
   "distrito": "Ayacucho",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 88 paulo Freire": {
+ "Instituto Superior de Formación Docente N° 88 Paulo Freire": {
   "cue": "061044100",
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
@@ -4634,22 +5409,22 @@
   "distrito": "Punta Indio",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 92 alicia Moreau de Justo": {
+ "Instituto Superior de Formación Docente N° 92 Alicia Moreau de Justo": {
   "cue": "060972200",
   "distrito": "Laprida",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 94 roberto Themis Speroni": {
+ "Instituto Superior de Formación Docente N° 94 Roberto Themis Speroni": {
   "cue": "060900000",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 95 mary O'graham": {
+ "Instituto Superior de Formación Docente N° 95 Mary O'Graham": {
   "cue": "060890600",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 96 dardo Rocha": {
+ "Instituto Superior de Formación Docente N° 96 Dardo Rocha": {
   "cue": "060073300",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -4659,7 +5434,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente N° 98 profesor Manuel José Almada": {
+ "Instituto Superior de Formación Docente N° 98 Profesor Manuel José Almada": {
   "cue": "060603300",
   "distrito": "Chascomús",
   "jurisdiccion": "Buenos Aires"
@@ -4679,7 +5454,7 @@
   "distrito": "Capiovi",
   "jurisdiccion": "Misiones"
  },
- "Instituto Superior de Formación Docente Pio Xii": {
+ "Instituto Superior de Formación Docente Pio XII": {
   "cue": "061048500",
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
@@ -4728,6 +5503,11 @@
   "cue": "4600330",
   "distrito": "Chamical",
   "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Docente Reconquista": {
+  "cue": "062468400",
+  "distrito": "San Isidro",
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente Renée Trettel de Fabián - ANEXO Santa Rosa de Río Primero": {
   "cue": null,
@@ -4792,21 +5572,6 @@
  "Instituto Superior de Formación Docente Y/o Técnica Santa Rosa": {
   "cue": "061533900",
   "distrito": "Chivilcoy",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente almirante Guillermo Brown": {
-  "cue": "062085200",
-  "distrito": "Berazategui",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente ana Isler": {
-  "cue": "062390200",
-  "distrito": "San Vicente",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente club Atlético Independiente": {
-  "cue": "062465600",
-  "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente de Alvear": {
@@ -4874,11 +5639,6 @@
   "distrito": "Santa Lucia",
   "jurisdiccion": "Corrientes"
  },
- "Instituto Superior de Formación Docente reconquista": {
-  "cue": "062468400",
-  "distrito": "San Isidro",
-  "jurisdiccion": "Buenos Aires"
- },
  "Instituto Superior de Formación Docente y Técnia Santo Tomás": {
   "cue": "062302100",
   "distrito": "Olavarría",
@@ -4899,12 +5659,22 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Superior de Formación Docente y Técnica Escuela de Música Popular de Cañuelas": {
+  "cue": "062465900",
+  "distrito": "Cañuelas",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Docente y Técnica Frederic Chopin": {
+  "cue": "062085400",
+  "distrito": "Pilar",
+  "jurisdiccion": "Buenos Aires"
+ },
  "Instituto Superior de Formación Docente y Técnica General Manuel Belgrano": {
   "cue": "3400167",
   "distrito": "Villa General Manuel Belgrano",
   "jurisdiccion": "Formosa"
  },
- "Instituto Superior de Formación Docente y Técnica Impronta Forense (isdytif)": {
+ "Instituto Superior de Formación Docente y Técnica Impronta Forense (ISDYTIF)": {
   "cue": "062469000",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -4929,7 +5699,7 @@
   "distrito": "Villa Kilometro 213",
   "jurisdiccion": "Formosa"
  },
- "Instituto Superior de Formación Docente y Técnica N° 114 tupac Amaru Ii": {
+ "Instituto Superior de Formación Docente y Técnica N° 114 Tupac Amaru II": {
   "cue": "060612800",
   "distrito": "General San Martín",
   "jurisdiccion": "Buenos Aires"
@@ -4954,17 +5724,17 @@
   "distrito": "Salto",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 129 tcnel. Expedic. al Desierto Antonio Tassi": {
+ "Instituto Superior de Formación Docente y Técnica N° 129 Tcnel. Expedic. al Desierto Antonio Tassi": {
   "cue": "061114900",
   "distrito": "Junín",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 13 escribano Hipólito Delfor Peña": {
+ "Instituto Superior de Formación Docente y Técnica N° 13 Escribano Hipólito Delfor Peña": {
   "cue": "061061600",
   "distrito": "Pehuajó",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 134 juan Emilio Cassani": {
+ "Instituto Superior de Formación Docente y Técnica N° 134 Juan Emilio Cassani": {
   "cue": "060940900",
   "distrito": "Lincoln",
   "jurisdiccion": "Buenos Aires"
@@ -4979,7 +5749,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 136 - Anexo Ii": {
+ "Instituto Superior de Formación Docente y Técnica N° 136 - Anexo II": {
   "cue": "060143202",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -4994,17 +5764,17 @@
   "distrito": "San Antonio de Areco",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 14 elba Vidal": {
+ "Instituto Superior de Formación Docente y Técnica N° 14 Elba Vidal": {
   "cue": "060951200",
   "distrito": "Lincoln",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 148 rafael Hernández": {
+ "Instituto Superior de Formación Docente y Técnica N° 148 Rafael Hernández": {
   "cue": "061061400",
   "distrito": "Pehuajó",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 15 prof. Berta Luisa Marquehosse": {
+ "Instituto Superior de Formación Docente y Técnica N° 15 Prof. Berta Luisa Marquehosse": {
   "cue": "060591300",
   "distrito": "Campana",
   "jurisdiccion": "Buenos Aires"
@@ -5014,7 +5784,7 @@
   "distrito": "Las Flores",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 155 prof. Hernán Bernal": {
+ "Instituto Superior de Formación Docente y Técnica N° 155 Prof. Hernán Bernal": {
   "cue": "062319400",
   "distrito": "General Rodríguez",
   "jurisdiccion": "Buenos Aires"
@@ -5024,7 +5794,7 @@
   "distrito": "Coronel de Marina L. Rosales",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 162 ernesto Tornquist": {
+ "Instituto Superior de Formación Docente y Técnica N° 162 Ernesto Tornquist": {
   "cue": "061190300",
   "distrito": "Tornquist",
   "jurisdiccion": "Buenos Aires"
@@ -5034,7 +5804,7 @@
   "distrito": "Florentino Ameghino",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 165 domingo Alberto Teruggi": {
+ "Instituto Superior de Formación Docente y Técnica N° 165 Domingo Alberto Teruggi": {
   "cue": "060008000",
   "distrito": "Lobería",
   "jurisdiccion": "Buenos Aires"
@@ -5044,12 +5814,12 @@
   "distrito": "General Arenales",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 20 martha Olimpia Carpaneto": {
+ "Instituto Superior de Formación Docente y Técnica N° 20 Martha Olimpia Carpaneto": {
   "cue": "061115100",
   "distrito": "Junín",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 209 ceferino Namuncurá": {
+ "Instituto Superior de Formación Docente y Técnica N° 209 Ceferino Namuncurá": {
   "cue": "061684200",
   "distrito": "Hurlingham",
   "jurisdiccion": "Buenos Aires"
@@ -5059,17 +5829,17 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 211 veteranas de Malvinas": {
+ "Instituto Superior de Formación Docente y Técnica N° 211 Veteranas de Malvinas": {
   "cue": "062318700",
   "distrito": "Leandro N. Alem",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 212 magdalena Corita Pesqueira": {
+ "Instituto Superior de Formación Docente y Técnica N° 212 Magdalena Corita Pesqueira": {
   "cue": "062327500",
   "distrito": "General Paz",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 215 manuel Belgrano": {
+ "Instituto Superior de Formación Docente y Técnica N° 215 Manuel Belgrano": {
   "cue": "062326400",
   "distrito": "Lezama",
   "jurisdiccion": "Buenos Aires"
@@ -5094,7 +5864,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 242 cecilia Grierson": {
+ "Instituto Superior de Formación Docente y Técnica N° 242 Cecilia Grierson": {
   "cue": "062441500",
   "distrito": "Navarro",
   "jurisdiccion": "Buenos Aires"
@@ -5104,12 +5874,12 @@
   "distrito": "Dolores",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 32 lidia Gallino de Camino": {
+ "Instituto Superior de Formación Docente y Técnica N° 32 Lidia Gallino de Camino": {
   "cue": "060613400",
   "distrito": "Balcarce",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 33 profesor Emilio García de la Calle": {
+ "Instituto Superior de Formación Docente y Técnica N° 33 Profesor Emilio García de la Calle": {
   "cue": "060604100",
   "distrito": "Tres Arroyos",
   "jurisdiccion": "Buenos Aires"
@@ -5134,17 +5904,17 @@
   "distrito": "Coronel Suárez",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 5 región de la Norpampa": {
+ "Instituto Superior de Formación Docente y Técnica N° 5 Región de la Norpampa": {
   "cue": "060825100",
   "distrito": "Pergamino",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 53 maría Esther Tommasi": {
+ "Instituto Superior de Formación Docente y Técnica N° 53 María Esther Tommasi": {
   "cue": "060807100",
   "distrito": "Almirante Brown",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 57 juana Paula Manso": {
+ "Instituto Superior de Formación Docente y Técnica N° 57 Juana Paula Manso": {
   "cue": "060595600",
   "distrito": "Chascomús",
   "jurisdiccion": "Buenos Aires"
@@ -5159,7 +5929,7 @@
   "distrito": "Magdalena",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 66 don Juan Manuel de Rosas": {
+ "Instituto Superior de Formación Docente y Técnica N° 66 Don Juan Manuel de Rosas": {
   "cue": "060176600",
   "distrito": "Monte",
   "jurisdiccion": "Buenos Aires"
@@ -5169,12 +5939,12 @@
   "distrito": "Mercedes",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 70 manuel Belgrano": {
+ "Instituto Superior de Formación Docente y Técnica N° 70 Manuel Belgrano": {
   "cue": "060845900",
   "distrito": "Rauch",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 72 manuela Goenaga": {
+ "Instituto Superior de Formación Docente y Técnica N° 72 Manuela Goenaga": {
   "cue": "060909700",
   "distrito": "General La Madrid",
   "jurisdiccion": "Buenos Aires"
@@ -5199,12 +5969,12 @@
   "distrito": "General Alvarado",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 83 simón Rodríguez": {
+ "Instituto Superior de Formación Docente y Técnica N° 83 Simón Rodríguez": {
   "cue": "060662400",
   "distrito": "Quilmes",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 89 dr. René Favaloro": {
+ "Instituto Superior de Formación Docente y Técnica N° 89 Dr. René Favaloro": {
   "cue": "060767300",
   "distrito": "La Costa",
   "jurisdiccion": "Buenos Aires"
@@ -5214,7 +5984,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Docente y Técnica N° 91 dr. René Favaloro": {
+ "Instituto Superior de Formación Docente y Técnica N° 91 Dr. René Favaloro": {
   "cue": "060738300",
   "distrito": "Tapalqué",
   "jurisdiccion": "Buenos Aires"
@@ -5224,9 +5994,19 @@
   "distrito": "Villa San José de Vinchina",
   "jurisdiccion": "La Rioja"
  },
+ "Instituto Superior de Formación Docente y Técnica San Bernardo": {
+  "cue": "062355900",
+  "distrito": "Escobar",
+  "jurisdiccion": "Buenos Aires"
+ },
  "Instituto Superior de Formación Docente y Técnica San Luis": {
   "cue": "062319800",
   "distrito": "Merlo",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Docente y Técnica Suetra": {
+  "cue": "062064600",
+  "distrito": "Berazategui",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente y Técnica T-030 del Bicentenario": {
@@ -5252,26 +6032,6 @@
  "Instituto Superior de Formación Docente y Técnica del Bicentenario": {
   "cue": "062224500",
   "distrito": "San Miguel",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente y Técnica escuela de Música Popular de Cañuelas": {
-  "cue": "062465900",
-  "distrito": "Cañuelas",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente y Técnica frederic Chopin": {
-  "cue": "062085400",
-  "distrito": "Pilar",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente y Técnica san Bernardo": {
-  "cue": "062355900",
-  "distrito": "Escobar",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Docente y Técnica suetra": {
-  "cue": "062064600",
-  "distrito": "Berazategui",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Docente y Técnico Profesional de Famatina": {
@@ -5314,12 +6074,22 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Superior de Formación Técnica Gato Dumas Colegio de Cocineros": {
+  "cue": "062274500",
+  "distrito": "Pilar",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Técnica Madre Deus": {
+  "cue": "062479400",
+  "distrito": "La Matanza",
+  "jurisdiccion": "Buenos Aires"
+ },
  "Instituto Superior de Formación Técnica N° 118": {
   "cue": "060595200",
   "distrito": "San Pedro",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 12 crucero A.r.a. General Belgrano": {
+ "Instituto Superior de Formación Técnica N° 12 Crucero A.R.A. General Belgrano": {
   "cue": "060899400",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -5339,12 +6109,12 @@
   "distrito": "Chacabuco",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 135 ing. Mario Deraldo Michelini": {
+ "Instituto Superior de Formación Técnica N° 135 Ing. Mario Deraldo Michelini": {
   "cue": "061613700",
   "distrito": "Saladillo",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 143 san Antonio de Areco": {
+ "Instituto Superior de Formación Técnica N° 143 San Antonio de Areco": {
   "cue": "060646200",
   "distrito": "San Antonio de Areco",
   "jurisdiccion": "Buenos Aires"
@@ -5364,12 +6134,12 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 171 g. Mistral": {
+ "Instituto Superior de Formación Técnica N° 171 G. Mistral": {
   "cue": "061197400",
   "distrito": "Pinamar",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 172 alan Turing": {
+ "Instituto Superior de Formación Técnica N° 172 Alan Turing": {
   "cue": "060324500",
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
@@ -5404,7 +6174,7 @@
   "distrito": "San Nicolás",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 179 carlos Pellegrini": {
+ "Instituto Superior de Formación Técnica N° 179 Carlos Pellegrini": {
   "cue": "060946300",
   "distrito": "Moreno",
   "jurisdiccion": "Buenos Aires"
@@ -5419,7 +6189,7 @@
   "distrito": "San Miguel",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 183 san Martín": {
+ "Instituto Superior de Formación Técnica N° 183 San Martín": {
   "cue": "060944400",
   "distrito": "General San Martín",
   "jurisdiccion": "Buenos Aires"
@@ -5444,7 +6214,7 @@
   "distrito": "General Rodríguez",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 189 carlos Thays": {
+ "Instituto Superior de Formación Técnica N° 189 Carlos Thays": {
   "cue": "060002800",
   "distrito": "Luján",
   "jurisdiccion": "Buenos Aires"
@@ -5489,7 +6259,7 @@
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 198 guillermo Enrique Hudson": {
+ "Instituto Superior de Formación Técnica N° 198 Guillermo Enrique Hudson": {
   "cue": "062224700",
   "distrito": "Berazategui",
   "jurisdiccion": "Buenos Aires"
@@ -5504,7 +6274,7 @@
   "distrito": "Vicente López",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 200 latinoamérica Libre": {
+ "Instituto Superior de Formación Técnica N° 200 Latinoamérica Libre": {
   "cue": "062238400",
   "distrito": "Villa Gesell",
   "jurisdiccion": "Buenos Aires"
@@ -5529,7 +6299,7 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 206 satélite Arsat I": {
+ "Instituto Superior de Formación Técnica N° 206 Satélite Arsat I": {
   "cue": "062249000",
   "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
@@ -5634,7 +6404,7 @@
   "distrito": "San Nicolás",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 6005 - Escuela de Policía juan Vucetich": {
+ "Instituto Superior de Formación Técnica N° 6005 - Escuela de Policía Juan Vucetich": {
   "cue": "062193400",
   "distrito": "Berazategui",
   "jurisdiccion": "Buenos Aires"
@@ -5649,9 +6419,19 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica N° 93 presidente Arturo Umberto Illia": {
+ "Instituto Superior de Formación Técnica N° 93 Presidente Arturo Umberto Illia": {
   "cue": "060563100",
   "distrito": "San Vicente",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Técnica Padre Carlos Mugica": {
+  "cue": "062489200",
+  "distrito": "Merlo",
+  "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Técnica Papa Francisco": {
+  "cue": "062450000",
+  "distrito": "La Matanza",
   "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Técnica Sadiv": {
@@ -5679,40 +6459,65 @@
   "distrito": "Pilar",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica gato Dumas Colegio de Cocineros": {
-  "cue": "062274500",
-  "distrito": "Pilar",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Técnica madre Deus": {
-  "cue": "062479400",
-  "distrito": "La Matanza",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Técnica padre Carlos Mugica": {
-  "cue": "062489200",
-  "distrito": "Merlo",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Técnica papa Francisco": {
-  "cue": "062450000",
-  "distrito": "La Matanza",
-  "jurisdiccion": "Buenos Aires"
- },
- "Instituto Superior de Formación Técnica para la Producción Total (facetp)": {
+ "Instituto Superior de Formación Técnica para la Producción Total (FACETP)": {
   "cue": "062323000",
   "distrito": "General Belgrano",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Formación Técnica y Profesorado instituto Municipal de Teatro": {
+ "Instituto Superior de Formación Técnica y Profesorado Instituto Municipal de Teatro": {
   "cue": "062300200",
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior de Formación Técnico Profesional Brigadier General Juan F. Quiroga": {
+  "cue": "4600741",
+  "distrito": "Capital",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional Brigadier Juan Facundo Quiroga": {
+  "cue": "4600415",
+  "distrito": "Rosario Vera Peñaloza",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional Ing. Otto Krause": {
+  "cue": "4600740",
+  "distrito": "Capital",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional Nonogasta": {
+  "cue": "4600317",
+  "distrito": "Chilecito",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional Pituil": {
+  "cue": "4600847",
+  "distrito": "Famatina",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional Santa Lucia": {
+  "cue": "4600414",
+  "distrito": "Rosario Vera Peñaloza",
+  "jurisdiccion": "La Rioja"
+ },
+ "Instituto Superior de Formación Técnico Profesional la Totorita Catuna": {
+  "cue": "4600428",
+  "distrito": "General Ocampo",
+  "jurisdiccion": "La Rioja"
  },
  "Instituto Superior de Formación y Capacitación Docente N° 1": {
   "cue": "1800815",
   "distrito": "Corrientes",
   "jurisdiccion": "Corrientes"
+ },
+ "Instituto Superior de Formación y Desarrollo Rural": {
+  "cue": "5401368",
+  "distrito": "Leandro N. Alem",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior de Formación, Capacitación y Superación Profesional Lic. Myriam Beatriz Gloss . Anexo San Pedro": {
+  "cue": "3800814",
+  "distrito": "San Pedro",
+  "jurisdiccion": "Jujuy"
  },
  "Instituto Superior de Hotelería, Gastronomía y Turismo Ángel Salvadori": {
   "cue": "061579800",
@@ -5859,7 +6664,7 @@
   "distrito": "Tostado",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior de Profesorado Pbro.dr.antoni Maria Saenz": {
+ "Instituto Superior de Profesorado Pbro.Dr.Antoni Maria Saenz": {
   "cue": "060830800",
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
@@ -5879,7 +6684,7 @@
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Psicología Social Dr.enrique Pichon Riviere": {
+ "Instituto Superior de Psicología Social Dr.Enrique Pichon Riviere": {
   "cue": "061478000",
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
@@ -5889,7 +6694,7 @@
   "distrito": "Bahía Blanca",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superior de Salud y Educación pedro Luro": {
+ "Instituto Superior de Salud y Educación Pedro Luro": {
   "cue": "062282900",
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
@@ -5898,6 +6703,11 @@
   "cue": "7400596",
   "distrito": "San Luis",
   "jurisdiccion": "San Luis"
+ },
+ "Instituto Superior de Tecnicaturas para la Salud": {
+  "cue": "0201877",
+  "distrito": "Comuna N° 4",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Superior de las Especialidades de la Educación Fisica": {
   "cue": "3001331",
@@ -6154,10 +6964,25 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior en Gestión de Pymes Agropecuarias Prof. Adriana Corina Linggerini": {
+  "cue": "3002819",
+  "distrito": "Gualeguay",
+  "jurisdiccion": "Entre Ríos"
+ },
  "Instituto Superior en Registración y Publicidad Inmobiliaria": {
   "cue": "062351400",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Superior en Tecnología Automotriz": {
+  "cue": "5401889",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Superior en Tecnologías Agropecuarias y Alimentarias Monseñor Jorge Kemerer": {
+  "cue": "5401630",
+  "distrito": "Candelaria",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Superior para el Desarrollo Estratégico Capacitare": {
   "cue": "061674800",
@@ -6169,7 +6994,7 @@
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto Superiorde For.doc.y Tec.no Oficial Sta. M. de la Asuncion": {
+ "Instituto Superiorde For.Doc.y Tec.No Oficial Sta. M. de la Asuncion": {
   "cue": "060646100",
   "distrito": "San Antonio de Areco",
   "jurisdiccion": "Buenos Aires"
@@ -6183,6 +7008,36 @@
   "cue": "062102600",
   "distrito": "San Andrés de Giles",
   "jurisdiccion": "Buenos Aires"
+ },
+ "Instituto Tecnológico (I.Tec.)": {
+  "cue": "5401393",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Tecnológico (I.Tec.) Instituto Tecnológico N° 1": {
+  "cue": "5401332",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Tecnológico (I.Tec.) Itec Alem 1008": {
+  "cue": "5401268",
+  "distrito": "Leandro N. Alem",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Tecnológico (I.Tec.) Itec Iguazú": {
+  "cue": "5401267",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Tecnológico (I.Tec.) Montecarlo": {
+  "cue": "5401313",
+  "distrito": "Montecarlo",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Tecnológico (I.Tec.) San Isidro": {
+  "cue": "5401771",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
  },
  "Instituto Tecnológico Foro de los Ríos": {
   "cue": null,
@@ -6199,6 +7054,11 @@
   "distrito": "José C. Paz",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Tecnológico Provincial (I.Te.P.) Itep N° 1": {
+  "cue": "5401519",
+  "distrito": "Cainguás",
+  "jurisdiccion": "Misiones"
+ },
  "Instituto Tecnológico Rafael de Aguiar": {
   "cue": "061589200",
   "distrito": "San Nicolás",
@@ -6209,7 +7069,7 @@
   "distrito": "Río Cuarto",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Tecnológico U.o.m.": {
+ "Instituto Tecnológico U.O.M.": {
   "cue": "062221400",
   "distrito": "Tres de Febrero",
   "jurisdiccion": "Buenos Aires"
@@ -6217,6 +7077,16 @@
  "Instituto Tecnológico de Educación Superior": {
   "cue": "4200238",
   "distrito": "Victorica",
+  "jurisdiccion": "La Pampa"
+ },
+ "Instituto Tecnológico de Educación Superior José LUIS Charruff": {
+  "cue": "4200165",
+  "distrito": "Conhelo",
+  "jurisdiccion": "La Pampa"
+ },
+ "Instituto Tecnológico de Educación Superior Santa Rosa": {
+  "cue": "4200289",
+  "distrito": "Capital",
   "jurisdiccion": "La Pampa"
  },
  "Instituto Tecnológico de Motores": {
@@ -6239,6 +7109,11 @@
   "distrito": "Moreno",
   "jurisdiccion": "Buenos Aires"
  },
+ "Instituto Tierra Santa": {
+  "cue": "0200974",
+  "distrito": "Comuna N° 5",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Técnico Renault": {
   "cue": null,
   "distrito": "Capital",
@@ -6249,25 +7124,155 @@
   "distrito": "Clorinda",
   "jurisdiccion": "Formosa"
  },
+ "Instituto Técnico Superior": {
+  "cue": "6200513",
+  "distrito": "Veinticinco de Mayo",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior CEAER Sede Central Choele Choel": {
+  "cue": "6200570",
+  "distrito": "Avellaneda",
+  "jurisdiccion": "Río Negro"
+ },
  "Instituto Técnico Superior Cerrito": {
   "cue": "3002818",
   "distrito": "Cerrito",
   "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto Técnico Superior Cipolletti N° 13": {
+  "cue": "6201096",
+  "distrito": "General Roca",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior Comallo": {
+  "cue": "6201070",
+  "distrito": "Pilcaniyeu",
+  "jurisdiccion": "Río Negro"
  },
  "Instituto Técnico Superior Córdoba": {
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Técnico Superior Esccuela de Bibliotecologia Dr. Mariano Moreno": {
+  "cue": "7000478",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
+ },
+ "Instituto Técnico Superior Gaspar Lucilo Benavento": {
+  "cue": "3003069",
+  "distrito": "Victoria",
+  "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto Técnico Superior ISET - Instituto Superior de Estudios Tecnicos": {
+  "cue": "5401217",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior Instituto Tecnico Superior Viedma N° 1": {
+  "cue": "6200151",
+  "distrito": "Adolfo Alsina",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior Instituto Tecnico Superior de Concordia": {
+  "cue": "3000248",
+  "distrito": "Concordia",
+  "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto Técnico Superior Instituto Tecnológico Superior N° 2": {
+  "cue": "5401541",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior Instituto Técnico Superior VIEDMA": {
+  "cue": "6201206",
+  "distrito": "Adolfo Alsina",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior Instituto de Educación Técnica Superior en Seguridad Vial": {
+  "cue": "5401899",
+  "distrito": "Capital",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior Multidiversidad Popular": {
+  "cue": "5401436",
+  "distrito": "San Ignacio",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior Puerto Esperanza": {
+  "cue": "5401385",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior San Carlos de Bariloche": {
+  "cue": "6200968",
+  "distrito": "Bariloche",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior San Martín": {
+  "cue": "7001125",
+  "distrito": "San Martín",
+  "jurisdiccion": "San Juan"
+ },
+ "Instituto Técnico Superior Sierra Grande": {
+  "cue": "6200956",
+  "distrito": "San Antonio",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior Tecnicatura Superior en Viticultura y Enología": {
+  "cue": "6200985",
+  "distrito": "General Roca",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior Uruguaí": {
+  "cue": "5401370",
+  "distrito": "Iguazú",
+  "jurisdiccion": "Misiones"
+ },
+ "Instituto Técnico Superior de Sarmiento": {
+  "cue": "7000759",
+  "distrito": "Sarmiento",
+  "jurisdiccion": "San Juan"
+ },
+ "Instituto Técnico Superior de ULLUM": {
+  "cue": "7000761",
+  "distrito": "Ullum",
+  "jurisdiccion": "San Juan"
+ },
  "Instituto Técnico Superior de Urdinarrain Prof. Alberto R. Fabre": {
   "cue": "3001363",
   "distrito": "Urdinarrain",
   "jurisdiccion": "Entre Ríos"
  },
+ "Instituto Técnico Superior los Menucos": {
+  "cue": "6200915",
+  "distrito": "Veinticinco de Mayo",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico UNT": {
+  "cue": "9090004",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Instituto Técnologico de Santiago del Estero": {
+  "cue": "8602273",
+  "distrito": "Banda",
+  "jurisdiccion": "Santiago del Estero"
+ },
  "Instituto Vocacional Concepcion": {
   "cue": "9001858",
   "distrito": "Concepción",
   "jurisdiccion": "Tucumán"
+ },
+ "Instituto de Capacitación Aduanera": {
+  "cue": "0201603",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Capacitación Asociación Personal Aeronáutico - ICAPA": {
+  "cue": "0203040",
+  "distrito": "Comuna N° 2",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Capacitación Dr. Justo Lucas Álvarez Rodríguez": {
   "cue": "062468200",
@@ -6279,7 +7284,7 @@
   "distrito": "General Pueyrredón",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto de Educ. Superior I.t.e.c.o.": {
+ "Instituto de Educ. Superior I.T.E.C.O.": {
   "cue": "061647800",
   "distrito": "Olavarría",
   "jurisdiccion": "Buenos Aires"
@@ -6314,10 +7319,190 @@
   "distrito": "Presidencia Roque Sáenz Peña",
   "jurisdiccion": "Chaco"
  },
+ "Instituto de Educación Superior (I. E. S.) Barranqueras": {
+  "cue": "2202205",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior (I. E. S.) CENT": {
+  "cue": "2201401",
+  "distrito": "Primero de Mayo",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior (I. E. S.) Raúl Bernardino Barbetti": {
+  "cue": "2202486",
+  "distrito": "Libertador General de San Martín",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior (I. E. S.) Rodolfo Walsh": {
+  "cue": "2202268",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior (I. E. S.) U.E.G.P. N° 106 Instituto de Educación Superior": {
+  "cue": "2201810",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior (I.E.S.)": {
+  "cue": "5002346",
+  "distrito": "Guaymallén",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Alfredo Coviello": {
+  "cue": "9000545",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Instituto de Educación Superior (I.E.S.) Camilo Golgi": {
+  "cue": "1801815",
+  "distrito": "Capital",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Carmen Molina de Llano": {
+  "cue": "1801176",
+  "distrito": "Capital",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Centro Educativo Irupé I.Prof.14 - I.T.3": {
+  "cue": "1801216",
+  "distrito": "Santo Tomé",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Cruz Roja Argentina Filial San Rafael": {
+  "cue": "5001324",
+  "distrito": "San Rafael",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Cruz Roja Argentina Plaza Huincul": {
+  "cue": "5800755",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto de Educación Superior (I.E.S.) Dr. Antenor Álvarez": {
+  "cue": "8601853",
+  "distrito": "Capital",
+  "jurisdiccion": "Santiago del Estero"
+ },
+ "Instituto de Educación Superior (I.E.S.) Esc. de Policia Gral. Don Jose de San Martin": {
+  "cue": "9001037",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Instituto de Educación Superior (I.E.S.) Escuela Internacional de Turismo, Hotelería y Gastronomía de Mendoza": {
+  "cue": "5001296",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Escuela de Diseño en el Habitat": {
+  "cue": "5800655",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto de Educación Superior (I.E.S.) Fermosa": {
+  "cue": "3400957",
+  "distrito": "Formosa",
+  "jurisdiccion": "Formosa"
+ },
+ "Instituto de Educación Superior (I.E.S.) Fundación Universitas": {
+  "cue": "5001807",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Agrotécnico Víctor Navajas Centeno": {
+  "cue": "1800657",
+  "distrito": "Santo Tomé",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Politécnico Formosa": {
+  "cue": "3401172",
+  "distrito": "Formosa",
+  "jurisdiccion": "Formosa"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Superior Cervantes": {
+  "cue": "7000251",
+  "distrito": "Capital",
+  "jurisdiccion": "San Juan"
+ },
  "Instituto de Educación Superior (I.E.S.) Instituto Superior Monseñor Jorge Gottau": {
   "cue": "8601876",
   "distrito": "Santiago del Estero",
   "jurisdiccion": "Santiago del Estero"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Superior Policial (I.S.P.)": {
+  "cue": "4200764",
+  "distrito": "Capital",
+  "jurisdiccion": "La Pampa"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Superior Tecnológico en Minería": {
+  "cue": "5002029",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Superior de Servicio Social Remedios Escalada de San Martín": {
+  "cue": "1800411",
+  "distrito": "Capital",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto Superior en Seguridad": {
+  "cue": "5801062",
+  "distrito": "Confluencia",
+  "jurisdiccion": "Neuquén"
+ },
+ "Instituto de Educación Superior (I.E.S.) Instituto de Formación y Capacitación Cruz Roja Argentina Filial Corrientes": {
+  "cue": "1801430",
+  "distrito": "Capital",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) Manuel Belgrano": {
+  "cue": "5001317",
+  "distrito": "Godoy Cruz",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Prof. Estela Susana Quiroga": {
+  "cue": "5002359",
+  "distrito": "Santa Rosa",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) SAN RAFAEL en Informática": {
+  "cue": "5001219",
+  "distrito": "San Rafael",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Santa Rita": {
+  "cue": "3400811",
+  "distrito": "Formosa",
+  "jurisdiccion": "Formosa"
+ },
+ "Instituto de Educación Superior (I.E.S.) Tecnológico Junín": {
+  "cue": "5002213",
+  "distrito": "Junín",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior (I.E.S.) Técnico Industrial -Dr. Néstor Kirchner-": {
+  "cue": "1000899",
+  "distrito": "Capital",
+  "jurisdiccion": "Catamarca"
+ },
+ "Instituto de Educación Superior (I.E.S.) UOCRA - I. S. F. T. Islas Malvinas": {
+  "cue": "1801650",
+  "distrito": "Capital",
+  "jurisdiccion": "Corrientes"
+ },
+ "Instituto de Educación Superior (I.E.S.) de Sanidad Prof. Dr. Ramon Carrillo": {
+  "cue": "3401152",
+  "distrito": "Formosa",
+  "jurisdiccion": "Formosa"
+ },
+ "Instituto de Educación Superior (I.E.S.) de Tecnología Gráfica Juan Gutenberg": {
+  "cue": "5001650",
+  "distrito": "Capital",
+  "jurisdiccion": "Mendoza"
+ },
+ "Instituto de Educación Superior Anexo Fraile Pintado": {
+  "cue": "3800352",
+  "distrito": "Ledesma",
+  "jurisdiccion": "Jujuy"
  },
  "Instituto de Educación Superior Atanasio Lanz": {
   "cue": "060986900",
@@ -6354,10 +7539,65 @@
   "distrito": "Resistencia",
   "jurisdiccion": "Chaco"
  },
+ "Instituto de Educación Superior Dr.Guillermo Cleland Paterson": {
+  "cue": "3800582",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
  "Instituto de Educación Superior Gobernador José Cubas": {
   "cue": "1000735",
   "distrito": "San Isidro",
   "jurisdiccion": "Catamarca"
+ },
+ "Instituto de Educación Superior Instituto Superior DELTA": {
+  "cue": "3800035",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Superior JUJUY": {
+  "cue": "3800067",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Superior Parroquial Mansilla": {
+  "cue": "3002070",
+  "distrito": "Tala",
+  "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto de Educación Superior Instituto Superior San Expedito": {
+  "cue": "3800984",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Superior de Capacitacion y Desarrollo Empresarial": {
+  "cue": "3800735",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Superior de Capacitación Empresaria": {
+  "cue": "3003227",
+  "distrito": "Paraná",
+  "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto de Educación Superior Instituto Superior de Mecanica DENTAL MANUEL Belgrano": {
+  "cue": "3800948",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Superior en Ciencias de la Salud": {
+  "cue": "3800928",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto Tecnico Superior del Colegio de Tecnicos de Jujuy": {
+  "cue": "3800750",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
+ "Instituto de Educación Superior Instituto de Educacion Superior N° 11": {
+  "cue": "3800978",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
  },
  "Instituto de Educación Superior José Manuel Estrada": {
   "cue": "2200653",
@@ -6378,6 +7618,11 @@
   "cue": "2201077",
   "distrito": "Presidencia Roque Sáenz Peña",
   "jurisdiccion": "Chaco"
+ },
+ "Instituto de Educación Superior Justo José de Urquiza D-145": {
+  "cue": "3002875",
+  "distrito": "Paraná",
+  "jurisdiccion": "Entre Ríos"
  },
  "Instituto de Educación Superior Maria Auxiliadora": {
   "cue": "8602188",
@@ -6574,6 +7819,121 @@
   "distrito": "Las Palmas",
   "jurisdiccion": "Chaco"
  },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) Centro Educativo Popular de Expresión y Comunicación": {
+  "cue": "8203823",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) Centro de Educación Técnica para el Diagnóstico": {
+  "cue": "8204121",
+  "distrito": "La Capital",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) Complejo Educativo Cristiano I.E.M.A.": {
+  "cue": "8204177",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) Dr. Pablo Mirizzi": {
+  "cue": "8203959",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) de Especialización Profesional": {
+  "cue": "8204139",
+  "distrito": "La Capital",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) de Mecánica Dental": {
+  "cue": "8204159",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Autorizado (I.S.P.A.) de Tecnología Médica": {
+  "cue": "8204077",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Centro de Estudios Superiores": {
+  "cue": "8200914",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Ciencias Comerciales": {
+  "cue": "8200050",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Computación Administrativa": {
+  "cue": "8202250",
+  "distrito": "San Lorenzo",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Cruz Roja Argentina": {
+  "cue": "8203814",
+  "distrito": "Caseros",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Cruz Roja Argentina - Anexo Esperanza": {
+  "cue": "8201884",
+  "distrito": "Las Colonias",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Cruz Roja Argentina - Filial Rosario": {
+  "cue": "8202507",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Dr. Luis Federico Leloir": {
+  "cue": "8204019",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Federico Grote": {
+  "cue": "8200514",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Fundación Hospital Oliveros": {
+  "cue": "8200619",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) General Manuel Belgrano": {
+  "cue": "8200028",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Humberto 1º": {
+  "cue": "8203060",
+  "distrito": "Castellanos",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Juan Pablo II": {
+  "cue": "8200397",
+  "distrito": "San Lorenzo",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) Monseñor Vicente F. Zazpe": {
+  "cue": "8202398",
+  "distrito": "San Cristóbal",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) San Pablo": {
+  "cue": "8202528",
+  "distrito": "Constitución",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) de Ciencias Comerciales": {
+  "cue": "8200175",
+  "distrito": "La Capital",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Particular Incorporada (I.S.P.I.) el Molino": {
+  "cue": "8204137",
+  "distrito": "Las Colonias",
+  "jurisdiccion": "Santa Fe"
+ },
  "Instituto de Educación Superior Pbro Orlando Bottegal": {
   "cue": "3000784",
   "distrito": "Hasenkamp",
@@ -6634,6 +7994,11 @@
   "distrito": "Resistencia",
   "jurisdiccion": "Chaco"
  },
+ "Instituto de Educación Superior San Gregorio": {
+  "cue": "3800949",
+  "distrito": "San Pedro",
+  "jurisdiccion": "Jujuy"
+ },
  "Instituto de Educación Superior San Salvador": {
   "cue": "3001395",
   "distrito": "San Salvador",
@@ -6658,6 +8023,11 @@
   "cue": "3001561",
   "distrito": "Bovril",
   "jurisdiccion": "Entre Ríos"
+ },
+ "Instituto de Educación Superior de Capacitación Aduanera Jujuy Dr. Guillermo E. Snopek": {
+  "cue": "3800791",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
  },
  "Instituto de Educación Superior de Charadai": {
   "cue": "2202295",
@@ -6689,6 +8059,11 @@
   "distrito": "Pampa del Indio",
   "jurisdiccion": "Chaco"
  },
+ "Instituto de Educación Superior de Seguridad Pública": {
+  "cue": "3800746",
+  "distrito": "Dr. Manuel Belgrano",
+  "jurisdiccion": "Jujuy"
+ },
  "Instituto de Educación Superior de Taco Pozo": {
   "cue": "2200616",
   "distrito": "Taco Pozo",
@@ -6718,6 +8093,16 @@
   "cue": null,
   "distrito": "General San Martín",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Educación Superior del Profesorado (I.S.P.)": {
+  "cue": "8204681",
+  "distrito": "Vera",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior del Profesorado (I.S.P.) Instituto Superior del Profesorado N° 68": {
+  "cue": "8204741",
+  "distrito": "Las Colonias",
+  "jurisdiccion": "Santa Fe"
  },
  "Instituto de Enseñanza Domingo Faustino Sarmiento": {
   "cue": null,
@@ -6908,6 +8293,11 @@
   "cue": "8602113",
   "distrito": "Campo Gallo",
   "jurisdiccion": "Santiago del Estero"
+ },
+ "Instituto de Formacion de Ciencias Empresariales": {
+  "cue": "0202187",
+  "distrito": "Comuna N° 14",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Formación Docente Chajari": {
   "cue": "3003129",
@@ -7199,6 +8589,11 @@
   "distrito": "Leandro N. Alem",
   "jurisdiccion": "Misiones"
  },
+ "Instituto de Formación No Universitario IFSSA": {
+  "cue": "6201111",
+  "distrito": "General Roca",
+  "jurisdiccion": "Río Negro"
+ },
  "Instituto de Formación Superior Padre Frassinetti": {
   "cue": "060659700",
   "distrito": "Avellaneda",
@@ -7207,6 +8602,31 @@
  "Instituto de Formación Superior Sedeba": {
   "cue": "0202821",
   "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior (I.F.T.S.)": {
+  "cue": "0201787",
+  "distrito": "Comuna N° 1",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior (I.F.T.S.) Don Orione": {
+  "cue": "0203149",
+  "distrito": "Comuna N° 4",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior (I.F.T.S.) Facultar": {
+  "cue": "0202822",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior (I.F.T.S.) Madre Deus": {
+  "cue": "0202476",
+  "distrito": "Comuna N° 3",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior (I.F.T.S.) de Enseñanza Hotelero Gastronómica": {
+  "cue": "0202787",
+  "distrito": "Comuna N° 1",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Formación Técnica Superior N° 1": {
@@ -7354,7 +8774,7 @@
   "distrito": "Avellaneda",
   "jurisdiccion": "Buenos Aires"
  },
- "Instituto de Formación y Capacitación sindicato de Salud Pública de la Provincia de Buenos Aires": {
+ "Instituto de Formación y Capacitación Sindicato de Salud Pública de la Provincia de Buenos Aires": {
   "cue": "060643100",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -7369,7 +8789,12 @@
   "distrito": "Neuquén",
   "jurisdiccion": "Neuquén"
  },
- "Instituto de Profesorado Pablo Vi": {
+ "Instituto de Nivel Superior Escuela Superior de Salud Pública": {
+  "cue": "2200899",
+  "distrito": "Comandante Fernández",
+  "jurisdiccion": "Chaco"
+ },
+ "Instituto de Profesorado Pablo VI": {
   "cue": "060640800",
   "distrito": "La Plata",
   "jurisdiccion": "Buenos Aires"
@@ -7389,7 +8814,7 @@
   "distrito": "Río Segundo",
   "jurisdiccion": "Córdoba"
  },
- "Instituto del Profesor Francisco de P.robles": {
+ "Instituto del Profesor Francisco de P.Robles": {
   "cue": "060610100",
   "distrito": "Dolores",
   "jurisdiccion": "Buenos Aires"
@@ -7424,7 +8849,7 @@
   "distrito": "Santiago del Estero",
   "jurisdiccion": "Santiago del Estero"
  },
- "Instituto.sup. San Judas Tadeo": {
+ "Instituto.Sup. San Judas Tadeo": {
   "cue": "060048300",
   "distrito": "Ituzaingó",
   "jurisdiccion": "Buenos Aires"
@@ -7739,7 +9164,7 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Siglo Xxi": {
+ "Siglo XXI": {
   "cue": "061418600",
   "distrito": "Lomas de Zamora",
   "jurisdiccion": "Buenos Aires"
@@ -7877,6 +9302,21 @@
  "Ues de los Frentones del Ies de Pampa del Infierno": {
   "cue": "2201157a",
   "distrito": "Los Frentones",
+  "jurisdiccion": "Chaco"
+ },
+ "Unidad Educativa Privada (U.E.P.) Deolindo Felipe Bittel": {
+  "cue": "2202269",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
+ },
+ "Unidad Educativa Privada (U.E.P.) Sarmiento": {
+  "cue": "2202611",
+  "distrito": "San Fernando",
+  "jurisdiccion": "Chaco"
+ },
+ "Unidad Educativa Privada (U.E.P.) Universidad Popular de Resistencia": {
+  "cue": "2201784",
+  "distrito": "San Fernando",
   "jurisdiccion": "Chaco"
  },
  "Unidad Educativa Privada N° 144 Centro Educativo, Cultural y Deportivo Padre Severiano": {
