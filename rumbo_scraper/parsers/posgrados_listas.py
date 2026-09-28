@@ -209,7 +209,13 @@ def leer_lista(html: str, pagina: str, dominios: tuple[str, ...],
     soup = BeautifulSoup(html, "html.parser")
     # A <small> is a label beside the name: "Cursos de posgrado" before it,
     # "Sede General Pico" after it.
-    for element in soup(["script", "style", "noscript", "header", "footer", "nav", "small"]):
+    # The menus list everything, so they are dropped; but a page named with
+    # ``ambito`` is read where it says, and a faculty that lists its
+    # postgraduates only in a menu is read there.
+    quitar = ["script", "style", "noscript", "small"]
+    if not ambito:
+        quitar += ["header", "footer", "nav"]
+    for element in soup(quitar):
         element.decompose()
     raices: list[Tag] = soup.select(ambito) if ambito else [soup]
     leidos: list[tuple[Tag, str, str]] = []

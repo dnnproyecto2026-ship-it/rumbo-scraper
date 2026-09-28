@@ -171,15 +171,17 @@ LISTAS: dict[str, Lista] = {
         Pagina("https://www.fhycs.unam.edu.ar/portada/secretaria-de-posgrado/",
                facultad="Facultad de Humanidades y Ciencias Sociales"),
     ), 42),
-    # Económicas builds its page in the browser. Tecnología and Exactas list
-    # theirs only in a menu.
+    # Económicas builds its page in the browser; Tecnología lists its
+    # programmes only in its menu. Exactas' menu merges two names in one.
     "UNCA": Lista("Universidad Nacional de Catamarca", "unca.edu.ar", (
         Pagina("https://agrarias.unca.edu.ar/?page_id=27256", ambito=".elementor-icon-box-title",
                facultad="Facultad de Ciencias Agrarias"),
         Pagina("https://huma.unca.edu.ar/oferta-academica/posgrado", ambito="article.item li",
                facultad="Facultad de Humanidades"),
         Pagina("https://eco.unca.edu.ar/posgrado", facultad="Facultad de Ciencias Económicas y de Administración"),
-    ), 11, navegador=True),
+        Pagina("https://tecno.unca.edu.ar/", ambito="#nav-topbar",
+               facultad="Facultad de Tecnología y Ciencias Aplicadas"),
+    ), 14, navegador=True),
     # The central page joins two programmes in one link; Sociales and Humanas
     # are read from their own pages.
     "UNVM": Lista("Universidad Nacional de Villa María", "unvm.edu.ar", (
@@ -189,14 +191,18 @@ LISTAS: dict[str, Lista] = {
                facultad="Instituto Académico Pedagógico de Ciencias Sociales"),
         Pagina("https://humanas.unvm.edu.ar/carreras/posgrados/",
                facultad="Instituto Académico Pedagógico de Ciencias Humanas"),
-    ), 14),
+        # Básicas' own page lists its postgraduates only in the menu.
+        Pagina("https://basicas.unvm.edu.ar/posgrados/", ambito="nav.main_menu",
+               facultad="Instituto Académico Pedagógico de Ciencias Básicas y Aplicadas"),
+    ), 16),
     "UNSE": Lista("Universidad Nacional de Santiago del Estero", "unse.edu.ar",
                   (Pagina("https://www.unse.edu.ar/carreras-de-posgrado/"),), 19),
     "UNSa": Lista("Universidad Nacional de Salta", "unsa.edu.ar",
                   (Pagina("https://www.unsa.edu.ar/posgrado/", ambito=".eael-accordion-header"),), 29),
     "UNLu": Lista("Universidad Nacional de Luján", "unlu.edu.ar",
                   (Pagina("https://www.unlu.edu.ar/posgrado.html"),), 22),
-    # No central list. Alimentación and Trabajo Social list theirs only in a menu.
+    # No central list. Alimentación and Trabajo Social list theirs only in
+    # their menus.
     "UNER": Lista("Universidad Nacional de Entre Ríos", "uner.edu.ar", (
         Pagina("https://www.fcad.uner.edu.ar/", facultad="Facultad de Ciencias de la Administración"),
         Pagina("https://posgrado.ingenieria.uner.edu.ar/", facultad="Facultad de Ingeniería"),
@@ -205,7 +211,11 @@ LISTAS: dict[str, Lista] = {
         Pagina("https://www.fcedu.uner.edu.ar/carreras/", facultad="Facultad de Ciencias de la Educación"),
         Pagina("https://www.fb.uner.edu.ar/carreras-3/", facultad="Facultad de Bromatología"),
         Pagina("https://fcs.uner.edu.ar/carreras/", facultad="Facultad de Ciencias de la Salud"),
-    ), 28),
+        Pagina("https://fcal.uner.edu.ar/", ambito="#top-header",
+               facultad="Facultad de Ciencias de la Alimentación"),
+        Pagina("https://www.fts.uner.edu.ar/", ambito="#primary-site-navigation-desktop",
+               facultad="Facultad de Trabajo Social"),
+    ), 34),
     # Each faculty's list is a template in the page's script.
     "UNSJ": Lista("Universidad Nacional de San Juan", "unsj.edu.ar",
                   (Pagina("https://www.unsj.edu.ar/posgrado/carreras"),), 39),
