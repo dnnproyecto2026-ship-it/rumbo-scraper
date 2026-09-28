@@ -41,6 +41,10 @@ class Titulo(unittest.TestCase):
         html = "<main><h2>Administración</h2><p>TÍTULO</p><p>Técnico/a en Administración</p><p>Perfil amplio</p></main>"
         self.assertEqual(titulo_de_la_pagina(html, "Tecnicatura en Administración"), "Técnico/a en Administración")
 
+    def test_solo_el_tipo_de_titulo_no_es_titulo(self):
+        self.assertEqual(titulos_en("Título: Técnico/a Universitario/a"), [])
+        self.assertEqual(titulos_en("Título: Licenciado en"), [])
+
     def test_sin_el_numero_de_la_seccion_siguiente(self):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
                          ["Técnico/a Universitario/a en Guía de Turismo"])

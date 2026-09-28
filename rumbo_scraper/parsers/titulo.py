@@ -50,7 +50,9 @@ def _limpio(texto: str) -> str | None:
         return None
     # "Licenciado", "Profesor/a", "Técnico" alone say the kind of degree, not
     # which: cut short.
-    if re.fullmatch(r"(?i)(licenciad|profesor|ingenier|t[ée]cnic|traductor|analista|bachiller)\S*", texto):
+    # (Nor "Técnico/a Universitario/a", nor "Licenciado en" cut short.)
+    if re.fullmatch(r"(?i)(licenciad|profesor|ingenier|t[ée]cnic|traductor|analista|bachiller)\S*"
+                    r"(\s+universitari\S*)?(\s+en)?", texto):
         return None
     if texto.isupper():
         from rumbo_scraper.parsers.guias_nacionales import con_tildes
