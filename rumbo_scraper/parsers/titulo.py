@@ -44,6 +44,8 @@ def _limpio(texto: str) -> str | None:
     # "Profesor/a en Cs. Biológicas": the abbreviation's point ends nothing.
     texto = re.sub(r"\bCs\.\s*", "Ciencias ", clean_text(texto))
     texto = _CORTE.split(texto, maxsplit=1)[0].strip(" .:;,-–\"'“”")
+    # The next section's number run into it ("... Viajes y Turismo 1.3").
+    texto = re.sub(r"\s+\d+(?:\.\d+)+$", "", texto)
     if not _ES_UN_GRADO.match(texto) or len(texto) > 90 or len(texto.split()) > 12:
         return None
     # "Licenciado", "Profesor/a", "Técnico" alone say the kind of degree, not
@@ -85,6 +87,9 @@ def titulo_de_la_pagina(html: str, carrera: str) -> str | None:
         return None
     # A label and its value are often two elements ("Título:" / "Ingeniero Civil").
     texto = re.sub(r"(?i)(t[íi]tulos?[^:\n]{0,30}:)\s*\n+\s*", r"\1 ", cuerpo.get_text("\n"))
+    # Or a label alone on its line, with no colon (UPC's "Nombre del título
+    # a otorgar" over "Técnico/a Universitario/a en ...").
+    texto = re.sub(r"(?im)^\s*(?:nombre del )?t[íi]tulo (?:a otorgar|que otorga|a obtener)\s*\n+\s*", "Título: ", texto)
     halladas = titulos_en(texto)
     if len(halladas) == 1:
         return halladas[0]

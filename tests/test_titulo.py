@@ -27,6 +27,15 @@ class Titulo(unittest.TestCase):
                 "<p>Título intermedio: Técnico Universitario en Laboratorio</p></main>")
         self.assertEqual(titulo_de_la_pagina(html, "Licenciatura en Química"), "Licenciado en Química")
 
+    def test_rotulo_sin_dos_puntos_en_su_renglon(self):
+        html = ("<main><p>Identificación de la carrera:</p><p>Nombre del título a otorgar</p>"
+                "<p>Técnico/a Universitario/a en Desarrollo Sostenible</p><p>Nivel Académico</p></main>")
+        self.assertEqual(titulo_de_la_pagina(html, "Tecnicatura Universitaria en Desarrollo Sostenible"),
+                         "Técnico/a Universitario/a en Desarrollo Sostenible")
+
+    def test_sin_el_numero_de_la_seccion_siguiente(self):
+        self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
+                         ["Técnico/a Universitario/a en Guía de Turismo"])
 
 if __name__ == "__main__":
     unittest.main()
