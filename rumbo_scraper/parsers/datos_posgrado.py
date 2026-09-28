@@ -46,7 +46,10 @@ def limpio(texto: str) -> str | None:
     # " expedido por la Universidad", ".: Requisitos a cumplir".
     # A comma that goes on with the list of the name ("la Ciencia, la
     # Tecnología y la Innovación", ", mención ...") stays.
-    texto = re.split(r"\.\s*:|,\s+(?!(?:(?:el|la|los|las|y|e)\s+)?[A-ZÁÉÍÓÚÑ]|(?:con\s+)?orientaci[óo]n|menci[óo]n)|"
+    # A colon stays when the name goes on after it ("Lenguas Extranjeras:
+    # Problemáticas Sociodidácticas"), and cuts where a sentence starts
+    # ("Especialista en Neurociencias: Requisitos a cumplir para...").
+    texto = re.split(r"\.\s*:|:\s+(?=\S+\s+[a-záéíóúñ])|,\s+(?!(?:(?:el|la|los|las|y|e)\s+)?[A-ZÁÉÍÓÚÑ]|(?:con\s+)?orientaci[óo]n|menci[óo]n)|"
                      r"\s+(?:expedido|otorgado|emitido)\b", texto, maxsplit=1)[0].strip(" .:;,-–\"'“”")
     if not _UN_TITULO.match(texto) or len(texto) > 120 or len(texto.split()) > 18:
         return None

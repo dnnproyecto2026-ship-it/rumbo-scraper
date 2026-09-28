@@ -50,6 +50,8 @@ class DatosDePosgrado(unittest.TestCase):
                          "Especialista en Endodoncia")
         self.assertEqual(limpio("Magíster en Aplicaciones de Información Espacial, se despliegan a lo largo"),
                          "Magíster en Aplicaciones de Información Espacial")
+        self.assertEqual(limpio("MAGISTER EN NEUROCIENCIAS: Requisitos a cumplir para recibir el diploma"),
+                         "Magister en Neurociencias")
         for nombre in ("Especialista en Divulgación de la Ciencia, la Tecnología y la Innovación",
                        "Magíster en Lenguas Extranjeras: Problemáticas Sociodidácticas",
                        "Especialista en Derecho Notarial, Registral e Inmobiliario"):
