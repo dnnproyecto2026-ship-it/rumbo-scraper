@@ -1642,7 +1642,10 @@ _NO_ES_MATERIA_DEL_ANIO = re.compile(
     # ("Interpretar y reformular…", "Diseñar, desarrollar y evaluar…").
     r"\w/a\b|^[a-záéíóúñ]{4,}(?:ar|er|ir)(?:,|\s+y\s+[a-záéíóúñ]+(?:ar|er|ir)\b)")
 _FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[óo]n\s+de\s+ingreso|^¿|"
-                               r"^normativa\s+de\s+la\s+carrera|^unidad\s+acad[ée]mica$")
+                               r"^normativa\s+de\s+la\s+carrera|^unidad\s+acad[ée]mica$|"
+                               # UNER's faculty pages: the call to enrol, the page's foot.
+                               r"^ingreso\s+20\d\d$|^m[áa]s\s+info|^scroll\s+al\s+inicio|^destinatarios$|"
+                               r"^\W*descargar\s+plan")
 
 
 def plan_por_anios(html: str) -> list[tuple[str, int]]:
@@ -1666,6 +1669,11 @@ def plan_por_anios(html: str) -> list[tuple[str, int]]:
                         "", nombre)
         nombre = re.sub(r"^[\u00ad\s\-–·•]+", "", nombre)
         _agregar(materias, re.sub(r"^\d{1,2}(?:\s+|(?=[A-ZÁÉÍÓÚÑ][a-záéíóúñ]))(?=[A-ZÁÉÍÓÚÑ])", "", nombre), anio)
+    # "1.01 Introducción a la Contabilidad" (UNER Económicas): where nearly
+    # every subject carries its code, one without is an elective offered.
+    codigo = re.compile(r"^\d{1,2}\.\d{2}\s+")
+    if materias and sum(bool(codigo.match(n)) for n, _ in materias) >= 0.8 * len(materias):
+        materias = [(codigo.sub("", n), a) for n, a in materias if codigo.match(n)]
     materias = desde_el_primero(materias)
     if len(materias) < 10 or max(Counter(a for _, a in materias).values()) > 15:
         return []
