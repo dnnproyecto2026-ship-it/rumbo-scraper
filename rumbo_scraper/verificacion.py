@@ -86,7 +86,11 @@ _ABREVIADAS = (
     (re.compile(r"^licenciatura en "), ("lic en ", "lic ")),
     (re.compile(r"^tecnicatura universitaria en "), ("tec universitaria en ", "tec univ en ", "tecn univ en ")),
     (re.compile(r"^tecnicatura en "), ("tec en ", "tec ")),
-    (re.compile(r"^profesorado en "), ("prof en ", "prof ")),
+    (re.compile(r"^profesorado en "), ("prof en ", "prof ", "profesor a en ", "profesor en ")),
+    (re.compile(r"^profesorado de "), ("profesor a de ", "profesor de ")),
+    # A province's registry names the degree: "Técnica/o Superior en ...".
+    (re.compile(r"^tecnicatura superior "), ("tecnica o superior ", "tecnico a superior ", "tecnico superior ",
+                                             "tecnica superior ")),
     (re.compile(r"^ingenieria en "), ("ing en ",)),
 )
 

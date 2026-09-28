@@ -319,6 +319,10 @@ def tipo_de_institucion(nombre_oficial: str) -> str:
     dicho = next((g.tipo_institucion for g in GUIAS.values() if g.nombre_oficial == nombre_oficial), None)
     if dicho:
         return dicho
+    # The institutes a province's registry lists (`database/terciarios`).
+    terciarios = Path("relevamiento/terciarios.json")
+    if terciarios.exists() and nombre_oficial in json.loads(terciarios.read_text()):
+        return "instituto_terciario"
     # An "Instituto" of the university system is an instituto universitario
     # even when its name does not say so (the Instituto Tecnológico de Buenos
     # Aires); the tertiary ones are marked by their guide.
