@@ -1,0 +1,512 @@
+{
+ "Agro Escuela Privada Córdoba AEPC": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Asociación Civil Odontológica Córdoba AOC": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Azafrán Escuela de Gastronomía": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Centro de Estudios Filosóficos y Teológicos": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Colegio Universitario IES Sigo 21": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Colegio Universitario Politécnico CUP": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Collegium Centro de Educación e Investigaciones Musicales": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Cruz Roja Argentina": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela Normal Superior Dr. Agustín Garzón Agulla": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela Normal Superior Dr. Alejandro Carbó": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela de Cadetes Cdro. Salustiano Pérez Estévez": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela de Diseño y Comunicación Audiovisual La Metro": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela de Música La Colmena": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela de Policía Libertador Gral. Don José de San Martin": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Escuela de Suboficiales y Agentes Gral. Manuel Belgrano": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "IES N° 6001 Instituto de Educación Superior «Gral. Manuel Belgrano»": {
+  "cue": "660135700",
+  "distrito": "Salta – Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6002 Escuela Provincial de Bellas Artes «Tomas Cabrera»": {
+  "cue": "660143300",
+  "distrito": "Capital – Salta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6003 Escuela Superior de Música de la Provincia «José Lo Giudice»": {
+  "cue": "660051700",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6004 Instituto Superior de Profesorado de Arte": {
+  "cue": "660082600",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6005 Instituto Superior del Profesorado de Salta": {
+  "cue": "660044600",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6006 Profesorado de Jardín de Infantes y Educación Especial": {
+  "cue": "660121100",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6007 Profesorado Superior de Lenguas Vivas": {
+  "cue": "660050500",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6008 Instituto Sup. De Formación Docente «Dip. Pcial. Hermenegildo Guillermo Armando»": {
+  "cue": "660027700",
+  "distrito": "Apolinario Saravia – Anta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6009 Instituto de Educación Superior": {
+  "cue": "660135900",
+  "distrito": "Cafayate – Salta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6010 Instituto Superior de Formación Docente": {
+  "cue": "660036600",
+  "distrito": "Colonia Sta. Rosa – Orán",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6011 Profesorado para la Enseñanza Primaria con Orientación Regional": {
+  "cue": "660068500",
+  "distrito": "Cnel. Juan Solá (Morillo) – Rivadavia",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6012 Instituto Superior de Formación Docente Rural": {
+  "cue": "660044100",
+  "distrito": "El Carril – Chicoana",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6013 Profesorado para la Enseñanza Primaria con Modalidades": {
+  "cue": "660067400",
+  "distrito": "El Quebrachal – Anta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6014 Instituto Superior de Formación Docente Rural": {
+  "cue": "660025800",
+  "distrito": "El Tala – La Calendaria",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6015 Instituto Superior de Formación Docente": {
+  "cue": "660057600",
+  "distrito": "Embarcación – Gral. José de San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6016 Instituto de Carreras Superiores «Conscripto Ricardo A. Paz»": {
+  "cue": "660006900",
+  "distrito": "Mosconi – Gral. José de San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6017 Instituto de Enseñanza Superior «Prof. Amadeo R. Sirolli»": {
+  "cue": "660081900",
+  "distrito": "Gral. Güemes – Gral. Güemes",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6018 Instituto Superior de Formación Docente Rural": {
+  "cue": "660097500",
+  "distrito": "Hipólito Irigoyen – Orán",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6019 Instituto de Educación Superior «Dr. Joaquín V. González»": {
+  "cue": "660136400",
+  "distrito": "J. V. González – Anta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6023 Instituto de Enseñanza Superior «Dr. Alfredo Loutaif»": {
+  "cue": "660062800",
+  "distrito": "Orán – S.R.N. Orán",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6024 Instituto de Educación Superior N° 6024": {
+  "cue": "660136100",
+  "distrito": "Melchora F. de Cornejo 751",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6025 Instituto Superior de Formación Docente": {
+  "cue": "660028000",
+  "distrito": "R. de la Frontera – R. de la Frontera",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6026 Profesorado para la Enseñanza Primaria con Modalidades": {
+  "cue": "660089800",
+  "distrito": "R. de Lerma – R. de Lerma",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6027 Instituto Superior de Formación Docente Rural «América Latina»": {
+  "cue": "660062500",
+  "distrito": "Salvador Mazza – San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6028 Instituto Superior de Formación Docente": {
+  "cue": "660023700",
+  "distrito": "San Antonio de los Cobres – Los Andes",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6029 Instituto de Educación Superior Nº 6029 – Tartagal": {
+  "cue": "660030200",
+  "distrito": "Tartagal – San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6030 Instituto de Carreras Superiores": {
+  "cue": "660106600",
+  "distrito": "Las Lajitas – Anta",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6031 Instituto Superior de Formación Docente": {
+  "cue": "660106700",
+  "distrito": "Pichanal – Orán",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6032 Escuela Provincial de Música y Danzas Tradicionales Argentinas": {
+  "cue": "660091000",
+  "distrito": "Cafayate – Cafayate",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6035 Instituto Politécnico Modelo «Gral. Mosconi»": {
+  "cue": "660133300",
+  "distrito": "Campamento Vespucio – San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6036 Unidad de Formación, Investigación y Desarrollo Tecnológico (UFIDeT) Salta": {
+  "cue": "660133200",
+  "distrito": "Salta – Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6038 Instituto de Educación Superior": {
+  "cue": "660138700",
+  "distrito": "Cafayate – Cafayate",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6039 Instituto de Educación Superior": {
+  "cue": "660145900",
+  "distrito": "Aguaray – San Martín",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6040 Instituto de Educación Superior": {
+  "cue": "660145700",
+  "distrito": "Vaqueros – La Caldera",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6043 Instituto de Educación Superior": {
+  "cue": "660149500",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6046 Instituto de Educación Superior «Felipe Wagner»": {
+  "cue": "660150800",
+  "distrito": "Orán – S.R.N. Orán",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6047 Instituto de Educación Superior": {
+  "cue": "660150700",
+  "distrito": "Cachi – Cachi",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6049 Instituto de Educación Superior": {
+  "cue": "660156700",
+  "distrito": "Rivadavia Banda Sur – Rivadavia",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6050 Instituto Superior de Formación Docente": {
+  "cue": "660157800",
+  "distrito": "Santa Victoria Este – Rivadavia",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6051 Instituto de Educación Superior": {
+  "cue": "660155700",
+  "distrito": "Molinos – Molinos",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6052 Instituto de Educación Superior": {
+  "cue": "660158400",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "IES N° 6053 Instituto de Educación Superior «Abuelas Plaza de Mayo»": {
+  "cue": "660159100",
+  "distrito": "Salta Capital",
+  "jurisdiccion": "Salta"
+ },
+ "Institución Cervantes": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Argentino de Prótesis Dental IAPD": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto BAC Spinoza": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Bancario Córdoba Educar y Capacitar": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Católico Superior": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Dr. Antonio Nores": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Juan Zorrilla de San Martín": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Parroquial San José - Nivel Superior": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Privado Santa Clara de Asís": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto San Ignacio": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Carlos Alberto Leguizamón": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Cruz del Sacrificio": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Cura Gabriel Brochero": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Juan Mantovani": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Mariano Moreno": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Nueva Formación": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Pascal": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior SEP San Nicolás": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Santo Domingo": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior Sor María Antonia de Paz y Figueroa": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Artes y Ciencias del Movimiento Humano San Miguel": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Ciencias Económicas y Tecnologías ISCET": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Comercio Exterior ISCE": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Diseño y Arte": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Educación Artístico Musical Domingo Zípoli": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Estudios Psicosociales Dr. Enrique Pichon Riviere": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Estudios en Administración y Negocios SABER": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Formacion Docente Renée Trettel de Fabián": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Formación Docente Calasanz": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Formación Docente Nuestra Madre de La Merced": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Formación Docente Nuestra Señora de Fátima": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Lenguas y Culturas Aborígenes": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior del Profesorado Dr. Antonio Sobral": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior del Profesorado En Ciencias Económicas y Jurídicas Dr. José Antonio Ortiz y Herrera": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior del Profesorado Tecnológico Aquiles Gay": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior del Profesorado en Educación Física - I.A.C.C.": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior en Actividades Físicas y Deportivas Aerobics Center": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior en Ciencias de la Educación y de Investigación Educativa Olga Cossettini": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Técnico Renault": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto Técnico Superior Córdoba": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Enseñanza Domingo Faustino Sarmiento": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Enseñanza Superior Simón Bolívar": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Formación Docente Nuestra Señora del Sagrado Corazón": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Formación Docente Nuestra Señora y Santa Inés": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ },
+ "Quality - ISAD": {
+  "cue": null,
+  "distrito": "Capital",
+  "jurisdiccion": "Córdoba"
+ }
+}

@@ -39,19 +39,36 @@ def main() -> None:
             time.sleep(5)
         return None
 
-    institutos: dict[int, dict] = {}
+    # What was read is kept as it is read: a crawl cut short resumes where
+    # it stopped.
+    avance = SALIDA.with_suffix(".avance.json")
+    estado = json.loads(avance.read_text()) if avance.exists() else {"distritos": [], "institutos": {}}
+    institutos: dict[str, dict] = estado["institutos"]
+
+    def guardar() -> None:
+        avance.write_text(json.dumps(estado, ensure_ascii=False))
+
     with Visitante(timeout=30) as visitante:
         distritos = pedir("distritos_desft") or []
         for distrito in distritos:
+            if distrito["id_distrito"] in estado["distritos"]:
+                continue
             for titulo in pedir(f"distritostitulos_desft/{distrito['id_distrito']}") or []:
                 for oferta in pedir(f"disxtit2_desft/{titulo['id_titulo']}/{distrito['id_distrito']}") or []:
-                    institutos.setdefault(oferta["idserv"], {})
+                    institutos.setdefault(str(oferta["idserv"]), {})
+            estado["distritos"].append(distrito["id_distrito"])
+            guardar()
             print(f"{distrito['distrito']}: {len(institutos)} institutos hasta ahora", flush=True)
-        for idserv, instituto in institutos.items():
+        for numero, (idserv, instituto) in enumerate(institutos.items()):
+            if "ofertas" in instituto:
+                continue
             ficha = pedir(f"escuela/{idserv}") or []
             instituto["escuela"] = ficha[0] if ficha else None
             instituto["ofertas"] = pedir(f"ofertascarreras/{idserv}") or []
-    SALIDA.write_text(json.dumps({str(k): v for k, v in institutos.items()}, ensure_ascii=False, indent=1) + "\n")
+            if numero % 25 == 0:
+                guardar()
+    guardar()
+    SALIDA.write_text(json.dumps(institutos, ensure_ascii=False, indent=1) + "\n")
     print(f"PBA: {len(institutos)} institutos — {SALIDA}")
 
 

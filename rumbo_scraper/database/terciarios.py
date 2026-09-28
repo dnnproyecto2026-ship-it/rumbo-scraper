@@ -141,9 +141,63 @@ def institutos_cba(html: str, localidades: set[str] | None = None) -> list[dict[
     return [i for i in por_nombre.values() if i["carreras"]]
 
 
+SALTA = "https://dges-sal.infd.edu.ar/sitio/6006-2/"
+
+
+def instituto_salta(html: str, url: str) -> dict[str, Any] | None:
+    """A Salta IES's page on the DGES site, as lines: its number ("6001"),
+    its name, its street, its town and department ("Salta – Capital"), its
+    own site, "Nº de CUE" and the CUE, then its careers after "CARRERAS"
+    (profesorados and tecnicaturas side by side)."""
+    from bs4 import BeautifulSoup
+
+    contenido = BeautifulSoup(html or "", "html.parser").select_one("div.entry-content")
+    lineas = [clean_text(l) for l in (contenido.get_text("\n") if contenido else "").split("\n") if clean_text(l)]
+    if len(lineas) < 5 or not re.fullmatch(r"60\d\d", lineas[0]):
+        return None
+    numero, nombre, calle, localidad = lineas[0], lineas[1], lineas[2], lineas[3]
+    cue = next((l for l in lineas if re.fullmatch(r"\d{9}", l)), None)
+    sitio = next((l if l.startswith("http") else f"https://{l}" for l in lineas if "infd.edu.ar" in l), None)
+    inicio = next((i for i, l in enumerate(lineas) if l.replace(" ", "") == "CARRERAS"), None)
+    carreras: list[CarreraDeLaGuia] = []
+    for linea in lineas[inicio + 1:] if inicio is not None else []:
+        if not re.match(r"(?i)(profesorado|tecnicatura|t[ée]cnic[oa])\s+\w", linea):
+            continue
+        propio = nombre_de_la_carrera(linea)
+        carrera = _carrera(propio, "", url) if propio else None
+        if carrera and carrera.nombre not in {c.nombre for c in carreras}:
+            carreras.append(carrera)
+    return {"nombre_oficial": f"IES N° {numero} {nombre}", "nombre_corto": f"IES {numero}",
+            "gestion": "Estatal", "localidad": re.split(r"\s+[–-]\s+", localidad)[0], "distrito": localidad,
+            "calle": calle, "cue": cue, "url": url, "sitio": sitio, "titulos": {}, "carreras": carreras}
+
+
+def institutos_salta(localidades: set[str] | None = None) -> list[dict[str, Any]]:
+    import time
+
+    from bs4 import BeautifulSoup
+    from rumbo_scraper.spiders.visitante import Visitante
+
+    institutos = []
+    with Visitante(timeout=30) as visitante:
+        indice = BeautifulSoup(visitante.get(SALTA) or "", "html.parser")
+        # An annex's careers are its institute's, at another campus.
+        paginas = sorted({a["href"] for a in indice.find_all("a", href=True)
+                          if re.search(r"/sitio/60\d\d-\d+/$", a["href"])})
+        for pagina in paginas:
+            instituto = instituto_salta(visitante.get(pagina), pagina)
+            time.sleep(1)
+            # The police institute (6045) is loaded from its own guide ("IESP Salta").
+            if instituto and "6045" in instituto["nombre_corto"]:
+                continue
+            if instituto and instituto["carreras"] and (not localidades or instituto["localidad"] in localidades):
+                institutos.append(instituto)
+    return institutos
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba", "cba"])
+    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta"])
     parser.add_argument("--distritos", default="",
                         help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
@@ -156,6 +210,8 @@ def main() -> None:
     if args.jurisdiccion == "pba":
         institutos, sitio, provincia = institutos_pba(json.loads(SALIDA.read_text()), distritos), \
             "https://mapaescolar.abc.gob.ar", "Buenos Aires"
+    elif args.jurisdiccion == "salta":
+        institutos, sitio, provincia = institutos_salta(distritos), "https://dges-sal.infd.edu.ar", "Salta"
     else:
         from rumbo_scraper.spiders.visitante import Visitante
 
@@ -172,7 +228,7 @@ def main() -> None:
         if not args.apply:
             continue
         guia = Guia(instituto["nombre_oficial"], instituto["nombre_corto"], instituto["gestion"],
-                    sitio, ((instituto["url"], None),),
+                    instituto.get("sitio") or sitio, ((instituto["url"], None),),
                     instituto["localidad"], instituto["calle"], 1, tipo_institucion="instituto_terciario")
         escribir_artefacto(guia, instituto["carreras"])
         universidad_id = universidad(client, guia, crear=True)
