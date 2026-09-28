@@ -390,6 +390,19 @@ def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+# UNR Veterinaria's table of prerequisites: a row per subject whose first
+# cell is its code, the year first ("3.24.2": third year, subject 24, second
+# term), the name next.
+def plan_por_codigo(html: str) -> list[tuple[str, int]]:
+    materias: list[tuple[str, int]] = []
+    for fila in BeautifulSoup(html or "", "html.parser").find_all("tr"):
+        celdas = [_texto(celda) for celda in fila.find_all(["td", "th"])]
+        codigo = re.fullmatch(r"(\d)\.\d+\.\d", celdas[0]) if len(celdas) > 1 else None
+        if codigo:
+            _agregar(materias, celdas[1], int(codigo.group(1)))
+    return desde_el_primero(materias)
+
+
 # The UCASAL links two kinds of plan it can be read from, as ``pdftotext
 # -layout`` lays them out:
 # - its brochure: an "AÑO" heading per year whose number is a drawing (the

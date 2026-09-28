@@ -158,6 +158,12 @@ ANUAL     QUÍMICA LEGAL"""
         self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
         self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [])
 
+    def test_unr_veterinaria_por_codigo(self):
+        html = """<table><tr><td>Código</td><td>Asignatura</td></tr>
+        <tr><td>1.1.1</td><td>Física Biológica</td><td>100</td></tr>
+        <tr><td>2.8.1</td><td>Anatomía Descriptiva y Comparada II</td><td>1.5.2</td></tr></table>"""
+        self.assertEqual(p.plan_por_codigo(html), [("Física Biológica", 1), ("Anatomía Descriptiva y Comparada II", 2)])
+
     def test_ucasal_plan_por_carrera_de_alumnos(self):
         texto = """PLAN DE ESTUDIO POR CARRERA
     1 PRIMER AÑO
