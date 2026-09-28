@@ -77,11 +77,22 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("upso.edu.ar", planes_sitios.plan_upso), ("unvm.edu.ar", planes_sitios.plan_unvm),
                         ("ucalp.edu.ar", planes_sitios.plan_ucalp), ("unlpam.edu.ar", planes_sitios.plan_unlpam),
                         ("exactas.unsa.edu.ar", planes_sitios.plan_exa_unsa),
+                        ("untdf.edu.ar", planes_sitios.plan_untdf),
                         ("natura.unsa.edu.ar", planes_sitios.plan_natura_unsa),
                         ("ing.unsa.edu.ar", planes_sitios.plan_ing_unsa),
                         ("exactas.unca.edu.ar", planes_sitios.plan_tabla_con_anios),
                         ("fba.unlp.edu.ar", planes_sitios.plan_fba_unlp),
                         ("fahce.unlp.edu.ar", planes_sitios.plan_fahce_unlp),
+                        # The general reader, year by year, where it was
+                        # checked against one career's page each (2026-09-28).
+                        *((sitio, planes_sitios.plan_por_anios) for sitio in (
+                            "unlc.edu.ar", "ucaece.edu.ar", "fhumyar.unr.edu.ar", "udc.edu.ar",
+                            "ugr.edu.ar", "carreras.unsl.edu.ar", "upso.edu.ar", "uean.edu.ar",
+                            "exa.unrc.edu.ar", "lenguas.unc.edu.ar", "med.unlp.edu.ar", "iss.edu.ar",
+                            "ucu.edu.ar", "udemm.edu.ar", "unsta.edu.ar", "uda.edu.ar", "usi.edu.ar",
+                            "uap.edu.ar", "uncaus.edu.ar", "unau.edu.ar", "maimonides.edu",
+                            "iuriverplate.edu.ar", "uca.edu.ar", "abarbanel.edu.ar", "upatagonia.edu.ar",
+                            "go.eseade.edu.ar", "um.edu.ar", "unraf.edu.ar")),
                         ("huma.unca.edu.ar", planes_sitios.plan_filas_numeradas),
                         ("derecho.unlz.edu.ar", planes_sitios.plan_cr_year),
                         ("fhycs.unam.edu.ar", planes_sitios.plan_anio_y_lista),

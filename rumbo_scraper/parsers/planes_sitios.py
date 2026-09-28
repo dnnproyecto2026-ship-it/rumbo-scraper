@@ -767,6 +767,28 @@ def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
 
 
+def _plan_untdf(html: str) -> list[tuple[str, int]]:
+    """UNTDF: the plan's table, a section row per year ("Año 1") and a row
+    per subject under it. A section that is not a year (electives) is not
+    the plan."""
+    materias: list[tuple[str, int]] = []
+    tabla = BeautifulSoup(html or "", "html.parser").select_one("table.untdf-study-plan__table")
+    anio = None
+    for fila in tabla.select("tr") if tabla else []:
+        if "untdf-study-plan__section-row" in (fila.get("class") or []):
+            numero = re.fullmatch(r"(?i)año\s+(\d)", _texto(fila))
+            anio = int(numero.group(1)) if numero else None
+            continue
+        nombre = fila.select_one(".untdf-study-plan__subject")
+        if anio and nombre:
+            _agregar(materias, _texto(nombre), anio)
+    return materias
+
+
+def plan_untdf(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_untdf(html))
+
+
 _REGIMEN = re.compile(r"(?i)^(i{1,2}|a|anual|\d\s*°?\s*c(uat)?\.?)$")
 
 
@@ -1203,5 +1225,44 @@ def plan_fahce_unlp(html: str) -> list[tuple[str, int]]:
     # A year of more than twelve is the pool of electives the page lists
     # under the last year without saying so (the profesorados' fifth).
     if materias and max(Counter(anio for _, anio in materias).values()) > 12:
+        return []
+    return materias
+
+
+# What the general reader, reading a page's lines year by year, takes in
+# besides the subjects: the terms, the page's foot and its admission papers.
+_NO_ES_MATERIA_DEL_ANIO = re.compile(
+    r"(?i)^\(?\s*(?:\d\s*[º°erdo.]*\s*)?(?:1er|2do|primer|segundo)?\s*cuatrimestr|^cuatrimestral|^\(?anual\)?$|"
+    r"^c[áa]tedra\s+[a-z]\b|^ver\s+plan|^obtiene\s+t[íi]tulo|^comienzan|^documentaci|^dni\b|"
+    r"^inscrip|^requisitos|^realizado\s+por|copyright|©|^todos\s+los\s+derechos|"
+    # A subject's state, a block's heading, the page's asides.
+    r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura)$|^optativas\b|"
+    r"^poseer\b|^\d+\s+materias$|^programa$|^reconocid|^modificaci|^campus|^coordinador|^ir\s+al|"
+    r"^espacios\s+curriculares|^nota\b|^per[íi]odo\s+de|^semanal$|^\d\s*[º°]\s*cuat|cuatrimestre$|"
+    r"^incumbenc|^alcances|^perfil")
+_FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[óo]n\s+de\s+ingreso|^¿")
+
+
+def plan_por_anios(html: str) -> list[tuple[str, int]]:
+    """The general reader's plan, year by year, for the sites whose pages it
+    reads well (checked by hand, one career each): without the terms, the
+    page's foot or its admission papers, beginning in the first year, with ten
+    subjects at least and never more than fifteen in a year."""
+    from rumbo_scraper.parsers import generico
+
+    materias: list[tuple[str, int]] = []
+    for fila in generico.leer_plan(html or ""):
+        nombre, anio = fila.get("nombre") or "", fila.get("anio")
+        if _FIN_DE_LA_PAGINA.search(nombre):
+            break
+        if not anio or _NO_ES_MATERIA_DEL_ANIO.search(nombre):
+            continue
+        # "Lingüística I - CL 2026": the year the chair's programme is of.
+        # "Lingüística I - CL 2026": the year the chair's programme is of;
+        # "1 Introducción a la Arqueología": its number in the plan; "(C)".
+        nombre = re.sub(r"\s+-\s+CL\s+\d{4}$|\s*\(C\)$", "", nombre)
+        _agregar(materias, re.sub(r"^\d{1,2}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre), anio)
+    materias = desde_el_primero(materias)
+    if len(materias) < 10 or max(Counter(a for _, a in materias).values()) > 15:
         return []
     return materias
