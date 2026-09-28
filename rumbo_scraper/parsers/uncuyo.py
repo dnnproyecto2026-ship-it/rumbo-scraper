@@ -70,7 +70,8 @@ _ANIOS = {"primer": 1, "segund": 2, "tercer": 3, "cuart": 4, "quint": 5, "sext":
           "1er": 1, "2do": 2, "3er": 3, "4to": 4, "5to": 5, "6to": 6}
 _PERIODO = re.compile(r"(?i)^(?:primer|segundo)\s+(?:semestre|cuatrimestre)$|^anual(?:es)?$")
 _FIN_DEL_PLAN = re.compile(r"(?i)^(?:al finalizar|normativa|unidad acad[ée]mica|otras carreras|inscripciones"
-                           r"|\*|(?:materias|espacios curriculares|cursos|asignaturas)\s+optativ|optativas?\b)")
+                           r"|\*|(?:materias|espacios curriculares|cursos|asignaturas)\s+optativ|optativas?\s*:?$)")
+# ("Optativa*", a year's slot, is not the electives' heading "Optativas:".)
 
 
 def leer_plan(html: str) -> list[tuple[str, int]]:
@@ -96,6 +97,9 @@ def leer_plan(html: str) -> list[tuple[str, int]]:
             anio = _ANIOS.get(clave) or int(clave)
             continue
         if _PERIODO.match(linea) or not anio or linea.endswith(":") or len(linea) > 120:
+            continue
+        # A year's elective slot ("Optativa*"): not a subject.
+        if re.fullmatch(r"(?i)optativas?\s*\**", linea):
             continue
         if linea not in [m for m, _ in materias]:
             materias.append((linea, anio))
