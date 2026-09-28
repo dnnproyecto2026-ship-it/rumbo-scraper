@@ -58,7 +58,7 @@ def anio_de(texto: str) -> int | None:
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
     # Numbered in Roman figures: "VI.- Derecho del Trabajo I", "XI. Inglés I" (UEAN).
-    nombre = re.sub(r"^[IVXL]{1,6}\s*\.-?\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
+    nombre = re.sub(r"^[IVXL]{1,8}\s*\.-?\s*(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
     # "(1° Cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)

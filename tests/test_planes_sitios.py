@@ -169,6 +169,10 @@ Código   Asignatura                 Régimen         Horas
         self.assertEqual(p.plan_por_codigo_en_texto(texto),
                          [("Anatomía", 1), ("Química Estomatológica Básica y Aplicada", 1), ("Fisiología", 2)])
 
+    def test_sin_la_numeracion_romana(self):
+        html = """<p><strong>Primer año</strong></p><ul><li>VI.- Derecho del Trabajo I</li><li>XI. Inglés I</li></ul>"""
+        self.assertEqual(p.plan_titulo_y_lista(html), [("Derecho del Trabajo I", 1), ("Inglés I", 1)])
+
     def test_unr_veterinaria_por_codigo(self):
         html = """<table><tr><td>Código</td><td>Asignatura</td></tr>
         <tr><td>1.1.1</td><td>Física Biológica</td><td>100</td></tr>
