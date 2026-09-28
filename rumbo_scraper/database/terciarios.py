@@ -89,7 +89,7 @@ def prolijo(nombre: str) -> str:
 
     def capital(palabra: str) -> str:
         # "(a-1380)" -> "(A-1380)", "brasil-argentina" -> "Brasil-Argentina"
-        return re.sub(r"(^|[-(/])([a-záéíóúñü])", lambda m: m.group(1) + m.group(2).upper(), palabra.lower())
+        return re.sub(r"(^|[-(/.])([a-záéíóúñü])", lambda m: m.group(1) + m.group(2).upper(), palabra.lower())
 
     palabras = []
     for i, palabra in enumerate(nombre.split()):
@@ -101,7 +101,7 @@ def prolijo(nombre: str) -> str:
             palabras.append(palabra.lower())
         else:
             palabras.append(capital(palabra))
-    return re.sub(r"\b(?:Nro\.?|N[oº°]\.?)\s*(?=\d)", "N° ", " ".join(palabras))
+    return re.sub(r"\b(?:Nro\.?|N\.?\s?[oº°]\.?)\s*(?=\d)", "N° ", " ".join(palabras))
 
 
 def _corto(nombre: str, numero: str, clave: str) -> str:

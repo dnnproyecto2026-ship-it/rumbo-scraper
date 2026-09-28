@@ -14,18 +14,13 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Centro Cultural Y Educativo Municipal Brigadier Estanislao Lopez": {
+ "Centro Cultural y Educativo Municipal Brigadier Estanislao Lopez": {
   "cue": "8204310",
   "distrito": "San Lorenzo",
   "jurisdiccion": "Santa Fe"
  },
- "Centro De Educación Corporal": {
+ "Centro de Educación Corporal": {
   "cue": "0201644",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Centro De Estudios Terciarios River Plate": {
-  "cue": "0202830",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
@@ -34,12 +29,17 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Centro de Estudios Terciarios River Plate": {
+  "cue": "0202830",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Colegio Superior N° 42 Dr. Agustín Luis Rossi": {
   "cue": "8200464",
   "distrito": "Vera",
   "jurisdiccion": "Santa Fe"
  },
- "Colegio Superior Nº 50 General José de San Martín": {
+ "Colegio Superior N° 50 General José de San Martín": {
   "cue": "8202402",
   "distrito": "Rufino",
   "jurisdiccion": "Santa Fe"
@@ -59,7 +59,7 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Conservatorio Superior De Música Manuel De Falla": {
+ "Conservatorio Superior de Música Manuel de Falla": {
   "cue": "0201173",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -74,12 +74,12 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Escuela Metropolitana De Arte Dramático": {
+ "Escuela Metropolitana de Arte Dramático": {
   "cue": "0201959",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Municipal De Bellas Artes Int. Angel Orlando Pedrazzoli": {
+ "Escuela Municipal de Bellas Artes Int. Angel Orlando Pedrazzoli": {
   "cue": "8204308",
   "distrito": "San Justo",
   "jurisdiccion": "Santa Fe"
@@ -94,153 +94,143 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Escuela Normal Superior En Lenguas Vivas Sofía E. Broquen De Spangenberg (Ex John F. Kennedy)": {
-  "cue": "0200708",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Escuela Normal Superior N° 1 En Lenguas Vivas Presidente Roque Saenz Peña": {
-  "cue": "0200696",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Escuela Normal Superior Nº 04 Estanislao S. Zeballos": {
+ "Escuela Normal Superior N° 04 Estanislao S. Zeballos": {
   "cue": "0201297",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 05 Gral. Don Martín Miguel De Güemes": {
+ "Escuela Normal Superior N° 05 Gral. Don Martín Miguel de Güemes": {
   "cue": "0201328",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 06 Vicente Lopez Y Planes": {
+ "Escuela Normal Superior N° 06 Vicente Lopez y Planes": {
   "cue": "0200717",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 08 Pte. Julio Argentino Roca": {
+ "Escuela Normal Superior N° 08 Pte. Julio Argentino Roca": {
   "cue": "0201778",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 1 Dr. Nicolás Avellaneda- Prov. Nº 34": {
+ "Escuela Normal Superior N° 1 Dr. Nicolás Avellaneda- Prov. N° 34": {
   "cue": "8202461",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 10 Juan Bautista Alberdi": {
+ "Escuela Normal Superior N° 1 en Lenguas Vivas Presidente Roque Saenz Peña": {
+  "cue": "0200696",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Escuela Normal Superior N° 10 Juan Bautista Alberdi": {
   "cue": "0201214",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 11 Dr. Ricardo Levene": {
+ "Escuela Normal Superior N° 11 Dr. Ricardo Levene": {
   "cue": "0201693",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 2 - Juan María Gutiérrez - Provincial Nº 35": {
+ "Escuela Normal Superior N° 2 - Juan María Gutiérrez - Provincial N° 35": {
   "cue": "8202738",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 2 En Lenguas Vivas Mariano Acosta": {
+ "Escuela Normal Superior N° 2 en Lenguas Vivas Mariano Acosta": {
   "cue": "0200866",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 3 Bernardino Rivadavia": {
+ "Escuela Normal Superior N° 3 Bernardino Rivadavia": {
   "cue": "0200536",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 3 Bernardino Rivadavia Anexo Lugano": {
+ "Escuela Normal Superior N° 3 Bernardino Rivadavia Anexo Lugano": {
   "cue": "0200536a",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 30 Domingo F. Sarmiento": {
+ "Escuela Normal Superior N° 30 Domingo F. Sarmiento": {
   "cue": "8202225",
   "distrito": "Esperanza",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 31 República De México": {
+ "Escuela Normal Superior N° 31 República de México": {
   "cue": "8202606",
   "distrito": "San Justo",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 32 Gral. José De San MartíN": {
+ "Escuela Normal Superior N° 32 Gral. José de San Martín": {
   "cue": "8201862",
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 33 Dr. Mariano Moreno": {
+ "Escuela Normal Superior N° 33 Dr. Mariano Moreno": {
   "cue": "8201812",
   "distrito": "Armstrong",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 36 Mariano Moreno": {
+ "Escuela Normal Superior N° 36 Mariano Moreno": {
   "cue": "8201672",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 37": {
+ "Escuela Normal Superior N° 37": {
   "cue": "8200894",
   "distrito": "Alcorta",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 38 Domingo Faustino Sarmiento": {
+ "Escuela Normal Superior N° 38 Domingo Faustino Sarmiento": {
   "cue": "8201611",
   "distrito": "Villa Cañás",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 40 Mariano Moreno": {
+ "Escuela Normal Superior N° 40 Mariano Moreno": {
   "cue": "8202271",
   "distrito": "San Cristóbal",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 41 Gral. José De San Martín": {
+ "Escuela Normal Superior N° 41 Gral. José de San Martín": {
   "cue": "8202136",
   "distrito": "San Jorge",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Normal Superior Nº 7 José María Torres": {
+ "Escuela Normal Superior N° 7 José María Torres": {
   "cue": "0200997",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Nº 9 Domingo F. Sarmiento": {
+ "Escuela Normal Superior N° 9 Domingo F. Sarmiento": {
   "cue": "0201177",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Escuela Normal Superior Y Superior De Comercio \\Domingo Guzmán Silva\\ N° 46": {
+ "Escuela Normal Superior en Lenguas Vivas Sofía E. Broquen de Spangenberg (Ex John F. Kennedy)": {
+  "cue": "0200708",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Escuela Normal Superior y Superior de Comercio Domingo Guzmán Silva N° 46": {
   "cue": "8202247",
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Provincial De Arte N° 3": {
+ "Escuela Provincial de Arte N° 3": {
   "cue": "8204518",
   "distrito": "Venado Tuerto",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Provincial De Artes Visuales Nº 3023 Profesor Juan Mantovani": {
+ "Escuela Provincial de Artes Visuales N° 3023 Profesor Juan Mantovani": {
   "cue": "8203825",
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Provincial De Artes Visuales Nº 3031 Gral. Manuel Belgrano": {
+ "Escuela Provincial de Artes Visuales N° 3031 Gral. Manuel Belgrano": {
   "cue": "8203826",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Escuela Provincial De Teatro Nº 3200": {
-  "cue": "8203892",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Escuela Provincial De Teatro Y TíTeres Nº 5029": {
-  "cue": "8204038",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
@@ -249,7 +239,17 @@
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Escuela Superior De Comercio Nro 39 Jose Ingenieros": {
+ "Escuela Provincial de Teatro N° 3200": {
+  "cue": "8203892",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Provincial de Teatro y Títeres N° 5029": {
+  "cue": "8204038",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Escuela Superior de Comercio N° 39 Jose Ingenieros": {
   "cue": "8201605",
   "distrito": "San Gregorio",
   "jurisdiccion": "Santa Fe"
@@ -309,7 +309,7 @@
   "distrito": "Santo Tomé",
   "jurisdiccion": "Santa Fe"
  },
- "I.S.P.I. NRO 4013 REVERENDO PADRE JOAQUIN BONALDO": {
+ "I.S.P.I. N° 4013 Reverendo Padre Joaquin Bonaldo": {
   "cue": "8201317",
   "distrito": "Avellaneda",
   "jurisdiccion": "Santa Fe"
@@ -534,11 +534,6 @@
   "distrito": "Salta Capital",
   "jurisdiccion": "Salta"
  },
- "INSTITUTO SUPERIOR PARTICULAR INCORPORADO Nº 9204": {
-  "cue": "8200450",
-  "distrito": "Reconquista",
-  "jurisdiccion": "Santa Fe"
- },
  "ISFD Dora Acosta A1522": {
   "cue": "0203011",
   "distrito": "Ciudad de Buenos Aires",
@@ -557,11 +552,6 @@
  "ISPI 4081 Natividad del Señor": {
   "cue": "8204075",
   "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "ISPI N° 4006": {
-  "cue": "8202312",
-  "distrito": "San Guillermo",
   "jurisdiccion": "Santa Fe"
  },
  "ISPI N° 4007 Inmaculada Concepción": {
@@ -589,7 +579,7 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Argentino De Enseñanza Superior": {
+ "Instituto Argentino de Enseñanza Superior": {
   "cue": "0200232",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -624,53 +614,13 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Colegio Superior De Artes Del Teatro Y La Comunicación. Andamio 90 A-1302": {
+ "Instituto Colegio Superior de Artes del Teatro y la Comunicación. Andamio 90 A-1302": {
   "cue": "0202120",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Daguerre": {
   "cue": "0200715",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto De Educación Superior Juan B.Justo": {
-  "cue": "0200895",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto De Educación Superior Nº 29 Galileo Galilei": {
-  "cue": "8201805",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto De Educación Superior Toratenu A-1282": {
-  "cue": "0202079",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto De Enseñanza Superior En Lenguas Vivas Juan R.Fernandez": {
-  "cue": "0200584",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto De Enseñanza Superior Nº 02 Mariano Acosta": {
-  "cue": "0201411",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto De Formación Superior Sedeba": {
-  "cue": "0202821",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Del Profesorado Del Consudec Septimio Walsh": {
-  "cue": "0201096",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Del Profesorado Sagrado Corazon A-29": {
-  "cue": "0200854",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
@@ -709,17 +659,17 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Nuestra Señora De Las Nieves": {
+ "Instituto Nuestra Señora de las Nieves": {
   "cue": "0200738",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Nuestra Señora Del Buen Perpetuo Socorro": {
+ "Instituto Nuestra Señora del Buen Perpetuo Socorro": {
   "cue": "0201705",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Obra Conservacion De La Fe Nº 5. Fundacion Macnab Bernal": {
+ "Instituto Obra Conservacion de la Fe N° 5. Fundacion Macnab Bernal": {
   "cue": "0200641",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -764,7 +714,7 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Santa Ana Y San Joaquin A-252": {
+ "Instituto Santa Ana y San Joaquin A-252": {
   "cue": "0201506",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -799,227 +749,7 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Superior De Ciencias De La Salud A-1243": {
-  "cue": "0201919",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Educación Fisica Nº 1 Dr. Enrique Romero Brest": {
-  "cue": "0201019",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Educación Fisica Nº 11 Abanderado Grandoli": {
-  "cue": "8203868",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Educación Fisica Nº 2 Federico Williams Dickens": {
-  "cue": "0201393",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Educación Fisica Nº 27 Prof. Cesar S. Vasquez": {
-  "cue": "8201896",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Educación FíSica Hugo Quinn A-795": {
-  "cue": "0201021",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Aida V. Mastrazzi": {
-  "cue": "0202744c",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Fernando Arranz": {
-  "cue": "0202744f",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Jorge Donn": {
-  "cue": "0202744e",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Juan Pedro Esnaola": {
-  "cue": "0202744g",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Lola Mora": {
-  "cue": "0202744b",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Manuel Belgrano": {
-  "cue": "0202744d",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Nelly Ramicone": {
-  "cue": "0202744h",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Artística Rogelio Yrutia": {
-  "cue": "0202744a",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior De Formación Docente En Artes Nº 5074 Gral. Manuel Belgrano": {
-  "cue": "8201211",
-  "distrito": "Reconquista",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 1 Manuel Leiva": {
-  "cue": "8200155",
-  "distrito": "Casilda",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 16 Dr. Bernardo A. Houssay": {
-  "cue": "8202146",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 16 Dr. Bernardo Houssay - Anexo Granadero Baigorria": {
-  "cue": "8202146a",
-  "distrito": "Granadero Baigorria",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 2 Dr. Joaquin V. Gonzalez": {
-  "cue": "8203756",
-  "distrito": "Rafaela",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 20 Senador Néstor J. Zamaro": {
-  "cue": "8200335",
-  "distrito": "San Justo",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 21 - Posta De San Martin": {
-  "cue": "8201625",
-  "distrito": "Arroyo Seco",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 22 Maestro Addad": {
-  "cue": "8201848",
-  "distrito": "Fray Luis Beltrán",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 23 Elisa Damiano": {
-  "cue": "8200719",
-  "distrito": "El Trébol",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 24": {
-  "cue": "8202712",
-  "distrito": "Villa Gobernador Gálvez",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 3 Eduardo Lafferriere": {
-  "cue": "8202434",
-  "distrito": "Villa Constitución",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 4 Ángel Cárcano": {
-  "cue": "8202289",
-  "distrito": "Reconquista",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 4 Ángel Cárcano - Anexo Nº 2 Calchaquí": {
-  "cue": "8202289b",
-  "distrito": "Calchaquí",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 5 Perito Francisco Moreno": {
-  "cue": "8201690",
-  "distrito": "Cañada de Gómez",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 6 Dr. Leopoldo Chizzini Melo": {
-  "cue": "8203757",
-  "distrito": "Coronda",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 63": {
-  "cue": "8204520",
-  "distrito": "Las Toscas",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 8 Alte. Guillermo Brown": {
-  "cue": "8203758",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº 9 José MaríA Scalenghe": {
-  "cue": "8202084",
-  "distrito": "Tostado",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior De Profesorado Nº10 Mateo Booz": {
-  "cue": "8202963",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorad De Enseñanza Técnica Nº 17 Fray Luis Beltrán": {
-  "cue": "8201350",
-  "distrito": "Barrancas",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado De Educación Especial": {
-  "cue": "0201414",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior Del Profesorado De Educación Inicial Sara C. De Eccleston": {
-  "cue": "0201329",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior Del Profesorado De Música Nº 5932 Carlos Guastavino": {
-  "cue": "8200042",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado Don Bosco": {
-  "cue": "0201558",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior Del Profesorado Juan B. Alberdi (A-815)": {
-  "cue": "0201800",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior Del Profesorado N°60": {
-  "cue": "8204458",
-  "distrito": "San Carlos Centro",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado Nº 2 Dr. Joaquin V. Gonzalez - Anexo San Vicente": {
-  "cue": "8203756a",
-  "distrito": "San Vicente",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado Nº 26 Ángela Peralta Pino": {
-  "cue": "8200519",
-  "distrito": "Ceres",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado Nº 62": {
-  "cue": "8204311",
-  "distrito": "San José de la Esquina",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Del Profesorado San Agustin A-757": {
-  "cue": "0201649",
-  "distrito": "Ciudad de Buenos Aires",
-  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
- },
- "Instituto Superior Edusalud De Ciencias De La Salud Para La Educación A-1283": {
+ "Instituto Superior Edusalud de Ciencias de la Salud para la Educación A-1283": {
   "cue": "0202134",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -1039,12 +769,12 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Superior Nuestra Señora De Fátima": {
+ "Instituto Superior Nuestra Señora de Fátima": {
   "cue": "0202862",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto Superior Nuestra Señora De La Paz": {
+ "Instituto Superior Nuestra Señora de la Paz": {
   "cue": "0201832",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -1054,24 +784,74 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Superior Nº 5 Perito Francisco Moreno - Anexo Carcarañá": {
+ "Instituto Superior N° 5 Perito Francisco Moreno - Anexo Carcarañá": {
   "cue": "8201690a",
   "distrito": "Carcarañá",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Nº 68": {
+ "Instituto Superior N° 68": {
   "cue": "8203758a",
   "distrito": "Esperanza",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Autorizado N° 4068 Parque De España": {
+ "Instituto Superior Particular Autorizado N° 4068 Parque de España": {
   "cue": "8203969",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4001 Estela Guinle de Cervera": {
+  "cue": "8202244",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4003 San Jose": {
+  "cue": "8202590",
+  "distrito": "Sunchales",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4004 Virgen del Rosario": {
+  "cue": "8202039",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4005 Santisimo Rosario": {
+  "cue": "8203797",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4008 San Miguel": {
+  "cue": "8201627",
+  "distrito": "Arroyo Seco",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4017 Immanuel Kant": {
+  "cue": "8200210",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4018 Colegio Rosario": {
+  "cue": "8201749",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
  "Instituto Superior Particular Incorporado N° 4019 San Juan Bautista": {
   "cue": "8200461",
   "distrito": "Vera",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4020 San Roque": {
+  "cue": "8201156",
+  "distrito": "San Roque",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4022 Verbo Encarnado": {
+  "cue": "8202556",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 4023 los Colonizadores": {
+  "cue": "8202105a",
+  "distrito": "Nelson",
   "jurisdiccion": "Santa Fe"
  },
  "Instituto Superior Particular Incorporado N° 4027 Inmaculada Concepcion": {
@@ -1089,7 +869,12 @@
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N° 9003 Sagrado Corazon De Jesus": {
+ "Instituto Superior Particular Incorporado N° 4062 San Juan de Avila": {
+  "cue": "8203896",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 9003 Sagrado Corazon de Jesus": {
   "cue": "8202626",
   "distrito": "Las Rosas",
   "jurisdiccion": "Santa Fe"
@@ -1099,12 +884,32 @@
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
+ "Instituto Superior Particular Incorporado N° 9009 San Juan Bautista de la Salle": {
+  "cue": "8203816",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
  "Instituto Superior Particular Incorporado N° 9017 San Jose Adoratrices": {
   "cue": "8202765",
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N° 9085 Santa Rosa De Viterbo": {
+ "Instituto Superior Particular Incorporado N° 9024 Inmaculado Corazon de María - Adoratrices": {
+  "cue": "8201639",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 9028 Nuestra Señora del Huerto": {
+  "cue": "8201659",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 9054 Santa Teresita del Niño Jesus": {
+  "cue": "8201508",
+  "distrito": "Hersilia",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 9085 Santa Rosa de Viterbo": {
   "cue": "8202109",
   "distrito": "San Lorenzo",
   "jurisdiccion": "Santa Fe"
@@ -1114,12 +919,12 @@
   "distrito": "Roldán",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N° 9088 Virgen De La Merced": {
+ "Instituto Superior Particular Incorporado N° 9088 Virgen de la Merced": {
   "cue": "8200816",
   "distrito": "Firmat",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N° 9096 Ntra. Sra. De La Misericordia": {
+ "Instituto Superior Particular Incorporado N° 9096 Ntra. Sra. de la Misericordia": {
   "cue": "8202406",
   "distrito": "Rufino",
   "jurisdiccion": "Santa Fe"
@@ -1129,107 +934,37 @@
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N° 9110 De La Sagrada Familia": {
+ "Instituto Superior Particular Incorporado N° 9110 de la Sagrada Familia": {
   "cue": "8202548",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado N°4062 San Juan De Avila": {
-  "cue": "8203896",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4001 Estela Guinle De Cervera": {
-  "cue": "8202244",
-  "distrito": "Santa Fe",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4003 San Jose": {
-  "cue": "8202590",
-  "distrito": "Sunchales",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4004 Virgen Del Rosario": {
-  "cue": "8202039",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4005 Santisimo Rosario": {
-  "cue": "8203797",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4008 San Miguel": {
-  "cue": "8201627",
-  "distrito": "Arroyo Seco",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4017 Immanuel Kant": {
-  "cue": "8200210",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4018 Colegio Rosario": {
-  "cue": "8201749",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4020 San Roque": {
-  "cue": "8201156",
-  "distrito": "San Roque",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4022 Verbo Encarnado": {
-  "cue": "8202556",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 4023 Los Colonizadores": {
-  "cue": "8202105a",
-  "distrito": "Nelson",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 9009 San Juan Bautista De La Salle": {
-  "cue": "8203816",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 9024 Inmaculado Corazon De MaríA - Adoratrices": {
-  "cue": "8201639",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 9028 Nuestra Señora Del Huerto": {
-  "cue": "8201659",
-  "distrito": "Rosario",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 9054 Santa Teresita Del Niño Jesus": {
-  "cue": "8201508",
-  "distrito": "Hersilia",
-  "jurisdiccion": "Santa Fe"
- },
- "Instituto Superior Particular Incorporado Nº 9123 San Bartolome": {
+ "Instituto Superior Particular Incorporado N° 9123 San Bartolome": {
   "cue": "8203818",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado Nº 9145 Catolico De Enseñanza Superior": {
+ "Instituto Superior Particular Incorporado N° 9145 Catolico de Enseñanza Superior": {
   "cue": "8201917",
   "distrito": "Venado Tuerto",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado Nº 9156 Nuestra Señora Del Perpetuo Socorro": {
+ "Instituto Superior Particular Incorporado N° 9156 Nuestra Señora del Perpetuo Socorro": {
   "cue": "8201974",
   "distrito": "Chañar Ladeado",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado Nº 9232 Don Bosco": {
+ "Instituto Superior Particular Incorporado N° 9204": {
+  "cue": "8200450",
+  "distrito": "Reconquista",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior Particular Incorporado N° 9232 Don Bosco": {
   "cue": "8202521",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto Superior Particular Incorporado Nº 9247 San Carlos Borromeo": {
+ "Instituto Superior Particular Incorporado N° 9247 San Carlos Borromeo": {
   "cue": "8201902",
   "distrito": "Capitan Bermudez",
   "jurisdiccion": "Santa Fe"
@@ -1244,7 +979,7 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Superior Provincial De Danzas Nº 5929 Isabel Taboga": {
+ "Instituto Superior Provincial de Danzas N° 5929 Isabel Taboga": {
   "cue": "8201033",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
@@ -1279,6 +1014,11 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior de Ciencias de la Salud A-1243": {
+  "cue": "0201919",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Superior de Comercio Exterior ISCE": {
   "cue": null,
   "distrito": "Capital",
@@ -1298,6 +1038,31 @@
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior de Educación Fisica N° 1 Dr. Enrique Romero Brest": {
+  "cue": "0201019",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Educación Fisica N° 11 Abanderado Grandoli": {
+  "cue": "8203868",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Fisica N° 2 Federico Williams Dickens": {
+  "cue": "0201393",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Educación Fisica N° 27 Prof. Cesar S. Vasquez": {
+  "cue": "8201896",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Física Hugo Quinn A-795": {
+  "cue": "0201021",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Superior de Educación Técnica N° 59": {
   "cue": "8203880",
@@ -1319,6 +1084,46 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior de Formación Artística Aida V. Mastrazzi": {
+  "cue": "0202744c",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Fernando Arranz": {
+  "cue": "0202744f",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Jorge Donn": {
+  "cue": "0202744e",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Juan Pedro Esnaola": {
+  "cue": "0202744g",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Lola Mora": {
+  "cue": "0202744b",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Manuel Belgrano": {
+  "cue": "0202744d",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Nelly Ramicone": {
+  "cue": "0202744h",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior de Formación Artística Rogelio Yrutia": {
+  "cue": "0202744a",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Superior de Formación Docente Calasanz": {
   "cue": null,
   "distrito": "Capital",
@@ -1334,15 +1139,120 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior de Formación Docente en Artes N° 5074 Gral. Manuel Belgrano": {
+  "cue": "8201211",
+  "distrito": "Reconquista",
+  "jurisdiccion": "Santa Fe"
+ },
  "Instituto Superior de Lenguas y Culturas Aborígenes": {
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Superior de Profesorado Nro.19 Raquel Cane": {
+ "Instituto Superior de Profesorado N° 1 Manuel Leiva": {
+  "cue": "8200155",
+  "distrito": "Casilda",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 10 Mateo Booz": {
+  "cue": "8202963",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 16 Dr. Bernardo A. Houssay": {
+  "cue": "8202146",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 16 Dr. Bernardo Houssay - Anexo Granadero Baigorria": {
+  "cue": "8202146a",
+  "distrito": "Granadero Baigorria",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 19 Raquel Cane": {
   "cue": "8200343",
   "distrito": "Rufino",
   "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 2 Dr. Joaquin V. Gonzalez": {
+  "cue": "8203756",
+  "distrito": "Rafaela",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 20 Senador Néstor J. Zamaro": {
+  "cue": "8200335",
+  "distrito": "San Justo",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 21 - Posta de San Martin": {
+  "cue": "8201625",
+  "distrito": "Arroyo Seco",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 22 Maestro Addad": {
+  "cue": "8201848",
+  "distrito": "Fray Luis Beltrán",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 23 Elisa Damiano": {
+  "cue": "8200719",
+  "distrito": "El Trébol",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 24": {
+  "cue": "8202712",
+  "distrito": "Villa Gobernador Gálvez",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 3 Eduardo Lafferriere": {
+  "cue": "8202434",
+  "distrito": "Villa Constitución",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 4 Ángel Cárcano": {
+  "cue": "8202289",
+  "distrito": "Reconquista",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 4 Ángel Cárcano - Anexo N° 2 Calchaquí": {
+  "cue": "8202289b",
+  "distrito": "Calchaquí",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 5 Perito Francisco Moreno": {
+  "cue": "8201690",
+  "distrito": "Cañada de Gómez",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 6 Dr. Leopoldo Chizzini Melo": {
+  "cue": "8203757",
+  "distrito": "Coronda",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 63": {
+  "cue": "8204520",
+  "distrito": "Las Toscas",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 8 Alte. Guillermo Brown": {
+  "cue": "8203758",
+  "distrito": "Santa Fe",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Profesorado N° 9 José María Scalenghe": {
+  "cue": "8202084",
+  "distrito": "Tostado",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorad de Enseñanza Técnica N° 17 Fray Luis Beltrán": {
+  "cue": "8201350",
+  "distrito": "Barrancas",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado Don Bosco": {
+  "cue": "0201558",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Superior del Profesorado Dr. Antonio Sobral": {
   "cue": null,
@@ -1359,15 +1269,60 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto Superior del Profesorado Nro 65": {
+ "Instituto Superior del Profesorado Juan B. Alberdi (A-815)": {
+  "cue": "0201800",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior del Profesorado N° 2 Dr. Joaquin V. Gonzalez - Anexo San Vicente": {
+  "cue": "8203756a",
+  "distrito": "San Vicente",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado N° 26 Ángela Peralta Pino": {
+  "cue": "8200519",
+  "distrito": "Ceres",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado N° 60": {
+  "cue": "8204458",
+  "distrito": "San Carlos Centro",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado N° 62": {
+  "cue": "8204311",
+  "distrito": "San José de la Esquina",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado N° 65": {
   "cue": "8204675",
   "distrito": "San Vicente",
   "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior del Profesorado San Agustin A-757": {
+  "cue": "0201649",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto Superior del Profesorado Tecnológico Aquiles Gay": {
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto Superior del Profesorado de Educación Especial": {
+  "cue": "0201414",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior del Profesorado de Educación Inicial Sara C. de Eccleston": {
+  "cue": "0201329",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto Superior del Profesorado de Música N° 5932 Carlos Guastavino": {
+  "cue": "8200042",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
  },
  "Instituto Superior del Profesorado en Educación Física - I.A.C.C.": {
   "cue": null,
@@ -1394,37 +1349,57 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto de Educación Superior Nro 7 Brigadier Estanislao Lopez": {
-  "cue": "8201895",
-  "distrito": "Venado Tuerto",
-  "jurisdiccion": "Santa Fe"
+ "Instituto de Educación Superior Juan B.Justo": {
+  "cue": "0200895",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Instituto de Educación Superior Nº 15 \\Dr. Alcides Greca\\": {
+ "Instituto de Educación Superior N° 15 Dr. Alcides Greca": {
   "cue": "8203156",
   "distrito": "San Javier",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto de Educación Superior Nº 28 Olga Cossettini": {
+ "Instituto de Educación Superior N° 28 Olga Cossettini": {
   "cue": "8202538",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto de Educación Superior Nº 48 Gral. José de San Martín": {
+ "Instituto de Educación Superior N° 29 Galileo Galilei": {
+  "cue": "8201805",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior N° 48 Gral. José de San Martín": {
   "cue": "8202341",
   "distrito": "Totoras",
   "jurisdiccion": "Santa Fe"
  },
- "Instituto de Educación Superior Nº 64 Ana María Fonseca": {
+ "Instituto de Educación Superior N° 64 Ana María Fonseca": {
   "cue": "8203758b",
   "distrito": "Santo Tomé",
   "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior N° 7 Brigadier Estanislao Lopez": {
+  "cue": "8201895",
+  "distrito": "Venado Tuerto",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto de Educación Superior Toratenu A-1282": {
+  "cue": "0202079",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Enseñanza Domingo Faustino Sarmiento": {
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
- "Instituto de Enseñanza Superior N.º 1 Dra. Alicia Moreau De Justo": {
+ "Instituto de Enseñanza Superior N° 02 Mariano Acosta": {
+  "cue": "0201411",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Enseñanza Superior N° 1 Dra. Alicia Moreau de Justo": {
   "cue": "0200720",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
@@ -1433,6 +1408,11 @@
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Enseñanza Superior en Lenguas Vivas Juan R.Fernandez": {
+  "cue": "0200584",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Formación Docente Nuestra Señora del Sagrado Corazón": {
   "cue": null,
@@ -1443,6 +1423,11 @@
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Formación Superior Sedeba": {
+  "cue": "0202821",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Instituto de Formación Técnica Superior N° 1": {
   "cue": "20087000",
@@ -1589,17 +1574,32 @@
   "distrito": "Recoleta",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Liceo Municipal De Santa Fe Antonio Fuentes Del Arco": {
+ "Instituto del Profesorado Sagrado Corazon A-29": {
+  "cue": "0200854",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto del Profesorado del Consudec Septimio Walsh": {
+  "cue": "0201096",
+  "distrito": "Ciudad de Buenos Aires",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Ispi N° 4006": {
+  "cue": "8202312",
+  "distrito": "San Guillermo",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Liceo Municipal de Santa Fe Antonio Fuentes del Arco": {
   "cue": "8204309",
   "distrito": "Santa Fe",
   "jurisdiccion": "Santa Fe"
  },
- "Nuestra Señora De La Misericordia A-58": {
+ "Nuestra Señora de la Misericordia A-58": {
   "cue": "0201685",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
- "Profesorado Calasanz Instituto De Educación Superior De Las Escuelas PíAs": {
+ "Profesorado Calasanz Instituto de Educación Superior de las Escuelas Pías": {
   "cue": "0202910",
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
