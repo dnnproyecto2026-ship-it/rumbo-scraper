@@ -41,7 +41,7 @@ _NO_ES_MATERIA = re.compile(
     # A term's or a duration's heading, hours, a total ("3º Cuatrimestre", "2 años
     # y medio", "120 horas", "Subtotal"); the staff of a diplomatura (UNTREF:
     # "Equipo", "Director", ": Mg. ..."); the office's hours (UNAHUR).
-    r"|^\d+\s*[°º]?\s*cuatrimestre$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?$|^(?:sub)?total$|^\d+\s+horas$"
+    r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$|^\d+\s+horas\.?$"
     r"|^(?:equipo|coordinador(?:a)?(?:\s+acad[ée]mico)?|docentes|director(?:a)?|comit[ée]\s+acad[ée]mico)$|^:\s"
     r"|^atenci[oó]n de lunes"
     # An elective marked as such in UM's tables: "Sastrería(a)".

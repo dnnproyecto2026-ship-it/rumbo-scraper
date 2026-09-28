@@ -157,7 +157,7 @@ _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tec
 # de Inglés" (UDA, UNSL): a note, a heading, a requirement.
 _FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s|^\(\*\)|^anuales$|^acreditaci[óo]n\b"
                              # What the subject filter of the site readers also turns away.
-                             r"|^\d+\s*[°º]?\s*cuatrimestre$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?$|^(?:sub)?total$"
+                             r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$"
                              r"|^\d+\s+horas$|^(?:equipo|docentes|director(?:a)?|coordinador(?:a)?)$|^:\s")
 
 
