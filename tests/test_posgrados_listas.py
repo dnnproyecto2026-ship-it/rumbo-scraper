@@ -100,6 +100,15 @@ class LeerTarjetas(unittest.TestCase):
             "Doctorado en Física": PAGINA,  # a PDF is not a page
         })
 
+    def test_el_titulo_de_una_seccion_y_la_modalidad(self):
+        self.assertIsNone(nombre_de_posgrado("MBA Y Maestrías"))
+        self.assertEqual(nombre_de_posgrado("Especialización en Dirección de Empresas - Online")[0],
+                         "Especialización en Dirección de Empresas")
+        self.assertEqual(nombre_de_posgrado("Especialización en Comunicación Corporativa - Blended")[0],
+                         "Especialización en Comunicación Corporativa")
+        self.assertEqual(nombre_de_posgrado("Especialización en Docencia Híbrida en Ciencias Aplicadas")[0],
+                         "Especialización en Docencia Híbrida en Ciencias Aplicadas")
+
     def test_la_docencia_sin_su_en(self):
         self.assertEqual(nombre_de_posgrado("Especialización Docencia en Educación Superior")[1], "Especialización")
 

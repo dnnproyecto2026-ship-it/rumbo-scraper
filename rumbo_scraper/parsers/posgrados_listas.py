@@ -54,7 +54,9 @@ _NO_ES_EL_NOMBRE = re.compile(
     r"reglamento|resolucion(?! de conflictos)|ordenanza|acta|jornada|charla|seminario|curso|"
     r"programa de la materia|admision|arancel|cronograma|calendario|"
     r"horarios?|comite|consejo|director[a]? de|coordinador|aprobo|aprueba|"
-    r"acredit[oa]|se dicta|inicia|comienza|comenzo|lanza|presenta|nueva|nuevo)\b")
+    r"acredit[oa]|se dicta|inicia|comienza|comenzo|lanza|presenta|nueva|nuevo|"
+    # A heading over a section lists kinds: "MBA y Maestrías".
+    r"maestrias|especializaciones|doctorados|posgrados)\b")
 # What a site writes after the name, on the same line: its accreditation,
 # its category, its modality or the cohort open now.
 _COLA = re.compile(
@@ -84,6 +86,10 @@ _NOTA = re.compile(r"\s+\*.*$")
 # The subject in quotes, without its preposition: Maestría “Docencia Universitaria”.
 _ENTRE_COMILLAS = re.compile(r"(?i)^((?:carrera de\s+)?(?:doctorado|maestr[íi]a|especializaci[óo]n))"
                              r"\s*[\"“”«]\s*([^\"“”»]+?)\s*[\"“”»]\s*$")
+# The modality after a dash: "Especialización en Dirección de Empresas -
+# Online". Only after a separator: "Docencia Híbrida" is a subject.
+_MODALIDAD_DETRAS = re.compile(r"(?i)\s*[-–—|(]\s*(?:online|on line|blended|h[íi]brid[ao]|virtual|"
+                               r"a distancia|presencial|semipresencial)\b.*$")
 _ARTICULO = re.compile(r"\s+(?:en|de|del|y|la|el|los|las)$", re.I)
 # A second degree in the same line: a card that lists two programmes, or one
 # that follows the name with the title it gives ("Especialización en
@@ -133,7 +139,7 @@ def nombre_de_posgrado(texto: str) -> tuple[str, str] | None:
         nombre = (nombre[otro.start():].strip()
                   if re.fullmatch(r"[A-Z]{2,6}|(?i:m[aá]ster)", antes) else antes)
     # The bracket first: "(Carrera a distancia)" is not cut at "a distancia".
-    nombre = _SIGLA.sub("", _COLA.sub("", _DONDE.sub("", nombre)))
+    nombre = _SIGLA.sub("", _COLA.sub("", _MODALIDAD_DETRAS.sub("", _DONDE.sub("", nombre))))
     nombre = clean_text(_DONDE.sub("", nombre)).strip(" .,;:-–—")
     nombre = _ARTICULO.sub("", nombre)
     if not 12 <= len(nombre) <= 150 or len(nombre.split()) > 20:

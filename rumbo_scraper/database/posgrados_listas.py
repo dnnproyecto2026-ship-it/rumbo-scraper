@@ -227,6 +227,10 @@ LISTAS: dict[str, Lista] = {
     # Its postgraduates are listed only in the site's menu.
     "IUSE": Lista("Instituto Universitario de Seguridad", "iuse.edu.ar",
                   (Pagina("https://iuse.edu.ar/", ambito="nav"),), 3),
+    # Its business school lists the master's and the specialisations apart.
+    "UADE": Lista("Universidad Argentina de la Empresa", "uade.edu.ar", tuple(
+        Pagina(f"https://www.uade.edu.ar/sites/business-school/{seccion}/")
+        for seccion in ("mba-y-maestrias", "especializaciones")), 6),
     "UEAN": Lista("Universidad Escuela Argentina de Negocios", "uean.edu.ar",
                   (Pagina("https://www.uean.edu.ar/posgrados/"),), 2),
     # One programme, two degrees: its page names the master's by its title.
