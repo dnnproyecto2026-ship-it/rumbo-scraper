@@ -44,6 +44,8 @@ _NO_ES_MATERIA = re.compile(
     r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$|^\d+\s+horas\.?$"
     r"|^(?:equipo|coordinador(?:a)?(?:\s+acad[ée]mico)?|docentes|director(?:a)?|comit[ée]\s+acad[ée]mico)$|^:\s"
     r"|^atenci[oó]n de lunes"
+    # The page's asides (UCC's "Estamos en contacto" in 34 careers).
+    r"|^estamos en contacto|^informaci[oó]n sobre la inscripci|^pre-?inscripci[oó]n|^\[?descargar|estar[áa]s en contacto|^examen de suficiencia"
     # An elective marked as such in UM's tables: "Sastrería(a)".
     r"|\(a\)$|derechos reservados")
 
