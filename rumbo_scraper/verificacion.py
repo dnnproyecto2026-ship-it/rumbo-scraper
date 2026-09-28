@@ -92,7 +92,9 @@ _ABREVIADAS = (
 
 
 _PALABRAS_ABREVIADAS = ((" administracion ", " adm "), (" organizacion ", " org "),
-                        (" recursos humanos ", " rr hh "))
+                        (" recursos humanos ", " rr hh "),
+                        # The UBA's CBC: "Intr. al Pensamiento Científico".
+                        (" introduccion ", " intr "))
 
 
 def dice(fuente_plana: str, nombre: str | None) -> bool:

@@ -24,6 +24,7 @@ import argparse
 import json
 import re
 import time
+from urllib.parse import urlparse
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -45,6 +46,8 @@ LISTADOS: dict[str, tuple[str, ...]] = {
             "https://www.filo.uba.ar", "https://www.fi.uba.ar/grado",
             "https://www.fmed.uba.ar/carreras-y-tecnicaturas/carreras-de-grado",
             "https://www.derecho.uba.ar", "https://www.psi.uba.ar"),
+    # Humanidades y Artes moved its careers ("/carreras/grado/10/..." is 404).
+    "UNR": ("https://fhumyar.unr.edu.ar/carreras-de-grado/", "https://fhumyar.unr.edu.ar/pregrado/"),
 }
 
 
@@ -69,9 +72,12 @@ def leer(client: Any, sigla: str) -> list[dict[str, Any]]:
             for nombre, url in paginas_por_nombre(visitante.get(listado), listado).items():
                 paginas.setdefault(nombre, url)
             time.sleep(PAUSA)
+        hosts = {urlparse(listado).netloc for listado in LISTADOS.get(sigla, ())}
         for carrera in carreras:
             actual = url_de.get(carrera["id"])
-            if actual and actual not in compartidas:
+            # A page of its own that is gone (the faculty moved it) is none.
+            if actual and actual not in compartidas and not (
+                    urlparse(actual).netloc in hosts and not visitante.get(actual)):
                 continue
             # Exactas names its "Licenciatura en Ciencias Biológicas" "Ciencias Biológicas".
             # A name so shortened ("Historia") may be any page's: only a page

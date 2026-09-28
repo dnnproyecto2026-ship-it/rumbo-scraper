@@ -925,7 +925,8 @@ def plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
 
 
 _FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
-                           r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo)")
+                           r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo|"
+                           r"ver correlatividades|plan de estudios?$)")
 
 
 def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
@@ -998,3 +999,31 @@ def _plan_obligatorias(html: str) -> list[tuple[str, int]]:
 
 def plan_obligatorias(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_obligatorias(html))
+
+
+def _plan_fadu(html: str) -> list[tuple[str, int]]:
+    """UBA, FADU: a table per level under its heading, the CBC ("CICLO
+    BÁSICO COMÚN", the career's first year) and "Nivel 1" to "Nivel 5"
+    (its second year on); a subject's name after its code ("A1. Arquitectura
+    I"). A row without a way to pass ("Matemática II On-line") is another
+    way to take the one above."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        titulo = _texto(tabla.find_previous(["h2", "h3", "h4", "h5", "strong", "p"]))
+        nivel = re.fullmatch(r"(?i)nivel\s+(\d)", titulo)
+        anio = 1 if re.fullmatch(r"(?i)ciclo b[áa]sico com[úu]n", titulo) else (int(nivel.group(1)) + 1 if nivel else None)
+        for fila in tabla.find_all("tr") if anio else []:
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) < 3 or celdas[0].lower() == "materia" or not celdas[1]:
+                continue
+            # The CBC's "Intr. al ..." is a shortened word, not a code.
+            nombre = re.sub(r"^Intr\.\s+", "Introducción ", celdas[0])
+            nombre = re.sub(r"^[A-Z][A-Za-z0-9]{0,4}\.\s+", "", nombre)
+            nombre = re.sub(r"\s*\(\*+\)$", "", nombre)
+            if not re.search(r"(?i)optativ|electiv", nombre):
+                _agregar(materias, nombre, anio)
+    return materias
+
+
+def plan_fadu(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_fadu(html))
