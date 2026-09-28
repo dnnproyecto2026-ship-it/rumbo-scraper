@@ -219,10 +219,13 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
-                       ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani))
+                       ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani),
+                       # The Hospital Italiano's university: its plans are on the hospital's site.
+                       ("hiba.hospitalitaliano.org.ar", planes_sitios.plan_uhiba))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
-_DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),)
+_DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
+                            ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:

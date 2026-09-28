@@ -791,6 +791,56 @@ def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
 
 
+_ANIO_UHIBA = re.compile(r"(?i)^\s+(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\s*$")
+
+
+def plan_uhiba(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The Hospital Italiano's plans (``pdftotext -layout``): a heading per
+    year ("Primer año"), then a record per subject: a yearly one on one
+    line ("Biofísica  Anual  128 ..."), a term's from the line that names
+    the term ("Primer", "Segundo") to the one that ends it ("cuatrimestre"),
+    its hours on any of them. The name is the text at the left margin of
+    the record's lines ("Módulo Integrador" / "Fisicomatemático"). A year's
+    totals are not a subject."""
+
+    def margen(linea: str) -> str:
+        # (A wrapped name's first line may start a space in: " Módulo Integrador".)
+        texto = re.split(r"\s{2,}", linea.strip())[0] if re.match(r"\s{0,3}\S", linea) else ""
+        return "" if re.fullmatch(r"(?i)anual|primer|segundo|cuatrimestral|cuatrimestre|[\d-]+", texto) else texto
+
+    materias: list[tuple[str, int]] = []
+    anio, registro = None, []
+
+    def cerrar() -> None:
+        nombre = clean_text(" ".join(filter(None, (margen(l) for l in registro))))
+        if anio and nombre and not re.search(r"\d", nombre):
+            _agregar(materias, nombre, anio)
+        registro.clear()
+
+    for linea in texto_con_columnas.splitlines():
+        if not linea.strip():
+            continue
+        encabezado = _ANIO_UHIBA.match(linea)
+        if encabezado or re.match(r"(?i)\s*totales\b", linea):
+            registro.clear()
+            anio = _ORDINALES_UHIBA[encabezado.group(1).lower()] if encabezado else anio
+            continue
+        if not anio:
+            continue
+        # A yearly subject ends on its line, its name maybe begun on the one before.
+        if re.search(r"(?i)\S\s{2,}(anual|cuatrimestral)\s{2,}\d", linea):
+            registro.append(linea)
+            cerrar()
+            continue
+        registro.append(linea)
+        if re.search(r"(?i)\bcuatrimestre\b", linea):
+            cerrar()
+    return desde_el_primero(materias)
+
+
+_ORDINALES_UHIBA = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+
+
 _SIU_MATERIA = re.compile(r"^\s*(\d{1,2}) - [A-Za-zÁÉÍÓÚáéíóú ]+?\s{2,}\d{3,6} (.+?)(?:\s{2,}\d+)?\s{2,}[SN]\s")
 _SIU_ORIENTACION = re.compile(r"^\s*Orientaci[óo]n \d+\s+(.+?)\s*$")
 
