@@ -40,7 +40,10 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
 
     corto = {u["id"]: u.get("nombre_corto") or "" for u in select_all(
         client.table("universidades").select("id,nombre_corto"))}
-    posgrados = select_all(client.table("posgrados").select("id,universidad_id,nombre_programa,url_oficial"))
+    # A diplomatura lists its units with their contents: only the careers.
+    posgrados = [p for p in select_all(client.table("posgrados").select(
+        "id,universidad_id,nombre_programa,url_oficial,tipo_posgrado"))
+        if p["tipo_posgrado"] in ("Doctorado", "Maestría", "Especialización")]
     con_materias = {m["posgrado_id"] for m in select_all(
         client.table("materias").select("posgrado_id")) if m["posgrado_id"]}
     veces = Counter(p["url_oficial"] for p in posgrados if p["url_oficial"])

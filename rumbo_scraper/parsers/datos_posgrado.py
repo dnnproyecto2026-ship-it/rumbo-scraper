@@ -272,7 +272,7 @@ _ANDAMIO = re.compile(
     r"(?i)^(?:m[óo]dulo|ciclo|bloque|eje|[áa]rea|tramo|n[úu]cleo|primer|segundo|tercer|cuarto|"
     r"\d+[°º]?\s*(?:a[ñn]o|cuatrimestre|semestre)|cuatrimestre|semestre|a[ñn]o)\b[^.]{0,50}:?$|"
     r"^(?:horas|carga\s+horaria|cr[ée]ditos|uvacs?)\b[^a-z]{0,20}\d")
-_VIÑETA = re.compile(r"^[\s•·\-–—*▪►◦○]+|^\d{1,2}\s*[.)\-–]\s+")
+_VIÑETA = re.compile(r"^[\s•·\-–—*▪►◦○»]+|^\d{1,2}\s*[.)\-–]\s+")
 # What es_materia lets through and a plan never lists: the page's buttons,
 # its paperwork, and anything asked or dated.
 _NO_ES_ASIGNATURA = re.compile(
@@ -282,6 +282,15 @@ _NO_ES_ASIGNATURA = re.compile(
     r"cuerpo\s+docente|docentes|comit[ée]|perfil|objetivos|destinatarios|t[íi]tulo|duraci[óo]n|"
     r"modalidad|sede|horarios?|presentaci[óo]n|fundamentaci[óo]n|campo\s+laboral|alcances|"
     r"tutorial|formulario|modelo\s+de|inicio|home)\b|\?|\d{1,2}\s+de\s+[a-z]+\s+de\s+\d{4}")
+
+
+# A list that holds any of these is a form, the site's accessibility menu or
+# the programme's research lines, not its plan: the whole list goes.
+_NO_ES_UN_PLAN = re.compile(
+    r"(?i)^(?:nombre|apellido|tel[ée]fono|e-?mail|correo|mensaje|enviar|provincia|pa[íi]s|"
+    r"contraste|texto|enlaces|equipo|cursor|tama[ñn]o)\b|solicit|quiero\s+recibir|please|field|"
+    r"preinscripci|l[íi]neas\s+de\s+investigaci|[áa]reas\s+estrat[ée]gicas|[áa]reas\s+tem[áa]ticas|"
+    r"^\+\s*info|carta\s+del?|intercambio\s+con|^(?:doctorado|maestr[íi]a|especializaci[óo]n)\s+en\b")
 
 
 def plan_de_posgrado(html: str) -> list[str]:
@@ -304,7 +313,7 @@ def plan_de_posgrado(html: str) -> list[str]:
         materias: list[str] = []
         antes = 0
         for siguiente in lineas[inicio + 1:]:
-            texto = clean_text(_VIÑETA.sub("", siguiente))
+            texto = clean_text(re.sub(r"\s*\(\*+\)$", "", _VIÑETA.sub("", siguiente)))
             texto = re.sub(r"(?i)^(?:cursos?|seminarios?)\s+(?:obligatorios?|electivos?|optativos?)\s*:\s*",
                            "", texto)
             # A block's heading in capitals ("FUNDAMENTOS", "MÓDULOS") or
@@ -326,6 +335,6 @@ def plan_de_posgrado(html: str) -> list[str]:
             antes += 1
             if antes > 3:
                 break
-        if 4 <= len(materias) <= 40:
+        if 4 <= len(materias) <= 40 and not any(_NO_ES_UN_PLAN.search(m) for m in materias):
             return materias
     return []
