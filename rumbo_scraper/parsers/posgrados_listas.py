@@ -38,7 +38,10 @@ TIPOS = (
 _CALIFICATIVOS = (r"interinstitucional|intrainstitucional|latinoamerican[oa]|"
                   r"internacional|binacional|regional|academic[oa]|profesional|"
                   r"conjunt[oa]|cooperativ[oa]|personalizad[oa]|estructurad[oa]|"
-                  r"integrad[oa]|universitari[oa]|semiestructurad[oa]")
+                  r"integrad[oa]|universitari[oa]|semiestructurad[oa]|"
+                  # "Especialización Docencia en Educación Superior" (UNRC):
+                  # the subject's first word, written without its "en".
+                  r"docencia")
 # A private university also writes "Magíster en", "Master en" and "MBA".
 _UN_NOMBRE = re.compile(
     r"^(?:(?:carrera de )?(?:doctorado|maestria|magister|master|especializacion)"

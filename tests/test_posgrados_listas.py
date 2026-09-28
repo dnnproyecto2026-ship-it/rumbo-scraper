@@ -100,6 +100,9 @@ class LeerTarjetas(unittest.TestCase):
             "Doctorado en Física": PAGINA,  # a PDF is not a page
         })
 
+    def test_la_docencia_sin_su_en(self):
+        self.assertEqual(nombre_de_posgrado("Especialización Docencia en Educación Superior")[1], "Especialización")
+
     def test_la_descripcion_no_es_parte_del_nombre(self):
         self.assertIsNone(nombre_de_posgrado("Maestría Gestión del Diseño para los Desarrollos"))
         self.assertEqual(nombre_de_posgrado("Doctorado Interinstitucional en Educación")[1], "Doctorado")
