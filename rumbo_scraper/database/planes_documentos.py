@@ -226,7 +226,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
-_DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
+_DOCUMENTOS_PROPIOS = (("unahur.edu.ar", planes_sitios.plan_unahur), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.

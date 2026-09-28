@@ -1051,6 +1051,32 @@ _MATERIA_IUCBC = re.compile(r"^(\S.*?)\s{2,}[A-Z/]{2,8}\s+\d+\s*hs\b")
 _MATERIA_IUCBC_NUMERADA = re.compile(r"^\s*[A-Z]{2,4}\s+\d{1,2}\s+(\S.*?)\s*$")
 
 
+_FILA_UNAHUR = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\s+(.*?)\s+(Cuatrimestral|Anual|Bimestral|Semestral)\b")
+_NUMEROS_AL_FINAL = re.compile(r"(\s+[\d.,]+)+\s*$")
+
+
+def plan_unahur(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's plan PDFs (``pdftotext -layout``): a table whose rows read
+    "PRIMER AÑO  Química  Cuatrimestral  4 64 86 150 6". A name too long for
+    its cell wraps around the row: the row has the year and the régimen but
+    no name, and the name is the line above joined to the line below (less
+    the hours that line carries)."""
+    lineas = texto_con_columnas.splitlines()
+    materias: list[tuple[str, int]] = []
+    for i, linea in enumerate(lineas):
+        fila = _FILA_UNAHUR.match(linea)
+        if not fila:
+            continue
+        anio = _ORDINALES[fila.group(1).lower()]
+        nombre = fila.group(2).strip()
+        if not nombre:
+            arriba = lineas[i - 1].strip() if i else ""
+            abajo = _NUMEROS_AL_FINAL.sub("", lineas[i + 1]).strip() if i + 1 < len(lineas) else ""
+            nombre = f"{arriba} {abajo}".strip()
+        _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
 def plan_iucbc(texto_con_columnas: str) -> list[tuple[str, int]]:
     """IUCBC's plans (``pdftotext -layout``): a heading per year ("PRIMER
     AÑO"), then a row per subject with its area and hours ("Química General

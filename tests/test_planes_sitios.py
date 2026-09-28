@@ -279,3 +279,18 @@ class PlanUcongreso(unittest.TestCase):
                 '</div><div class="tab-contents">' + plan(1, ["Primer Año", "Derecho Político", "Segundo Año", "Obligaciones"])
                 + plan(2, ["Primer Año", "Derecho Romano"]) + "</div></div>")
         self.assertEqual(p.plan_ucongreso(html), [("Derecho Político", 1), ("Obligaciones", 2)])
+
+
+class PlanUnahur(unittest.TestCase):
+    def test_a_wrapped_name_is_the_lines_around_its_row(self):
+        texto = "\n".join([
+            "PRIMER AÑO       Química                     Cuatrimestral     4   64   86  150  6",
+            "                 Cultura y alfabetización",
+            "PRIMER AÑO                                   Cuatrimestral              68  100  4",
+            "                 digital en la universidad                     2   32",
+            "                 TOTAL PRIMER CUATRIMESTRE                               288  387",
+            "SEGUNDO AÑO      Física II                   Cuatrimestral     4   64  111  175  7",
+            "TERCER AÑO   Espacio de integración curricular II Cuatrimestral       13",
+        ])
+        self.assertEqual(p.plan_unahur(texto), [("Química", 1), ("Cultura y alfabetización digital en la universidad", 1),
+                                                ("Física II", 2), ("Espacio de integración curricular II", 3)])
