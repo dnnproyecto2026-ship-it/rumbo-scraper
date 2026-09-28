@@ -63,7 +63,7 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
     # A list's marks and codes: "› Nutrición" (UNAU), "COD: 101 - Guión" (UNMdP FAUD).
     nombre = re.sub(r"^(?:[›•·⏺◻▪■□◦\u2022\ufe0f\ufe0e]\s*)+", "", nombre)
-    nombre = re.sub(r"(?i)^cod\.?:?\s*\d+\s*[-–]\s*", "", nombre)
+    nombre = re.sub(r"(?i)^cod\.?:?\s*\d*\s*[-–]\s*", "", nombre)
     # Numbered in Roman figures: "VI.- Derecho del Trabajo I", "XI. Inglés I" (UEAN).
     nombre = re.sub(r"^[IVXL]{1,8}\s*\.-?\s*(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
@@ -1159,9 +1159,10 @@ def plan_fadu(html: str) -> list[tuple[str, int]]:
 
 
 def _plan_fba_unlp(html: str) -> list[tuple[str, int]]:
-    """UNLP's Bellas Artes: the plan on the career's page, each year a heading
-    written with a dot before it (". Primer año") and its subjects one per
-    line, until "+ Ver plan de estudios completo" or the page's other parts."""
+    """UNLP's Bellas Artes and Humanidades: the plan on the career's page,
+    each year a heading (". Primer año", "1º AÑO") and its subjects one per
+    line, until "+ Ver plan de estudios completo", "Archivos" or the page's
+    other parts."""
     soup = BeautifulSoup(html or "", "html.parser")
     for parte in soup.find_all(["nav", "header", "footer", "script", "style"]):
         parte.decompose()
@@ -1175,12 +1176,26 @@ def _plan_fba_unlp(html: str) -> list[tuple[str, int]]:
             continue
         if anio is None:
             continue
-        if re.match(r"(?i)^\+?\s*ver\s+plan|^(?:requisitos|inscrip|t[íi]tulo|alcances|perfil|contacto)", linea) \
-                or len(linea) > 90:
+        if re.match(r"(?i)^\+?\s*ver\s+plan|^(?:requisitos|inscrip|t[íi]tulo|alcances|perfil|contacto|"
+                    r"archivos|esquema\s+de\s+correlativas)\b", linea) or len(linea) > 90:
             break
+        # A choice among several ("Una MATERIA OPTATIVA A a elegir entre
+        # ...", Humanidades) is not a subject of its own.
+        if re.match(r"(?i)^(?:una|dos|tres)\s+(?:materias?\s+)?(?:optativas?|capacitaci)", linea):
+            continue
         _agregar(materias, linea, anio)
     return materias
 
 
 def plan_fba_unlp(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_fba_unlp(html))
+
+
+def plan_fahce_unlp(html: str) -> list[tuple[str, int]]:
+    """UNLP's Humanidades: as Bellas Artes, but a row "Una MATERIA OPTATIVA A
+    a elegir entre" lists its options inside the cell; one of them is taken,
+    not all, so the options go with it."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for opciones in soup.select("td ul"):
+        opciones.decompose()
+    return plan_fba_unlp(str(soup))

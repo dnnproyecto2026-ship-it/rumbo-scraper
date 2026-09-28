@@ -177,6 +177,11 @@ Código   Asignatura                 Régimen         Horas
         html = "<p>Plan de estudios</p><p>1º año</p><p>Historia de Roma</p><p>¿Por qué UMAI?</p><p>Otra cosa</p>"
         self.assertEqual(p._plan_texto_por_anio(html), [("Historia de Roma", 1)])
 
+    def test_sin_marcas_codigos_ni_datos_del_plan(self):
+        html = """<p><strong>Primer año</strong></p><ul><li>› Nutrición</li><li>COD: 101 - Guión</li>
+        <li>TÍTULO DE PREGRADO: Intérprete</li><li>CARGA HORARIA TOTAL: 2008 horas</li></ul>"""
+        self.assertEqual(p.plan_titulo_y_lista(html), [("Nutrición", 1), ("Guión", 1)])
+
     def test_sin_la_numeracion_romana(self):
         html = """<p><strong>Primer año</strong></p><ul><li>VI.- Derecho del Trabajo I</li><li>XI. Inglés I</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Derecho del Trabajo I", 1), ("Inglés I", 1)])
