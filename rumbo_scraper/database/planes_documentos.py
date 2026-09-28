@@ -232,7 +232,8 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("hiba.hospitalitaliano.org.ar", planes_sitios.plan_uhiba),
                        ("iucbc.edu.ar", planes_sitios.plan_iucbc),
                        ("universidad-policial.edu.ar", planes_sitios.plan_iupfa),
-                       ("unpilar.edu.ar", planes_sitios.plan_unpilar))
+                       ("unpilar.edu.ar", planes_sitios.plan_unpilar),
+                       ("ude.edu.ar", planes_sitios.plan_ude))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),

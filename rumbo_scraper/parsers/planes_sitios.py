@@ -877,6 +877,52 @@ def plan_iupfa(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """Universidad del Este's plans (``pdftotext -layout``, one page): two
+    columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
+    at the left margin ("1"), alone or on its first row. A row is cut where
+    the second column starts; a name that goes on below, in lower case
+    ("Comunicación en Lengua Inglesa" / "para Turismo I"), is one; "-" is an
+    empty cell. The plan ends at the degrees ("Título de Grado")."""
+    columna = None
+    filas: list[list] = []
+    ultima: dict[int, list] = {}
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        if columna is None:
+            encabezado = re.search(r"2\s*[·°º.]\s*CUATRIMESTRE", linea)
+            if encabezado and re.search(r"1\s*[·°º.]\s*CUATRIMESTRE", linea):
+                columna = encabezado.start()
+            continue
+        if re.match(r"(?i)\s*t[íi]tulo", linea):
+            break
+        numero = re.match(r"^\s*(\d)(?=\s{2,}|\s*$)", linea)
+        if numero:
+            anio, ultima = int(numero.group(1)), {}
+            linea = " " * numero.end() + linea[numero.end():]
+        if not anio or not linea.strip():
+            continue
+        for lado, parte in enumerate((linea[:columna], linea[columna:])):
+            parte = clean_text(parte)
+            if not parte or parte in "-–":
+                continue
+            if parte[:1].islower() and lado in ultima:
+                ultima[lado][0] += " " + parte
+            else:
+                ultima[lado] = [parte, anio]
+                filas.append(ultima[lado])
+    materias: list[tuple[str, int]] = []
+    for nombre, anio_de_la_fila in filas:
+        _agregar(materias, nombre, anio_de_la_fila)
+    # An adjective alone ("Turísticos", "Educativas") is the end of a name
+    # wrapped in capitals ("Formulación y Evaluación de Proyectos" /
+    # "Turísticos"): the rows cannot be told apart, so no plan.
+    if any(re.fullmatch(r"(?i)\w+(?:ístic|ativ|iv|ic)[oa]s", n) and n.lower() != "estadísticas"
+           for n, _ in materias):
+        return []
+    return desde_el_primero(materias)
+
+
 _ANIO_UNPILAR = re.compile(r"(?i)^\s*(\d)\s*(?:er|do|ro|to|°|º)\s*año\b")
 _MATERIA_UNPILAR = re.compile(r"^\s*\d{1,2}\s+(\S.*?)\s{2,}\d+\b")
 
