@@ -33,11 +33,22 @@ _NO_ES_CARRERA = re.compile(r"(?i)^(certificaci[óo]n|trayecto|post[íi]tulo|act
                             r"diplomatura|curso)")
 
 
+_PROFESIONES = ((r"enfermer[oa](?:/[oa])?(?: profesional)?", "Enfermería"),
+                (r"trabajador(?:/a|a)? social", "Trabajo Social"),
+                (r"psicopedagog[oa](?:/[oa])?", "Psicopedagogía"),
+                (r"bibliotecari[oa](?:/[oa])?", "Bibliotecología"),
+                (r"guía de turismo|gu[íi]a (?:universitari[oa] )?de turismo", "Guía de Turismo"))
+
+
 def nombre_de_la_carrera(titulo: str) -> str | None:
     """The career a degree names, or None when it is not one."""
     titulo = clean_text(titulo)
     if not titulo or _NO_ES_CARRERA.match(titulo):
         return None
+    # A registry that names the profession ("Enfermero/a"): the career is its field.
+    for profesion, carrera in _PROFESIONES:
+        if re.fullmatch(profesion, titulo, re.I):
+            return carrera
     titulo = re.sub(r"(?i)^t[ée]cnic[oa](?:/[oa])?\s+superior\b", "Tecnicatura Superior", titulo)
     titulo = re.sub(r"(?i)^profesor(?:/a|a)?\s+(de|en)\b", r"Profesorado \1", titulo)
     return titulo[0].upper() + titulo[1:]
@@ -45,7 +56,9 @@ def nombre_de_la_carrera(titulo: str) -> str | None:
 
 def _titulo(texto: str) -> str:
     texto = clean_text(texto)
-    return con_tildes(texto) if texto.isupper() else texto
+    # "INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Nº 28": capitals but for the "º".
+    texto = con_tildes(texto) if sum(c.islower() for c in texto) <= 2 else texto
+    return re.sub(r"\bN[oº°]\.?\s*(?=\d)", "N° ", texto)
 
 
 def siglas(nombre: str) -> str:
@@ -65,8 +78,8 @@ def siglas(nombre: str) -> str:
 
 def _corto(nombre: str, numero: str, clave: str) -> str:
     """"INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Y TÉCNICA Nº 12" -> "ISFDyT 12"."""
-    siglas = (("docente y t[ée]cnica", "ISFDyT"), ("docente", "ISFD"), ("t[ée]cnica", "ISFT"))
-    for patron, sigla in siglas:
+    por_tipo = (("docente y t[ée]cnica", "ISFDyT"), ("docente", "ISFD"), ("t[ée]cnica", "ISFT"))
+    for patron, sigla in por_tipo:
         if re.search(rf"(?i)instituto superior de formaci[óo]n {patron}\s+n", nombre) and numero:
             return f"{sigla} {int(numero)}"
     return siglas(_titulo(nombre)) or clave
