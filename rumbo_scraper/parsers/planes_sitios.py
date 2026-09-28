@@ -1013,7 +1013,8 @@ def _plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
     for elemento in BeautifulSoup(html or "", "html.parser").find_all(["p", "h2", "h3", "h4", "h5", "li"]):
         if elemento.name == "li":
             texto = re.sub(r"(?i)\s*:?\s*c[áa]tedra\s+[a-z]\b.*$", "", _texto(elemento))
-            if anio and not re.search(r"(?i)optativ|electiv", texto):
+            # (Nor one outside it: "PAFU ... opcional", "Informática (extracurricular)".)
+            if anio and not re.search(r"(?i)optativ|electiv|opcional|extracurricular", texto):
                 _agregar(materias, texto, anio)
             continue
         negrita = elemento if elemento.name != "p" else elemento.find(["b", "strong"])
