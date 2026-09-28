@@ -39,6 +39,11 @@ class CatalogoDeLaUNL(unittest.TestCase):
         self.assertEqual(leer_plan(CARRERA),
                          ["Matemática Básica", "Fundamentos de Programación", "Electrónica Digital"])
 
+    def test_plan_con_nombre_partido_y_casilleros_de_optativas(self):
+        html = """<p>Plan de estudios</p><p>SEGUNDO CICLO<br> •Biogeografía<br> •Asignatura optativa I – Formación General<br>
+        (4 créditos)*<br> •Epistemología y Metodología de la<br> Investigación<br> •Tesina</p>"""
+        self.assertEqual(leer_plan(html), ["Biogeografía", "Epistemología y Metodología de la Investigación", "Tesina"])
+
 
 UNCUYO = """
 <div class="card card-estudio"><div class="card-body"><h3 class="card-title">

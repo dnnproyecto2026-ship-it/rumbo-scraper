@@ -90,8 +90,8 @@ def leer_plan(html: str) -> list[str]:
     soup = BeautifulSoup(html or "", "html.parser")
     for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):
         parte.decompose()
-    materias: list[str] = []
-    dentro = False
+    renglones: list[str] = []
+    dentro, sigue = False, False
     for linea in soup.get_text("\n").split("\n"):
         linea = clean_text(linea)
         if not linea:
@@ -104,7 +104,22 @@ def leer_plan(html: str) -> list[str]:
         if _FIN_DEL_PLAN.match(linea):
             break
         if _VINETA.match(linea):
-            materia = clean_text(_VINETA.sub("", linea))
-            if materia and materia not in materias:
-                materias.append(materia)
+            renglones.append(clean_text(_VINETA.sub("", linea)))
+            sigue = True
+        # A name the line wraps goes on without its bullet ("Epistemología y
+        # Metodología de la" over "Investigación"); a cycle's heading does not.
+        elif sigue and renglones and not re.search(r"(?i)\bciclo\b|\ba[ñn]o\b|cuatrimestre", linea):
+            renglones[-1] += " " + linea
+        else:
+            sigue = False
+    materias: list[str] = []
+    for renglon in renglones:
+        # Credits, its term and a note after an asterisk are not the name:
+        # "(4 créditos)*", "Canto I (Anual)", "Proyecto Final *El alumno deberá ...".
+        materia = re.split(r"(?i)\s\*|\sdescarga de archivos", renglon)[0]
+        materia = re.sub(r"(?i)\s*\(\d+\s*cr[ée]ditos\)\*?", "", materia)
+        materia = clean_text(re.sub(r"(?i)\s*\((?:anual|primer cuatrimestre|segundo cuatrimestre|cuatrimestral)\)$", "", materia))
+        # An elective's slot ("Asignatura optativa I – Formación General") is not a subject.
+        if materia and materia not in materias and not re.search(r"(?i)^(\d+\s+)?asignaturas?\s+(optativ|electiv)|^(optativ|electiv)", materia):
+            materias.append(materia)
     return materias
