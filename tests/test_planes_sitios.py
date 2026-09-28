@@ -158,6 +158,17 @@ ANUAL     QUÍMICA LEGAL"""
         self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
         self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [])
 
+    def test_anexo_con_codigo_de_anio_y_nombre_partido(self):
+        texto = """                                              PRIMER AÑO
+Código   Asignatura                 Régimen         Horas
+1.1      Anatomía                   Anual           6           180
+1.3.1    Química Estomatológica     Cuatrimestral   6           96
+         Básica y Aplicada
+         Subtotales                                 35          728
+2.7      Fisiología                 Anual           4           120     60          -           1.1. a 1.6.2."""
+        self.assertEqual(p.plan_por_codigo_en_texto(texto),
+                         [("Anatomía", 1), ("Química Estomatológica Básica y Aplicada", 1), ("Fisiología", 2)])
+
     def test_unr_veterinaria_por_codigo(self):
         html = """<table><tr><td>Código</td><td>Asignatura</td></tr>
         <tr><td>1.1.1</td><td>Física Biológica</td><td>100</td></tr>

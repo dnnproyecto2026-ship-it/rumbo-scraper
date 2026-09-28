@@ -403,6 +403,34 @@ def plan_por_codigo(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+# A resolution's annex as ``pdftotext -layout`` lays it out (UNR
+# Odontología): a row per subject whose code starts with the year ("1.3.1",
+# "2.7", "1.6.2."), the name next, then its term ("Anual", "Cuatrimestral");
+# a name that wraps goes on under itself in the next line.
+_FILA_CON_ANIO_EN_EL_CODIGO = re.compile(r"^(\s*)(\d)\.\d{1,2}(?:\.\d)?\.?\s+(\S.*?)\s{2,}(?:Anual|Cuatrimestral|Semestral|Bimestral)\b")
+
+
+def plan_por_codigo_en_texto(texto_con_columnas: str) -> list[tuple[str, int]]:
+    renglones: list[list] = []
+    columna = None
+    for linea in (texto_con_columnas or "").splitlines():
+        fila = _FILA_CON_ANIO_EN_EL_CODIGO.match(linea)
+        if fila:
+            columna = fila.start(3)
+            renglones.append([fila.group(3), int(fila.group(2))])
+            continue
+        sigue = linea[columna:].split("  ")[0].strip() if columna and len(linea) > columna else ""
+        # (Only a name's piece sits in its column, with nothing before it.)
+        if renglones and sigue and not linea[:columna].strip() and not re.match(r"(?i)subtotal", sigue):
+            renglones[-1][0] += " " + sigue
+        elif linea.strip():
+            columna = None
+    materias: list[tuple[str, int]] = []
+    for nombre, anio in renglones:
+        _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
 # The UCASAL links two kinds of plan it can be read from, as ``pdftotext
 # -layout`` lays them out:
 # - its brochure: an "AÑO" heading per year whose number is a drawing (the
