@@ -1284,7 +1284,7 @@ _NO_ES_MATERIA_DEL_ANIO = re.compile(
     r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura)$|^optativas\b|"
     r"^poseer\b|^\d+\s+materias$|^programa$|^reconocid|^modificaci|^campus|^coordinador|^ir\s+al|"
     r"^espacios\s+curriculares|^nota\b|^per[íi]odo\s+de|^semanal$|^\d\s*[º°]\s*cuat|cuatrimestre$|"
-    r"^incumbenc|^alcances|^perfil|^ordenanza\b|"
+    r"^incumbenc|^alcances|^perfil|^ordenanza\b|^mat\.\s|"
     # The degree ("Ingeniero/a Químico/a"), a graduate's competence
     # ("Interpretar y reformular…", "Diseñar, desarrollar y evaluar…").
     r"\w/a\b|^[a-záéíóúñ]{4,}(?:ar|er|ir)(?:,|\s+y\s+[a-záéíóúñ]+(?:ar|er|ir)\b)")
