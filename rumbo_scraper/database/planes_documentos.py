@@ -236,14 +236,17 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("iucbc.edu.ar", planes_sitios.plan_iucbc),
                        ("universidad-policial.edu.ar", planes_sitios.plan_iupfa),
                        ("unpilar.edu.ar", planes_sitios.plan_unpilar),
-                       ("ude.edu.ar", planes_sitios.plan_ude))
+                       ("ude.edu.ar", planes_sitios.plan_ude),
+                       # UNLP Ingeniería: the plan its system prints (plan.php?carrera=...).
+                       ("ing.unlp.edu.ar", planes_sitios.plan_ing_unlp))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"),
                             ("unpilar.edu.ar", "plan de la licenciatura"),
                             # The Federal Police's: or by its address ("pdf/PlanesEstudio/plan-Abogacia-...").
-                            ("universidad-policial.edu.ar", re.compile(r"(?i)/PlanesEstudio/plan[_-]")))
+                            ("universidad-policial.edu.ar", re.compile(r"(?i)/PlanesEstudio/plan[_-]")),
+                            ("ing.unlp.edu.ar", re.compile(r"asignaturas/plan\.php\?carrera=")))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
@@ -480,9 +483,12 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                     de_la_pagina[carrera["id"]] = del_plan
                     pagina_del_plan[carrera["id"]] = nuevo
                     continue
-            documento = (_documento_del_plan(html, url, dominios)
-                         or _documento_con_su_nombre(html, url, carrera["nombre_carrera"])
-                         or _documento_por_su_enlace(html, url, host))
+            # A site's own rule for its plan's link goes first: it is the
+            # one that knows (UNLP Ingeniería's page also links a PDF named
+            # after the career: its profile).
+            documento = (_documento_por_su_enlace(html, url, host)
+                         or _documento_del_plan(html, url, dominios)
+                         or _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
             if not documento:
                 enlace = _enlace_al_plan(html, url, dominios)
                 if enlace:

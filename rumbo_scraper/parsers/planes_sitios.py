@@ -890,6 +890,51 @@ def plan_iupfa(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+_SEMESTRE_ING_UNLP = re.compile(r"^\s*(\d{1,2})\s*[º°]\s*Semestre\s*$")
+_MATERIA_ING_UNLP = re.compile(r"^\s{0,4}([A-Z]\d{4})\s+(\S.*?)\s{2,}(?:[A-Z]{2}(?:/[A-Z]{2})?)\s")
+
+
+def plan_ing_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNLP Ingeniería's plans (``plan.php?carrera=...``, a PDF its system
+    prints): a heading per term ("3º Semestre"), a row per subject with its
+    code, name and kind ("F1304  Matemática C  CB  9  144"), a long name
+    going on below in the name's column ("... y Analisis" / "Numérico").
+    The year is the term's pair. The levelling course before the first term
+    and the complementary activities ("AFC 1") are not subjects."""
+    materias: list[list] = []
+    semestre, ultima = None, None
+    for linea in texto_con_columnas.splitlines():
+        # (The plan's terms end where its language requirement, practice
+        # hours and optional subjects begin; "Ver al dorso" is a page's foot.)
+        if re.match(r"^\s*(Idioma|OPTATIVAS|Formaci[óo]n Pr[áa]ctica)\b", linea):
+            break
+        if re.match(r"(?i)\s*ver al dorso", linea):
+            ultima = None
+            continue
+        encabezado = _SEMESTRE_ING_UNLP.match(linea)
+        if encabezado:
+            semestre, ultima = int(encabezado.group(1)), None
+            continue
+        if re.match(r"^\s*Nivelaci[óo]n\s*$", linea):
+            semestre, ultima = None, None
+            continue
+        materia = _MATERIA_ING_UNLP.match(linea)
+        if materia and semestre:
+            ultima = [materia.group(2), (semestre + 1) // 2]
+            materias.append(ultima)
+            continue
+        # A wrapped name: text alone, in the name's column.
+        seguida = re.match(r"^\s{8,24}(\S.*?)(?:\s{3,}.*)?$", linea)
+        if ultima and seguida and not re.search(r"\d{4}", seguida.group(1)):
+            ultima[0] += " " + seguida.group(1)
+        elif linea.strip():
+            ultima = None
+    plan: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        _agregar(plan, re.sub(r"\s*\(1/2 semestre\)", "", nombre), anio)
+    return desde_el_primero(plan)
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
