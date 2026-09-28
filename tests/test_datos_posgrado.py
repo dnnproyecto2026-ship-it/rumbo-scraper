@@ -110,6 +110,11 @@ class DatosDePosgrado(unittest.TestCase):
                 "<p>Más info</p><p>Admisión</p><p>Eventos</p></main>")
         self.assertEqual(plan_de_posgrado(html), [])
 
+    def test_un_formulario_bajo_el_encabezado_no_es_un_plan(self):
+        html = ("<main><h3>Plan de estudios</h3><p>Diagnóstico Clínico</p><p>Nombre</p><p>Apellido</p>"
+                "<p>Teléfono</p><p>Solicitá más información</p></main>")
+        self.assertEqual(plan_de_posgrado(html), [])
+
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))
         self.assertFalse(nombra_el_programa(LISTA_DE_DATOS, "Maestría en Finanzas"))
