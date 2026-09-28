@@ -392,13 +392,19 @@ def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
     materias: list[tuple[str, int]] = []
     renglones: list[list] = []
     anio, dentro = None, False
+    # Where the right column starts varies by brochure (50 in Derecho's, 37
+    # in Analista de Sistemas'): the column its bullets most often start at.
+    from collections import Counter as _Counter
+    comienzos = _Counter(m.start() for linea in (texto_con_columnas or "").splitlines()
+                         for m in re.finditer(r"£", linea) if m.start() > 20)
+    columna = min(_COLUMNA_UCSE, comienzos.most_common(1)[0][0]) if comienzos else _COLUMNA_UCSE
     for linea in (texto_con_columnas or "").splitlines():
         if "PLAN DE ESTUDIOS" in linea:
             dentro = True
             continue
         if not dentro:
             continue
-        izquierda = linea[:_COLUMNA_UCSE].rstrip()
+        izquierda = linea[:columna].rstrip()
         texto = clean_text(izquierda)
         if not texto:
             continue
