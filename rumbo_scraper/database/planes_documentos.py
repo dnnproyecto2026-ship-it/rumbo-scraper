@@ -421,9 +421,16 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # Universities that lay the plan out their own way on the page:
             # their reader knows it better than the general one (which read
             # UNLZ Derecho's hours as a plan).
+            # Of two readers of one site, the later one's reading, unless only
+            # the other's is the whole plan (UNR Piano: the text reader stops
+            # in the third year, the year one reads all five).
+            lecturas = []
             for dominio, lector in _PLANES_EN_LA_PAGINA:
                 if host.endswith(dominio):
-                    en_la_pagina = lector(html) or en_la_pagina
+                    lecturas += [leido for leido in [lector(html)] if leido]
+            enteras = [leido for leido in lecturas if _parece_el_plan_entero(
+                carrera["nombre_carrera"], leido, carrera.get("duracion_anios"))]
+            en_la_pagina = (enteras or lecturas or [en_la_pagina])[-1]
             # Where the site's own reader finds nothing, the general one, year
             # by year, on the sites it was checked on.
             if not en_la_pagina and any(host.endswith(d) for d in _RESPALDO_POR_ANIOS):
