@@ -31,7 +31,11 @@ _ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*\.?\s*(?:er|ro|do|to|vo|mo|[°ºo])?\
 # Not subjects: an elective's slot, a heading that ends in a colon.
 _NO_ES_MATERIA = re.compile(
     r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
-    r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$")
+    r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
+    # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
+    r"|^t[íi]tulo (?:de |intermedio|final)|^carga horaria|^duraci[óo]n\s*:"
+    # An elective marked as such in UM's tables: "Sastrería(a)".
+    r"|\(a\)$")
 
 
 def _texto(elemento: Tag | None) -> str:
@@ -57,6 +61,9 @@ def anio_de(texto: str) -> int | None:
 
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    # A list's marks and codes: "› Nutrición" (UNAU), "COD: 101 - Guión" (UNMdP FAUD).
+    nombre = re.sub(r"^(?:[›•·⏺◻▪■□◦\u2022\ufe0f\ufe0e]\s*)+", "", nombre)
+    nombre = re.sub(r"(?i)^cod\.?:?\s*\d+\s*[-–]\s*", "", nombre)
     # Numbered in Roman figures: "VI.- Derecho del Trabajo I", "XI. Inglés I" (UEAN).
     nombre = re.sub(r"^[IVXL]{1,8}\s*\.-?\s*(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
@@ -572,7 +579,7 @@ def _plan_upso(html: str) -> list[tuple[str, int]]:
         if anio and (len(linea) > 90 or re.match(
                 r"(?i)^(requisitos|inscrip|documentaci|informaci|condiciones|t[íi]tulo|alcances|perfil|"
                 r"materias optativas|optativas|asignaturas optativas|preinscrip|¿|para finalizar la carrera|"
-                r"espacios de talleres)", linea)):
+                r"espacios de talleres|descarg|quiero recibir|aclaraciones$|ingreso \d{4}$)", linea)):
             break
         if anio and not re.match(r"(?i)^prueba de suficiencia", linea):
             _agregar(materias, _INICIALES.sub("", linea), anio)
@@ -1035,13 +1042,14 @@ def plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
 # A table's legend, not a subject: "Anual", "1.º Cuatrimestre", "Materias
 # anuales", "Materia cuatrimestral", "** ...", "Materias Electivas (no
 # obligatorias)".
-_LEYENDA = re.compile(r"(?i)^(\*|anual$|cuatrimestral$|semestral$|\d\.?\s*[º°]?\s*cuatrimestre$|"
+_LEYENDA = re.compile(r"(?i)^(\*|anual(es)?$|cuatrimestral(es)?$|semestral(es)?$|\d\.?\s*[º°]?\s*cuatrimestre$|ciclo de especializaci|(primer|segundo)\s+(semestre|cuatrimestre)$|"
                       r"materias? (anual|cuatrimestral|semestral|electiva)|materias electivas)")
 
 
 _FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
                            r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo|"
-                           r"ver correlatividades|plan de estudios?$|¿|para finalizar la carrera|en \w+ vas a encontrar)")
+                           r"ver correlatividades|plan de estudios?$|¿|para finalizar la carrera|en \w+ vas a encontrar|"
+                           r"descarg|quiero recibir|aclaraciones$|ingreso \d{4}$)")
 
 
 def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
@@ -1148,3 +1156,31 @@ def _plan_fadu(html: str) -> list[tuple[str, int]]:
 
 def plan_fadu(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_fadu(html))
+
+
+def _plan_fba_unlp(html: str) -> list[tuple[str, int]]:
+    """UNLP's Bellas Artes: the plan on the career's page, each year a heading
+    written with a dot before it (". Primer año") and its subjects one per
+    line, until "+ Ver plan de estudios completo" or the page's other parts."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for parte in soup.find_all(["nav", "header", "footer", "script", "style"]):
+        parte.decompose()
+    lineas = [clean_text(l) for l in (soup.body or soup).get_text("\n").split("\n") if clean_text(l)]
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas:
+        nuevo = anio_de(re.sub(r"^[.·•]\s*", "", linea))
+        if nuevo:
+            anio = nuevo
+            continue
+        if anio is None:
+            continue
+        if re.match(r"(?i)^\+?\s*ver\s+plan|^(?:requisitos|inscrip|t[íi]tulo|alcances|perfil|contacto)", linea) \
+                or len(linea) > 90:
+            break
+        _agregar(materias, linea, anio)
+    return materias
+
+
+def plan_fba_unlp(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_fba_unlp(html))

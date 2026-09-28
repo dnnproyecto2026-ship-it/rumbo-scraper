@@ -80,6 +80,7 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("natura.unsa.edu.ar", planes_sitios.plan_natura_unsa),
                         ("ing.unsa.edu.ar", planes_sitios.plan_ing_unsa),
                         ("exactas.unca.edu.ar", planes_sitios.plan_tabla_con_anios),
+                        ("fba.unlp.edu.ar", planes_sitios.plan_fba_unlp),
                         ("huma.unca.edu.ar", planes_sitios.plan_filas_numeradas),
                         ("derecho.unlz.edu.ar", planes_sitios.plan_cr_year),
                         ("fhycs.unam.edu.ar", planes_sitios.plan_anio_y_lista),
@@ -101,7 +102,19 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("maimonides.edu", planes_sitios.plan_texto_por_anio),
                         ("ugr.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("unsta.edu.ar", planes_sitios.plan_texto_por_anio),
-                        ("uean.edu.ar", planes_sitios.plan_titulo_y_lista))
+                        ("uean.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("unimoron.edu.ar", planes_sitios.plan_tabla_con_anios),
+                        ("uda.edu.ar", planes_sitios.plan_upso),
+                        ("unisud.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("faud.mdp.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("unraf.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("upatagonia.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("usba.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("usi.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("uap.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("musicalesysonoras.una.edu.ar", planes_sitios.plan_en_lista),
+                        ("unau.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("ucema.edu.ar", planes_sitios.plan_texto_por_anio))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
