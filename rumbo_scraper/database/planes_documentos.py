@@ -144,7 +144,9 @@ MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
 _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tecnicatura "
                     "universitaria carrera profesorado ingenieria ciclo".split())
-_FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:")
+# "Mat. Biológicas": an area heading over a plan's last year (UNT's
+# Enfermería), not a subject.
+_FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s")
 
 
 def _nombra(texto: str, carrera: str) -> bool:
@@ -467,7 +469,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
     usos = Counter(documento_de.values())
     planes: dict[str, dict[str, Any]] = {}
     for carrera in carreras:
-        materias = de_la_pagina.get(carrera["id"])
+        materias = [m for m in de_la_pagina.get(carrera["id"]) or [] if not _FUERA_DEL_PLAN.search(m[0])]
         if materias and _parece_el_plan_entero(carrera["nombre_carrera"], materias,
                                                carrera.get("duracion_anios")):
             planes[carrera["id"]] = {
