@@ -52,8 +52,10 @@ def siglas(nombre: str) -> str:
     """"Instituto Superior de Comercio Exterior ISCE" -> "ISCE"; "Instituto
     Superior Santo Domingo" -> "ISSD": the name's own acronym, or its initials."""
     propias = re.findall(r"\b[A-ZÁÉÍÓÚÑ]{2,6}\b", nombre)
+    numero = re.search(r"\b(\d{2,5})\b", nombre)
     if propias and not nombre.isupper():
-        return propias[-1]
+        # "ISPI N° 4007 Inmaculada Concepción" -> "ISPI 4007": several ISPI.
+        return f"{propias[-1]} {numero.group(1)}" if numero else propias[-1]
     palabras = [p for p in re.findall(r"[\wÁÉÍÓÚÑáéíóúñ]+", nombre)
                 if p.lower() not in {"de", "del", "la", "las", "los", "el", "y", "e", "en", "n", "nº", "n°"}]
     iniciales = "".join(p[0].upper() for p in palabras if not p.isdigit())
@@ -357,6 +359,18 @@ def main() -> None:
         sitio, provincia = "https://bd.dges-cba.edu.ar", "Córdoba"
     registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
     client = get_supabase_client() if args.apply else None
+    # A short name is the institution's address in the app (its slug): two
+    # institutes may not share one. The second takes its town.
+    usados = {u["nombre_corto"]: u["nombre_oficial"] for u in select_all(
+        client.table("universidades").select("nombre_corto,nombre_oficial"))} if client else {}
+    for instituto in institutos:
+        corto = instituto["nombre_corto"]
+        if usados.get(corto, instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
+            corto = f"{corto} {instituto['localidad']}".strip()
+            if usados.get(corto, instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
+                corto = f"{corto} {instituto['cue'] or ''}".strip()
+        instituto["nombre_corto"] = corto
+        usados[corto] = instituto["nombre_oficial"]
     total = 0
     for instituto in institutos:
         total += len(instituto["carreras"])

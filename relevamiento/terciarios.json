@@ -269,6 +269,11 @@
   "distrito": "Ciudad de Buenos Aires",
   "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
+ "Escuela Superior de Enfermería Cecilia Grierson": {
+  "cue": "20036600",
+  "distrito": "Caballito",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Escuela de Cadetes Cdro. Salustiano Pérez Estévez": {
   "cue": null,
   "distrito": "Capital",
@@ -1279,6 +1284,11 @@
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
  },
+ "Instituto Superior de Deportes": {
+  "cue": "20136000",
+  "distrito": "Nuñez",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
  "Instituto Superior de Diseño y Arte": {
   "cue": null,
   "distrito": "Capital",
@@ -1433,6 +1443,151 @@
   "cue": null,
   "distrito": "Capital",
   "jurisdiccion": "Córdoba"
+ },
+ "Instituto de Formación Técnica Superior N° 1": {
+  "cue": "20087000",
+  "distrito": "San Nicolas",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 10": {
+  "cue": "20115300",
+  "distrito": "Balvanera",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 11": {
+  "cue": "20246400",
+  "distrito": "Parque Patricios",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 12": {
+  "cue": "20178100",
+  "distrito": "Montserrat",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 13": {
+  "cue": "20028300",
+  "distrito": "Caballito",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 14": {
+  "cue": "20128700",
+  "distrito": "San Cristobal",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 15": {
+  "cue": "20172500",
+  "distrito": "Chacarita",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 16": {
+  "cue": "20037200",
+  "distrito": "Chacarita",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 17": {
+  "cue": "20042400",
+  "distrito": "San Nicolas",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 19": {
+  "cue": "20045800",
+  "distrito": "Balvanera",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 2": {
+  "cue": "20245300",
+  "distrito": "Villa Lugano",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 20": {
+  "cue": "20045100",
+  "distrito": "Villa Crespo",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 21": {
+  "cue": "20025600",
+  "distrito": "Almagro",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 22": {
+  "cue": "20183400",
+  "distrito": "Palermo",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 23": {
+  "cue": "20288500",
+  "distrito": "Constitucion",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 24": {
+  "cue": "20236700",
+  "distrito": "Balvanera",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 26": {
+  "cue": "20236900",
+  "distrito": "San Cristobal",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 27": {
+  "cue": "20237000",
+  "distrito": "Parque Chacabuco",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 28": {
+  "cue": "20273900",
+  "distrito": "Almagro",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 29": {
+  "cue": "20292500",
+  "distrito": "Balvanera",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 3": {
+  "cue": "20160500",
+  "distrito": "Palermo",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 31": {
+  "cue": "20308800",
+  "distrito": "San Telmo",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 32": {
+  "cue": "20309000",
+  "distrito": "San Telmo",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 33": {
+  "cue": "20308900",
+  "distrito": "San Cristobal",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 4": {
+  "cue": "20113800",
+  "distrito": "Mataderos",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 6": {
+  "cue": "20178400",
+  "distrito": "Montserrat",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 7": {
+  "cue": "20111600",
+  "distrito": "Caballito",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Formación Técnica Superior N° 9": {
+  "cue": "20128400",
+  "distrito": "San Nicolas",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
+ },
+ "Instituto de Tiempo Libre y Recreacion": {
+  "cue": "20036100",
+  "distrito": "Recoleta",
+  "jurisdiccion": "Ciudad Autónoma de Buenos Aires"
  },
  "Liceo Municipal De Santa Fe Antonio Fuentes Del Arco": {
   "cue": "8204309",
