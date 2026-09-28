@@ -189,6 +189,12 @@ Código   Asignatura                 Régimen         Horas
         <button class="subject"><p>Física II (01295)</p></button>"""
         self.assertEqual(p.plan_unnoba(html), [("Física I", 1), ("Lengua Extranjera", 2), ("Física II", 2)])
 
+    def test_tabla_por_la_columna_de_su_encabezado(self):
+        html = """<table><tr><td>Código</td><td>Unidad curricular</td><td>Modalidad</td></tr>
+        <tr><td colspan="3">Primer año</td></tr><tr><td>01</td><td>Sociología Política*</td><td>Cuatrimestral</td></tr>
+        <tr><td colspan="3">Segundo año</td></tr><tr><td>09</td><td>Teoría Política II</td><td>Cuatrimestral</td></tr></table>"""
+        self.assertEqual(p.plan_tabla_por_columna(html), [("Sociología Política", 1), ("Teoría Política II", 2)])
+
     def test_sin_la_numeracion_romana(self):
         html = """<p><strong>Primer año</strong></p><ul><li>VI.- Derecho del Trabajo I</li><li>XI. Inglés I</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Derecho del Trabajo I", 1), ("Inglés I", 1)])

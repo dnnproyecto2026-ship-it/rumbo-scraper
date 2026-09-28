@@ -464,6 +464,31 @@ def plan_unnoba(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+# A plan table whose header names its columns ("Código | Unidad curricular |
+# Formato | Modalidad | ..."), a row per year across the whole table
+# ("Primer año"), a row per subject (UNLa). The name is the column the header
+# calls the subject's; a mark after it ("Sociología Política*") is a note.
+_COLUMNA_DEL_NOMBRE = re.compile(r"(?i)^(unidad(es)? curricular(es)?|asignaturas?|materias?|espacios? curriculares?)$")
+
+
+def plan_tabla_por_columna(html: str) -> list[tuple[str, int]]:
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        columna, anio = None, None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(celda) for celda in fila.find_all(["td", "th"])]
+            if columna is None:
+                columna = next((i for i, c in enumerate(celdas) if _COLUMNA_DEL_NOMBRE.match(c)), None)
+                continue
+            if len(celdas) == 1 or (celdas and all(not c for c in celdas[1:])):
+                # Another heading ("Otros requisitos") ends the year's rows.
+                anio = anio_de(celdas[0])
+                continue
+            if anio and columna < len(celdas):
+                _agregar(materias, celdas[columna].rstrip("*").strip(), anio)
+    return desde_el_primero(materias)
+
+
 # The UCASAL links two kinds of plan it can be read from, as ``pdftotext
 # -layout`` lays them out:
 # - its brochure: an "AÑO" heading per year whose number is a drawing (the
