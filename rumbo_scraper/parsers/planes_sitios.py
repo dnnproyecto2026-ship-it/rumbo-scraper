@@ -73,6 +73,8 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     nombre = re.sub(r"(?i)\s*\(\s*(?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\s*\)\s*$", "", nombre)
     # A code before or after the name: "0401 Cálculo I" (UNRC Ingeniería), "Física I (00131)" (UNNOBA).
     nombre = re.sub(r"^\d{3,5}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
+    # Numbered in the list: "1 Introducción a la Arqueología" (UNT Naturales), "12. Estadística".
+    nombre = re.sub(r"^\d{1,2}[.)-]?\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     nombre = re.sub(r"\s*\((?:[A-Z]{2})?\d{3,5}\)$", "", nombre)
     # Its term as UM writes it: "Procesamiento de Imágenes (s2)", "(un semestre)".
     nombre = re.sub(r"(?i)\s*\((?:s\d|un semestre|anual)\)$", "", nombre)
