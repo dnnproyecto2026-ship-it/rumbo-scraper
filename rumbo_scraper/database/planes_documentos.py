@@ -72,7 +72,7 @@ HALLADOS = Path("data/planes_documentos.json")
 _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicios.uns.edu.ar",
                        "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
                        "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
-                       "artes.unne.edu.ar")
+                       "artes.unne.edu.ar", "unicen.edu.ar")
 _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),

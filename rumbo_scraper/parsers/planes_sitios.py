@@ -44,6 +44,8 @@ _NO_ES_MATERIA = re.compile(
     r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$|^\d+\s+horas\.?$"
     r"|^(?:equipo|coordinador(?:a)?(?:\s+acad[ée]mico)?|docentes|director(?:a)?|comit[ée]\s+acad[ée]mico)$|^:\s"
     r"|^atenci[oó]n de lunes"
+    # What the graduate will do, not a subject (UNICEN: "Realizar la programación, prueba...").
+    r"|^[a-záéíóúñ]{4,}(?:ar|er|ir)\s+(?:el|la|los|las|un|una)\s\w+.*\s\w+\s\w+"
     # The page's asides (UCC's "Estamos en contacto" in 34 careers).
     r"|^estamos en contacto|^informaci[oó]n sobre la inscripci|^pre-?inscripci[oó]n|^\[?descargar|estar[áa]s en contacto|^examen de suficiencia"
     # An elective marked as such in UM's tables: "Sastrería(a)".
@@ -1809,7 +1811,7 @@ _FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[
                                r"^normativa\s+de\s+la\s+carrera|^unidad\s+acad[ée]mica$|"
                                # UNER's faculty pages: the call to enrol, the page's foot.
                                r"^ingreso\s+20\d\d$|^m[áa]s\s+info|^scroll\s+al\s+inicio|^destinatarios$|"
-                               r"^\W*descargar\s+plan")
+                               r"^\W*descargar\s+plan|^caracter[íi]sticas del plan")
 
 
 def plan_por_anios(html: str) -> list[tuple[str, int]]:
