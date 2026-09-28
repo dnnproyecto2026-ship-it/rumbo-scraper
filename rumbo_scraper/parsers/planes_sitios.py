@@ -1091,7 +1091,12 @@ def _plan_unahur_por_area(lineas: list[str]) -> list[tuple[str, int]]:
     for i, linea in enumerate(lineas):
         encabezado = _ANIO_SOLO_UNAHUR.match(linea)
         if encabezado:
-            anio = _ORDINALES[encabezado.group(1).lower()]
+            nuevo = _ORDINALES[encabezado.group(1).lower()]
+            # The first year again: another plan's table (the intermediate
+            # degree's), not this one's.
+            if materias and nuevo <= max(a for _, a in materias):
+                break
+            anio = nuevo
             continue
         area = _AREA_UNAHUR.search(linea)
         if not anio or not area:
