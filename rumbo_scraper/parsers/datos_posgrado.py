@@ -106,13 +106,23 @@ def nombra_el_programa(html: str, programa: str) -> bool:
     return comparison_key(programa) in comparison_key(" ".join(_lineas(html)))
 
 
+def minimo_de_meses(programa: str) -> int:
+    """The fewest months a programme of its kind can last: a doctorate is not
+    done in a year, nor a master's in a semester."""
+    clave = comparison_key(programa)
+    if clave.startswith("doctorado"):
+        return 24
+    if re.match(r"(?:maestria|magister|master|mba)\b", clave):
+        return 12
+    return 6
+
+
 def datos_de_posgrado(html: str, programa: str) -> dict[str, object]:
     """What the page says of the programme: degree, months, modality."""
     lineas = _lineas(html)
     meses = _primero(lineas, _ROTULO_DE_DURACION, generico.duracion_meses)
     return {
         "titulo_otorgado": titulo_de_posgrado(lineas, programa),
-        # A postgraduate lasts between a semester and six years.
-        "duracion_meses": meses if meses and 6 <= meses <= 72 else None,
+        "duracion_meses": meses if meses and minimo_de_meses(programa) <= meses <= 72 else None,
         "modalidad": _primero(lineas, _ROTULO_DE_MODALIDAD, generico.modalidad),
     }
