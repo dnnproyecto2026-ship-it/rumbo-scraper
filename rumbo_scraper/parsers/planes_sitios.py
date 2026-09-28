@@ -1800,7 +1800,7 @@ _NO_ES_MATERIA_DEL_ANIO = re.compile(
     r"^c[áa]tedra\s+[a-z]\b|^ver\s+plan|^obtiene\s+t[íi]tulo|^comienzan|^documentaci|^dni\b|"
     r"^inscrip|^requisitos|^realizado\s+por|copyright|©|^todos\s+los\s+derechos|"
     # A subject's state, a block's heading, the page's asides.
-    r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura)$|^optativas\b|"
+    r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura|profesional|de\s+especializaci[óo]n)$|^optativas\b|"
     r"^poseer\b|^\d+\s+materias$|^programa$|^reconocid|^modificaci|^campus|^coordinador|^ir\s+al|"
     r"^espacios\s+curriculares|^nota\b|^per[íi]odo\s+de|^semanal$|^\d\s*[º°]\s*cuat|cuatrimestre$|"
     r"^incumbenc|^alcances|^perfil|^ordenanza\b|^mat\.\s|"
