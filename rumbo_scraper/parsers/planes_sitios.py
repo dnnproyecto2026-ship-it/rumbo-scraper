@@ -57,6 +57,8 @@ def anio_de(texto: str) -> int | None:
 
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    # Numbered in Roman figures: "VI.- Derecho del Trabajo I", "XI. Inglés I" (UEAN).
+    nombre = re.sub(r"^[IVXL]{1,6}\s*\.-?\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
     # "(1° Cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
@@ -1045,7 +1047,7 @@ def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
     lineas = [clean_text(l) for l in soup.get_text("\n").split("\n") if clean_text(l)]
     inicio = next((i for i, l in enumerate(lineas) if l.lower().startswith("plan de estudio")), None)
     materias: list[tuple[str, int]] = []
-    anio = None
+    anio, guiones = None, False
     for linea in lineas[inicio + 1:] if inicio is not None else []:
         if re.fullmatch(r"(?i)\d+\s*[º°o]?\s*año|\w+\s+año", linea) and anio_de(linea):
             anio = anio_de(linea)
@@ -1054,7 +1056,13 @@ def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
         elif anio and _FIN_DEL_PLAN.match(linea):
             break
         elif anio:
-            _agregar(materias, linea, anio)
+            # UNSTA marks each subject annual or by term: "– A Formación
+            # Humanística I"; on such a page a line without the dash ends the plan.
+            con_guion = re.match(r"^[–-]\s*", linea)
+            if guiones and not con_guion:
+                break
+            guiones = guiones or (bool(con_guion) and not materias)
+            _agregar(materias, re.sub(r"^[–-]\s*(?:[AC]\s+)?", "", linea), anio)
     return materias
 
 

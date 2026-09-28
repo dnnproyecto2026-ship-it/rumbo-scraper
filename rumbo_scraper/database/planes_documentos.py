@@ -88,13 +88,20 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("lenguas.unc.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("carreras.unsl.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("go.eseade.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("unsta.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("frn.unf.edu.ar", planes_sitios.plan_kt_tabs),
                         ("exa.unrc.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("hum.unrc.edu.ar", planes_sitios.plan_obligatorias),
                         ("fadu.uba.ar", planes_sitios.plan_fadu),
                         ("fhumyar.unr.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("fveter.unr.edu.ar", planes_sitios.plan_por_codigo),
-                        ("umaza.edu.ar", planes_sitios.plan_titulo_y_lista))
+                        ("umaza.edu.ar", planes_sitios.plan_titulo_y_lista),
+                        ("21.edu.ar", planes_sitios.plan_ucalp), ("udemm.edu.ar", planes_sitios.plan_ucalp),
+                        ("atlantida.edu.ar", planes_sitios.plan_upso),
+                        ("maimonides.edu", planes_sitios.plan_texto_por_anio),
+                        ("ugr.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("unsta.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("uean.edu.ar", planes_sitios.plan_titulo_y_lista))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
