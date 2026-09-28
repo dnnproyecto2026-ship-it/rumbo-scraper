@@ -44,6 +44,18 @@ class DatosDePosgrado(unittest.TestCase):
                          "Especialista en Docencia y Producción Teatral")
         self.assertEqual(limpio("DOCTOR/A DE LA UNRN MENCIÓN ARQUITECTURA"), "Doctor/a de la UNRN Mención Arquitectura")
         self.assertIsNone(limpio("Magister en Gestión del"))
+        self.assertEqual(limpio("MAGÍSTER EN DIABETES MELLITUS expedido por la Universidad Favaloro"),
+                         "Magíster en Diabetes Mellitus")
+        self.assertEqual(limpio("ESPECIALISTA EN ENDODONCIA.: Requisitos a cumplir para recibir el diploma"),
+                         "Especialista en Endodoncia")
+        self.assertEqual(limpio("Magíster en Aplicaciones de Información Espacial, se despliegan a lo largo"),
+                         "Magíster en Aplicaciones de Información Espacial")
+        for nombre in ("Especialista en Divulgación de la Ciencia, la Tecnología y la Innovación",
+                       "Magíster en Lenguas Extranjeras: Problemáticas Sociodidácticas",
+                       "Especialista en Derecho Notarial, Registral e Inmobiliario"):
+            self.assertEqual(limpio(nombre), nombre)
+        self.assertEqual(limpio("Magíster en Ciencias Sociales, mención Historia"),
+                         "Magíster en Ciencias Sociales, mención Historia")
 
     def test_otras_formas_de_decir_el_titulo(self):
         for html in ("<main><p>Título con reconocimiento oficial y validez nacional que otorga:</p>"

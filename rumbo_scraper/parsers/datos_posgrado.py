@@ -19,7 +19,13 @@ from bs4 import BeautifulSoup
 
 from rumbo_scraper.normalizers.text import clean_text, comparison_key
 from rumbo_scraper.parsers import generico
-from rumbo_scraper.parsers.titulo import _CORTE, _FRASE
+from rumbo_scraper.parsers.titulo import _FRASE
+
+# Where the line stops saying the degree. Unlike a grado degree's, a comma is
+# not cut here: "Especialista en Divulgación de la Ciencia, la Tecnología y
+# la Innovación" is one name.
+_CORTE = re.compile(r"\s*(?:[.;]\s|\.$|\(|\s[-–]\s|\s\|\s|\s+con\s+validez|\s+duraci[óo]n\b|"
+                    r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s)")
 
 _UN_TITULO = re.compile(r"(?i)^(?:mag[íi]ster|m[áa]ster|especialista|doctor(?:a|/a|\(a\))?)\s+(?:en|de)\s+\S")
 _TIPO = re.compile(r"(?i)^(?:carrera de\s+)?(?:doctorado|maestr[íi]a|mag[íi]ster|m[áa]ster|especializaci[óo]n)"
@@ -35,11 +41,17 @@ def limpio(texto: str) -> str | None:
     """The degree as a name: cut where the line goes on, and not shouted."""
     from rumbo_scraper.parsers.posgrados_listas import _titulo
 
-    texto = _CORTE.split(clean_text(texto), maxsplit=1)[0].strip(" .:;,-–\"'“”")
+    texto = _CORTE.split(clean_text(texto), maxsplit=1)[0]
+    # What the sentence goes on to say: ", se despliegan a lo largo de...",
+    # " expedido por la Universidad", ".: Requisitos a cumplir".
+    # A comma that goes on with the list of the name ("la Ciencia, la
+    # Tecnología y la Innovación", ", mención ...") stays.
+    texto = re.split(r"\.\s*:|,\s+(?!(?:(?:el|la|los|las|y|e)\s+)?[A-ZÁÉÍÓÚÑ]|(?:con\s+)?orientaci[óo]n|menci[óo]n)|"
+                     r"\s+(?:expedido|otorgado|emitido)\b", texto, maxsplit=1)[0].strip(" .:;,-–\"'“”")
     if not _UN_TITULO.match(texto) or len(texto) > 120 or len(texto.split()) > 18:
         return None
     # "Magister en Gestión del": the line broke before the subject ended.
-    if re.search(r"(?i)\s(?:en|de|del|la|el|los|las|y|e|o|con|para)$", texto):
+    if re.search(r"(?i)\s(?:en|de|del|la|el|los|las|y|e|o|con|para|menci[óo]n)$", texto):
         return None
     if texto.isupper():
         texto = _titulo(texto)
@@ -86,9 +98,14 @@ _ROTULO_DE_DURACION = re.compile(r"(?i)^duraci[óo]n(?:\s+[^:]{0,40})?:\s*(.+)")
 _ROTULO_DE_MODALIDAD = re.compile(r"(?i)^modalidad(?:\s+[^:]{0,40})?:\s*(.+)")
 
 
+def es_suyo(titulo: str, programa: str) -> bool:
+    """Whether the degree names most of the programme's subject."""
+    tema = _palabras(_TIPO.sub("", programa))
+    return bool(tema) and len(_palabras(titulo) & tema) * 2 >= len(tema)
+
+
 def titulo_de_posgrado(lineas: list[str], programa: str) -> str | None:
     """The one postgraduate degree the page gives that is this programme's."""
-    tema = _palabras(_TIPO.sub("", programa))
     hallados: dict[str, str] = {}
     for linea in lineas:
         for patron in (_ROTULO_DE_TITULO, _FRASE, _EN_UNA_FRASE):
@@ -96,8 +113,7 @@ def titulo_de_posgrado(lineas: list[str], programa: str) -> str | None:
                 titulo = limpio(match.group(1))
                 if titulo:
                     hallados.setdefault(comparison_key(titulo), titulo)
-    propios = [t for t in hallados.values()
-               if tema and len(_palabras(t) & tema) * 2 >= len(tema)]
+    propios = [t for t in hallados.values() if es_suyo(t, programa)]
     return propios[0] if len(propios) == 1 else None
 
 
