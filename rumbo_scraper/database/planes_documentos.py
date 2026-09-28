@@ -284,6 +284,12 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
     clave = comparison_key(carrera)
     if not duracion and not clave.startswith(("ciclo", "tecnicatura")) and max(anios) < 4:
         return False
+    # A licenciatura, Abogacía, an engineering, Medicina or a profesorado
+    # stopping in its third year is its first cycle, whatever duration the
+    # career carries (UDA's Abogacía and Administración were stored at three).
+    if re.match(r"(?:licenciatura|abogacia|ingenieria|arquitectura|medicina|profesorado)\b", clave) \
+            and not re.search(r"ciclo|complementaci|para profesionales", clave) and max(anios) < 4:
+        return False
     return True
 
 
