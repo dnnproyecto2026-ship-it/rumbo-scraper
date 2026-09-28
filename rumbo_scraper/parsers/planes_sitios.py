@@ -22,7 +22,7 @@ from collections import Counter
 
 from bs4 import BeautifulSoup, Tag
 
-from rumbo_scraper.normalizers.text import clean_text
+from rumbo_scraper.normalizers.text import clean_text, comparison_key
 
 _ORDINALES = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
               "quinto": 5, "sexto": 6}
@@ -843,6 +843,66 @@ def plan_isalud(html: str) -> list[tuple[str, int]]:
             continue
         if anio:
             _agregar(materias, texto, anio)
+    return desde_el_primero(materias)
+
+
+_MATERIA_IUPFA = re.compile(r"^\s*\d{2}\s+(\S.*?)\s{2,}(?:ANUAL|CUATRIMESTRAL|SEMESTRAL|BIMESTRAL)\b")
+
+
+def plan_iupfa(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The Federal Police university's plans (``pdftotext -layout``): a
+    heading per year ("PRIMER AÑO"), a row per subject with its code, name
+    and term ("01  BALÍSTICA I  ANUAL  128")."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        encabezado = _ANIO_IUCBC.match(linea)
+        if encabezado:
+            anio = _ORDINALES_UHIBA[encabezado.group(1).lower()]
+            continue
+        materia = _MATERIA_IUPFA.match(linea)
+        if anio and materia:
+            _agregar(materias, materia.group(1), anio)
+    # Rows the reader missed show in a second part without its first
+    # ("Enfermería Materno Infantil II", no "... I"): not the whole plan.
+    # (The first part may be written a little differently: "Estudio de las Vías de
+    # Circulación I" and "Estudios ... II".)
+    from difflib import SequenceMatcher
+
+    primeras = [comparison_key(n[:-2]) for n, _ in materias if re.search(r"\sI$", n)]
+    for nombre, _ in materias:
+        if re.search(r"\sII$", nombre) and not any(
+                SequenceMatcher(None, comparison_key(nombre[:-3]), p).ratio() >= 0.8 for p in primeras):
+            return []
+    return desde_el_primero(materias)
+
+
+_ANIO_UNPILAR = re.compile(r"(?i)^\s*(\d)\s*(?:er|do|ro|to|°|º)\s*año\b")
+_MATERIA_UNPILAR = re.compile(r"^\s*\d{1,2}\s+(\S.*?)\s{2,}\d+\b")
+
+
+def plan_unpilar(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNPilar's plans (``pdftotext -layout``): a heading per term ("1er Año
+    | Primer cuatrimestre"), a numbered row per subject with its hours and
+    credits ("1  Introducción al laboratorio.  48  7"). A long name starts
+    on the line above, in the name's column ("Taller de formulación y
+    desarrollo de" over "23  proyectos sociocomunitarios.")."""
+    materias: list[tuple[str, int]] = []
+    anio, anterior = None, ""
+    for linea in texto_con_columnas.splitlines():
+        encabezado = _ANIO_UNPILAR.match(linea)
+        if encabezado:
+            anio, anterior = int(encabezado.group(1)), ""
+            continue
+        materia = _MATERIA_UNPILAR.match(linea)
+        if anio and materia:
+            nombre = materia.group(1)
+            if nombre[:1].islower() and re.match(r"^\s{0,12}[A-ZÁÉÍÓÚÑa-záéíóúñ]", anterior) \
+                    and not re.search(r"\d", anterior):
+                nombre = f"{anterior.strip()} {nombre}"
+            _agregar(materias, nombre, anio)
+        if linea.strip():
+            anterior = linea
     return desde_el_primero(materias)
 
 

@@ -230,18 +230,24 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani),
                        # The Hospital Italiano's university: its plans are on the hospital's site.
                        ("hiba.hospitalitaliano.org.ar", planes_sitios.plan_uhiba),
-                       ("iucbc.edu.ar", planes_sitios.plan_iucbc))
+                       ("iucbc.edu.ar", planes_sitios.plan_iucbc),
+                       ("universidad-policial.edu.ar", planes_sitios.plan_iupfa),
+                       ("unpilar.edu.ar", planes_sitios.plan_unpilar))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
-                            ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"))
+                            ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"),
+                            ("unpilar.edu.ar", "plan de la licenciatura"),
+                            # The Federal Police's: or by its address ("pdf/PlanesEstudio/plan-Abogacia-...").
+                            ("universidad-policial.edu.ar", re.compile(r"(?i)/PlanesEstudio/plan[_-]")))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
         if host.endswith(dominio):
             return next((urljoin(url, a["href"]) for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
-                         if clean_text(a.get_text(" ")).lower() == texto), None)
+                         if (texto.search(a["href"]) if isinstance(texto, re.Pattern)
+                             else clean_text(a.get_text(" ")).lower() == texto)), None)
     return None
 
 
