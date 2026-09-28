@@ -257,3 +257,75 @@ def datos_de_posgrado(html: str, programa: str) -> dict[str, object]:
         "duracion_meses": meses if meses and minimo_de_meses(programa) <= meses <= 72 else None,
         "modalidad": _primero(lineas, _ROTULO_DE_MODALIDAD, generico.modalidad),
     }
+
+
+# ------------------------------------------------------------- the plan
+
+# The heading a postgraduate's page puts over the list of what it teaches.
+_ENCABEZADO_DEL_PLAN = re.compile(
+    r"(?i)^(?:el\s+)?(?:plan\s+de\s+estudios?|estructura\s+curricular|asignaturas|materias|"
+    r"cursos\s+obligatorios|m[óo]dulos|actividades\s+curriculares|espacios\s+curriculares|"
+    r"seminarios\s+obligatorios|malla\s+curricular)\s*:?$")
+# What stands between the heading and the subjects, or between two blocks:
+# "Módulo 1", "Ciclo de formación básica", "Primer año:", "Horas: 30".
+_ANDAMIO = re.compile(
+    r"(?i)^(?:m[óo]dulo|ciclo|bloque|eje|[áa]rea|tramo|n[úu]cleo|primer|segundo|tercer|cuarto|"
+    r"\d+[°º]?\s*(?:a[ñn]o|cuatrimestre|semestre)|cuatrimestre|semestre|a[ñn]o)\b[^.]{0,50}:?$|"
+    r"^(?:horas|carga\s+horaria|cr[ée]ditos|uvacs?)\b[^a-z]{0,20}\d")
+_VIÑETA = re.compile(r"^[\s•·\-–—*▪►◦○]+|^\d{1,2}\s*[.)\-–]\s+")
+# What es_materia lets through and a plan never lists: the page's buttons,
+# its paperwork, and anything asked or dated.
+_NO_ES_ASIGNATURA = re.compile(
+    r"(?i)^(?:m[áa]s\s+info|ver\s+m[áa]s|leer\s+m[áa]s|admisi[óo]n|inscrib|inscripci|eventos?|contacto|"
+    r"descarg|consult|requisitos|aranceles?|becas|noticias|cronograma|calendario|reglamento|"
+    r"resoluci[óo]n|dictamen|acta|disposici|ordenanza|autoridades|direcci[óo]n|coordinaci[óo]n|"
+    r"cuerpo\s+docente|docentes|comit[ée]|perfil|objetivos|destinatarios|t[íi]tulo|duraci[óo]n|"
+    r"modalidad|sede|horarios?|presentaci[óo]n|fundamentaci[óo]n|campo\s+laboral|alcances|"
+    r"tutorial|formulario|modelo\s+de|inicio|home)\b|\?|\d{1,2}\s+de\s+[a-z]+\s+de\s+\d{4}")
+
+
+def plan_de_posgrado(html: str) -> list[str]:
+    """The subjects a postgraduate's page lists under its plan's heading.
+
+    A structured plan is a list under "Plan de estudios" (or "Cursos
+    obligatorios", "Módulos"), one subject per line, maybe split by module
+    headings and followed by its hours. The list ends at the first line that
+    is none of that. A semi-structured plan (most doctorates) describes its
+    cycles in prose instead, and gives nothing: that is right, it has no
+    fixed subjects. Fewer than four is not a plan; more than forty is the
+    reader running into the rest of the page.
+    """
+    from rumbo_scraper.parsers.generico import es_materia
+
+    lineas = _lineas(html)
+    for inicio, linea in enumerate(lineas):
+        if not _ENCABEZADO_DEL_PLAN.match(linea):
+            continue
+        materias: list[str] = []
+        antes = 0
+        for siguiente in lineas[inicio + 1:]:
+            texto = clean_text(_VIÑETA.sub("", siguiente))
+            texto = re.sub(r"(?i)^(?:cursos?|seminarios?)\s+(?:obligatorios?|electivos?|optativos?)\s*:\s*",
+                           "", texto)
+            # A block's heading in capitals ("FUNDAMENTOS", "MÓDULOS") or
+            # "Actividades curriculares generales" is structure, not a subject.
+            if not texto or _ANDAMIO.match(texto) or (texto.isupper() and len(texto.split()) <= 3) \
+                    or re.match(r"(?i)^actividades\s+curriculares|^blank$", texto):
+                continue
+            # A line that starts in lower case goes on from the one before.
+            if texto[0].islower():
+                if materias:
+                    break
+                continue
+            if es_materia(texto) and not _NO_ES_ASIGNATURA.search(texto):
+                if comparison_key(texto) not in {comparison_key(m) for m in materias}:
+                    materias.append(texto)
+                continue
+            if materias:
+                break
+            antes += 1
+            if antes > 3:
+                break
+        if 4 <= len(materias) <= 40:
+            return materias
+    return []

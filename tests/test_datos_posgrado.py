@@ -2,7 +2,7 @@
 
 import unittest
 
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa, titulo_mencionado, duracion_mencionada
+from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa, titulo_mencionado, duracion_mencionada, plan_de_posgrado
 
 LISTA_DE_DATOS = """
 <html><head><title>Universidad Nacional de X</title></head><body>
@@ -97,6 +97,18 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertIsNone(duracion_mencionada(
             ["título de grado universitario de al", "menos cuatro (4) años de duración."],
             "Especialización en Algo"))
+
+    def test_el_plan_bajo_su_encabezado(self):
+        html = ("<main><h3>PLAN DE ESTUDIOS</h3><p>FUNDAMENTOS</p><p>Inteligencia de Negocio</p>"
+                "<p>Aspectos Legales de Proyectos Digitales</p><p>Horas: 30</p><p>Comercio Electrónico</p>"
+                "<p>Seminario de Trabajo Final</p><p>Dictamen Favorable Sesión N°568 (22 de junio de 2022)</p></main>")
+        self.assertEqual(plan_de_posgrado(html), ["Inteligencia de Negocio", "Aspectos Legales de Proyectos Digitales",
+                                                  "Comercio Electrónico", "Seminario de Trabajo Final"])
+
+    def test_los_botones_bajo_el_encabezado_no_son_un_plan(self):
+        html = ("<main><h3>Plan de estudios</h3><p>¿Cuáles son las materias que deberé cursar?</p>"
+                "<p>Más info</p><p>Admisión</p><p>Eventos</p></main>")
+        self.assertEqual(plan_de_posgrado(html), [])
 
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))
