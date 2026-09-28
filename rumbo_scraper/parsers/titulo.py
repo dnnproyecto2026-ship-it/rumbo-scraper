@@ -33,11 +33,16 @@ _GRADOS = (r"licenciad[oa]s?|ingenier[oa]s?|profesor(?:a|es)?|t[ée]cnic[oa]s?|c
            r"escen[óo]graf[oa]|cine[ae]sta|compositor(?:a)?|dramaturg[oa]|mec[áa]nic[oa]|piloto|oficial")
 _ES_UN_GRADO = re.compile(r"(?i)^(?:" + _GRADOS + r")\b")
 _ROTULO = re.compile(
-    r"(?i)\bt[íi]tulos?(?:\s+(?:que\s+(?:se\s+)?otorga|a\s+obtener|otorgado|que\s+se\s+obtiene|de\s+grado|final|"
-    r"profesional|universitario))?\s*:\s*(.+)")
-_FRASE = re.compile(r"(?i)\b(?:expide|otorga|obtiene|recibe|obtendr[áa]s?|obten[ée]s)\s+(?:el\s+)?t[íi]tulo\s+de\s+(.+)")
+    r"(?i)\bt[íi]tulos?(?:\s+(?:que\s+(?:se\s+)?otorga|a\s+obtener|otorgado|obtenido|que\s+se\s+obtiene|de\s+grado|"
+    r"final|profesional|universitario))?\s*:\s*(.+)")
+# "Se expide el título de ...", "¿Qué título obtengo? Técnico/a ..." (Siglo 21), "Actividades
+# Profesionales Reservadas al Título de Licenciado en Genética son" (Morón), "Los alcances
+# profesionales del título de Licenciado/a en Física son" (UNC).
+_FRASE = re.compile(r"(?i)(?:\b(?:expide|otorga|obtiene|recibe|obtendr[áa]s?|obten[ée]s)\s+(?:el\s+)?t[íi]tulo\s+de\s+"
+                    r"|qu[ée] t[íi]tulo obtengo\?\s*|\breservadas al t[íi]tulo de\s+"
+                    r"|\balcances (?:profesionales )?del t[íi]tulo de\s+)(.+)")
 _CORTE = re.compile(r"\s*(?:[.;]\s|\.$|\(|\s[-–]\s|\s\|\s|,\s*(?:con|que|el|la|y)\b|\s+con\s+validez|\s+duraci[óo]n\b|"
-                    r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s)")
+                    r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s|\s+son\b)")
 
 
 def _limpio(texto: str) -> str | None:

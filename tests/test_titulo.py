@@ -45,6 +45,15 @@ class Titulo(unittest.TestCase):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a"), [])
         self.assertEqual(titulos_en("Título: Licenciado en"), [])
 
+    def test_otras_formas_de_decirlo(self):
+        self.assertEqual(titulos_en("¿Qué título obtengo? Técnico/a Universitario/a en Gestión y Auditorías Ambientales (Resolución)"),
+                         ["Técnico/a Universitario/a en Gestión y Auditorías Ambientales"])
+        self.assertEqual(titulos_en("Título Obtenido: Licenciado en Genética"), ["Licenciado en Genética"])
+        self.assertEqual(titulos_en("Las Actividades Profesionales Reservadas al Título de Licenciado en Genética son: - Dirigir"),
+                         ["Licenciado en Genética"])
+        self.assertEqual(titulos_en("Los alcances profesionales del título de Licenciado/a en Física son los siguientes"),
+                         ["Licenciado/a en Física"])
+
     def test_sin_el_numero_de_la_seccion_siguiente(self):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
                          ["Técnico/a Universitario/a en Guía de Turismo"])
