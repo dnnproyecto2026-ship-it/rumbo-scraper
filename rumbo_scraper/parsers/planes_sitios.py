@@ -1032,6 +1032,34 @@ def _anios_declarados_unlu(html: str) -> float | None:
     return int(anios.group(1)) + (0.5 if anios.group(2) else 0) if anios else None
 
 
+def plan_ucongreso(html: str) -> list[tuple[str, int]]:
+    """Universidad de Congreso, in its first set of tabs (the second is its
+    campuses) a ``p.materia`` per subject, each followed by the campuses
+    that teach it (links in a hidden span, not subjects). Two layouts: a tab
+    per year ("1º AÑO"), or tabs of plans ("Plan", "Plan 2018"), the first
+    the one in force, where "Primer Año" heads each year's lines."""
+    tabs = BeautifulSoup(html or "", "html.parser").select_one(".careers-tabs")
+    if not tabs:
+        return []
+    etiquetas = {e.get("data-tabs-number"): anio_de(_texto(e)) for e in tabs.select(".tab-labels .tab-label")}
+    materias: list[tuple[str, int]] = []
+    for contenido in tabs.select(".tab-contents > .tab-content"):
+        anio = etiquetas.get(contenido.get("data-tabs-number"))
+        por_anio = bool(anio)
+        for linea in contenido.select(".materias > p.materia"):
+            # "Administración I (*)": promoted; "(*) Régimen promocional: 12
+            # espacios curriculares" and "1º SEMESTRE" are notes and headings.
+            texto = re.sub(r"\s*\(\*\)$", "", _texto(linea).lstrip("+- ").strip())
+            if not por_anio and anio_de(texto):
+                anio = anio_de(texto)
+            elif anio and not re.match(r"(?i)\(\*\)|\d\s*[°º]?\s*semestre$", texto):
+                _agregar(materias, texto, anio)
+        # Of tabs of plans, only the first: the one in force.
+        if not por_anio:
+            break
+    return desde_el_primero(materias)
+
+
 def plan_fbqf_unt(html: str) -> list[tuple[str, int]]:
     """UNT Bioquímica, Química y Farmacia (fbqfuntedu.ar): under "#plan", a
     tab per year titled "1er año" (``data-title-tab-id``), its pane (the same

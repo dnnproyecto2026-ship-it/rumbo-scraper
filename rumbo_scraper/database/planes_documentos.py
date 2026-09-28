@@ -93,6 +93,7 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("fba.unlp.edu.ar", planes_sitios.plan_fba_unlp),
                         ("fahce.unlp.edu.ar", planes_sitios.plan_fahce_unlp),
                         ("fbqfuntedu.ar", planes_sitios.plan_fbqf_unt),
+                        ("ucongreso.edu.ar", planes_sitios.plan_ucongreso),
                         # The general reader, year by year, where it was
                         # checked against one career's page each (2026-09-28).
                         *((sitio, planes_sitios.plan_por_anios) for sitio in (

@@ -253,3 +253,29 @@ class PlanFahceCatedras(unittest.TestCase):
         self.assertNotIn("Historia de Asia y África", materias)
         self.assertNotIn("Francés", materias)
         self.assertEqual(len(materias), 20)
+
+
+class PlanUcongreso(unittest.TestCase):
+    def _materia(self, nombre):
+        return (f'<p class="materia"><span>+</span> {nombre} </p>'
+                '<span style="display:none;"><a class="materia"> Mendoza</a><a class="materia"> San Juan</a></span>')
+
+    def test_a_tab_per_year(self):
+        def pestana(n, nombres):
+            return f'<div class="tab-content" data-tabs-number="{n}"><div class="materias">' \
+                + "".join(self._materia(x) for x in nombres) + "</div></div>"
+        html = ('<div class="tabs careers-tabs"><div class="tab-labels">'
+                '<a class="tab-label" data-tabs-number="1">1º AÑO</a><a class="tab-label" data-tabs-number="2">2º AÑO</a>'
+                '</div><div class="tab-contents">' + pestana(1, ["Administración I (*)", "1º SEMESTRE", "Economía I"])
+                + pestana(2, ["(*) Régimen promocional: 12 espacios curriculares", "Costos"]) + "</div></div>")
+        self.assertEqual(p.plan_ucongreso(html), [("Administración I", 1), ("Economía I", 1), ("Costos", 2)])
+
+    def test_tabs_of_plans_take_the_first(self):
+        def plan(n, lineas):
+            return f'<div class="tab-content" data-tabs-number="{n}"><div class="materias">' \
+                + "".join(self._materia(x) for x in lineas) + "</div></div>"
+        html = ('<div class="tabs careers-tabs"><div class="tab-labels">'
+                '<a class="tab-label" data-tabs-number="1">Plan</a><a class="tab-label" data-tabs-number="2">Plan 2018</a>'
+                '</div><div class="tab-contents">' + plan(1, ["Primer Año", "Derecho Político", "Segundo Año", "Obligaciones"])
+                + plan(2, ["Primer Año", "Derecho Romano"]) + "</div></div>")
+        self.assertEqual(p.plan_ucongreso(html), [("Derecho Político", 1), ("Obligaciones", 2)])
