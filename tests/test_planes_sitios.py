@@ -134,6 +134,40 @@ TERCER AÑO
         <table><tr><th colspan="3">Primer año</th></tr><tr><td>PLAN VIEJO</td><td>Anual</td><td>OBLIGATORIA</td></tr></table>"""
         self.assertEqual(p.plan_obligatorias(html), [("Economía I", 1)])
 
+    def test_ucasal_folleto_cuenta_los_anios_y_salta_el_encabezado(self):
+        texto = """                  PLAN DE ESTUDIO
+                  CARRERA (46) LICENCIATURA
+                                  EN CRIMINALÍSTICA
+  AÑO
+ANUAL     ANÁLISIS MATEMÁTICO I
+1° SEM.   FILOSOFÍA
+          PRUEBA DE SUFICIENCIA DE IDIOMA INGLES
+     0387 426 8800   informes@ucasal.edu.ar    ucasal.edu.ar
+                  PLAN DE ESTUDIO
+                                  EN CRIMINALÍSTICA
+  AÑO
+2° SEM.   DERECHO PROCESAL PENAL
+4 AÑO
+ANUAL     QUÍMICA LEGAL"""
+        self.assertEqual(p.plan_ucasal(texto), [])  # the fourth year follows the second
+        self.assertEqual(p.plan_ucasal(texto.replace("4 AÑO", "  AÑO")),
+                         [("Análisis Matemático I", 1), ("Filosofía", 1), ("Derecho Procesal Penal", 2),
+                          ("Química Legal", 3)])
+
+    def test_ucasal_nombres_abreviados_o_cortados_no_se_leen(self):
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
+        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [])
+
+    def test_ucasal_plan_por_carrera_de_alumnos(self):
+        texto = """PLAN DE ESTUDIO POR CARRERA
+    1 PRIMER AÑO
+      05 0000     FILOSOFÍA                                                             3      1 Sem
+      50 6260     PLANIFICACIÓN, PRODUCCIÓN Y LOGÍSTICA DE EVENTOS                      6      2 Sem
+    2 SEGUNDO AÑO
+      00 0050     TEOLOGÍA                                                              3      1 Sem"""
+        self.assertEqual(p.plan_ucasal(texto), [("Filosofía", 1), ("Planificación, Producción y Logística de Eventos", 1),
+                                                ("Teología", 2)])
+
 
 if __name__ == "__main__":
     unittest.main()

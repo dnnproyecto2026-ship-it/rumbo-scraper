@@ -17,6 +17,7 @@ or an empty list when the page does not have the plan the way it expects;
 from __future__ import annotations
 
 import re
+from collections import Counter
 
 from bs4 import BeautifulSoup, Tag
 
@@ -386,6 +387,68 @@ def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
     for nombre, anio_ in renglones:
         # The brochure's "fi" ligature comes out split: "Áf rica", "suf iciente".
         _agregar(materias, re.sub(r"(?<=\w)f (?=[a-záéíóúñ]{2,})", "f", nombre), anio_)
+    return desde_el_primero(materias)
+
+
+# The UCASAL links two kinds of plan it can be read from, as ``pdftotext
+# -layout`` lays them out:
+# - its brochure: an "AÑO" heading per year whose number is a drawing (the
+#   years are counted), the subjects one per line, the first of each term
+#   after "ANUAL", "1° SEM." or "2° SEM.";
+# - its students' office's "PLAN DE ESTUDIO POR CARRERA": "1 PRIMER AÑO",
+#   then "05 0000   FILOSOFÍA   3   1 Sem" per subject.
+# Its "PLAN DE ESTUDIO Y CORRELATIVIDADES DETALLADAS" cuts every name at
+# twenty letters ("TÉC.Y ESTRAT.DE ESTU"): not read.
+_UCASAL_PERIODO = re.compile(r"^(?:ANUAL|\d\s*°\s*SEM\.?)\s+")
+_UCASAL_FILA = re.compile(r"^\d{2}\s+\d{4}\s+(.+?)\s{2,}\d+\s+(?:\d\s*)?(?:Sem|Anual|ANUAL)")
+_UCASAL_ABREVIADA = re.compile(r"[º°]|\w\.(?=\s*\w)|\w\.$")
+_UCASAL_NO_ES = re.compile(r"(?i)^(prueba de suficiencia|plan de estudio|carrera|modalidad|plan\s+\d)|@|ucasal\.edu")
+
+
+def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
+    texto = texto_con_columnas or ""
+    if "CORRELATIVIDADES DETALLADAS" in texto:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    if "PLAN DE ESTUDIO POR CARRERA" in texto:
+        for linea in texto.splitlines():
+            # (The columns are told apart by their runs of spaces.)
+            linea = linea.replace("\xa0", " ").strip()
+            encabezado = re.match(r"^(\d)\s+(?:PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO$", linea)
+            if encabezado:
+                anio = int(encabezado.group(1))
+                continue
+            fila = _UCASAL_FILA.match(linea)
+            if fila and anio:
+                _agregar(materias, fila.group(1), anio)
+        # One subject per instrument ("Instrumento Principal I / Canto I
+        # (Oboe)", "(Guitarra)", ...) is a choice, not the plan's sequence.
+        variantes = Counter(re.sub(r"\s*\(.*", "", nombre) for nombre, _ in materias)
+        if variantes and max(variantes.values()) > 2:
+            return []
+        return desde_el_primero(materias)
+    # Each page repeats the heading ("CARRERA (46) LICENCIATURA" over "EN
+    # CRIMINALÍSTICA") up to its first year.
+    encabezado = False
+    for linea in texto.splitlines():
+        linea = clean_text(linea)
+        # (Some brochures print the number: "4 AÑO".)
+        rotulo = re.fullmatch(r"(?:(\d)\s*)?AÑO", linea)
+        if rotulo:
+            anio, encabezado = int(rotulo.group(1) or anio + 1), False
+            continue
+        if linea.startswith("PLAN DE ESTUDIO"):
+            encabezado = True
+        nombre = _UCASAL_PERIODO.sub("", linea)
+        if encabezado or not anio or not nombre or _UCASAL_NO_ES.search(nombre):
+            continue
+        # Some brochures copy the students' office's short names ("Dº PROC
+        # CIVIL I", "PSIC.DESARR.NIÑO Y A"): such a plan is not read at all.
+        if _UCASAL_ABREVIADA.search(nombre) or len(nombre) == 20:
+            return []
+        if nombre.isupper():
+            _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
 
 
