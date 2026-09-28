@@ -48,13 +48,26 @@ def _titulo(texto: str) -> str:
     return con_tildes(texto) if texto.isupper() else texto
 
 
+def siglas(nombre: str) -> str:
+    """"Instituto Superior de Comercio Exterior ISCE" -> "ISCE"; "Instituto
+    Superior Santo Domingo" -> "ISSD": the name's own acronym, or its initials."""
+    propias = re.findall(r"\b[A-ZÁÉÍÓÚÑ]{2,6}\b", nombre)
+    if propias and not nombre.isupper():
+        return propias[-1]
+    palabras = [p for p in re.findall(r"[\wÁÉÍÓÚÑáéíóúñ]+", nombre)
+                if p.lower() not in {"de", "del", "la", "las", "los", "el", "y", "e", "en", "n", "nº", "n°"}]
+    iniciales = "".join(p[0].upper() for p in palabras if not p.isdigit())
+    numero = next((p for p in palabras if p.isdigit()), "")
+    return f"{iniciales[:8]} {numero}".strip()
+
+
 def _corto(nombre: str, numero: str, clave: str) -> str:
     """"INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Y TÉCNICA Nº 12" -> "ISFDyT 12"."""
     siglas = (("docente y t[ée]cnica", "ISFDyT"), ("docente", "ISFD"), ("t[ée]cnica", "ISFT"))
     for patron, sigla in siglas:
         if re.search(rf"(?i)instituto superior de formaci[óo]n {patron}\s+n", nombre) and numero:
             return f"{sigla} {int(numero)}"
-    return clave
+    return siglas(_titulo(nombre)) or clave
 
 
 def institutos_pba(datos: dict[str, Any], distritos: set[str] | None = None) -> list[dict[str, Any]]:
@@ -97,10 +110,42 @@ def institutos_pba(datos: dict[str, Any], distritos: set[str] | None = None) -> 
     return institutos
 
 
+CBA_MAPA = "https://bd.dges-cba.edu.ar/bd_dges/modulos/mapas/operaciones/mapa_leaf.php?dges=1"
+
+
+def institutos_cba(html: str, localidades: set[str] | None = None) -> list[dict[str, Any]]:
+    """Córdoba's DGES map of its 2026 offer: an array in the page
+    ("datosOriginales") of institutes and annexes with their careers. Only
+    careers that open in 2026 count; the Universidad Provincial's are the
+    university's, already loaded. An annex's careers are its institute's,
+    at another campus."""
+    datos = re.search(r"datosOriginales\s*=\s*(\[.*?\]);", html or "", re.S)
+    filas = json.loads(datos.group(1)) if datos else []
+    por_nombre: dict[str, dict[str, Any]] = {}
+    for fila in sorted(filas, key=lambda f: f.get("tipo") != "Instituto"):
+        nombre = clean_text(re.split(r"\s+(?:Anexo|-\s*Extensi[óo]n)\b", fila["nombre"])[0])
+        if localidades and fila.get("loc") not in localidades:
+            continue
+        instituto = por_nombre.setdefault(nombre, {
+            "nombre_oficial": nombre, "nombre_corto": siglas(nombre),
+            "gestion": "Privada" if fila.get("gestion") == "Privada" else "Estatal",
+            "localidad": fila.get("loc") or "", "distrito": fila.get("depto"), "calle": "", "cue": None,
+            "url": CBA_MAPA, "titulos": {}, "carreras": []})
+        for dada in fila.get("carreras") or []:
+            if dada.get("nivel") == "UPC" or dada.get("abre") != "Si":
+                continue
+            nombre_carrera = nombre_de_la_carrera(dada.get("nombre") or "")
+            carrera = _carrera(nombre_carrera, "", CBA_MAPA) if nombre_carrera else None
+            if carrera and carrera.nombre not in {c.nombre for c in instituto["carreras"]}:
+                instituto["carreras"].append(carrera)
+    return [i for i in por_nombre.values() if i["carreras"]]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba"])
-    parser.add_argument("--distritos", default="", help="Distritos separados por coma; todos si se omite")
+    parser.add_argument("jurisdiccion", choices=["pba", "cba"])
+    parser.add_argument("--distritos", default="",
+                        help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
 
@@ -108,7 +153,15 @@ def main() -> None:
     from rumbo_scraper.parsers.terciarios_pba import SALIDA
 
     distritos = {d.strip() for d in args.distritos.split(",") if d.strip()} or None
-    institutos = institutos_pba(json.loads(SALIDA.read_text()), distritos)
+    if args.jurisdiccion == "pba":
+        institutos, sitio, provincia = institutos_pba(json.loads(SALIDA.read_text()), distritos), \
+            "https://mapaescolar.abc.gob.ar", "Buenos Aires"
+    else:
+        from rumbo_scraper.spiders.visitante import Visitante
+
+        with Visitante(timeout=60) as visitante:
+            institutos = institutos_cba(visitante.get(CBA_MAPA), distritos)
+        sitio, provincia = "https://bd.dges-cba.edu.ar", "Córdoba"
     registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
     client = get_supabase_client() if args.apply else None
     total = 0
@@ -119,7 +172,7 @@ def main() -> None:
         if not args.apply:
             continue
         guia = Guia(instituto["nombre_oficial"], instituto["nombre_corto"], instituto["gestion"],
-                    "https://mapaescolar.abc.gob.ar", ((instituto["url"], None),),
+                    sitio, ((instituto["url"], None),),
                     instituto["localidad"], instituto["calle"], 1, tipo_institucion="instituto_terciario")
         escribir_artefacto(guia, instituto["carreras"])
         universidad_id = universidad(client, guia, crear=True)
@@ -129,7 +182,7 @@ def main() -> None:
         for carrera, titulo in instituto["titulos"].items():
             client.table("carreras").update({"titulo_otorgado": titulo}).eq(
                 "universidad_id", universidad_id).eq("nombre_carrera", carrera).execute()
-        registro[instituto["nombre_oficial"]] = {"jurisdiccion": "Buenos Aires", "cue": instituto["cue"],
+        registro[instituto["nombre_oficial"]] = {"jurisdiccion": provincia, "cue": instituto["cue"],
                                                   "distrito": instituto["distrito"]}
     if args.apply:
         REGISTRO.write_text(json.dumps(registro, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
