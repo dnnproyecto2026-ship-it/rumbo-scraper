@@ -600,7 +600,7 @@ def _plan_upso(html: str) -> list[tuple[str, int]]:
         if anio and (len(linea) > 90 or re.match(
                 r"(?i)^(requisitos|inscrip|documentaci|informaci|condiciones|t[íi]tulo|alcances|perfil|"
                 r"materias optativas|optativas|asignaturas optativas|preinscrip|¿|para finalizar la carrera|"
-                r"espacios de talleres|descarg|quiero recibir|aclaraciones$|ingreso \d{4}$)", linea)):
+                r"espacios de talleres|descarg|quiero recibir|aclaraciones$|ingreso \d{4}$|autoridades$|¡?quiero inscribirme)", linea)):
             break
         if anio and not re.match(r"(?i)^prueba de suficiencia", linea):
             _agregar(materias, _INICIALES.sub("", linea), anio)
@@ -786,6 +786,30 @@ def _plan_exa_unsa(html: str) -> list[tuple[str, int]]:
 
 def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
+
+
+def _plan_unnoba(html: str) -> list[tuple[str, int]]:
+    """UNNOBA's plans (planesdeestudio.unnoba.edu.ar): a heading per year
+    ("1º Año") and a button per subject, its code in brackets ("Elementos de
+    Matemática (01374)"). An elective's options, listed in a dialog under
+    "Posibles:", are not the plan: the elective's own slot is."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for elemento in BeautifulSoup(html or "", "html.parser").find_all(["h2", "button"]):
+        if elemento.find_parent("dialog") or elemento.find_parent("ul"):
+            continue
+        if elemento.name == "h2":
+            numero = re.fullmatch(r"(\d)\s*º\s*Año", _texto(elemento))
+            anio = int(numero.group(1)) if numero else None
+            continue
+        nombre = elemento.find("p")
+        if anio and nombre and "subject" in (elemento.get("class") or []):
+            _agregar(materias, re.sub(r"\s*\([A-Z]{0,2}\d{3,5}\)$", "", _texto(nombre)), anio)
+    return materias
+
+
+def plan_unnoba(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_unnoba(html))
 
 
 def _plan_untdf(html: str) -> list[tuple[str, int]]:
@@ -1092,7 +1116,7 @@ _LEYENDA = re.compile(r"(?i)^(\*|anual(es)?$|cuatrimestral(es)?$|semestral(es)?$
 _FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
                            r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo|"
                            r"ver correlatividades|plan de estudios?$|¿|para finalizar la carrera|en \w+ vas a encontrar|"
-                           r"descarg|quiero recibir|aclaraciones$|ingreso \d{4}$|contacta a nuestr|todos los derechos)")
+                           r"descarg|quiero recibir|aclaraciones$|ingreso \d{4}$|contacta a nuestr|todos los derechos|autoridades$|¡?quiero inscribirme)")
 
 
 def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:

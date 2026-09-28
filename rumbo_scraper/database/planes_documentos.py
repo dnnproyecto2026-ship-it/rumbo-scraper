@@ -136,7 +136,8 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("barcelo.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("fono.fcm.unc.edu.ar", planes_sitios.plan_en_lista),
                         ("planesdeestudio.unnoba.edu.ar", planes_sitios.plan_unnoba),
-                        ("um.edu.ar", planes_sitios.plan_texto_por_anio))
+                        ("um.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("ucaece.edu.ar", planes_sitios.plan_texto_por_anio))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20
@@ -171,7 +172,10 @@ _PLAN_EN_UN_MARCO = (("fhycs.unju.edu.ar", planes_sitios.plan_list_group),)
 _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),
                         ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp),
                         # UNSa's Económicas: the career's first plan listed, its newest.
-                        ("economicas.unsa.edu.ar", re.compile(r"/carreras/[^/]+/item/\d+$"), planes_sitios.plan_eco_unsa))
+                        ("economicas.unsa.edu.ar", re.compile(r"/carreras/[^/]+/item/\d+$"), planes_sitios.plan_eco_unsa),
+                        # UNNOBA: its plans system, the Junín campus' whole plan.
+                        ("elegi.unnoba.edu.ar", re.compile(r"planesdeestudio\.unnoba\.edu\.ar/\?planversion="),
+                         planes_sitios.plan_unnoba))
 
 
 def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
@@ -185,7 +189,9 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
             enlaces = BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
             # The link is named by its text, or by its address (a pattern).
             pagina = next((urljoin(url, a["href"]) for a in enlaces
-                           if (texto.search(a["href"]) and urljoin(url, a["href"]).startswith(url.rstrip("/") + "/")
+                           # (Under the career's own address, or on the other site the pattern names.)
+                           if (texto.search(a["href"]) and (urljoin(url, a["href"]).startswith(url.rstrip("/") + "/")
+                                                            or urlparse(urljoin(url, a["href"])).netloc != urlparse(url).netloc)
                                if isinstance(texto, re.Pattern)
                                else clean_text(a.get_text(" ")).lower().startswith(texto))), None)
             if pagina:
