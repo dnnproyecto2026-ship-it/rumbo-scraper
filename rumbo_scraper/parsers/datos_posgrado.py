@@ -31,10 +31,18 @@ def _palabras(texto: str) -> set[str]:
     return {p for p in re.findall(r"[a-z]{4,}", comparison_key(texto)) if p not in _VACIAS}
 
 
-def _limpio(texto: str) -> str | None:
+def limpio(texto: str) -> str | None:
+    """The degree as a name: cut where the line goes on, and not shouted."""
+    from rumbo_scraper.parsers.posgrados_listas import _titulo
+
     texto = _CORTE.split(clean_text(texto), maxsplit=1)[0].strip(" .:;,-–\"'“”")
     if not _UN_TITULO.match(texto) or len(texto) > 120 or len(texto.split()) > 18:
         return None
+    # "Magister en Gestión del": the line broke before the subject ended.
+    if re.search(r"(?i)\s(?:en|de|del|la|el|los|las|y|e|o|con|para)$", texto):
+        return None
+    if texto.isupper():
+        texto = _titulo(texto)
     return texto[0].upper() + texto[1:]
 
 
@@ -77,7 +85,7 @@ def titulo_de_posgrado(lineas: list[str], programa: str) -> str | None:
     for linea in lineas:
         for patron in (_ROTULO_DE_TITULO, _FRASE):
             for match in patron.finditer(linea):
-                titulo = _limpio(match.group(1))
+                titulo = limpio(match.group(1))
                 if titulo:
                     hallados.setdefault(comparison_key(titulo), titulo)
     propios = [t for t in hallados.values()

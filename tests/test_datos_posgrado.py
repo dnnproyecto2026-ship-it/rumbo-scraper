@@ -2,7 +2,7 @@
 
 import unittest
 
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, nombra_el_programa
+from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa
 
 LISTA_DE_DATOS = """
 <html><head><title>Universidad Nacional de X</title></head><body>
@@ -38,6 +38,12 @@ class DatosDePosgrado(unittest.TestCase):
 
     def test_el_titulo_de_otro_programa_no_es_el_suyo(self):
         self.assertIsNone(datos_de_posgrado(LISTA_DE_DATOS, "Maestría en Estudios Feministas")["titulo_otorgado"])
+
+    def test_un_titulo_a_los_gritos_o_cortado(self):
+        self.assertEqual(limpio("ESPECIALISTA EN DOCENCIA Y PRODUCCIÓN TEATRAL"),
+                         "Especialista en Docencia y Producción Teatral")
+        self.assertEqual(limpio("DOCTOR/A DE LA UNRN MENCIÓN ARQUITECTURA"), "Doctor/a de la UNRN Mención Arquitectura")
+        self.assertIsNone(limpio("Magister en Gestión del"))
 
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))

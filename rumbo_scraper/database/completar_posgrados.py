@@ -25,7 +25,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, nombra_el_programa
+from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -79,6 +79,9 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
 def aplicar(client: Any, hallados: list[dict[str, Any]]) -> Counter:
     escritos: Counter = Counter()
     for h in hallados:
+        # A preview written before a fix to the reader is read with the fix.
+        if h.get("titulo_otorgado") is not None:
+            h["titulo_otorgado"] = limpio(h["titulo_otorgado"])
         for campo in CAMPOS:
             if h.get(campo) is None:
                 continue
