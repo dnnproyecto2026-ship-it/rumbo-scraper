@@ -233,8 +233,10 @@ def duracion_mencionada(lineas: list[str], programa: str) -> int | None:
         # the next, "cuatro (4) años de duración como mínimo".
         antes = lineas[i - 1][-60:] if i else ""
         despues = lineas[i + 1][:40] if i + 1 < len(lineas) else ""
+        # ... and "al" / "menos cuatro (4) años de duración".
         if _OTRA_DURACION.search(linea) or _OTRA_DURACION.search(antes) \
-                or re.match(r"(?i)\s*m[íi]nimo", despues):
+                or re.match(r"(?i)\s*m[íi]nimo", despues) \
+                or re.match(r"(?i)\s*(?:menos|m[íi]nimo|m[áa]s)\b", linea):
             continue
         for patron in _DURACION_EN_FRASE:
             for match in patron.finditer(linea):

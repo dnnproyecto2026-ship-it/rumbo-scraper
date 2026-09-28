@@ -94,6 +94,9 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertIsNone(duracion_mencionada(
             ["Podrán inscribirse graduados con título de grado de",
              "cuatro (4) años de duración como mínimo"], "Maestría en Algo"))
+        self.assertIsNone(duracion_mencionada(
+            ["título de grado universitario de al", "menos cuatro (4) años de duración."],
+            "Especialización en Algo"))
 
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))
