@@ -38,6 +38,12 @@ _NO_ES_MATERIA = re.compile(
     # A plan table's column heading (Morón: "Cod", "Asignatura", "Opción",
     # "Durac", "Correl" were published as subjects of 77 careers).
     r"|^(?:correl\w*|opci[oó]n|durac\w*|cod\.?|c[oó]digo|asignatura|duraci[óo]ndelacarreraen)$"
+    # A term's or a duration's heading, hours, a total ("3º Cuatrimestre", "2 años
+    # y medio", "120 horas", "Subtotal"); the staff of a diplomatura (UNTREF:
+    # "Equipo", "Director", ": Mg. ..."); the office's hours (UNAHUR).
+    r"|^\d+\s*[°º]?\s*cuatrimestre$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?$|^(?:sub)?total$|^\d+\s+horas$"
+    r"|^(?:equipo|coordinador(?:a)?(?:\s+acad[ée]mico)?|docentes|director(?:a)?|comit[ée]\s+acad[ée]mico)$|^:\s"
+    r"|^atenci[oó]n de lunes"
     # An elective marked as such in UM's tables: "Sastrería(a)".
     r"|\(a\)$|derechos reservados")
 
