@@ -69,11 +69,19 @@ def _lineas(html: str) -> list[str]:
             tabla.replace_with(soup.new_string("\n" + "\n".join(lineas) + "\n"))
     texto = (soup.body or soup).get_text("\n")
     # "Título de Posgrado" as a heading, the degree in the next element.
-    texto = re.sub(r"(?im)^(\s*(?:t[íi]tulos?|duraci[óo]n|modalidad)[^:\n]{0,40}):?\s*\n+\s*", r"\1: ", texto)
+    texto = re.sub(r"(?im)^(\s*(?:t[íi]tulos?|duraci[óo]n|modalidad|grado\s+(?:acad[ée]mico\s+)?otorgado)"
+                   r"[^:\n]{0,40}):?\s*\n+\s*", r"\1: ", texto)
+    # "Título con reconocimiento oficial y validez nacional que otorga:" and,
+    # on the next line, the degree.
+    texto = re.sub(r"(?im)^(\s*[^\n]{0,90}\b(?:t[íi]tulo|otorga)[^\n]{0,90}:)\s*\n+\s*", r"\1 ", texto)
     return [clean_text(l) for l in texto.split("\n") if clean_text(l)]
 
 
-_ROTULO_DE_TITULO = re.compile(r"(?i)^t[íi]tulos?(?:\s+[^:]{0,40})?:\s*(.+)")
+_ROTULO_DE_TITULO = re.compile(
+    r"(?i)(?:^t[íi]tulos?(?:\s+[^:]{0,40})?|^grado\s+(?:acad[ée]mico\s+)?otorgado|"
+    r"\b(?:t[íi]tulo|otorga)[^:]{0,90}):\s*(.+)")
+# "... otorga validez al título de Magíster en Historia Contemporánea."
+_EN_UNA_FRASE = re.compile(r"(?i)\bt[íi]tulo\s+de\s+((?:mag[íi]ster|m[áa]ster|especialista|doctor)\b.+)")
 _ROTULO_DE_DURACION = re.compile(r"(?i)^duraci[óo]n(?:\s+[^:]{0,40})?:\s*(.+)")
 _ROTULO_DE_MODALIDAD = re.compile(r"(?i)^modalidad(?:\s+[^:]{0,40})?:\s*(.+)")
 
@@ -83,7 +91,7 @@ def titulo_de_posgrado(lineas: list[str], programa: str) -> str | None:
     tema = _palabras(_TIPO.sub("", programa))
     hallados: dict[str, str] = {}
     for linea in lineas:
-        for patron in (_ROTULO_DE_TITULO, _FRASE):
+        for patron in (_ROTULO_DE_TITULO, _FRASE, _EN_UNA_FRASE):
             for match in patron.finditer(linea):
                 titulo = limpio(match.group(1))
                 if titulo:

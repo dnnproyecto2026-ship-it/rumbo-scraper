@@ -45,6 +45,15 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertEqual(limpio("DOCTOR/A DE LA UNRN MENCIÓN ARQUITECTURA"), "Doctor/a de la UNRN Mención Arquitectura")
         self.assertIsNone(limpio("Magister en Gestión del"))
 
+    def test_otras_formas_de_decir_el_titulo(self):
+        for html in ("<main><p>Título con reconocimiento oficial y validez nacional que otorga:</p>"
+                     "<p>Magíster en Derecho Empresario</p></main>",
+                     "<main><p>GRADO OTORGADO:</p><p>Magíster en Derecho Empresario</p></main>",
+                     "<main><p>La Dirección General otorga validez al título de Magíster en Derecho "
+                     "Empresario.</p></main>"):
+            self.assertEqual(datos_de_posgrado(html, "Maestría en Derecho Empresario")["titulo_otorgado"],
+                             "Magíster en Derecho Empresario")
+
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))
         self.assertFalse(nombra_el_programa(LISTA_DE_DATOS, "Maestría en Finanzas"))
