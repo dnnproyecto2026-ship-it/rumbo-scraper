@@ -1488,6 +1488,12 @@ def plan_fahce_unlp(html: str) -> list[tuple[str, int]]:
     """UNLP's Humanidades: as Bellas Artes, but a row "Una MATERIA OPTATIVA A
     a elegir entre" lists its options inside the cell; one of them is taken,
     not all, so the options go with it."""
+    # The list of its chairs, where the page has one, reads cleaner than its
+    # tables (Sociología's: "TALLER I (un", "anual- o dos"), though it has no
+    # years.
+    catedras = _plan_fahce_catedras(html)
+    if len(catedras) >= 20:
+        return catedras
     soup = BeautifulSoup(html or "", "html.parser")
     for opciones in soup.select("td ul"):
         opciones.decompose()
@@ -1496,7 +1502,47 @@ def plan_fahce_unlp(html: str) -> list[tuple[str, int]]:
     # under the last year without saying so (the profesorados' fifth).
     if materias and max(Counter(anio for _, anio in materias).values()) > 12:
         return []
+    # A term's heading or a cut "Una" read as a subject (Bibliotecología):
+    # the table is not read right.
+    if any(re.match(r"(?i)(\d\w*\s+cuatrimestre|una)$", nombre) for nombre, _ in materias):
+        return []
     return materias
+
+
+# A slot of the plan listed among its chairs: "Materia optativa I", "Seminario II".
+_HUECO_FAHCE = re.compile(r"(?i)^(materia optativa|optativa|seminario de licenciatura|seminario)\b")
+_IDIOMA_SUELTO = re.compile(r"(?i)^(franc[ée]s|italiano|portugu[ée]s|alem[áa]n|ingl[ée]s|lat[íi]n|griego)$")
+
+
+def _plan_fahce_catedras(html: str) -> list[tuple[str, int | None]]:
+    """Humanidades' other layout: the plan as a list of links to its chairs
+    (".../catedras/catedra-…"), no years. The subjects everyone takes are in
+    capitals; a heading "Cinco OPTATIVAS LIBRES a elegir entre" is followed
+    by its options, of which only the slots ("Materia optativa I") are the
+    plan's. A language alone is an option of the language requirement."""
+    materias: list[str] = []
+    for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=re.compile(r"/catedras/catedra-\d+")):
+        texto = " ".join(enlace.get_text(" ", strip=True).split()).strip(" *")
+        letras = [c for c in texto if c.isalpha()]
+        if not letras or re.search(r"(?i)elegir|^(una|dos|tres|cuatro|cinco)\s", texto):
+            continue
+        en_mayusculas = sum(c.isupper() for c in letras) / len(letras) > 0.8
+        if not (en_mayusculas or _HUECO_FAHCE.match(texto)):
+            continue
+        if en_mayusculas:
+            from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+            texto = con_tildes(texto)
+        texto = re.sub(r"(?i)\b(i{1,4}|iv|vi{0,3}|ix|x)\b(?=\s|/|$)", lambda m: m.group(1).upper(), texto)
+        texto = re.sub(r"/(\w)", lambda m: "/" + m.group(1).upper(), texto)
+        texto = re.sub(r"\s([a-e])$", lambda m: " " + m.group(1).upper(), texto)
+        # A link broken in two: "FILOSOFÍA" + "DE LAS CIENCIAS".
+        if materias and re.match(r"(?i)de\s", texto) and len(materias[-1].split()) == 1:
+            materias[-1] = f"{materias[-1]} {texto[0].lower()}{texto[1:]}"
+            continue
+        if not _IDIOMA_SUELTO.match(texto) and texto not in materias:
+            materias.append(texto)
+    return [(nombre, None) for nombre in materias]
 
 
 # What the general reader, reading a page's lines year by year, takes in

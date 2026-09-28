@@ -233,3 +233,23 @@ class PlanFbqfUnt(unittest.TestCase):
                 + panel(6, ["Trabajo Final", "Demostrar conocimiento de Inglés Técnico"]) + "</div>")
         self.assertEqual(p.plan_fbqf_unt(html),
                          [("Matemática I", 1), ("Física I", 1), ("Biología", 2), ("Trabajo Final", 3)])
+
+
+class PlanFahceCatedras(unittest.TestCase):
+    def test_takes_the_capitals_and_the_slots_not_the_options(self):
+        def catedra(n, texto):
+            return f'<li><a href="/deptos/historia/catedras/catedra-{n}">{texto}</a></li>'
+        nombres = [f"HISTORIA GENERAL {r}" for r in ("I", "II", "III", "IV", "V", "VI")] + [
+            "HISTORIA ARGENTINA I", "HISTORIA ARGENTINA II", "HISTORIA AMERICANA I", "HISTORIA AMERICANA II",
+            "SOCIOLOGÍA GENERAL", "INTRODUCCIÓN A LA HISTORIA", "TEORÍA SOCIAL CONTEMPORÁNEA A", "FILOSOFÍA"]
+        html = "<ul>" + "".join(catedra(i, n) for i, n in enumerate(nombres)) + catedra(90, "DE LAS CIENCIAS") \
+            + catedra(91, "Cinco OPTATIVAS LIBRES a elegir entre") + catedra(92, "Historia de Asia y África") \
+            + "".join(catedra(93 + i, f"Materia optativa {r}") for i, r in enumerate(("I", "II", "III", "IV", "V"))) \
+            + catedra(99, "Seminario de licenciatura I") + catedra(100, "Francés") + "</ul>"
+        materias = [nombre for nombre, anio in p.plan_fahce_unlp(html)]
+        self.assertIn("Teoría Social Contemporánea A", materias)
+        self.assertIn("Filosofía de las Ciencias", materias)
+        self.assertIn("Materia optativa V", materias)
+        self.assertNotIn("Historia de Asia y África", materias)
+        self.assertNotIn("Francés", materias)
+        self.assertEqual(len(materias), 20)
