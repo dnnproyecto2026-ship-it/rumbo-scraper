@@ -2,7 +2,7 @@
 
 import unittest
 
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa
+from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa, titulo_mencionado
 
 LISTA_DE_DATOS = """
 <html><head><title>Universidad Nacional de X</title></head><body>
@@ -67,6 +67,17 @@ class DatosDePosgrado(unittest.TestCase):
                      "Empresario.</p></main>"):
             self.assertEqual(datos_de_posgrado(html, "Maestría en Derecho Empresario")["titulo_otorgado"],
                              "Magíster en Derecho Empresario")
+
+    def test_el_titulo_que_encabeza_un_documento(self):
+        self.assertEqual(titulo_mencionado(["Plan de estudios", "MAGÍSTER EN DERECHO DEL TRABAJO", "Asignatura 1"],
+                                           "Maestría en Derecho del Trabajo"), "Magíster en Derecho del Trabajo")
+        self.assertEqual(titulo_mencionado(["otorga el título de Doctor/a en Ingeniería."], "Doctorado en Ingeniería"),
+                         "Doctor/a en Ingeniería")
+
+    def test_un_titulo_de_otro_tipo_u_otro_tema_no_es_el_suyo(self):
+        self.assertIsNone(titulo_mencionado(["Especialista en Estudios Latinoamericanos"],
+                                            "Maestría en Estudios Latinoamericanos"))
+        self.assertIsNone(titulo_mencionado(["Magíster en Ingeniería Química"], "Maestría en Ingeniería"))
 
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))

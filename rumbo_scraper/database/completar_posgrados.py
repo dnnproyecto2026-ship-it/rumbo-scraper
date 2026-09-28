@@ -25,7 +25,8 @@ from typing import Any
 from urllib.parse import urlparse
 
 from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, es_suyo, limpio, minimo_de_meses, nombra_el_programa
+from rumbo_scraper.parsers.datos_posgrado import (_lineas, datos_de_posgrado, es_suyo, limpio, minimo_de_meses,
+                                                nombra_el_programa, titulo_mencionado)
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -65,6 +66,11 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
                     continue
                 datos = {c: v for c, v in datos_de_posgrado(html, p["nombre_programa"]).items()
                          if v is not None and p[c] is None}
+                if p["titulo_otorgado"] is None and "titulo_otorgado" not in datos:
+                    titulo, fuente = _titulo_por_mencion(html, p, visitante)
+                    if titulo:
+                        datos["titulo_otorgado"] = titulo
+                        datos["fuente_titulo"] = fuente
                 if datos:
                     u = corto.get(p["universidad_id"], "")
                     print(f"{u:9} | {p['nombre_programa'][:55]:55} | {datos}", flush=True)
@@ -74,6 +80,51 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
 
     with ThreadPoolExecutor(max_workers=SITIOS_A_LA_VEZ) as pool:
         return [h for lote in pool.map(un_sitio, por_sitio.values()) for h in lote]
+
+
+MAX_PDFS = 3
+MAX_BYTES = 8_000_000
+
+
+def _titulo_por_mencion(html: str, programa: dict[str, Any], visitante: Visitante) -> tuple[str | None, str]:
+    """The degree the page, or a document of the university's own that the
+    page links, writes before the programme's subject (`titulo_mencionado`).
+    A plan or a brochure heads itself with it: "MAGISTER EN DERECHO DEL
+    TRABAJO". A scanned document has no text, and gives nothing."""
+    from io import BytesIO
+    from urllib.parse import urljoin
+
+    from bs4 import BeautifulSoup
+
+    nombre, url = programa["nombre_programa"], programa["url_oficial"]
+    titulo = titulo_mencionado(_lineas(html), nombre)
+    if titulo:
+        return titulo, url
+    sitio = ".".join((urlparse(url).hostname or "").split(".")[-3:])
+    documentos: list[str] = []
+    for enlace in BeautifulSoup(html, "html.parser").find_all("a", href=True):
+        destino = urljoin(url, enlace["href"].strip()).split("#")[0]
+        if ".pdf" in destino.lower() and (urlparse(destino).hostname or "").endswith(sitio) \
+                and destino not in documentos:
+            documentos.append(destino)
+    for documento in documentos[:MAX_PDFS]:
+        try:
+            respuesta = visitante.client.get(documento)
+        except Exception:
+            continue
+        time.sleep(PAUSA)
+        if not respuesta.content.startswith(b"%PDF") or len(respuesta.content) > MAX_BYTES:
+            continue
+        try:
+            from pypdf import PdfReader
+            paginas = PdfReader(BytesIO(respuesta.content)).pages[:8]
+            texto = "\n".join(pagina.extract_text() or "" for pagina in paginas)
+        except Exception:
+            continue
+        titulo = titulo_mencionado([l.strip() for l in texto.split("\n") if l.strip()], nombre)
+        if titulo:
+            return titulo, documento
+    return None, ""
 
 
 def aplicar(client: Any, hallados: list[dict[str, Any]]) -> Counter:

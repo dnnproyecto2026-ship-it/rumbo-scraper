@@ -144,6 +144,43 @@ def minimo_de_meses(programa: str) -> int:
     return 6
 
 
+# The degree word each kind of programme gives, as a site writes it.
+_GRADO_DEL_TIPO = (
+    (re.compile(r"(?:carrera de )?doctorado\b"), r"doctor(?:/a|a|\(a\))?"),
+    (re.compile(r"(?:maestria|magister|master)\b"), r"mag[ií]ster|m[aá]ster"),
+    (re.compile(r"(?:carrera de )?especializacion\b"), r"especialista"),
+)
+_TILDES = {"a": "aáà", "e": "eéè", "i": "iíì", "o": "oóò", "u": "uúùü", "n": "nñ"}
+
+
+def _sin_tildes(palabra: str) -> str:
+    """A pattern for a word however its accents are written."""
+    return "".join(f"[{_TILDES[c]}]" if c in _TILDES else re.escape(c) for c in comparison_key(palabra))
+
+
+def titulo_mencionado(lineas: list[str], programa: str) -> str | None:
+    """The degree, when a line writes its word before the programme's own
+    subject and the subject ends there: "MAGISTER EN DERECHO DEL TRABAJO" in
+    the plan of the Maestría en Derecho del Trabajo. Nothing of the name is
+    guessed: the subject is the programme's, the degree word the text's. A
+    subject that goes on ("Magíster en Ingeniería Química") is another's."""
+    clave = comparison_key(programa)
+    tema = _TIPO.sub("", programa).strip()
+    grado = next((g for patron, g in _GRADO_DEL_TIPO if patron.match(clave)), None)
+    if not grado or len(tema) < 4 or tema == programa:
+        return None
+    patron = re.compile(r"(?i)(?<![\w])(" + grado + r")\s+(?:en|de)\s+" +
+                        r"\s+".join(_sin_tildes(w) for w in comparison_key(tema).split()) +
+                        r"(?=\s*$|\s*[.,;:()\"“”«»\-–|])")
+    for linea in lineas:
+        match = patron.search(linea)
+        if match:
+            palabra = match.group(1)
+            palabra = palabra.capitalize() if palabra.isupper() else palabra[:1].upper() + palabra[1:]
+            return f"{palabra} en {tema}"
+    return None
+
+
 def datos_de_posgrado(html: str, programa: str) -> dict[str, object]:
     """What the page says of the programme: degree, months, modality."""
     lineas = _lineas(html)
