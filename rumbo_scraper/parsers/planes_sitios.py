@@ -816,6 +816,30 @@ def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
 
 
+_ANIO_IUCBC = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*$")
+_MATERIA_IUCBC = re.compile(r"^(\S.*?)\s{2,}[A-Z/]{2,8}\s+\d+\s*hs\b")
+# Enfermería's: area, number, name ("AP   1   Enfermería Comunitaria I").
+_MATERIA_IUCBC_NUMERADA = re.compile(r"^\s*[A-Z]{2,4}\s+\d{1,2}\s+(\S.*?)\s*$")
+
+
+def plan_iucbc(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """IUCBC's plans (``pdftotext -layout``): a heading per year ("PRIMER
+    AÑO"), then a row per subject with its area and hours ("Química General
+    I   AFB   80 hs"), or its area and number ("AP  1  Enfermería
+    Comunitaria I")."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        encabezado = _ANIO_IUCBC.match(linea)
+        if encabezado:
+            anio = _ORDINALES_UHIBA[encabezado.group(1).lower()]
+            continue
+        materia = _MATERIA_IUCBC.match(linea) or _MATERIA_IUCBC_NUMERADA.match(linea)
+        if anio and materia:
+            _agregar(materias, materia.group(1), anio)
+    return desde_el_primero(materias)
+
+
 _ANIO_UHIBA = re.compile(r"(?i)^\s+(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\s*$")
 
 
