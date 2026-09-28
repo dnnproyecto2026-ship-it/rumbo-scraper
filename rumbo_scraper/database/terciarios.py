@@ -58,7 +58,14 @@ def _titulo(texto: str) -> str:
     texto = clean_text(texto)
     # "INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Nº 28": capitals but for the "º".
     texto = con_tildes(texto) if sum(c.islower() for c in texto) <= 2 else texto
-    return re.sub(r"\bN[oº°]\.?\s*(?=\d)", "N° ", texto)
+    return _romanos(re.sub(r"\bN[oº°]\.?\s*(?=\d)", "N° ", texto))
+
+
+def _romanos(texto: str) -> str:
+    """"Juan Xxiii" -> "Juan XXIII": a roman numeral is written in capitals."""
+    return re.sub(r"\b(?=[IVXLC]{2,}\b|[ivxlc]{2,}\b)|\b([IVXLCivxlc][ivxlc]+)\b",
+                  lambda m: m.group(1).upper() if m.group(1) and re.fullmatch(
+                      r"(?i)(x{0,3})(ix|iv|v?i{0,3})", m.group(1)) else (m.group(0) or ""), texto)
 
 
 def siglas(nombre: str) -> str:
@@ -101,7 +108,7 @@ def prolijo(nombre: str) -> str:
             palabras.append(palabra.lower())
         else:
             palabras.append(capital(palabra))
-    return re.sub(r"\b(?:Nro\.?|N\.?\s?[oº°]\.?)\s*(?=\d)", "N° ", " ".join(palabras))
+    return _romanos(re.sub(r"\b(?:Nro\.?|N\.?\s?[oº°]\.?)\s*(?=\d)", "N° ", " ".join(palabras)))
 
 
 def _corto(nombre: str, numero: str, clave: str) -> str:
