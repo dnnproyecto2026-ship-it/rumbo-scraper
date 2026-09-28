@@ -1074,6 +1074,34 @@ def plan_unahur(texto_con_columnas: str) -> list[tuple[str, int]]:
             abajo = _NUMEROS_AL_FINAL.sub("", lineas[i + 1]).strip() if i + 1 < len(lineas) else ""
             nombre = f"{arriba} {abajo}".strip()
         _agregar(materias, nombre, anio)
+    return desde_el_primero(materias) or _plan_unahur_por_area(lineas)
+
+
+_ANIO_SOLO_UNAHUR = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\s*$")
+_AREA_UNAHUR = re.compile(r"\s(C[A-Z]{1,3})\s+[ACB]\s+\d")
+
+
+def _plan_unahur_por_area(lineas: list[str]) -> list[tuple[str, int]]:
+    """UNAHUR's other layout (its licenciaturas): "PRIMER AÑO" alone over
+    rows "3   Biología   CFE   C   4   64 ...": the number, the name, the
+    subject's field (CFB, CFE, CIC...) and its régimen. A wrapped name runs
+    from the line above to the one below, which carries the row's number."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for i, linea in enumerate(lineas):
+        encabezado = _ANIO_SOLO_UNAHUR.match(linea)
+        if encabezado:
+            anio = _ORDINALES[encabezado.group(1).lower()]
+            continue
+        area = _AREA_UNAHUR.search(linea)
+        if not anio or not area:
+            continue
+        nombre = re.sub(r"^\s*\d{1,3}\s+", "", linea[:area.start()]).strip()
+        if not nombre:
+            arriba = lineas[i - 1].strip() if i else ""
+            abajo = re.sub(r"^\s*\d{1,3}\s+", "", lineas[i + 1]).strip() if i + 1 < len(lineas) else ""
+            nombre = f"{arriba} {abajo}".strip()
+        _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
 
 
