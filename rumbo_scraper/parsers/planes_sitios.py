@@ -789,6 +789,60 @@ def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
 
 
+_SIU_MATERIA = re.compile(r"^\s*(\d{1,2}) - [A-Za-zÁÉÍÓÚáéíóú ]+?\s{2,}\d{3,6} (.+?)(?:\s{2,}\d+)?\s{2,}[SN]\s")
+_SIU_ORIENTACION = re.compile(r"^\s*Orientaci[óo]n \d+\s+(.+?)\s*$")
+
+
+def plan_siu_guarani(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The plan report SIU Guaraní prints ("Plan de Estudios", ``pdftotext
+    -layout``): a row per subject, "1 - Primer Cuatrimestre  15802
+    Arqueología General  6  S  0  Normal", its name wrapped onto the next
+    line when long; the rows under it ("Para Cursarla debe tener ...") are
+    its prerequisites. A plan with orientations lists each one after the
+    common trunk ("Orientación 001  Teoría y Metodología ..."), repeating
+    the subjects all share: the plan is the trunk and what every
+    orientation has; an orientation's own subjects are a choice."""
+    # The plan of one orientation of the career ("Carrera: 073 Tecnicatura
+    # Superior en Interpretación Musical Orientación: Arpa") is not the
+    # career's.
+    if re.search(r"(?im)^\s*Carrera:.*\bOrientaci[óo]n:", texto_con_columnas):
+        return []
+    tronco: list[tuple[str, int]] = []
+    orientaciones: dict[str, list[tuple[str, int]]] = {}
+    actual: list[tuple[str, int]] = tronco
+    ultima = None
+    for linea in texto_con_columnas.splitlines():
+        orientacion = _SIU_ORIENTACION.match(linea)
+        if orientacion:
+            actual = orientaciones.setdefault(orientacion.group(1), [])
+            ultima = None
+            continue
+        materia = _SIU_MATERIA.match(linea)
+        if materia:
+            actual.append((clean_text(materia.group(2)), int(materia.group(1))))
+            ultima = len(actual) - 1
+            continue
+        # A name wrapped onto the next line: text alone, under the name.
+        if (ultima is not None and re.match(r"^\s{30,}[A-Za-zÁÉÍÓÚáéíóú]", linea)
+                and not re.search(r"\d{3,6}|Para (Cursarla|Aprobarla)|Plan de Estudios", linea)):
+            nombre, anio = actual[ultima]
+            actual[ultima] = (f"{nombre} {clean_text(linea)}", anio)
+        if linea.strip():
+            ultima = None if not re.match(r"^\s{30,}", linea) else ultima
+    comunes = None
+    for materias in orientaciones.values():
+        nombres = {m for m, _ in materias}
+        comunes = nombres if comunes is None else comunes & nombres
+    plan: list[tuple[str, int]] = []
+    for nombre, anio in tronco + [m for materias in orientaciones.values() for m in materias
+                                   if m[0] in (comunes or set())]:
+        # A requirement is not a subject ("Requisito: Idioma Moderno",
+        # "Prueba de Suficiencia de Inglés").
+        if not re.match(r"(?i)requisito\b|prueba de suficiencia\b", nombre):
+            _agregar(plan, nombre, anio)
+    return desde_el_primero(sorted(plan, key=lambda m: m[1]))
+
+
 _CUATRIMESTRE_ROMANO = {r: i for i, r in enumerate(
     ("I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"), start=1)}
 

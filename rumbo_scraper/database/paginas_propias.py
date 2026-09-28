@@ -48,6 +48,8 @@ LISTADOS: dict[str, tuple[str, ...]] = {
             "https://www.derecho.uba.ar", "https://www.psi.uba.ar"),
     # Humanidades y Artes moved its careers ("/carreras/grado/10/..." is 404).
     "UNR": ("https://fhumyar.unr.edu.ar/carreras-de-grado/", "https://fhumyar.unr.edu.ar/pregrado/"),
+    # The UNSJ's guide points its careers at their faculty's page.
+    "UNSJ": ("https://www.ffha.unsj.edu.ar/?page_id=171",),
 }
 
 

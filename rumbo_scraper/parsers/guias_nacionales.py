@@ -2240,6 +2240,10 @@ def paginas_por_nombre(html: str, pagina: str) -> dict[str, str]:
         url = urljoin(pagina, a["href"]).split("#")[0]
         if urlparse(url).netloc.removeprefix("www.") != dominio or url.rstrip("/") == pagina.rstrip("/"):
             continue
+        # A list served over https that links its own pages over http (UNSJ's
+        # Filosofía, whose http does not answer): the same page, over https.
+        if pagina.startswith("https://") and url.startswith("http://"):
+            url = "https://" + url.removeprefix("http://")
         titulo = a.find_previous(["h2", "h3", "h4", "h5"])
         archivo = re.sub(r"[-_]+", " ", unquote(urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]).rsplit(".", 1)[0])
         for nombre in (_texto(a), _texto(titulo) if titulo else "", archivo):

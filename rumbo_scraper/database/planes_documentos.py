@@ -214,7 +214,9 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 # the text as ``pdftotext -layout`` gives it.
 _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal),
-                       ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto))
+                       ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
+                       # UNSJ's Filosofía: SIU Guaraní's plan report.
+                       ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),)
@@ -456,6 +458,11 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                     time.sleep(PAUSA)
             if not documento:
                 continue
+            # A page over https that links its plan over http, on its own
+            # site (UNSJ's Filosofía, whose http does not answer).
+            if (url.startswith("https://") and documento.startswith("http://")
+                    and urlparse(documento).netloc == urlparse(url).netloc):
+                documento = "https://" + documento.removeprefix("http://")
             archivo = CACHE / (hashlib.md5(documento.encode()).hexdigest() + ".pdf")
             if not archivo.exists():
                 try:
