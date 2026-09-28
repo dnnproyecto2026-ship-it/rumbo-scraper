@@ -270,9 +270,65 @@ def institutos_infd(jurisdiccion: str, localidades: set[str] | None = None) -> l
     return list(vistos.values())
 
 
+CABA_IFTS = ("https://formacionesagencia.bue.edu.ar/inscribiteba/api/formaciones/buscar?"
+             "area=Formaci%C3%B3n%20T%C3%A9cnica%20Superior")
+CABA_PADRON = ("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/ministerio-de-educacion/"
+               "establecimientos-educativos/padron-establecimientos.csv")
+
+
+def institutos_caba_ifts() -> list[dict[str, Any]]:
+    """CABA's state technical institutes (IFTS): the Agencia de Aprendizaje's
+    service lists each tecnicatura with the IFTS that gives it ("IFTS 33",
+    "90 - GRIERSON Sede Caballito"); the city's open padrón gives each IFTS's
+    name and address, its mail carrying its number ("dfts_ifts21_de8@")."""
+    import csv
+    import io
+
+    from rumbo_scraper.parsers.guias_nacionales import anios
+    from rumbo_scraper.spiders.visitante import Visitante
+
+    import time
+
+    def traer(url: str, **opciones: Any) -> Any:
+        for _ in range(3):
+            try:
+                with Visitante(timeout=60) as visitante:
+                    return visitante.client.get(url, **opciones)
+            except Exception:
+                time.sleep(10)
+        raise RuntimeError(f"no responde: {url}")
+
+    ofertas = traer(CABA_IFTS, headers={"Accept": "application/json"}).json()
+    padron = traer(CABA_PADRON).content.decode("utf-8-sig")
+    por_numero: dict[str, dict[str, str]] = {}
+    for fila in csv.DictReader(io.StringIO(padron), delimiter=";"):
+        numero = re.search(r"ifts(\d+)_", fila.get("email") or "")
+        if numero and fila.get("anexo") == "00":
+            por_numero.setdefault(numero.group(1), fila)
+    institutos: dict[str, dict[str, Any]] = {}
+    for oferta in ofertas:
+        numero = re.search(r"(\d+)", oferta.get("lugar") or "")
+        fila = por_numero.get(numero.group(1)) if numero else None
+        if not fila:
+            continue
+        nombre = re.sub(r"\s+DE\s+\d+$", "", clean_text(fila["nombre_est"]))
+        nombre = (f"Instituto de Formación Técnica Superior N° {numero.group(1)}" if nombre.upper().startswith("IFTS")
+                  else _titulo(nombre).replace("Inst. ", "Instituto "))
+        instituto = institutos.setdefault(numero.group(1), {
+            "nombre_oficial": nombre, "nombre_corto": f"IFTS {numero.group(1)}", "gestion": "Estatal",
+            "localidad": "Ciudad Autónoma de Buenos Aires", "distrito": _titulo(fila.get("barrio") or ""),
+            "calle": _titulo(f"{fila.get('calle') or ''} {fila.get('num') or ''}"), "cue": fila.get("cueanexo"),
+            "url": CABA_IFTS, "sitio": "https://formacionesagencia.bue.edu.ar", "titulos": {}, "carreras": []})
+        propio = nombre_de_la_carrera(oferta.get("name") or "")
+        carrera = _carrera(propio, "", CABA_IFTS, None, anios(oferta.get("duracion") or "")) if propio else None
+        if carrera and carrera.nombre not in {c.nombre for c in instituto["carreras"]}:
+            instituto["carreras"].append(carrera)
+    return [i for i in institutos.values() if i["carreras"]]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar institutos superiores no universitarios")
-    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba", "santafe"])
+    parser.add_argument("jurisdiccion", choices=["pba", "cba", "salta", "caba", "caba_ifts", "santafe"])
     parser.add_argument("--distritos", default="",
                         help="Distritos (PBA) o localidades (Córdoba) separados por coma; todos si se omite")
     parser.add_argument("--apply", action="store_true")
@@ -285,6 +341,9 @@ def main() -> None:
     if args.jurisdiccion == "pba":
         institutos, sitio, provincia = institutos_pba(json.loads(SALIDA.read_text()), distritos), \
             "https://mapaescolar.abc.gob.ar", "Buenos Aires"
+    elif args.jurisdiccion == "caba_ifts":
+        institutos, sitio = institutos_caba_ifts(), "https://formacionesagencia.bue.edu.ar"
+        provincia = "Ciudad Autónoma de Buenos Aires"
     elif args.jurisdiccion in _PROVINCIAS_INFD:
         institutos, sitio = institutos_infd(args.jurisdiccion, distritos), "https://mapa.infd.edu.ar"
         provincia = _PROVINCIAS_INFD[args.jurisdiccion][1]
