@@ -29,7 +29,18 @@ class NombreDePosgrado(unittest.TestCase):
         self.assertEqual(nombre_de_posgrado("Maestría en Ciencias Agrarias - Acreditada CONEAU Cat. A"),
                          ("Maestría en Ciencias Agrarias", "Maestría"))
         self.assertEqual(nombre_de_posgrado("Carrera de Especialización en Cirugía"),
-                         ("Carrera de Especialización en Cirugía", "Especialización"))
+                         ("Especialización en Cirugía", "Especialización"))
+
+    def test_como_escribe_una_privada_la_maestria(self):
+        self.assertEqual(nombre_de_posgrado("Magíster en Finanzas"), ("Maestría en Finanzas", "Maestría"))
+        self.assertEqual(nombre_de_posgrado("MBA - Maestría en Dirección de Empresas"),
+                         ("Maestría en Dirección de Empresas", "Maestría"))
+        self.assertEqual(nombre_de_posgrado("MBA Executive Full Time")[1], "Maestría")
+        self.assertEqual(nombre_de_posgrado("Master in Business Administration")[1], "Maestría")
+
+    def test_la_fecha_de_inicio_en_el_enlace(self):
+        self.assertEqual(nombre_de_posgrado("Especialización en Argumentación Jurídica 17 marzo")[0],
+                         "Especialización en Argumentación Jurídica")
 
     def test_una_noticia_no_es_un_nombre(self):
         self.assertIsNone(nombre_de_posgrado("Abierta la inscripción al Doctorado en Física"))
@@ -124,6 +135,49 @@ class LoQueLaListaAgregaAlNombre(unittest.TestCase):
                 "Energía</a></li></ul>`};</script>")
         self.assertEqual([(p.nombre, p.url) for p in leer_lista(html, PAGINA, ("unx.edu.ar",))],
                          [("Maestría en Energía", "https://www.unx.edu.ar/c/3")])
+
+    def test_los_temas_bajo_un_titulo_que_dice_el_tipo(self):
+        html = ('<div id="r"><h4>Carrera de Especialización bajo modalidad de Residencia</h4>'
+                '<strong>BÁSICAS</strong><a href="/x.pdf"><strong>- Anatomía Patológica</strong></a>'
+                ' (RM N° 267/2018)<strong>- Cirugía General</strong><strong>**</strong></div>')
+        self.assertEqual([p.nombre for p in leer_lista(html, PAGINA, ("unx.edu.ar",), "#r strong",
+                                                         prefijo="Especialización en")],
+                         ["Especialización en Anatomía Patológica", "Especialización en Cirugía General"])
+
+    def test_dos_titulos_sobre_un_tema(self):
+        html = '<h2>Especialización y Maestría en <b>Informática en Salud</b></h2>'
+        self.assertEqual(sorted(p.nombre for p in leer_lista(html, PAGINA, ("unx.edu.ar",))),
+                         ["Especialización en Informática en Salud", "Maestría en Informática en Salud"])
+
+    def test_un_tipo_sobre_varios_temas(self):
+        html = ('<div><div class="sub">Especialización</div><a class="it" href="/cirugia/"><span>Cirugía'
+                '</span></a><a class="it" href="/endo/"><span>Endodoncia</span></a>'
+                '<div class="sub">Maestría</div><a class="it" href="/sm/">Salud Mental</a></div>')
+        self.assertEqual([(p.nombre, p.url) for p in leer_lista(html, PAGINA, ("unx.edu.ar",))], [
+            ("Especialización en Cirugía", "https://www.unx.edu.ar/cirugia/"),
+            ("Especialización en Endodoncia", "https://www.unx.edu.ar/endo/"),
+            ("Maestría en Salud Mental", "https://www.unx.edu.ar/sm/")])
+
+    def test_el_titulo_de_especialista(self):
+        self.assertEqual(nombre_de_posgrado("Especialista En Comunicación Corporativa E Institucional")[0],
+                         "Especialización en Comunicación Corporativa E Institucional")
+        self.assertIsNone(nombre_de_posgrado("Especialización Superior en Neurodiversidad"))
+
+    def test_el_estado_de_la_inscripcion(self):
+        for texto in ("Especialización en Asesoramiento Jurídico de Empresa (preinscripción online 2027)",
+                      "Especialización en Asesoramiento Jurídico de Empresa (inscripción abierta 2026)",
+                      "Especialización en Asesoramiento Jurídico de Empresa (en curso 2025-2026)",
+                      "Especialización en Asesoramiento Jurídico de Empresa – Sede San Rafael"):
+            self.assertEqual(nombre_de_posgrado(texto)[0], "Especialización en Asesoramiento Jurídico de Empresa")
+
+    def test_el_titulo_bajo_el_nombre(self):
+        html = ("<ul><li><h3>Maestría en Biotecnología Agropecuaria</h3><p>Magíster en Biotecnología "
+                "Agropecuaria con Orientación Vegetal</p></li><li><p>Magíster en Diabetes</p></li></ul>")
+        self.assertEqual(sorted(p.nombre for p in leer_lista(html, PAGINA, ("unx.edu.ar",))),
+                         ["Maestría en Biotecnología Agropecuaria", "Maestría en Diabetes"])
+
+    def test_una_descripcion_que_nombra_la_carrera(self):
+        self.assertIsNone(nombre_de_posgrado("La Maestría en Estudios Feministas busca transversalizar"))
 
     def test_una_nota_al_pie(self):
         self.assertEqual(nombre_de_posgrado("Maestría en Cereales * * Dictada en conjunto con Ingeniería")[0],

@@ -26,7 +26,7 @@ from rumbo_scraper.normalizers.text import clean_text, comparison_key
 
 TIPOS = (
     (re.compile(r"^doctorado\b"), "Doctorado"),
-    (re.compile(r"^maestria\b"), "Maestría"),
+    (re.compile(r"^(?:maestria|magister|master|mba)\b"), "Maestría"),
     (re.compile(r"^(?:carrera de )?especializacion\b"), "Especialización"),
 )
 
@@ -38,10 +38,12 @@ TIPOS = (
 _CALIFICATIVOS = (r"interinstitucional|intrainstitucional|latinoamerican[oa]|"
                   r"internacional|binacional|regional|academic[oa]|profesional|"
                   r"conjunt[oa]|cooperativ[oa]|personalizad[oa]|estructurad[oa]|"
-                  r"integrad[oa]|universitari[oa]|superior|semiestructurad[oa]")
+                  r"integrad[oa]|universitari[oa]|semiestructurad[oa]")
+# A private university also writes "Magíster en", "Master en" and "MBA".
 _UN_NOMBRE = re.compile(
-    r"^(?:carrera de )?(?:doctorado|maestria|especializacion)"
-    rf"(?:\s+(?:{_CALIFICATIVOS})){{0,2}}\s+(?:en|de|del|sobre)\s+\S")
+    r"^(?:(?:carrera de )?(?:doctorado|maestria|magister|master|especializacion)"
+    rf"(?:\s+(?:{_CALIFICATIVOS})){{0,2}}\s+(?:en|de|del|sobre)\s+\S|mba\b|"
+    r"master (?:in|of) \S)")
 # What turns a name into news, a call or a section about the degree.
 _NO_ES_EL_NOMBRE = re.compile(
     r"\b(?:inscripci|preinscrip|convocatoria|cohorte|abierta|abiertas|"
@@ -56,9 +58,12 @@ _COLA = re.compile(
     r"(?i)\s*(?:[-–—|:(\[]\s*|\s)(?:acreditad[ao]|con acreditaci[óo]n|"
     r"categor[íi]a\b|cat\.\s|coneau|res(?:oluci[óo]n)?\.?\s*(?:n|cs|me|min)|"
     r"(?:modalidad|a distancia|virtual|presencial|semipresencial)\b|"
-    r"cohorte|inscripci[óo]n|nueva cohorte|resfc\b|res\w*-\d|\(?\d{4}\)?\s*$).*$")
+    r"cohorte|inscripci[óo]n|nueva cohorte|resfc\b|res\w*-\d|"
+    # The start of the next intake, printed inside the link: "17 marzo".
+    r"\d{1,2}\s+(?:de\s+)?(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|"
+    r"septiembre|setiembre|octubre|noviembre|diciembre)\b|\(?\d{4}\)?\s*$).*$")
 # An acronym after the name: "| MBA", "| GTec", "(MRS)", "- MAGNAGRO".
-_SIGLA = re.compile(r"\s*(?:\|\s*[^|]{2,20}|\s-[a-z]{1,4}|[\-–—]\s*[A-ZÁÉÍÓÚÑ]{2,12}|"
+_SIGLA = re.compile(r"\s*(?:\s[-–—]\s+Sede\b.*|\|\s*[^|]{2,20}|\s-[a-z]{1,4}|[\-–—]\s*[A-ZÁÉÍÓÚÑ]{2,12}|"
                     r"[\-–—]\s*(?=\S*[A-Z]\S*[A-Z]|\S*/)\S{2,16}|"
                     r"\(\s*[A-ZÁÉÍÓÚÑ]{2,12}\s*\))\s*$")
 # What a site puts in brackets after the name to say where or with whom it
@@ -67,6 +72,8 @@ _SIGLA = re.compile(r"\s*(?:\|\s*[^|]{2,20}|\s-[a-z]{1,4}|[\-–—]\s*[A-ZÁÉ�
 # the name, "(Operatoria Dental y Biomateriales)", says none of that.
 _DONDE = re.compile(r"\s*\((?=[^()]*(?:\b[Ss]edes?\b|[Ff]acultad|[Ee]n conjunto|"
                     r"[Ff]ormaci[óo]n|[Cc]arrera|[Dd]istancia|[Vv]irtual|[Pp]resencial|"
+                    # Its state: "(preinscripción online 2027)", "(en curso 2025-2026)".
+                    r"[Pp]re-?ins?cripci|[Ii]nicio|[Ee]n curso|[Aa]biert[ao]|"
                     r"[Ii]nter-?institucional|[Ii]ntrainstitucional|"
                     r"\b[A-Z][a-zA-Z]*[A-Z][a-zA-Z]*\b))[^()]*\)\s*$")
 # A footnote mark and what it points to: "... Oleaginosas * * Dictada en ...".
@@ -102,6 +109,13 @@ def nombre_de_posgrado(texto: str) -> tuple[str, str] | None:
     True
     """
     nombre = _NOTA.sub("", clean_text(texto.replace("\u200b", " ")))
+    # A label before the name: "Segundo año | Magíster en Cine Documental".
+    nombre = re.sub(r"(?i)^[^|]{2,20}\|\s*(?=(?:mag|maest|m[aá]ster|espec|doct))", "", nombre)
+    # The title a card heads its programme with: "Especialista en X" is the
+    # Especialización en X.
+    nombre = re.sub(r"(?i)^especialista\s+en\b", "Especialización en", nombre)
+    # And "Magíster en X", "Master en X" is the Maestría en X.
+    nombre = re.sub(r"(?i)^(?:mag[íi]ster|m[áa]ster)\s+en\b", "Maestría en", nombre)
     comillas = _ENTRE_COMILLAS.match(nombre)
     if comillas:
         nombre = f"{comillas.group(1)} en {comillas.group(2)}"
@@ -111,7 +125,10 @@ def nombre_de_posgrado(texto: str) -> tuple[str, str] | None:
     primero = re.match(r"(?i)(?:carrera de\s+)?\S+", nombre)
     otro = _OTRO_TITULO.search(nombre, primero.end() if primero else 0)
     if otro:
-        nombre = nombre[:otro.start()]
+        # "MBA - Maestría en Dirección de Empresas": the acronym, then the name.
+        antes = nombre[:otro.start()].strip(" -–—|:")
+        nombre = (nombre[otro.start():].strip()
+                  if re.fullmatch(r"[A-Z]{2,6}|(?i:m[aá]ster)", antes) else antes)
     # The bracket first: "(Carrera a distancia)" is not cut at "a distancia".
     nombre = _SIGLA.sub("", _COLA.sub("", _DONDE.sub("", nombre)))
     nombre = clean_text(_DONDE.sub("", nombre)).strip(" .,;:-–—")
@@ -125,6 +142,8 @@ def nombre_de_posgrado(texto: str) -> tuple[str, str] | None:
         return None
     for patron, tipo in TIPOS:
         if patron.match(clave):
+            # "Carrera de Especialización en X" is the Especialización en X.
+            nombre = re.sub(r"(?i)^carrera de\s+", "", nombre)
             # A name shouted whole or in part: "ESPECIALIZACIÓN EN Sindicatura
             # Concursal", "ESPECIALIZACIÓN EN Producción Y AMBIENTES".
             letras = [c for c in nombre if c.isalpha()]
@@ -133,7 +152,7 @@ def nombre_de_posgrado(texto: str) -> tuple[str, str] | None:
                 nombre = _titulo(nombre)
             # "MAESTRÍA en Educación": only the kind was shouted.
             primera, _, resto = nombre.partition(" ")
-            if primera.isupper():
+            if primera.isupper() and len(primera) > 3:  # not "MBA"
                 nombre = f"{primera.capitalize()} {resto}"
             nombre = nombre[:1].upper() + nombre[1:]
             nombre = re.sub(r"\b(en|de) \1\b", r"\1", nombre)
@@ -169,33 +188,55 @@ _SOLO_EL_TIPO = re.compile(r"^(?:doctorado|maestria|especializacion)$")
 _EDICION = re.compile(r"(?i)^\d+\s*[ªºa°]?\s*cohorte\s+(?:de|del)\s+")
 
 
-def _nombre_de_la_tarjeta(elemento: Tag) -> tuple[str, Tag] | None:
-    """The full name a card gives by its kind and, next to it, its subject."""
+def _nombres_de_la_tarjeta(elemento: Tag) -> list[tuple[str, Tag]]:
+    """The full names a card gives by its kind and, beside it, the subjects.
+
+    One subject follows the kind on a card; a menu puts one kind over a run
+    of links of the same shape ("Especialización": Cirugía Buco Máxilo
+    Facial, Diagnóstico por Imágenes, ...), and the kind applies to each.
+    """
     if not _SOLO_EL_TIPO.match(comparison_key(elemento.get_text(" ", strip=True))):
-        return None
-    titulo = elemento.find_next_sibling()
-    if not isinstance(titulo, Tag):
-        return None
-    tema = _EDICION.sub("", clean_text(titulo.get_text(" ", strip=True)))
-    # A subject that is itself a kind of course is a card filed under the
-    # wrong heading: "Maestría" over "Diplomatura en ...".
-    if not tema or re.match(r"(?:en|de|del|diplomatura|curso|seminario|doctorado|"
-                            r"maestria|especializacion)\b", comparison_key(tema)):
-        return None
+        return []
     tipo = clean_text(elemento.get_text(" ", strip=True)).capitalize()
-    return f"{tipo} en {tema}", titulo
+    primero = elemento.find_next_sibling()
+    if not isinstance(primero, Tag):
+        return []
+    forma = (primero.name, tuple(primero.get("class") or ()))
+    nombres = []
+    for titulo in [primero, *primero.find_next_siblings()]:
+        if (titulo.name, tuple(titulo.get("class") or ())) != forma:
+            break
+        tema = _EDICION.sub("", clean_text(titulo.get_text(" ", strip=True)))
+        # A subject that is itself a kind of course is a card filed under
+        # the wrong heading: "Maestría" over "Diplomatura en ...".
+        if not tema or re.match(r"(?:en|de|del|diplomaturas?|cursos?|seminarios?|doctorados?|"
+                                r"maestrias?|especializacion(?:es)?)\b", comparison_key(tema)):
+            break
+        nombres.append((f"{tipo} en {tema}", titulo))
+    return nombres
+
+
+# The degree a programme gives, printed where its name would be.
+_UN_TITULO = re.compile(r"(?i)^(?:mag[íi]ster|m[áa]ster|especialista)\s+en\b")
+
+# Two degrees over one subject: "Maestría y Especialización en Vínculos".
+_DOS_TIPOS = re.compile(r"(?i)^(maestr[íi]a|especializaci[óo]n|doctorado)\s+y\s+"
+                        r"(maestr[íi]a|especializaci[óo]n|doctorado)\s+(en\s+.+)$")
 
 
 def leer_lista(html: str, pagina: str, dominios: tuple[str, ...],
                ambito: str | None = None, facultad: str | None = None,
-               ) -> list[PosgradoListado]:
+               prefijo: str | None = None) -> list[PosgradoListado]:
     """Every programme a page lists, in the order it lists them.
 
     A name that links to a page of the university's own sites takes that page
     as its address; one written without a link, or linking elsewhere, takes
     the page it is listed on, which is the one that says it. ``ambito`` is a
     CSS selector for the part of the page that holds the list, where the menus
-    around it list other things.
+    around it list other things. ``prefijo`` is for a list that gives only
+    the subjects under a heading that says the kind ("Carrera de
+    Especialización bajo modalidad de Residencia: - Cardiología"): each
+    "- Subject" line inside ``ambito`` is read as ``prefijo`` + subject.
     """
     # "&microtipo=" in a link is a query, not the entity "&micro": the
     # parser would turn it into "µtipo=".
@@ -228,19 +269,33 @@ def leer_lista(html: str, pagina: str, dominios: tuple[str, ...],
             # A card that is only an image says the name in its link's title.
             if not texto and elemento.name == "a":
                 texto = elemento.get("title") or ""
-            tarjeta = _nombre_de_la_tarjeta(elemento)
-            if tarjeta:
-                texto, elemento = tarjeta
-            leido = nombre_de_posgrado(texto)
-            if leido:
-                leidos.append((elemento, *leido))
+            if prefijo:
+                tema = re.match(r"^[-–•]\s*([^()*\d]{4,70}?)\s*$", texto)
+                texto = f"{prefijo} {tema.group(1)}" if tema else ""
+            candidatos = _nombres_de_la_tarjeta(elemento) or [(texto, elemento)]
+            dos = _DOS_TIPOS.match(clean_text(texto))
+            if dos:
+                candidatos = [(f"{dos.group(1)} {dos.group(3)}", elemento),
+                              (f"{dos.group(2)} {dos.group(3)}", elemento)]
+            for candidato, donde in candidatos:
+                leido = nombre_de_posgrado(candidato)
+                if leido:
+                    titulo = bool(_UN_TITULO.match(clean_text(candidato)))
+                    leidos.append((donde, *leido, titulo))
     # Only the innermost element that names a programme: the card around it
     # also carries "Abierto", "Más información" or the campus.
-    con_nombre = {id(e) for e, _, _ in leidos}
+    # A page that names its programmes and prints under each the degree it
+    # gives ("Magíster en Diabetes") names each twice: the degree goes.
+    nombrados = [comparison_key(n) for _, n, _, titulo in leidos if not titulo]
+    leidos = [(e, n, t, titulo) for e, n, t, titulo in leidos
+              if not titulo or not any(comparison_key(n) == k or comparison_key(n).startswith(k + " ")
+                                       for k in nombrados)]
+    con_nombre = {id(e) for e, _, _, _ in leidos}
     encontrados: dict[str, PosgradoListado] = {}
-    for elemento, nombre, tipo in leidos:
+    for elemento, nombre, tipo, _ in leidos:
         if any(id(d) in con_nombre for d in elemento.find_all(_BLOQUES)):
             continue
+        clave = comparison_key(nombre)
         url = pagina
         enlace = _enlace(elemento, con_nombre)
         if enlace is not None:

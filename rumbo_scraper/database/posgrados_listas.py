@@ -36,6 +36,8 @@ class Pagina:
     ambito: str | None = None
     # The unit that teaches what the page lists, when the page is a unit's.
     facultad: str | None = None
+    # The kind a heading gives a list of bare subjects: "Especialización en".
+    prefijo: str | None = None
 
 
 @dataclass(frozen=True)
@@ -219,6 +221,119 @@ LISTAS: dict[str, Lista] = {
     # Each faculty's list is a template in the page's script.
     "UNSJ": Lista("Universidad Nacional de San Juan", "unsj.edu.ar",
                   (Pagina("https://www.unsj.edu.ar/posgrado/carreras"),), 39),
+    # ------------------------------------------------------------ privadas
+    "UEAN": Lista("Universidad Escuela Argentina de Negocios", "uean.edu.ar",
+                  (Pagina("https://www.uean.edu.ar/posgrados/"),), 2),
+    # One programme, two degrees: its page names the master's by its title.
+    "UCINE": Lista("Universidad del Cine", "ucine.edu.ar",
+                   (Pagina("https://www.ucine.edu.ar/posgrados/posgrado-en-cine-documental"),), 1),
+    "USI": Lista('Universidad de San Isidro "Dr. Plácido Marín"', "usi.edu.ar",
+                 (Pagina("https://usi.edu.ar/posgrados-y-diplomaturas/posgrados/"),), 1),
+    "UCongreso": Lista("Universidad de Congreso", "ucongreso.edu.ar", tuple(
+        Pagina(f"https://www.ucongreso.edu.ar/facultad/posgrados-{tipo}/")
+        for tipo in ("virtuales", "presenciales")), 8),
+    "UGD": Lista("Universidad Gastón Dachary", "ugd.edu.ar",
+                 (Pagina("https://ugd.edu.ar/es/oferta-academica/posgrado"),), 3),
+    "UAP": Lista("Universidad Adventista del Plata", "uap.edu.ar", (Pagina("https://uap.edu.ar/posgrado/"),), 5),
+    # Every career of every level as cards; the filter works only in a browser.
+    "Atlántida": Lista("Universidad Atlántida Argentina", "atlantida.edu.ar",
+                       (Pagina("https://inscribite.atlantida.edu.ar/carreras/?programa=posgrado",
+                               ambito="article.ua-card-career h3.ua-card-title"),), 3),
+    "UCALP": Lista("Universidad Católica de La Plata", "ucalp.edu.ar",
+                   (Pagina("https://www.ucalp.edu.ar/?taxonomy=tipo-de-carrera&term=posgrados"),), 9),
+    "UCASAL": Lista("Universidad Católica de Salta", "ucasal.edu.ar",
+                    (Pagina("https://www.ucasal.edu.ar/menu-oferta-educativa-por-nivel/posgrado"),), 34),
+    "UGR": Lista("Universidad del Gran Rosario", "ugr.edu.ar",
+                 (Pagina("https://ugr.edu.ar/grado_academico/posgrado/"),), 10),
+    # The faculties' drop-down on the home page.
+    "UDE": Lista("Universidad del Este", "ude.edu.ar",
+                 (Pagina("https://www.ude.edu.ar/", ambito="ul.dropdown-facultades"),), 2),
+    # The specialisations taught as residencies are listed by subject alone,
+    # under a heading that says they are specialisations.
+    "CEMIC": Lista("Instituto Universitario CEMIC", "cemic.edu.ar", (
+        Pagina("https://cemic.edu.ar/instituto-universitario.php",
+               ambito="#pilljustifiedHomePos h3, h1.color-green"),
+        Pagina("https://cemic.edu.ar/instituto-universitario.php", ambito="#pilljustified5 strong",
+               prefijo="Especialización en"),
+    ), 15),
+    # Its one postgraduate is only in the careers menu.
+    "UCAMI": Lista("Universidad Católica de las Misiones", "ucami.edu.ar",
+                   (Pagina("https://www.ucami.edu.ar/", ambito="#cbp-hrmenu"),), 1),
+    "UCP": Lista("Universidad de la Cuenca del Plata", "ucp.edu.ar",
+                 (Pagina("https://www.ucp.edu.ar/posgrado/", ambito="#resultado-cursos"),), 10),
+    "UCH": Lista("Universidad Champagnat", "uch.edu.ar", (Pagina("https://www.uch.edu.ar/"),), 2),
+    # The visible list; the page also carries hidden search entries.
+    "CAECE": Lista("Universidad CAECE", "ucaece.edu.ar",
+                   (Pagina("https://www.ucaece.edu.ar/posgrados", ambito=".carrera-listado-nombre-publico"),), 13),
+    "UDA": Lista("Universidad del Aconcagua", "uda.edu.ar", (Pagina("https://www.uda.edu.ar/"),), 9),
+    "IUCSB": Lista("Instituto Universitario de Ciencias de la Salud", "barcelo.edu.ar",
+                   (Pagina("https://barcelo.edu.ar/carreras-de-posgrado"),), 2),
+    # One page per kind; two programmes can share a heading.
+    "UHIBA": Lista("Universidad Hospital Italiano de Buenos Aires", "hospitalitaliano.edu.ar", tuple(
+        Pagina(f"https://posgrado.hospitalitaliano.edu.ar/{tipo}")
+        for tipo in ("doctorados", "maestrias", "especializaciones")), 10),
+    "UdeMM": Lista("Universidad de la Marina Mercante", "udemm.edu.ar",
+                   (Pagina("https://www.udemm.edu.ar/posgrado/"),), 1),
+    # The page's banner reads as a card of its own without the ambito.
+    "IUCBC": Lista("Instituto Universitario de Ciencias Biomédicas de Córdoba", "iucbc.edu.ar",
+                   (Pagina("https://www.iucbc.edu.ar/posgrado.html", ambito=".item-oferta-titulo h3"),), 14),
+    # Built by script: each kind heads a run of links to its programmes.
+    "Maimónides": Lista("Universidad Maimónides", "maimonides.edu",
+                        (Pagina("https://www.maimonides.edu/carreras/"),), 15, navegador=True),
+    "UCU": Lista("Universidad de Concepción del Uruguay", "ucu.edu.ar",
+                 (Pagina("https://ucu.edu.ar/project_category/posgrado/"),), 4),
+    "UNSTA": Lista("Universidad del Norte Santo Tomás de Aquino", "unsta.edu.ar",
+                   (Pagina("https://www.unsta.edu.ar/posgrados-unsta/"),), 6),
+    # The side menu keeps an old name of the doctorate.
+    "IUNIR": Lista("Instituto Universitario Italiano de Rosario", "iunir.edu.ar", tuple(
+        Pagina(f"https://www.iunir.edu.ar/postgrado/{ruta}", ambito="#contenido")
+        for ruta in ("", "especializacion/medicina/", "especializacion/odontologia/")), 10),
+    # Built in the browser.
+    "ISALUD": Lista("Universidad ISALUD", "isalud.edu.ar",
+                    (Pagina("https://www.isalud.edu.ar/carreras/posgrados"),), 8, navegador=True),
+    # No page names them all in full: each programme's own landing page does.
+    "ESEADE": Lista("Instituto Universitario ESEADE", "eseade.edu.ar", tuple(
+        Pagina(f"https://go.eseade.edu.ar/{codigo}", ambito=".hs-elevate-heading-container:first-of-type")
+        for codigo in ("mgac", "mmkt", "mbdba", "mder", "mcur", "mcomp", "mproy", "mecp", "mde", "dba")
+    ) + (Pagina("https://go.eseade.edu.ar/mba", ambito=".hs-elevate-rich-text p:first-child strong"),), 9),
+    # The "Posgrado" column of the careers menu; the postítulos sit beside it.
+    "UCSE": Lista("Universidad Católica de Santiago del Estero", "ucse.edu.ar",
+                  (Pagina("https://www.ucse.edu.ar/carreras/", ambito="#menu-item-2628"),), 6),
+    # The central page is a menu; each faculty lists its own.
+    "UMendoza": Lista("Universidad de Mendoza", "um.edu.ar", tuple(
+        Pagina(f"https://um.edu.ar/{ruta}/", facultad=facultad) for ruta, facultad in (
+            ("ciencias-juridicas-y-sociales/doctorados-fcjs", "Facultad de Ciencias Jurídicas y Sociales"),
+            ("ciencias-juridicas-y-sociales/maestrias-fcjs", "Facultad de Ciencias Jurídicas y Sociales"),
+            ("ciencias-juridicas-y-sociales/especializaciones-fcjs", "Facultad de Ciencias Jurídicas y Sociales"),
+            ("arquitectura-urbanismo-y-diseno/doctorado-faud", "Facultad de Arquitectura, Urbanismo y Diseño"),
+            ("arquitectura-urbanismo-y-diseno/especializaciones-faud",
+             "Facultad de Arquitectura, Urbanismo y Diseño"),
+            ("ingenieria/doctorados-fi", "Facultad de Ingeniería"),
+            ("ciencias-medicas/especializaciones-fcm", "Facultad de Ciencias Médicas"),
+        )), 15),
+    "IUDPT": Lista("Instituto Universitario para el Desarrollo Productivo y Tecnológico Empresarial de la "
+                   "Argentina", "iudpt.edu.ar", (Pagina("https://iudpt.edu.ar/extension-academica/posgrados/"),), 2),
+    # The list is of pictures; each programme's page names it in its crumbs.
+    "UCSF": Lista("Universidad Católica de Santa Fe", "ucsf.edu.ar", tuple(
+        Pagina(f"https://www.ucsf.edu.ar/{ruta}/", ambito=".breadcrumbs") for ruta in (
+            "la-ucsf/facultades/posgrados/especializacion-en-comunicacion-comunitaria",
+            "la-ucsf/facultades/posgrados/especializacion-en-docencia-universitaria",
+            "la-ucsf/facultades/posgrados/especializacion-en-pastoral-en-contextos-educativos",
+            "la-ucsf/facultades/posgrados/especializacion-en-psicogerontologia",
+            "posgrados/doctorado-en-ciencia-juridica", "posgrados/doctorado-en-educacion",
+            "posgrados/especializacion-analisis-economico-y-gestion-cadenas-valor-agroalimentarias",
+            "posgrados/especializacion-en-derecho-procesal",
+            "posgrados/especializacion-en-gestion-de-la-transformacion-digital",
+            "posgrados/especializacion-en-gestion-integral-del-habitat", "posgrados/maestria-en-educacion",
+            "posgrados/maestria-en-proyecto-arquitectonico-y-urbano",
+            "posgrados/maestria-relaciones-internacionales", "posgrados/maestria-sustentabilidad-ambiental",
+        )), 11),
+    # The list names the specialisations; each master's is named by its own page.
+    "UMaza": Lista("Universidad Juan Agustín Maza", "umaza.edu.ar", (
+        Pagina("https://www.umaza.edu.ar/posgrado"),
+        *(Pagina(f"https://www.umaza.edu.ar/landings/{codigo}", ambito=".texto-cabecera")
+          for codigo in ("maestria-educacion-superior", "winemba", "maestria-en-gestion-de-rrhh")),
+    ), 6),
     "UNJu": Lista("Universidad Nacional de Jujuy", "unju.edu.ar",
                   (Pagina("https://unju.edu.ar/posgrado.html"),), 30),
 }
@@ -238,7 +353,7 @@ def leer(lista: Lista) -> tuple[list[PosgradoListado], list[dict[str, str]]]:
             html = (lector._navegador.get(pagina.url) if lector._navegador is not None
                     else lector.get(pagina.url))
             for programa in leer_lista(html, pagina.url, lector.dominios,
-                                       pagina.ambito, pagina.facultad):
+                                       pagina.ambito, pagina.facultad, pagina.prefijo):
                 vistos.setdefault(comparison_key(programa.nombre), programa)
         return list(vistos.values()), lector.errores
     finally:
