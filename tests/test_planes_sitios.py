@@ -212,3 +212,18 @@ Código   Asignatura                 Régimen         Horas
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlanFbqfUnt(unittest.TestCase):
+    def test_takes_the_year_from_the_tab_title_not_its_id(self):
+        def panel(tab, nombres):
+            filas = "".join(f"<tr><td>{n}</td><td>Cuatrimestral</td><td>–</td></tr>" for n in nombres)
+            return (f'<div data-tab-id="{tab}"><table><tr><td>Asignatura</td><td>Regimen</td>'
+                    f"<td>Correlativas</td></tr>{filas}</table></div>")
+        html = ('<div id="plan"><ul><li data-title-tab-id="1"><h6>1<sup>er</sup> año</h6></li>'
+                '<li data-title-tab-id="2"><h6>2<sup>do</sup> año</h6></li>'
+                '<li data-title-tab-id="6"><h6>3<sup>er</sup> año</h6></li></ul>'
+                + panel(1, ["Matemática I", "Física I"]) + panel(2, ["Biología"])
+                + panel(6, ["Trabajo Final", "Demostrar conocimiento de Inglés Técnico"]) + "</div>")
+        self.assertEqual(p.plan_fbqf_unt(html),
+                         [("Matemática I", 1), ("Física I", 1), ("Biología", 2), ("Trabajo Final", 3)])

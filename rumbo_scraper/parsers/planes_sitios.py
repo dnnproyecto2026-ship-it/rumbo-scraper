@@ -901,6 +901,30 @@ def _anios_declarados_unlu(html: str) -> float | None:
     return int(anios.group(1)) + (0.5 if anios.group(2) else 0) if anios else None
 
 
+def plan_fbqf_unt(html: str) -> list[tuple[str, int]]:
+    """UNT Bioquímica, Química y Farmacia (fbqfuntedu.ar): under "#plan", a
+    tab per year titled "1er año" (``data-title-tab-id``), its pane (the same
+    ``data-tab-id``, not the year: Química's run 1, 2, 3, 4, 6) holding a
+    table per term: "Asignatura", "Regimen", "Correlativas"."""
+    plan = BeautifulSoup(html or "", "html.parser").find(id="plan")
+    if not plan:
+        return []
+    anio_de_la_pestana = {t["data-title-tab-id"]: anio_de(t.get_text("", strip=True))
+                          for t in plan.find_all(attrs={"data-title-tab-id": True})}
+    materias: list[tuple[str, int]] = []
+    for tabla in plan.find_all("table"):
+        panel = tabla.find_parent(attrs={"data-tab-id": True})
+        anio = anio_de_la_pestana.get(panel["data-tab-id"]) if panel else None
+        if not anio:
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            # "Demostrar conocimiento de Inglés Técnico": a requirement.
+            if celdas and celdas[0] and not re.match(r"(?i)asignatura$|demostrar\b", celdas[0]):
+                _agregar(materias, celdas[0], anio)
+    return desde_el_primero(materias)
+
+
 def plan_unlu(html: str) -> list[tuple[str, int]]:
     # A plan whose years are not the ones the page states is part of one
     # (Biológicas: 5 1/2 years stated, four read).
