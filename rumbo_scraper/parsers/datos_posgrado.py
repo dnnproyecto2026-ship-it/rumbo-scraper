@@ -181,10 +181,75 @@ def titulo_mencionado(lineas: list[str], programa: str) -> str | None:
     return None
 
 
+_NUMEROS = {"un": 1, "uno": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6,
+            "siete": 7, "ocho": 8, "nueve": 9, "diez": 10, "once": 11, "doce": 12, "dieciocho": 18,
+            "veinte": 20, "veinticuatro": 24, "treinta": 30, "treinta y seis": 36}
+_CANTIDAD = r"(\d+(?:[.,]\d)?|treinta y seis|" + "|".join(sorted(_NUMEROS, key=len, reverse=True)) + r")"
+_UNIDAD = r"(a[ñn]os?|cuatrimestres?|semestres?|meses)"
+_DURACION_EN_FRASE = (
+    re.compile(r"(?i)\bduraci[óo]n\b[^.;\n]{0,40}?\b" + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\b"),
+    re.compile(r"(?i)\b" + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\s+de\s+duraci[óo]n\b"),
+    re.compile(r"(?i)\b(?:se\s+cursa|se\s+desarrolla|se\s+dicta|se\s+extiende)\s+(?:en|a\s+lo\s+largo\s+de|durante)\s+"
+               + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\b"),
+)
+# What the degree the applicant already holds lasts is not the programme's:
+# "título de grado universitario de 4 años de duración".
+_OTRA_DURACION = re.compile(r"(?i)t[íi]tulo|grado|requisit|admisi|ingres|aspirante|postula|egresad|"
+                            r"carrera de|licenciatura|plazo|tesis|beca|prórroga|prorroga|vigencia|"
+                            r"como\s+m[íi]nimo|al\s+menos|no\s+menor|m[íi]nimo\s+de|mayores\s+de|o\s+m[áa]s\b|\bhoras\b")
+
+
+def _meses(cantidad: str, unidad: str) -> int | None:
+    clave = comparison_key(cantidad)
+    numero = _NUMEROS.get(clave)
+    if numero is None:
+        try:
+            numero = float(cantidad.replace(",", "."))
+        except ValueError:
+            return None
+    unidad = comparison_key(unidad)
+    por = 12 if unidad.startswith("ano") else 6 if unidad.startswith(("cuatri", "semes")) else 1
+    return round(numero * por)
+
+
+def _maximo_de_meses(programa: str) -> int:
+    """The most months a sentence may give: a master's of four years or a
+    specialisation of five is a line about something else."""
+    clave = comparison_key(programa)
+    if clave.startswith("doctorado"):
+        return 72
+    if re.match(r"(?:maestria|magister|master|mba)\b", clave):
+        return 36
+    return 48
+
+
+def duracion_mencionada(lineas: list[str], programa: str) -> int | None:
+    """The months a sentence gives the programme ("tiene una duración de dos
+    años", "cuatro cuatrimestres de duración", "se cursa en 18 meses"), when
+    the page gives one value only and not about another degree."""
+    halladas = set()
+    for i, linea in enumerate(lineas):
+        # A requirement broken over two lines: "título de grado de" and, on
+        # the next, "cuatro (4) años de duración como mínimo".
+        antes = lineas[i - 1][-60:] if i else ""
+        despues = lineas[i + 1][:40] if i + 1 < len(lineas) else ""
+        if _OTRA_DURACION.search(linea) or _OTRA_DURACION.search(antes) \
+                or re.match(r"(?i)\s*m[íi]nimo", despues):
+            continue
+        for patron in _DURACION_EN_FRASE:
+            for match in patron.finditer(linea):
+                meses = _meses(match.group(1), match.group(2))
+                if meses and minimo_de_meses(programa) <= meses <= _maximo_de_meses(programa):
+                    halladas.add(meses)
+    return halladas.pop() if len(halladas) == 1 else None
+
+
 def datos_de_posgrado(html: str, programa: str) -> dict[str, object]:
     """What the page says of the programme: degree, months, modality."""
     lineas = _lineas(html)
     meses = _primero(lineas, _ROTULO_DE_DURACION, generico.duracion_meses)
+    if not meses or not minimo_de_meses(programa) <= meses <= 72:
+        meses = duracion_mencionada(lineas, programa)
     return {
         "titulo_otorgado": titulo_de_posgrado(lineas, programa),
         "duracion_meses": meses if meses and minimo_de_meses(programa) <= meses <= 72 else None,

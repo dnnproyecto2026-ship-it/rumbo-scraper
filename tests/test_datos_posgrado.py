@@ -2,7 +2,7 @@
 
 import unittest
 
-from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa, titulo_mencionado
+from rumbo_scraper.parsers.datos_posgrado import datos_de_posgrado, limpio, nombra_el_programa, titulo_mencionado, duracion_mencionada
 
 LISTA_DE_DATOS = """
 <html><head><title>Universidad Nacional de X</title></head><body>
@@ -78,6 +78,22 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertIsNone(titulo_mencionado(["Especialista en Estudios Latinoamericanos"],
                                             "Maestría en Estudios Latinoamericanos"))
         self.assertIsNone(titulo_mencionado(["Magíster en Ingeniería Química"], "Maestría en Ingeniería"))
+
+    def test_la_duracion_dicha_en_una_frase(self):
+        for linea, meses in (("La carrera tiene una duración de dos años.", 24),
+                             ("Cuatro cuatrimestres de duración, con cursado virtual.", 24),
+                             ("Se cursa en 18 meses.", 18),
+                             ("Duración total: 3 (tres) años", 36)):
+            self.assertEqual(duracion_mencionada([linea], "Maestría en Algo"), meses, linea)
+
+    def test_la_duracion_del_titulo_de_grado_no_es_la_suya(self):
+        self.assertIsNone(duracion_mencionada(
+            ["Requisito: título de grado universitario de 4 años de duración"], "Maestría en Algo"))
+        self.assertIsNone(duracion_mencionada(
+            ["La carrera dura dos años de duración.", "Duración: 4 años"], "Maestría en Algo"))
+        self.assertIsNone(duracion_mencionada(
+            ["Podrán inscribirse graduados con título de grado de",
+             "cuatro (4) años de duración como mínimo"], "Maestría en Algo"))
 
     def test_la_pagina_que_nombra_el_programa(self):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))

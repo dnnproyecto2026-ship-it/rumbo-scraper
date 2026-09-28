@@ -25,8 +25,10 @@ from typing import Any
 from urllib.parse import urlparse
 
 from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
-from rumbo_scraper.parsers.datos_posgrado import (_lineas, datos_de_posgrado, es_suyo, limpio, minimo_de_meses,
-                                                nombra_el_programa, titulo_mencionado)
+from rumbo_scraper.parsers.datos_posgrado import (_ROTULO_DE_DURACION, _lineas, _primero,
+                                                datos_de_posgrado, duracion_mencionada, es_suyo, limpio,
+                                                minimo_de_meses, nombra_el_programa, titulo_mencionado)
+from rumbo_scraper.parsers.generico import duracion_meses as duracion_meses_de
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -66,11 +68,7 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
                     continue
                 datos = {c: v for c, v in datos_de_posgrado(html, p["nombre_programa"]).items()
                          if v is not None and p[c] is None}
-                if p["titulo_otorgado"] is None and "titulo_otorgado" not in datos:
-                    titulo, fuente = _titulo_por_mencion(html, p, visitante)
-                    if titulo:
-                        datos["titulo_otorgado"] = titulo
-                        datos["fuente_titulo"] = fuente
+                _lo_que_falta(html, p, datos, visitante)
                 if datos:
                     u = corto.get(p["universidad_id"], "")
                     print(f"{u:9} | {p['nombre_programa'][:55]:55} | {datos}", flush=True)
@@ -86,20 +84,16 @@ MAX_PDFS = 3
 MAX_BYTES = 8_000_000
 
 
-def _titulo_por_mencion(html: str, programa: dict[str, Any], visitante: Visitante) -> tuple[str | None, str]:
-    """The degree the page, or a document of the university's own that the
-    page links, writes before the programme's subject (`titulo_mencionado`).
-    A plan or a brochure heads itself with it: "MAGISTER EN DERECHO DEL
-    TRABAJO". A scanned document has no text, and gives nothing."""
+def _documentos(html: str, url: str, visitante: Visitante):
+    """The lines of each PDF of the university's own the page links, read one
+    at a time and only when asked: a plan or a resolution says the degree
+    and the duration the page leaves out. A scanned document has no text."""
     from io import BytesIO
     from urllib.parse import urljoin
 
     from bs4 import BeautifulSoup
+    from pypdf import PdfReader
 
-    nombre, url = programa["nombre_programa"], programa["url_oficial"]
-    titulo = titulo_mencionado(_lineas(html), nombre)
-    if titulo:
-        return titulo, url
     sitio = ".".join((urlparse(url).hostname or "").split(".")[-3:])
     documentos: list[str] = []
     for enlace in BeautifulSoup(html, "html.parser").find_all("a", href=True):
@@ -116,15 +110,37 @@ def _titulo_por_mencion(html: str, programa: dict[str, Any], visitante: Visitant
         if not respuesta.content.startswith(b"%PDF") or len(respuesta.content) > MAX_BYTES:
             continue
         try:
-            from pypdf import PdfReader
             paginas = PdfReader(BytesIO(respuesta.content)).pages[:8]
             texto = "\n".join(pagina.extract_text() or "" for pagina in paginas)
         except Exception:
             continue
-        titulo = titulo_mencionado([l.strip() for l in texto.split("\n") if l.strip()], nombre)
-        if titulo:
-            return titulo, documento
-    return None, ""
+        yield documento, [linea.strip() for linea in texto.split("\n") if linea.strip()]
+
+
+def _lo_que_falta(html: str, programa: dict[str, Any], datos: dict[str, Any],
+                  visitante: Visitante) -> None:
+    """The degree and the duration the page's labels did not give: the page
+    or its documents mention them (`titulo_mencionado`, `duracion_mencionada`)."""
+    nombre, url = programa["nombre_programa"], programa["url_oficial"]
+    falta_titulo = programa["titulo_otorgado"] is None and "titulo_otorgado" not in datos
+    falta_meses = programa["duracion_meses"] is None and "duracion_meses" not in datos
+    if falta_titulo and (titulo := titulo_mencionado(_lineas(html), nombre)):
+        datos["titulo_otorgado"], datos["fuente_titulo"] = titulo, url
+        falta_titulo = False
+    if not (falta_titulo or falta_meses):
+        return
+    for documento, lineas in _documentos(html, url, visitante):
+        if falta_titulo and (titulo := titulo_mencionado(lineas, nombre)):
+            datos["titulo_otorgado"], datos["fuente_titulo"] = titulo, documento
+            falta_titulo = False
+        if falta_meses:
+            meses = (_primero(lineas, _ROTULO_DE_DURACION, duracion_meses_de) or
+                     duracion_mencionada(lineas, nombre))
+            if meses and minimo_de_meses(nombre) <= meses <= 72:
+                datos["duracion_meses"], datos["fuente_duracion"] = meses, documento
+                falta_meses = False
+        if not (falta_titulo or falta_meses):
+            return
 
 
 def aplicar(client: Any, hallados: list[dict[str, Any]]) -> Counter:
