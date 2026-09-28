@@ -35,6 +35,9 @@ _NO_ES_MATERIA = re.compile(
     r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
     # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
     r"|^t[íi]tulo (?:de |intermedio|final)|^carga horaria|^duraci[óo]n\s*:"
+    # A plan table's column heading (Morón: "Cod", "Asignatura", "Opción",
+    # "Durac", "Correl" were published as subjects of 77 careers).
+    r"|^(?:correl\w*|opci[oó]n|durac\w*|cod\.?|c[oó]digo|asignatura|duraci[óo]ndelacarreraen)$"
     # An elective marked as such in UM's tables: "Sastrería(a)".
     r"|\(a\)$|derechos reservados")
 
