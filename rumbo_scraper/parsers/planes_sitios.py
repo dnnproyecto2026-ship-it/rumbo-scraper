@@ -567,11 +567,12 @@ def _plan_upso(html: str) -> list[tuple[str, int]]:
         if nuevo:
             anio = nuevo
             continue
-        if re.match(r"(?i)^([12]\s*[º°]|primer|segundo)\s*cuatrimestre", linea):
+        if re.match(r"(?i)^([12]\s*[º°]|primer|segundo)\s*cuatrimestre", linea) or _LEYENDA.match(linea):
             continue
         if anio and (len(linea) > 90 or re.match(
                 r"(?i)^(requisitos|inscrip|documentaci|informaci|condiciones|t[íi]tulo|alcances|perfil|"
-                r"materias optativas|optativas|asignaturas optativas|preinscrip)", linea)):
+                r"materias optativas|optativas|asignaturas optativas|preinscrip|¿|para finalizar la carrera|"
+                r"espacios de talleres)", linea)):
             break
         if anio and not re.match(r"(?i)^prueba de suficiencia", linea):
             _agregar(materias, _INICIALES.sub("", linea), anio)
@@ -1031,9 +1032,16 @@ def plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_titulo_y_lista(html))
 
 
+# A table's legend, not a subject: "Anual", "1.º Cuatrimestre", "Materias
+# anuales", "Materia cuatrimestral", "** ...", "Materias Electivas (no
+# obligatorias)".
+_LEYENDA = re.compile(r"(?i)^(\*|anual$|cuatrimestral$|semestral$|\d\.?\s*[º°]?\s*cuatrimestre$|"
+                      r"materias? (anual|cuatrimestral|semestral|electiva)|materias electivas)")
+
+
 _FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
                            r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo|"
-                           r"ver correlatividades|plan de estudios?$)")
+                           r"ver correlatividades|plan de estudios?$|¿|para finalizar la carrera|en \w+ vas a encontrar)")
 
 
 def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
@@ -1051,7 +1059,7 @@ def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
     for linea in lineas[inicio + 1:] if inicio is not None else []:
         if re.fullmatch(r"(?i)\d+\s*[º°o]?\s*año|\w+\s+año", linea) and anio_de(linea):
             anio = anio_de(linea)
-        elif re.search(r"(?i)cuatrimestre|semestre", linea) and len(linea.split()) <= 3:
+        elif re.search(r"(?i)cuatrimestre|semestre", linea) and len(linea.split()) <= 3 or _LEYENDA.match(linea):
             continue
         elif anio and _FIN_DEL_PLAN.match(linea):
             break

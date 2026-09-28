@@ -169,6 +169,14 @@ Código   Asignatura                 Régimen         Horas
         self.assertEqual(p.plan_por_codigo_en_texto(texto),
                          [("Anatomía", 1), ("Química Estomatológica Básica y Aplicada", 1), ("Fisiología", 2)])
 
+    def test_la_publicidad_de_la_pagina_termina_el_plan(self):
+        html = """<div class="entry-content"><p>Plan de estudios</p><p>PRIMER AÑO</p><p>Derecho Político</p>
+        <p>Para finalizar la carrera, vas a necesitar</p><p>Completar los talleres obligatorios</p>
+        <p>¿Por qué estudiar Abogacía?</p></div>"""
+        self.assertEqual(p._plan_upso(html), [("Derecho Político", 1)])
+        html = "<p>Plan de estudios</p><p>1º año</p><p>Historia de Roma</p><p>¿Por qué UMAI?</p><p>Otra cosa</p>"
+        self.assertEqual(p._plan_texto_por_anio(html), [("Historia de Roma", 1)])
+
     def test_sin_la_numeracion_romana(self):
         html = """<p><strong>Primer año</strong></p><ul><li>VI.- Derecho del Trabajo I</li><li>XI. Inglés I</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Derecho del Trabajo I", 1), ("Inglés I", 1)])
