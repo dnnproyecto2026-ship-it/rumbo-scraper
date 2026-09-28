@@ -221,7 +221,12 @@ LISTAS: dict[str, Lista] = {
     # Each faculty's list is a template in the page's script.
     "UNSJ": Lista("Universidad Nacional de San Juan", "unsj.edu.ar",
                   (Pagina("https://www.unsj.edu.ar/posgrado/carreras"),), 39),
+    "IUPFA": Lista("Instituto Universitario de la Policía Federal Argentina", "universidad-policial.edu.ar",
+                   (Pagina("https://universidad-policial.edu.ar/posgradosIUPFA.html"),), 4),
     # ------------------------------------------------------------ privadas
+    # Its postgraduates are listed only in the site's menu.
+    "IUSE": Lista("Instituto Universitario de Seguridad", "iuse.edu.ar",
+                  (Pagina("https://iuse.edu.ar/", ambito="nav"),), 3),
     "UEAN": Lista("Universidad Escuela Argentina de Negocios", "uean.edu.ar",
                   (Pagina("https://www.uean.edu.ar/posgrados/"),), 2),
     # One programme, two degrees: its page names the master's by its title.

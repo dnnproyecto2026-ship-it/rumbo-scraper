@@ -158,6 +158,10 @@ class LoQueLaListaAgregaAlNombre(unittest.TestCase):
             ("Especialización en Endodoncia", "https://www.unx.edu.ar/endo/"),
             ("Maestría en Salud Mental", "https://www.unx.edu.ar/sm/")])
 
+    def test_la_sigla_en_un_nombre_a_los_gritos(self):
+        self.assertEqual(nombre_de_posgrado("DOCTORADO DE LA UNRN MENCIÓN EN ARQUITECTURA")[0],
+                         "Doctorado de la UNRN Mención en Arquitectura")
+
     def test_el_titulo_de_especialista(self):
         self.assertEqual(nombre_de_posgrado("Especialista En Comunicación Corporativa E Institucional")[0],
                          "Especialización en Comunicación Corporativa E Institucional")

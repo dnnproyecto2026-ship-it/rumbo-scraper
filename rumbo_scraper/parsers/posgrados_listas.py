@@ -167,9 +167,13 @@ _MENORES = frozenset("en de del y e o u la el los las a al con para por sobre su
 
 def _titulo(nombre: str) -> str:
     """A name written in capitals, as a name: the site shouted it."""
-    palabras = nombre.lower().split()
-    return " ".join(p if i and p in _MENORES else p[:1].upper() + p[1:]
-                    for i, p in enumerate(palabras))
+    def palabra(i: int, original: str) -> str:
+        p = original.lower()
+        # An acronym has no vowel after its first letter: "UNRN", "FCEFyN".
+        if len(p) >= 3 and not re.search(r"[aeiouáéíóú]", p[1:]):
+            return original
+        return p if i and p in _MENORES else p[:1].upper() + p[1:]
+    return " ".join(palabra(i, p) for i, p in enumerate(nombre.split()))
 
 
 def _del_sitio(url: str, dominios: tuple[str, ...]) -> bool:
