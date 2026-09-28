@@ -182,6 +182,13 @@ Código   Asignatura                 Régimen         Horas
         <li>TÍTULO DE PREGRADO: Intérprete</li><li>CARGA HORARIA TOTAL: 2008 horas</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Nutrición", 1), ("Guión", 1)])
 
+    def test_unnoba_sin_las_opciones_de_una_optativa(self):
+        html = """<h2>1º Año</h2><h3>1er Cuatrimestre</h3><button class="subject"><p>Física I (00131)</p></button>
+        <h2>2º Año</h2><button class="subject"><p>Lengua Extranjera (GE076)</p></button>
+        <dialog><h5>Posibles:</h5><button class="subject"><p>Inglés Técnico (01325)</p></button></dialog>
+        <button class="subject"><p>Física II (01295)</p></button>"""
+        self.assertEqual(p.plan_unnoba(html), [("Física I", 1), ("Lengua Extranjera", 2), ("Física II", 2)])
+
     def test_sin_la_numeracion_romana(self):
         html = """<p><strong>Primer año</strong></p><ul><li>VI.- Derecho del Trabajo I</li><li>XI. Inglés I</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Derecho del Trabajo I", 1), ("Inglés I", 1)])

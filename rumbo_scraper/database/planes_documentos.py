@@ -126,7 +126,11 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("uap.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("musicalesysonoras.una.edu.ar", planes_sitios.plan_en_lista),
                         ("unau.edu.ar", planes_sitios.plan_titulo_y_lista),
-                        ("ucema.edu.ar", planes_sitios.plan_texto_por_anio))
+                        ("ucema.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("barcelo.edu.ar", planes_sitios.plan_texto_por_anio),
+                        ("fono.fcm.unc.edu.ar", planes_sitios.plan_en_lista),
+                        ("planesdeestudio.unnoba.edu.ar", planes_sitios.plan_unnoba),
+                        ("um.edu.ar", planes_sitios.plan_texto_por_anio))
 PAUSA = 0.7
 MINIMO_SIN_ANIO = 20
 MAS_POR_ANIO = 20

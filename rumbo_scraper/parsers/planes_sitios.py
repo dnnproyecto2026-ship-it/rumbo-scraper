@@ -69,7 +69,12 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
     # "(1° Cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
-    nombre = re.sub(r"(?i)\s*\((?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\)\s*$", "", nombre)
+    nombre = re.sub(r"(?i)\s*\(\s*(?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\s*\)\s*$", "", nombre)
+    # A code before or after the name: "0401 Cálculo I" (UNRC Ingeniería), "Física I (00131)" (UNNOBA).
+    nombre = re.sub(r"^\d{3,5}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
+    nombre = re.sub(r"\s*\((?:[A-Z]{2})?\d{3,5}\)$", "", nombre)
+    # Its term as UM writes it: "Procesamiento de Imágenes (s2)", "(un semestre)".
+    nombre = re.sub(r"(?i)\s*\((?:s\d|un semestre|anual)\)$", "", nombre)
     nombre = re.sub(r"(?i)\s+(?:anual|cuatrimestral|\d\s*[°º]\s*c)$", "", nombre)
     # (An acronym stays one: "TFG", "PPS".)
     if nombre.isupper() and len(nombre) > 5:
@@ -437,6 +442,22 @@ def plan_por_codigo_en_texto(texto_con_columnas: str) -> list[tuple[str, int]]:
     materias: list[tuple[str, int]] = []
     for nombre, anio in renglones:
         _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
+# UNNOBA's plans site (planesdeestudio.unnoba.edu.ar): a heading per year
+# ("1º Año"), a button per subject (class "subject") with its code after it
+# ("Física I (00131)"); an elective's possible subjects are in a <dialog>
+# behind its button, and are not the plan's.
+def plan_unnoba(html: str) -> list[tuple[str, int]]:
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for elemento in BeautifulSoup(html or "", "html.parser").find_all(True):
+        if elemento.name in ("h1", "h2", "h3", "h4") and anio_de(_texto(elemento)):
+            anio = anio_de(_texto(elemento))
+        elif "subject" in (elemento.get("class") or []) and not elemento.find_parent("dialog") and anio:
+            nombre = elemento.find("p")
+            _agregar(materias, _texto(nombre or elemento), anio)
     return desde_el_primero(materias)
 
 
@@ -1071,7 +1092,7 @@ _LEYENDA = re.compile(r"(?i)^(\*|anual(es)?$|cuatrimestral(es)?$|semestral(es)?$
 _FIN_DEL_PLAN = re.compile(r"(?i)^(disposici[óo]n|resoluci[óo]n|res\.|requisitos|t[íi]tulo|modalidad|duraci[óo]n|"
                            r"inscrib|materias optativas|optativas|electivas|perfil|alcances|autorizad|plan de estudios? tentativo|"
                            r"ver correlatividades|plan de estudios?$|¿|para finalizar la carrera|en \w+ vas a encontrar|"
-                           r"descarg|quiero recibir|aclaraciones$|ingreso \d{4}$)")
+                           r"descarg|quiero recibir|aclaraciones$|ingreso \d{4}$|contacta a nuestr|todos los derechos)")
 
 
 def _plan_texto_por_anio(html: str) -> list[tuple[str, int]]:
