@@ -304,9 +304,23 @@ def plan_de_posgrado(html: str) -> list[str]:
     fixed subjects. Fewer than four is not a plan; more than forty is the
     reader running into the rest of the page.
     """
+    return plan_en_lineas(_lineas(html))
+
+
+# What a plan's table puts beside each subject in a document: its code before
+# it ("A01", "3."), its hours and credits after it ("60 hs", "4 30").
+_CODIGO = re.compile(r"^(?:[A-Z]{1,4}\s?\d{1,3}|\d{1,3})\s*[.\-)]?\s+(?=[A-ZÁÉÍÓÚÑ])")
+_CARGA = re.compile(r"(?i)(?:\s+\d+(?:[.,]\d+)?\s*(?:hs?\.?|horas|cr[ée]ditos|uvacs?|ects)?)+\s*$")
+
+
+def plan_en_lineas(lineas: list[str], documento: bool = False) -> list[str]:
+    """The subjects listed under a plan's heading in these lines: a page's,
+    or, with ``documento``, a plan's PDF, whose table rows carry a code and
+    their hours around each subject."""
     from rumbo_scraper.parsers.generico import es_materia
 
-    lineas = _lineas(html)
+    if documento:
+        lineas = [clean_text(_CARGA.sub("", _CODIGO.sub("", linea))) for linea in lineas]
     for inicio, linea in enumerate(lineas):
         if not _ENCABEZADO_DEL_PLAN.match(linea):
             continue

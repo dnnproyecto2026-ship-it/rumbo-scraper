@@ -26,7 +26,8 @@ from typing import Any
 from urllib.parse import urlparse
 
 from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
-from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa, plan_de_posgrado
+from rumbo_scraper.database.completar_posgrados import _documentos
+from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa, plan_de_posgrado, plan_en_lineas
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -66,14 +67,23 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
                 if not html or not (es_la_pagina_de(html, p["nombre_programa"])
                                     or nombra_el_programa(html, p["nombre_programa"])):
                     continue
-                materias = plan_de_posgrado(html)
+                materias, fuente = plan_de_posgrado(html), p["url_oficial"]
+                if not materias:
+                    # The plan the page leaves to a document of its own.
+                    for documento, lineas in _documentos(
+                            html, p["url_oficial"], visitante,
+                            solo=r"plan|malla|curr[íi]cul|asignatur|estructura", paginas_max=20):
+                        materias = plan_en_lineas(lineas, documento=True)
+                        if materias:
+                            fuente = documento
+                            break
                 if materias:
                     u = corto.get(p["universidad_id"], "")
                     print(f"{u:9} | {p['nombre_programa'][:50]:50} | {len(materias):2} | "
                           + " ; ".join(m[:25] for m in materias[:4]), flush=True)
                     hallados.append({"posgrado_id": p["id"], "universidad_id": p["universidad_id"],
                                      "universidad": u, "programa": p["nombre_programa"],
-                                     "url": p["url_oficial"], "materias": materias})
+                                     "url": p["url_oficial"], "fuente": fuente, "materias": materias})
         return hallados
 
     with ThreadPoolExecutor(max_workers=SITIOS_A_LA_VEZ) as pool:

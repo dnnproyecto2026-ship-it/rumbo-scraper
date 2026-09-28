@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -84,10 +85,13 @@ MAX_PDFS = 3
 MAX_BYTES = 8_000_000
 
 
-def _documentos(html: str, url: str, visitante: Visitante):
+def _documentos(html: str, url: str, visitante: Visitante, solo: str | None = None,
+                paginas_max: int = 8):
     """The lines of each PDF of the university's own the page links, read one
     at a time and only when asked: a plan or a resolution says the degree
-    and the duration the page leaves out. A scanned document has no text."""
+    and the duration the page leaves out. A scanned document has no text.
+    ``solo`` keeps the documents whose link or address says it (a pattern):
+    for the plan, the one called "Plan de estudios", not every resolution."""
     from io import BytesIO
     from urllib.parse import urljoin
 
@@ -99,7 +103,8 @@ def _documentos(html: str, url: str, visitante: Visitante):
     for enlace in BeautifulSoup(html, "html.parser").find_all("a", href=True):
         destino = urljoin(url, enlace["href"].strip()).split("#")[0]
         if ".pdf" in destino.lower() and (urlparse(destino).hostname or "").endswith(sitio) \
-                and destino not in documentos:
+                and destino not in documentos \
+                and (not solo or re.search(solo, enlace.get_text(" ") + " " + destino, re.I)):
             documentos.append(destino)
     for documento in documentos[:MAX_PDFS]:
         try:
@@ -110,7 +115,7 @@ def _documentos(html: str, url: str, visitante: Visitante):
         if not respuesta.content.startswith(b"%PDF") or len(respuesta.content) > MAX_BYTES:
             continue
         try:
-            paginas = PdfReader(BytesIO(respuesta.content)).pages[:8]
+            paginas = PdfReader(BytesIO(respuesta.content)).pages[:paginas_max]
             texto = "\n".join(pagina.extract_text() or "" for pagina in paginas)
         except Exception:
             continue
