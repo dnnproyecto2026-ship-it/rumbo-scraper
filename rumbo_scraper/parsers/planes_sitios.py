@@ -68,9 +68,9 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     # Numbered in Roman figures: "VI.- Derecho del Trabajo I", "XI. Inglés I" (UEAN).
     nombre = re.sub(r"^[IVXL]{1,8}\s*\.-?\s*(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
-    # "(1° Cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
+    # "(1° Cuatrimestre)", "(2do cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
-    nombre = re.sub(r"(?i)\s*\(\s*(?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*[°º]?\s*(?:cuatr\.?|cuatrimestre|c))\s*\)\s*$", "", nombre)
+    nombre = re.sub(r"(?i)\s*\(\s*(?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*(?:[°º]|er|do|ro|to)?\s*(?:cuatr\.?|cuatrimestre|semestre|c))\s*\)\s*$", "", nombre)
     # A code before or after the name: "0401 Cálculo I" (UNRC Ingeniería), "Física I (00131)" (UNNOBA).
     nombre = re.sub(r"^\d{3,5}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
     # Numbered in the list: "1 Introducción a la Arqueología" (UNT Naturales), "12. Estadística".
