@@ -119,6 +119,16 @@ class Fuentes:
         tipo = respuesta.headers.get("content-type", "")
         if "pdf" in tipo or url.lower().split("?")[0].endswith(".pdf"):
             return {"ok": True, "html": "", "texto": v.plano(_texto_del_pdf(respuesta.content))}
+        # A catalogue's spreadsheet (INET's institutes per degree): its cells.
+        if "spreadsheet" in tipo or url.lower().split("?")[0].endswith(".xlsx"):
+            from rumbo_scraper.parsers.terciarios_inet import filas_de_la_planilla
+
+            try:
+                filas = filas_de_la_planilla(respuesta.content)
+            except Exception:
+                return {"ok": False, "html": "", "texto": ""}
+            return {"ok": True, "html": "",
+                    "texto": v.plano(f" {v.CORTE} ".join(" ".join(f.values()) for f in filas))}
         if "json" in tipo:
             try:
                 datos = respuesta.json()
