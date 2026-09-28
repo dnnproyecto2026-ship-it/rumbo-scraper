@@ -35,7 +35,7 @@ _NO_ES_MATERIA = re.compile(
     # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
     r"|^t[íi]tulo (?:de |intermedio|final)|^carga horaria|^duraci[óo]n\s*:"
     # An elective marked as such in UM's tables: "Sastrería(a)".
-    r"|\(a\)$")
+    r"|\(a\)$|derechos reservados")
 
 
 def _texto(elemento: Tag | None) -> str:
