@@ -76,7 +76,9 @@ class Fuentes:
         """``{"ok": bool, "html": str, "texto": plain text}`` of an official
         source; one outside the university's domain is not fetched, unless
         an official page links it as its plan (``avalada``)."""
-        if url in self.leidas:
+        # (A source turned away as not official is read when an official page
+        # vouches for it later in the run: the refusal was not a reading.)
+        if url in self.leidas and (self.leidas[url]["ok"] or not avalada or v.es_oficial(url, self.sitio_web)):
             return self.leidas[url]
         if url.endswith("#catalogo"):
             self.leidas[url] = self.leer(url.removesuffix("#catalogo"), avalada=True)
