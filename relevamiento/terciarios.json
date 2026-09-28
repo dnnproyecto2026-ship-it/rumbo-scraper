@@ -119,7 +119,12 @@
   "distrito": "San Ignacio",
   "jurisdiccion": "Misiones"
  },
- "Centro Educativo de Nivel Terciario (C.E.N.T.)": {
+ "Centro Educativo de Nivel Terciario (C.E.N.T.) (San Miguel de Tucuman, Maipú N° 785)": {
+  "cue": "9000173",
+  "distrito": "Capital",
+  "jurisdiccion": "Tucumán"
+ },
+ "Centro Educativo de Nivel Terciario (C.E.N.T.) (San Miguel de Tucuman, Suipacha N° 553)": {
   "cue": "9001040",
   "distrito": "Capital",
   "jurisdiccion": "Tucumán"
@@ -4199,8 +4204,23 @@
   "distrito": "Maipú",
   "jurisdiccion": "Chaco"
  },
- "Instituto Superior de Educación Técnica (I.S.E.T.)": {
+ "Instituto Superior de Educación Técnica (I.S.E.T.) (Rosario, Buenos Aires N° 2027)": {
   "cue": "8203877",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) (Rosario, Entre Rios N° 2366 - 2° Piso)": {
+  "cue": "8203878",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) (Rosario, MENDOZA 3969)": {
+  "cue": "8202705",
+  "distrito": "Rosario",
+  "jurisdiccion": "Santa Fe"
+ },
+ "Instituto Superior de Educación Técnica (I.S.E.T.) (Rosario, Santa Fe)": {
+  "cue": "8201619",
   "distrito": "Rosario",
   "jurisdiccion": "Santa Fe"
  },
@@ -7124,7 +7144,12 @@
   "distrito": "Clorinda",
   "jurisdiccion": "Formosa"
  },
- "Instituto Técnico Superior": {
+ "Instituto Técnico Superior (Catriel)": {
+  "cue": "6200518",
+  "distrito": "General Roca",
+  "jurisdiccion": "Río Negro"
+ },
+ "Instituto Técnico Superior (Ingeniero Jacobacci)": {
   "cue": "6200513",
   "distrito": "Veinticinco de Mayo",
   "jurisdiccion": "Río Negro"

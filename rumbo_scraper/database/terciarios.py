@@ -22,7 +22,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from rumbo_scraper.database.carreras_de_guias import (Guia, escribir_artefacto, plan_de_cambios,
+from rumbo_scraper.database.carreras_de_guias import (Guia, clave as clave_de_carrera, escribir_artefacto, plan_de_cambios,
                                                       universidad, aplicar, unicas)
 from rumbo_scraper.normalizers.text import clean_text
 from rumbo_scraper.parsers.guias_nacionales import _carrera, con_tildes
@@ -195,7 +195,8 @@ def institutos_cba(html: str, localidades: set[str] | None = None) -> list[dict[
                 continue
             nombre_carrera = nombre_de_la_carrera(dada.get("nombre") or "")
             carrera = _carrera(nombre_carrera, "", CBA_MAPA) if nombre_carrera else None
-            if carrera and carrera.nombre not in {c.nombre for c in instituto["carreras"]}:
+            # ("Enfermeria" and "Enfermería" are one career, INET listing it twice.)
+            if carrera and clave_de_carrera(carrera.nombre) not in {clave_de_carrera(c.nombre) for c in instituto["carreras"]}:
                 instituto["carreras"].append(carrera)
     return [i for i in por_nombre.values() if i["carreras"]]
 
@@ -445,10 +446,28 @@ def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
                 "sitio": web if web.startswith("http") else (f"https://{web}" if web.startswith("www.") else None),
                 "provincia": _PROVINCIA_DE_CODIGO.get(provincia, provincia), "titulos": {}, "carreras": []})
             carrera = _carrera(propio, "", url)
-            if carrera and carrera.nombre not in {c.nombre for c in instituto["carreras"]}:
+            # ("Enfermeria" and "Enfermería" are one career, INET listing it twice.)
+            if carrera and clave_de_carrera(carrera.nombre) not in {clave_de_carrera(c.nombre) for c in instituto["carreras"]}:
                 instituto["carreras"].append(carrera)
                 instituto["titulos"][carrera.nombre] = clean_text(fila.get("Título") or "")
-    return [i for i in institutos.values() if i["carreras"] and i["nombre_oficial"]]
+    institutos = {cue: i for cue, i in institutos.items() if i["carreras"] and i["nombre_oficial"]}
+    # A name is an institution's key: two institutes INET names alike ("Centro
+    # Educativo de Nivel Terciario (C.E.N.T.)") take their town, and their
+    # street when they share the town. (One already loaded keeps its name.)
+    registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
+    cargados = {cue7(v.get("cue")) for v in registro.values()}
+    por_nombre: dict[str, list[dict[str, Any]]] = {}
+    for instituto in institutos.values():
+        if instituto["cue"] not in cargados:
+            por_nombre.setdefault(instituto["nombre_oficial"], []).append(instituto)
+    for nombre, iguales in por_nombre.items():
+        if len(iguales) < 2 and nombre not in registro:
+            continue
+        pueblos = [_titulo(i["localidad"]) for i in iguales]
+        for instituto, pueblo in zip(iguales, pueblos):
+            lugar = pueblo if pueblos.count(pueblo) == 1 else f"{pueblo}, {instituto['calle']}"
+            instituto["nombre_oficial"] = f"{nombre} ({lugar})"
+    return list(institutos.values())
 
 
 def main() -> None:
