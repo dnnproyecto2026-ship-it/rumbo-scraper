@@ -914,7 +914,8 @@ def _plan_titulo_y_lista(html: str) -> list[tuple[str, int]]:
             continue
         negrita = elemento if elemento.name != "p" else elemento.find(["b", "strong"])
         texto = _texto(negrita) if negrita else ""
-        if texto and texto == _texto(elemento):
+        # A term's heading ("Primer Cuatrimestre") is inside the year.
+        if texto and texto == _texto(elemento) and not re.search(r"(?i)cuatrimestre|semestre", texto):
             anio = anio_de(texto) if re.fullmatch(r"(?i)\w+\s+año", texto) else None
     return materias
 
@@ -974,3 +975,26 @@ def _plan_kt_tabs(html: str) -> list[tuple[str, int]]:
 
 def plan_kt_tabs(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_kt_tabs(html))
+
+
+def _plan_obligatorias(html: str) -> list[tuple[str, int]]:
+    """UNRC, Humanas: a table with a row per year ("Primer año") and a row
+    per subject: its name, its term and its kind; only an OBLIGATORIA is
+    the plan's (an optional language is one to choose)."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) == 1:
+                anio = anio_de(celdas[0]) if re.fullmatch(r"(?i)\w+\s+año", celdas[0]) else None
+            elif anio and len(celdas) >= 3 and celdas[-1].upper() == "OBLIGATORIA":
+                _agregar(materias, celdas[0], anio)
+        # A page with the new plan and the old one shows the new first.
+        if materias:
+            break
+    return materias
+
+
+def plan_obligatorias(html: str) -> list[tuple[str, int]]:
+    return desde_el_primero(_plan_obligatorias(html))

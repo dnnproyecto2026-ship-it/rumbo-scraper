@@ -121,6 +121,19 @@ TERCER AÑO
         <li><a>Lengua y Cultura Latina I</a> (Optativa)</li><li>Práctica Gramatical</li></ul>"""
         self.assertEqual(p.plan_titulo_y_lista(html), [("Lengua Inglesa I", 1), ("Práctica Gramatical", 1)])
 
+    def test_titulo_y_lista_con_cuatrimestres_dentro_del_anio(self):
+        html = """<p><strong>PRIMER AÑO</strong></p><p><em><strong>Primer Cuatrimestre</strong></em></p>
+        <ul><li>Introducción al Cálculo</li></ul><p><em><strong>Segundo Cuatrimestre</strong></em></p>
+        <ul><li>Álgebra Lineal</li></ul>"""
+        self.assertEqual(p.plan_titulo_y_lista(html), [("Introducción al Cálculo", 1), ("Álgebra Lineal", 1)])
+
+    def test_unrc_humanas_solo_obligatorias_del_primer_plan(self):
+        html = """<table><tr><th colspan="3">Primer año</th></tr>
+        <tr><td>ECONOMÍA I</td><td>Anual</td><td>OBLIGATORIA</td></tr>
+        <tr><td>ALEMÁN NIVEL I</td><td>Anual</td><td>OPTATIVA</td></tr></table>
+        <table><tr><th colspan="3">Primer año</th></tr><tr><td>PLAN VIEJO</td><td>Anual</td><td>OBLIGATORIA</td></tr></table>"""
+        self.assertEqual(p.plan_obligatorias(html), [("Economía I", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()
