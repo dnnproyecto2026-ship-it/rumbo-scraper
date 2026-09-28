@@ -16,6 +16,7 @@ or an empty list when the page does not have the plan the way it expects;
 
 from __future__ import annotations
 
+import math
 import re
 from collections import Counter
 
@@ -786,6 +787,75 @@ def _plan_exa_unsa(html: str) -> list[tuple[str, int]]:
 
 def plan_exa_unsa(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(_plan_exa_unsa(html))
+
+
+_CUATRIMESTRE_ROMANO = {r: i for i, r in enumerate(
+    ("I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"), start=1)}
+
+
+def _plan_unlu(html: str) -> list[tuple[str, int]]:
+    """UNLu: tables headed "Cuat" ("Cuat.", "Cuat. (1)"), a row per subject:
+    its term in roman numerals on the first row of the term ("III", spanning
+    the rows under it), its five-digit code, and its name in the cell after
+    the code. The year is the term's pair (terms I and II, the first). A row
+    with no term ("-": the introductory workshop, the language and computing
+    requirements) is not in a year, and footnote marks ("(2)", "(a)") and a
+    yearly subject's second term ("(Anual)", "(Continuación)") are not
+    names."""
+    materias: list[tuple[str, int]] = []
+    # A second table that counts its terms from I again is the cycle after
+    # the intermediate degree (Administración: 8 terms, then "I", "II"): its
+    # terms follow the first table's.
+    hasta, desde = 0, 0
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        filas = tabla.find_all("tr")
+        encabezado = [_texto(c) for c in filas[0].find_all(["td", "th"])] if filas else []
+        if not encabezado or not encabezado[0].startswith("Cuat"):
+            continue
+        cuatrimestre, primero = None, True
+        for fila in filas[1:]:
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            codigo = next((i for i, c in enumerate(celdas) if re.match(r"\d{5}\b", c)), None)
+            if codigo is None or codigo + 1 >= len(celdas):
+                continue
+            if codigo == 1:
+                cuatrimestre = _CUATRIMESTRE_ROMANO.get(celdas[0])
+                if cuatrimestre and primero:
+                    desde, primero = (hasta if cuatrimestre <= hasta else 0), False
+                if cuatrimestre:
+                    cuatrimestre += desde
+                    hasta = max(hasta, cuatrimestre)
+            nombre = re.sub(r"(?i)\s*\(anual\)", "", celdas[codigo + 1])
+            nombre = re.sub(r"(?i)(\s*-\s*continuaci[óo]n|\s*\((\d{1,2}|[a-z]|continuaci[óo]n)\))+$", "", nombre)
+            if cuatrimestre and nombre and nombre.lower() not in {m.lower() for m, _ in materias}:
+                _agregar(materias, nombre, (cuatrimestre + 1) // 2)
+    return materias
+
+
+def _anios_declarados_unlu(html: str) -> float | None:
+    """The years the page's first table states ("5 años", "5 1/2 años"),
+    when it states them in years."""
+    tabla = BeautifulSoup(html or "", "html.parser").find("table")
+    filas = tabla.find_all("tr") if tabla else []
+    if len(filas) < 2:
+        return None
+    encabezado = [_texto(c) for c in filas[0].find_all(["td", "th"])]
+    celdas = [_texto(c) for c in filas[1].find_all(["td", "th"])]
+    if "Duración" not in encabezado or len(celdas) != len(encabezado):
+        return None
+    anios = re.fullmatch(r"(?i)(\d+)(\s+1/2)?\s+años", celdas[encabezado.index("Duración")])
+    return int(anios.group(1)) + (0.5 if anios.group(2) else 0) if anios else None
+
+
+def plan_unlu(html: str) -> list[tuple[str, int]]:
+    # A plan whose years are not the ones the page states is part of one
+    # (Biológicas: 5 1/2 years stated, four read).
+    materias = desde_el_primero(_plan_unlu(html))
+    declarados = _anios_declarados_unlu(html)
+    ultimo = max((anio for _, anio in materias), default=0)
+    if declarados and not (int(declarados) <= ultimo <= math.ceil(declarados)):
+        return []
+    return materias
 
 
 def _plan_unnoba(html: str) -> list[tuple[str, int]]:

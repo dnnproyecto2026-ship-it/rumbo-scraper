@@ -84,6 +84,7 @@ _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", p
                         ("ucalp.edu.ar", planes_sitios.plan_ucalp), ("unlpam.edu.ar", planes_sitios.plan_unlpam),
                         ("exactas.unsa.edu.ar", planes_sitios.plan_exa_unsa),
                         ("untdf.edu.ar", planes_sitios.plan_untdf),
+                        ("unlu.edu.ar", planes_sitios.plan_unlu),
                         ("natura.unsa.edu.ar", planes_sitios.plan_natura_unsa),
                         ("ing.unsa.edu.ar", planes_sitios.plan_ing_unsa),
                         ("exactas.unca.edu.ar", planes_sitios.plan_tabla_con_anios),
