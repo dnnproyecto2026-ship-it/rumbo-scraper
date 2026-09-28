@@ -67,6 +67,12 @@ from rumbo_scraper.spiders.visitante import Visitante
 
 CACHE = Path("data/planes_documentos")
 HALLADOS = Path("data/planes_documentos.json")
+# Sites with a reader of their own where the general one, year by year, still
+# reads the careers theirs does not (checked by hand, 2026-09-28).
+_RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicios.uns.edu.ar",
+                       "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
+                       "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
+                       "artes.unne.edu.ar")
 _PLANES_EN_LA_PAGINA = (("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
@@ -390,6 +396,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             for dominio, lector in _PLANES_EN_LA_PAGINA:
                 if host.endswith(dominio):
                     en_la_pagina = lector(html) or en_la_pagina
+            # Where the site's own reader finds nothing, the general one, year
+            # by year, on the sites it was checked on.
+            if not en_la_pagina and any(host.endswith(d) for d in _RESPALDO_POR_ANIOS):
+                en_la_pagina = planes_sitios.plan_por_anios(html)
             if en_la_pagina:
                 de_la_pagina[carrera["id"]] = en_la_pagina
                 continue
