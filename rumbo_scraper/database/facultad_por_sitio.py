@@ -7,6 +7,11 @@ university whose page lives on that site belongs to one faculty, and at least
 two do, the site is that faculty's, and so is the postgraduate. The
 university's main site says nothing: it hosts every faculty.
 
+When no grado career lives on that site, the site's own home page may say
+whose it is: its title or its main heading names the faculty ("Facultad de
+Ciencias Agrarias - UNCuyo"). If exactly one of the university's faculties is
+named there, in full, that is the site's faculty (``--por-titulo``).
+
 Only empty faculties are written. Preview by default; ``--apply`` writes.
 
     python -m rumbo_scraper.database.facultad_por_sitio [--apply]
@@ -61,14 +66,64 @@ def asignables(client: Any) -> list[tuple[str, str, str, str]]:
     return hallados
 
 
+def por_titulo(client: Any) -> list[tuple[str, str, str, str]]:
+    """(posgrado, facultad, universidad, sitio) for each postgraduate on a
+    site whose home page names one of its university's faculties, in full."""
+    from bs4 import BeautifulSoup
+
+    from rumbo_scraper.database.supabase import select_all
+    from rumbo_scraper.normalizers.text import comparison_key
+    from rumbo_scraper.spiders.visitante import Visitante
+
+    universidades = {u["id"]: u for u in select_all(
+        client.table("universidades").select("id,nombre_corto,sitio_web"))}
+    facultades: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for f in select_all(client.table("facultades").select("id,universidad_id,nombre_facultad")):
+        facultades[f["universidad_id"]].append(f)
+    por_sitio: dict[tuple[str, str], list[str]] = defaultdict(list)
+    for posgrado in select_all(client.table("posgrados").select("id,universidad_id,facultad_id,url_oficial")):
+        universidad = universidades.get(posgrado["universidad_id"])
+        sitio = _sitio(posgrado["url_oficial"])
+        if posgrado["facultad_id"] or not universidad or not sitio or sitio == _sitio(universidad["sitio_web"]):
+            continue
+        por_sitio[(posgrado["universidad_id"], sitio)].append(posgrado["id"])
+
+    hallados = []
+    with Visitante(timeout=25) as visitante:
+        for (uid, sitio), posgrados in por_sitio.items():
+            html = visitante.get(f"https://{sitio}/") or visitante.get(f"http://{sitio}/")
+            if not html:
+                continue
+            soup = BeautifulSoup(html, "html.parser")
+            partes = [soup.title.get_text(" ") if soup.title else ""]
+            partes += [h.get_text(" ") for h in soup.find_all("h1")[:2]]
+            partes += [m.get("content", "") for m in soup.find_all("meta", attrs={"property": "og:site_name"})]
+            partes += [i.get("alt", "") for i in soup.find_all("img", alt=True)[:3]]
+            texto = comparison_key(" ".join(partes))
+            nombradas = [f for f in facultades[uid]
+                         if len(comparison_key(f["nombre_facultad"])) > 12
+                         and comparison_key(f["nombre_facultad"]) in texto]
+            # "Facultad de Ciencias" inside "Facultad de Ciencias Agrarias":
+            # the longest named is the one, if it contains the others.
+            nombradas.sort(key=lambda f: len(f["nombre_facultad"]), reverse=True)
+            if nombradas and all(comparison_key(f["nombre_facultad"]) in comparison_key(nombradas[0]["nombre_facultad"])
+                                 for f in nombradas):
+                corto = universidades[uid]["nombre_corto"]
+                print(f"{corto:9} | {sitio:35} | {nombradas[0]['nombre_facultad']} | {len(posgrados)}", flush=True)
+                hallados += [(pid, nombradas[0]["id"], corto, sitio) for pid in posgrados]
+    return hallados
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Dar a cada posgrado la facultad de su sitio")
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    parser.add_argument("--por-titulo", action="store_true",
+                        help="Leer el título de la portada de cada sitio en vez de las carreras de grado")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
     client = get_supabase_client()
-    hallados = asignables(client)
+    hallados = por_titulo(client) if args.por_titulo else asignables(client)
     print(f"Asignables: {len(hallados)} {dict(Counter(h[2] for h in hallados))}")
     if args.apply:
         escritos = sum(len(client.table("posgrados").update({"facultad_id": facultad}).eq(
