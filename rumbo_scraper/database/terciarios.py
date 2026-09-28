@@ -76,6 +76,34 @@ def siglas(nombre: str) -> str:
     return f"{iniciales[:8]} {numero}".strip()
 
 
+_MENORES = {"de", "del", "la", "las", "los", "el", "y", "e", "en", "a", "al", "para", "con"}
+
+
+def prolijo(nombre: str) -> str:
+    """INFoD's names as written with care: "Escuela Provincial De Teatro Y
+    TíTeres" -> "Escuela Provincial de Teatro y Títeres"; "I.S.P.I. NRO 4013
+    REVERENDO PADRE" -> "I.S.P.I. N° 4013 Reverendo Padre"; quotes dropped."""
+    nombre = clean_text(nombre.replace("\\", " ").replace('"', " "))
+    # A name all in capitals has no acronyms to keep but those with points.
+    en_mayusculas = sum(c.isupper() for c in nombre) > 2 * sum(c.islower() for c in nombre)
+
+    def capital(palabra: str) -> str:
+        # "(a-1380)" -> "(A-1380)", "brasil-argentina" -> "Brasil-Argentina"
+        return re.sub(r"(^|[-(/])([a-záéíóúñü])", lambda m: m.group(1) + m.group(2).upper(), palabra.lower())
+
+    palabras = []
+    for i, palabra in enumerate(nombre.split()):
+        sigla = re.fullmatch(r"(?:[A-ZÁÉÍÓÚÑ]\.){2,}", palabra) or (
+            not en_mayusculas and re.fullmatch(r"[A-Z]{2,6}\d*", palabra))
+        if sigla and palabra.lower() not in _MENORES | {"nro"}:
+            palabras.append(palabra)
+        elif palabra.lower() in _MENORES and i > 0:
+            palabras.append(palabra.lower())
+        else:
+            palabras.append(capital(palabra))
+    return re.sub(r"\b(?:Nro\.?|N[oº°]\.?)\s*(?=\d)", "N° ", " ".join(palabras))
+
+
 def _corto(nombre: str, numero: str, clave: str) -> str:
     """"INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Y TÉCNICA Nº 12" -> "ISFDyT 12"."""
     por_tipo = (("docente y t[ée]cnica", "ISFDyT"), ("docente", "ISFD"), ("t[ée]cnica", "ISFT"))
@@ -252,7 +280,7 @@ def instituto_infd(respuesta: str, url: str) -> dict[str, Any] | None:
         carrera = _carrera(propio, "", url) if propio else None
         if carrera and carrera.nombre not in {c.nombre for c in carreras}:
             carreras.append(carrera)
-    nombre = clean_text(titulo.get_text(" ")).replace('"', "")
+    nombre = prolijo(titulo.get_text(" "))
     gestion = (listas.get("Tipo de gestión") or ["Estatal"])[0]
     return {"nombre_oficial": nombre, "nombre_corto": siglas(nombre), "gestion": "Privada" if "rivad" in gestion else "Estatal",
             "localidad": datos.get("Localidad", ""), "distrito": datos.get("Localidad", ""),
