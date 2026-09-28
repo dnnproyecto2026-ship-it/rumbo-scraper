@@ -90,7 +90,7 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertIsNone(duracion_mencionada(
             ["Requisito: título de grado universitario de 4 años de duración"], "Maestría en Algo"))
         self.assertIsNone(duracion_mencionada(
-            ["La carrera dura dos años de duración.", "Duración: 4 años"], "Maestría en Algo"))
+            ["La carrera dura dos años de duración.", "Duración: 3 años"], "Maestría en Algo"))
         self.assertIsNone(duracion_mencionada(
             ["Podrán inscribirse graduados con título de grado de",
              "cuatro (4) años de duración como mínimo"], "Maestría en Algo"))
