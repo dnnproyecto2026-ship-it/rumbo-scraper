@@ -37,7 +37,7 @@ _NO_ES_MATERIA = re.compile(
     r"|^t[íi]tulo (?:de |intermedio|final)|^carga horaria|^duraci[óo]n\s*:"
     # A plan table's column heading (Morón: "Cod", "Asignatura", "Opción",
     # "Durac", "Correl" were published as subjects of 77 careers).
-    r"|^(?:correl\w*|opci[oó]n|durac\w*|cod\.?|c[oó]digo|asignatura|duraci[óo]ndelacarreraen)$"
+    r"|^(?:correl\w*|opci[oó]n|durac\w*|cod|c[oó]digo|asignatura|duraci[óo]ndelacarreraen)\.?$"
     # A term's or a duration's heading, hours, a total ("3º Cuatrimestre", "2 años
     # y medio", "120 horas", "Subtotal"); the staff of a diplomatura (UNTREF:
     # "Equipo", "Director", ": Mg. ..."); the office's hours (UNAHUR).
