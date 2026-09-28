@@ -55,9 +55,17 @@ def nombre_de_la_carrera(titulo: str) -> str | None:
 
 
 def _titulo(texto: str) -> str:
-    texto = clean_text(texto)
+    # (Quotes go first: "\"TUPAC AMARU\"" would keep a capital quote and a lowercase name.)
+    texto = clean_text(texto.replace('"', " "))
     # "INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Nº 28": capitals but for the "º".
-    texto = con_tildes(texto) if sum(c.islower() for c in texto) <= 2 else texto
+    if sum(c.islower() for c in texto) <= 2:
+        texto = con_tildes(texto)
+        # What the capitals said that words do not: "I.S.F.T.", "(ISEL)", "Dr.Enrique".
+        texto = re.sub(r"\b(?:[a-zA-Z]\.){2,}[a-zA-Z]?", lambda m: m.group(0).upper(), texto)
+        texto = re.sub(r"\(([a-zA-Z]{2,8})\)", lambda m: f"({m.group(1).upper()})", texto)
+        texto = re.sub(r"(?:(?<=[(´'])|(?<= -))([a-záéíóúñ])", lambda m: m.group(1).upper(), texto)
+        texto = re.sub(r"(?<=[a-zA-Z]\.)([a-záéíóúñ])([a-záéíóúñ]+)",
+                       lambda m: m.group(0) if m.group(0) in _MENORES else m.group(1).upper() + m.group(2), texto)
     return _romanos(re.sub(r"\bN[oº°]\.?\s*(?=\d)", "N° ", texto))
 
 
@@ -71,7 +79,8 @@ def _romanos(texto: str) -> str:
 def siglas(nombre: str) -> str:
     """"Instituto Superior de Comercio Exterior ISCE" -> "ISCE"; "Instituto
     Superior Santo Domingo" -> "ISSD": the name's own acronym, or its initials."""
-    propias = re.findall(r"\b[A-ZÁÉÍÓÚÑ]{2,6}\b", nombre)
+    # (A roman numeral is not one: "Juan Pablo II".)
+    propias = [p for p in re.findall(r"\b[A-ZÁÉÍÓÚÑ]{2,6}\b", nombre) if not re.fullmatch(r"[IVXLC]+", p)]
     numero = re.search(r"\b(\d{2,5})\b", nombre)
     if propias and not nombre.isupper():
         # "ISPI N° 4007 Inmaculada Concepción" -> "ISPI 4007": several ISPI.
@@ -419,12 +428,17 @@ def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
         url = f"{INET}/instituciones/{titulo}/{int(provincia)}?departamento=0&localidad=0"
         for fila in filas:
             cue = cue7(fila.get("CUE"))
-            propio = nombre_de_la_carrera(fila.get("Título") or "")
+            # A family of degrees ("Técnico Superior en Marketing / Analista",
+            # "... en Turismo y/o con Orientaciones"): the career is the first.
+            propio = nombre_de_la_carrera(re.sub(r"(?i)\s*(?:/\s*analista|y/o con orientaciones)\s*$", "",
+                                                 clean_text(fila.get("Título") or "")))
             if not cue or not propio:
                 continue
             web = (fila.get("Página Web") or "").strip()
+            # "Instituto Instituto Nuestro Señor del Milagro": the kind said twice.
+            nombre = re.sub(r"(?i)^(\w+)\s+\1\b", r"\1", prolijo(fila.get("Nombre") or ""))
             instituto = institutos.setdefault(cue, {
-                "nombre_oficial": prolijo(fila.get("Nombre") or ""), "nombre_corto": siglas(prolijo(fila.get("Nombre") or "")),
+                "nombre_oficial": nombre, "nombre_corto": siglas(nombre),
                 "gestion": "Privada" if (fila.get("Gestión") or "").startswith("Priv") else "Estatal",
                 "localidad": clean_text(fila.get("Localidad") or ""), "distrito": clean_text(fila.get("Departamento") or ""),
                 "calle": clean_text(fila.get("Dirección") or ""), "cue": cue, "url": url,
