@@ -734,10 +734,12 @@ def _plan_ucalp(html: str) -> list[tuple[str, int]]:
         return materias
     titulo = next((h for h in soup.find_all("h2") if "plan de estudio" in _texto(h).lower()), None)
     anio = None
-    for elemento in (titulo.find_all_next(["h2", "h4", "h5", "h6", "strong", "li"]) if titulo else []):
-        if elemento.name == "h2":
-            break
+    for elemento in (titulo.find_all_next(["h2", "h3", "h4", "h5", "h6", "strong", "li"]) if titulo else []):
         texto = _texto(elemento)
+        # The electives' pool ("Asignaturas optativas") and, past the plan,
+        # each campus's address and mail under an h3 ("La Plata").
+        if elemento.name in ("h2", "h3") or (elemento.name == "strong" and re.match(r"(?i)asignaturas optativas|optativas$", texto)):
+            break
         nuevo = anio_de(texto)
         if nuevo:
             anio = nuevo
