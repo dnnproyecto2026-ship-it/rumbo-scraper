@@ -285,6 +285,15 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
         return False
     if comparison_key(carrera).startswith("tecnicatura") and max(anios) > 3:
         return False
+    # Terms counted as years: UNL's design pages run to a "seventh year" of
+    # a four-year degree.
+    if max(anios) > 7 or (duracion and max(anios) > math.ceil(duracion) + 1):
+        return False
+    # Two years with a single subject each are what a profesorado adds to
+    # a licenciatura it shares its subjects with (UNS: only the teaching
+    # practice from the second year on).
+    if sum(1 for veces in Counter(anios).values() if veces == 1) >= 2:
+        return False
     if duracion and max(anios) < math.ceil(duracion) - 1:
         return False
     # A short career has no final year of thesis alone: a two-year

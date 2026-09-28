@@ -1284,8 +1284,12 @@ _NO_ES_MATERIA_DEL_ANIO = re.compile(
     r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura)$|^optativas\b|"
     r"^poseer\b|^\d+\s+materias$|^programa$|^reconocid|^modificaci|^campus|^coordinador|^ir\s+al|"
     r"^espacios\s+curriculares|^nota\b|^per[íi]odo\s+de|^semanal$|^\d\s*[º°]\s*cuat|cuatrimestre$|"
-    r"^incumbenc|^alcances|^perfil")
-_FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[óo]n\s+de\s+ingreso|^¿")
+    r"^incumbenc|^alcances|^perfil|^ordenanza\b|"
+    # The degree ("Ingeniero/a Químico/a"), a graduate's competence
+    # ("Interpretar y reformular…", "Diseñar, desarrollar y evaluar…").
+    r"\w/a\b|^[a-záéíóúñ]{4,}(?:ar|er|ir)(?:,|\s+y\s+[a-záéíóúñ]+(?:ar|er|ir)\b)")
+_FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[óo]n\s+de\s+ingreso|^¿|"
+                               r"^normativa\s+de\s+la\s+carrera|^unidad\s+acad[ée]mica$")
 
 
 def plan_por_anios(html: str) -> list[tuple[str, int]]:
@@ -1302,11 +1306,13 @@ def plan_por_anios(html: str) -> list[tuple[str, int]]:
             break
         if not anio or _NO_ES_MATERIA_DEL_ANIO.search(nombre):
             continue
-        # "Lingüística I - CL 2026": the year the chair's programme is of.
         # "Lingüística I - CL 2026": the year the chair's programme is of;
-        # "1 Introducción a la Arqueología": its number in the plan; "(C)".
-        nombre = re.sub(r"\s+-\s+CL\s+\d{4}$|\s*\(C\)$", "", nombre)
-        _agregar(materias, re.sub(r"^\d{1,2}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre), anio)
+        # "1 Introducción a la Arqueología" or "19Fundamentos de Geofísica":
+        # its number in the plan; "(C)", "(2do cuatrimestre)"; a leading dash.
+        nombre = re.sub(r"\s+-\s+CL\s+\d{4}$|\s*\(C\)$|\s*\((?:\d\s*\w*|1er|2do|primer|segundo)\s+cuatrimestre\)",
+                        "", nombre)
+        nombre = re.sub(r"^[\u00ad\s\-–·•]+", "", nombre)
+        _agregar(materias, re.sub(r"^\d{1,2}(?:\s+|(?=[A-ZÁÉÍÓÚÑ][a-záéíóúñ]))(?=[A-ZÁÉÍÓÚÑ])", "", nombre), anio)
     materias = desde_el_primero(materias)
     if len(materias) < 10 or max(Counter(a for _, a in materias).values()) > 15:
         return []
