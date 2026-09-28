@@ -238,7 +238,9 @@ _DOCUMENTOS_PROPIOS = (("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.
                        ("unpilar.edu.ar", planes_sitios.plan_unpilar),
                        ("ude.edu.ar", planes_sitios.plan_ude),
                        # UNLP Ingeniería: the plan its system prints (plan.php?carrera=...).
-                       ("ing.unlp.edu.ar", planes_sitios.plan_ing_unlp))
+                       ("ing.unlp.edu.ar", planes_sitios.plan_ing_unlp),
+                       ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
+                       ("exactas.unlp.edu.ar", planes_sitios.plan_exactas_unlp))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
@@ -246,7 +248,9 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             ("unpilar.edu.ar", "plan de la licenciatura"),
                             # The Federal Police's: or by its address ("pdf/PlanesEstudio/plan-Abogacia-...").
                             ("universidad-policial.edu.ar", re.compile(r"(?i)/PlanesEstudio/plan[_-]")),
-                            ("ing.unlp.edu.ar", re.compile(r"asignaturas/plan\.php\?carrera=")))
+                            ("ing.unlp.edu.ar", re.compile(r"asignaturas/plan\.php\?carrera=")),
+                            # UNT Filosofía: the career's brochure has its plan.
+                            ("filo.unt.edu.ar", re.compile(r"/folleto_[^/]+\.pdf$")))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
@@ -264,8 +268,10 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
         if host.endswith(dominio):
             import subprocess
 
+            # A reader of a table's cells takes the text's boxes (``-bbox-layout``).
+            modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
             try:
-                texto = subprocess.run(["pdftotext", "-layout", str(archivo), "-"], capture_output=True,
+                texto = subprocess.run(["pdftotext", modo, str(archivo), "-"], capture_output=True,
                                        text=True, timeout=60).stdout
             except Exception:
                 return []

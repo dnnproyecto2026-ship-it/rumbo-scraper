@@ -937,6 +937,74 @@ def plan_ing_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(plan)
 
 
+def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
+    """UNT Filosofía y Letras' brochures: the plan a table with a column per
+    year ("1° año" ... "5° año"), each cell a block of text in ``pdftotext
+    -bbox-layout`` (a name wrapped over lines is one block). A cell goes to
+    the column its left edge is under; the table ends at its foot ("Carga
+    horaria total"). "Área de Formación General" is a slot, not a subject."""
+    bloques = []
+    for x, y, contenido in re.findall(r'<block xMin="([\d.]+)" yMin="([\d.]+)"[^>]*>(.*?)</block>', cajas or "", re.S):
+        texto = clean_text(" ".join(re.findall(r">([^<]+)</word>", contenido)))
+        bloques.append((float(x), float(y), texto))
+    columnas = {}
+    for x, y, texto in bloques:
+        anio = re.fullmatch(r"(\d)\s*[°º]\s*año", texto, re.I)
+        if anio:
+            columnas[int(anio.group(1))] = (x, y)
+    if not columnas or len({round(y) for x, y in columnas.values()}) != 1:
+        return []
+    arriba = next(iter(columnas.values()))[1]
+    materias: list[tuple[str, int]] = []
+    for x, y, texto in sorted(bloques, key=lambda b: (b[1], b[0])):
+        if y <= arriba:
+            continue
+        if re.search(r"(?i)carga horaria total|alcances del t[íi]tulo", texto):
+            break
+        anio = next((a for a, (cx, _) in columnas.items() if abs(cx - x) < 6), None)
+        if anio and not re.fullmatch(r"(?i)área de formación general", texto):
+            _agregar(materias, texto, anio)
+    return desde_el_primero(sorted(materias, key=lambda m: m[1]))
+
+
+plan_filo_unt.cajas = True
+
+
+_MATERIA_EXACTAS_UNLP = re.compile(r"^\s*([A-Z]\d{4})\s+(\S.*?)(?:\s{2,}.*)?$")
+
+
+def plan_exactas_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNLP Exactas' plans (``pdftotext -layout``): a heading per year
+    ("PRIMER AÑO"), its terms, and a row per subject with its SIU code,
+    name, prerequisites and weekly hours ("E0204  Física General I  -  7h").
+    A slot that names its options by code ("Laboratorio (D0225 o D0226)")
+    is a choice: neither it nor its options are the plan; nor is a count of
+    electives ("Materias Optativas: 2 a elección")."""
+    filas: list[tuple[str, str, int]] = []
+    opciones: set[str] = set()
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        encabezado = _ANIO_IUCBC.match(linea)
+        if encabezado:
+            anio = _ORDINALES_UHIBA[encabezado.group(1).lower()]
+            continue
+        materia = _MATERIA_EXACTAS_UNLP.match(linea)
+        if not (anio and materia):
+            continue
+        codigos = re.findall(r"\b[A-Z]\d{4}\b", materia.group(2))
+        if codigos:
+            opciones |= set(codigos)
+            continue
+        if re.match(r"(?i)materias optativas", materia.group(2)):
+            continue
+        filas.append((materia.group(1), materia.group(2), anio))
+    materias: list[tuple[str, int]] = []
+    for codigo, nombre, anio_de_la_fila in filas:
+        if codigo not in opciones:
+            _agregar(materias, nombre, anio_de_la_fila)
+    return desde_el_primero(materias)
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
