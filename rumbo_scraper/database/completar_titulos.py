@@ -30,6 +30,25 @@ PAUSA = 0.8
 HALLADOS = Path("data/titulos_hallados.json")
 
 
+_TIPOS = frozenset("licenciatura licenciado licenciada tecnicatura tecnico tecnica universitario universitaria "
+                   "profesorado profesor profesora ingenieria ingeniero ingeniera".split())
+
+
+def es_de_la_carrera(titulo: str, carrera: str) -> bool:
+    """A degree that names a field ("... en Corretaje Inmobiliario") shares a
+    word's root with the career's name: UNR's Derecho page names its sister
+    career's degree too. One with no field ("Abogado", "Médico") is not checked."""
+    import re as _re
+
+    from rumbo_scraper.normalizers.text import comparison_key
+
+    if " en " not in f" {comparison_key(titulo)} ":
+        return True
+    raices = lambda texto: {p[:5] for p in _re.findall(r"[a-z]{5,}", comparison_key(texto)) if p not in _TIPOS}
+    propias = raices(carrera)
+    return not propias or bool(propias & raices(titulo))
+
+
 def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
     from rumbo_scraper.database.supabase import select_all
 
@@ -57,7 +76,7 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
             if not es_la_pagina_de(html, carrera["nombre_carrera"]):
                 continue
             titulo = titulo_de_la_pagina(html, carrera["nombre_carrera"])
-            if not titulo:
+            if not titulo or not es_de_la_carrera(titulo, carrera["nombre_carrera"]):
                 continue
             corto = universidades[carrera["universidad_id"]].get("nombre_corto") or ""
             print(f"{corto:9} | {carrera['nombre_carrera'][:50]:50} | {titulo}", flush=True)
