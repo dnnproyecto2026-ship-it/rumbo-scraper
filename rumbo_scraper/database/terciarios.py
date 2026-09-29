@@ -405,6 +405,14 @@ _INET_YA_LEIDAS = {"06", "14", "66"}
 _PROVINCIA_DE_CODIGO = {codigo: nombre for codigo, nombre in _PROVINCIAS_INFD.values()}
 
 
+def _slug(texto: str) -> str:
+    """The address the import makes of a short name (Rumbo's importar_scraper.slug)."""
+    import unicodedata
+
+    sin_tildes = "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9]+", "-", sin_tildes.lower()).strip("-") or "sin-nombre"
+
+
 def cue7(cue: str | None) -> str | None:
     """The CUE's institution part: 9 digits with the annex ("020219100"),
     8 when a leading zero was lost ("20025600"), 7 as INFoD gives it."""
@@ -508,18 +516,21 @@ def main() -> None:
         client.table("universidades").select("nombre_corto,nombre_oficial"))} if client else {}
     # A short name is the institution's address in the app (its slug): two
     # institutes may not share one. The second takes its town.
-    usados = {u["nombre_corto"]: u["nombre_oficial"] for u in select_all(
+    # (Compared as the import makes the slug of it: "IES -" and "IES" are one address.)
+    usados = {_slug(u["nombre_corto"] or ""): u["nombre_oficial"] for u in select_all(
         client.table("universidades").select("nombre_corto,nombre_oficial"))} if client else {}
     for instituto in institutos:
         if args.jurisdiccion == "inet" and instituto["cue"] in por_cue:
             continue
         corto = instituto["nombre_corto"]
-        if usados.get(corto, instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
-            corto = f"{corto} {instituto['localidad']}".strip()
-            if usados.get(corto, instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
+        # A town that is none ("-") does not tell two institutes apart.
+        pueblo = instituto["localidad"] if re.search(r"\w", instituto["localidad"] or "") else ""
+        if usados.get(_slug(corto), instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
+            corto = f"{corto} {pueblo}".strip()
+            if usados.get(_slug(corto), instituto["nombre_oficial"]) != instituto["nombre_oficial"]:
                 corto = f"{corto} {instituto['cue'] or ''}".strip()
         instituto["nombre_corto"] = corto
-        usados[corto] = instituto["nombre_oficial"]
+        usados[_slug(corto)] = instituto["nombre_oficial"]
     total = 0
     for instituto in institutos:
         total += len(instituto["carreras"])
