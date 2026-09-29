@@ -2184,7 +2184,12 @@ def _titulo_de_unidad(lineas: list[str], i: int) -> str:
     while j >= 0 and lineas[j] and not _PIE_DISENO.match(lineas[j]) and len(bloque) < 3:
         bloque.insert(0, lineas[j])
         j -= 1
-    rotulo = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^denominaci[óo]n\s*:", l)), None)
+    # Neuquén sets the unit's "Eje articulador: ..." between its heading and
+    # its "Formato": the heading is what comes before it.
+    eje = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^eje articulador\s*:", l)), None)
+    if eje:
+        bloque = bloque[:eje]
+    rotulo = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^(?:denominaci[óo]n|unidad curricular)\s*:", l)), None)
     if rotulo is not None:  # a labelled name runs to its "Formato:"
         bloque = bloque[rotulo:]
     # A heading set in capitals over two lines ("TALLER DE JUEGOS Y MATERIALES"
@@ -2196,7 +2201,7 @@ def _titulo_de_unidad(lineas: list[str], i: int) -> str:
         bloque.pop(0)
     titulo = re.sub(r"\.\s+(I{1,3})$", r" \1", " ".join(bloque).strip().rstrip(".").strip())
     if titulo.isupper():
-        titulo = titulo[:1] + titulo[1:].lower()
+        titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
     return titulo
 
 
@@ -2244,12 +2249,27 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
     lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
     materias: list[tuple[str, int]] = []
     for i, linea in enumerate(lineas):
-        if not re.match(r"(?i)^formato\s*:", linea):
+        # "Formato:" (Buenos Aires), "Tipo de Unidad Curricular:" (Tucumán).
+        if not re.match(r"(?i)^(?:formato(?: curricular)?|tipo de unidad curricular)\s*:", linea):
             continue
         siguientes = [l for l in lineas[i + 1:i + 30] if l and not _PIE_DISENO.match(l)][:5]
-        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (sugerida )?en el dise[ñn]o", l)), "")
-        ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|[1-5])\s*[°º]?\s*a[ñn]o\b", ubicacion)
-        titulo = re.sub(r"(?i)^denominaci[óo]n\s*:\s*", "", _titulo_de_unidad(lineas, i))
+        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (?:sugerida )?en (?:el )?(?:dise[ñn]o|plan de estudios?)", l)), "")
+        # Neuquén: "Año: Primero".
+        ordinal = next((re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l) for l in siguientes
+                        if re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l)), None)
+        if not ubicacion and ordinal:
+            ubicacion = {"primer": "1", "segund": "2", "tercer": "3", "cuart": "4"}[ordinal.group(1).lower()] + " año"
+        ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|[1-5])(?:er|do|ro|to)?\.?\s*[°º]?\s*a[ñn]o\b",
+                        ubicacion)
+        titulo = re.sub(r"(?i)^(?:denominaci[óo]n|unidad curricular)\s*:\s*", "", _titulo_de_unidad(lineas, i))
+        # Tucumán numbers a unit by its field and place ("F G 1. 1 - PEDAGOGÍA",
+        # "FE 3.1ALFABETIZACIÓN", "FPP 4.1. PRÁCTICA ..."); its institutional
+        # spaces ("EDI (ver recomendaciones temáticas)") are not units.
+        titulo = re.sub(r"(?i)^f\s?(?:g|e|pp)\.?\s*\d+\s*\.\s*\d+(?:\s*,\s*\d+)*(?:\s*y\s*\d+)?\s*[.\-–]?\s*",
+                        "", titulo)
+        titulo = titulo[:1].upper() + titulo[1:]
+        if re.match(r"(?i)^edi\b", titulo):
+            continue
         # A heading numbered as the document's section ("6.2.1.3 Pedagogía")
         # or by its year ("1° AÑO PEDAGOGÍA"): the year must be the one its
         # "Ubicación" gives, or the unit is not taken.

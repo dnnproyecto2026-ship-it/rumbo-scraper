@@ -145,6 +145,17 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Inicial": ("https://isfd804-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Diseno_Curricular_Nivel_Inicial_1.pdf", planes_sitios.plan_formato_ubicacion),
         "Profesorado de Educación Especial con orientación en Discapacidad Intelectual": ("https://isfd804-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Res._ME_315.14_Anexo_I_Disen_o_Curricular_Prof.Ed.Especial_Or._Disc.Int..pdf", planes_sitios.plan_formato_ubicacion),
     },
+    # Tucumán's, La Rioja's and Neuquén's, as their institutes publish them.
+    "Tucumán": {
+        "Profesorado de Educación Primaria": ("https://iesfa-tuc.infd.edu.ar/sitio/wp-content/uploads/sitio/Disenio_Curricular_Prof.Primaria.pdf", planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Inicial": ("https://iesmarchetti-tuc.infd.edu.ar/sitio/wp-content/uploads/sitio/Disen_o_Curricular_Educ._Inicial.pdf", planes_sitios.plan_formato_ubicacion),
+    },
+    "La Rioja": {
+        "Profesorado de Educación Primaria": ("https://ifdcjvgonzalez-lrj.infd.edu.ar/sitio/wp-content/uploads/2019/03/Diseño-Curricular-Educación-Primaria.pdf", planes_sitios.plan_formato_ubicacion),
+    },
+    "Neuquén": {
+        "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
+    },
 }
 PAUSA = 2.0
 
