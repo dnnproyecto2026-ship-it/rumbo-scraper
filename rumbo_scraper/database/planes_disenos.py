@@ -7,7 +7,9 @@ does. Its curricular design for a career (the Province of Buenos Aires'
 the plan every institute of the province that gives the career follows, by
 resolution. So one design is the plan of each of them: the career of that
 name at every institute of the province's registry
-(``relevamiento/terciarios.json``) that has no plan yet.
+(``relevamiento/terciarios.json``) that has no plan yet and whose site is on
+the design's domain (abc.gob.ar; infd.edu.ar, where the INFoD hosts the
+institutes' sites and they publish their province's designs).
 
 A design is read by its own reader (``planes_sitios.plan_diseno_pba``: the
 "Estructura curricular" table, a row per unit and year) and taken only when
@@ -33,6 +35,7 @@ from rumbo_scraper.database.planes_documentos import (CACHE, _FUERA_DEL_PLAN, _p
                                                       guardar_las_fuentes)
 from rumbo_scraper.database.terciarios import REGISTRO
 from rumbo_scraper.parsers import planes_sitios
+from rumbo_scraper.verificacion import es_oficial
 
 _PBA = "https://abc.gob.ar/secretarias/sites/default/files/"
 _SECUNDARIA = "Profesorado de Educación Secundaria en "
@@ -102,6 +105,16 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Especial Orientación en Sordos e Hipoacúsicos": (
             _ESPECIAL, _especial("SORDOS E HIPOACÚSICOS")),
     },
+    # Santa Fe's designs (Res. 528/09 and 529/09), as its Escuela Normal
+    # Superior N° 35 publishes them on its INFoD site.
+    "Santa Fe": {
+        "Profesorado de Educación Primaria": (
+            "https://ens35-sfe.infd.edu.ar/sitio/wp-content/uploads/2026/03/Diseno-curricular-Prof.-Ed.-Primaria-528-09.pdf",
+            planes_sitios.plan_listas_sfe),
+        "Profesorado de Educación Inicial": (
+            "https://ens35-sfe.infd.edu.ar/sitio/wp-content/uploads/2026/03/Diseno-curricular-Prof.-Ed.-Inicial-529-09.pdf",
+            planes_sitios.plan_listas_sfe),
+    },
 }
 PAUSA = 2.0
 
@@ -134,7 +147,8 @@ def main() -> None:
 
     client = get_supabase_client()
     registro = json.loads(REGISTRO.read_text())
-    universidades = {u["id"]: u for u in select_all(client.table("universidades").select("id,nombre_oficial,nombre_corto"))}
+    universidades = {u["id"]: u for u in select_all(
+        client.table("universidades").select("id,nombre_oficial,nombre_corto,sitio_web"))}
     con_materias = {m["carrera_id"] for m in select_all(client.table("materias").select("carrera_id")) if m["carrera_id"]}
     carreras = select_all(client.table("carreras").select("id,universidad_id,nombre_carrera"))
     planes, filas = [], []
@@ -144,8 +158,11 @@ def main() -> None:
                           if (registro.get(u["nombre_oficial"]) or {}).get("jurisdiccion") == provincia}
             for carrera_nombre, (url, lector) in disenos.items():
                 materias = leer_diseno(visitante, url, lector, carrera_nombre)
+                # Only where the design is on the institute's own domain: that is
+                # where the verifier reads its source.
                 destino = [c for c in carreras if c["universidad_id"] in institutos
-                           and c["nombre_carrera"] == carrera_nombre and c["id"] not in con_materias]
+                           and c["nombre_carrera"] == carrera_nombre and c["id"] not in con_materias
+                           and es_oficial(url, universidades[c["universidad_id"]]["sitio_web"])]
                 print(f"{provincia:14} {carrera_nombre[:55]:55} {len(materias):3} materias "
                       f"{dict(Counter(a for _, a in materias))} -> {len(destino)} institutos", flush=True)
                 if not materias:

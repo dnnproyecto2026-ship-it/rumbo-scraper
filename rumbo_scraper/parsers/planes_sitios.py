@@ -2258,3 +2258,39 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
             vistas.add(comparison_key(nombre))
             unicas.append((nombre, anio))
     return unicas
+
+
+
+def plan_listas_sfe(texto: str) -> list[tuple[str, int]]:
+    """A Province of Santa Fe design (Profesorados de Educación Inicial and
+    Primaria, Res. 528/09 and 529/09): each field lists its units by year,
+    "Primer Año:" (or "… que se desarrollarán en el Primer Año de la
+    carrera son:") over lines "− Pedagogía.". A unit the structure table
+    marks "*" is an experimental space the Ministry says not to offer
+    ("Movimiento y Cuerpo I*"), and is left out."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    no_ofrecer = {comparison_key(m.group(1)) for m in re.finditer(r"([A-ZÁÉÍÓÚ][\wáéíóúñ ]{3,60}?)\*", texto)}
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for i, linea in enumerate(lineas):
+        ano = re.match(r"(?i)^(primer|segundo|tercer|cuarto)\s+a[ñn]o\s*:?$", linea)
+        cabeza = re.search(r"(?i)\b(primer|segundo|tercer|cuarto)\s+a[ñn]o\b.*\bson\s*:$",
+                           (lineas[i - 1] + " " + linea) if i else linea)
+        if ano or (cabeza and linea.endswith(":")):
+            anio = _ANIO_INDICE[(ano or cabeza).group(1).lower()]
+            continue
+        item = re.match(r"^[−–-]\s+(.+?)\.?$", linea)
+        if anio and item:
+            nombre = item.group(1).strip()
+            if not re.fullmatch(r"[\d\s-]+", nombre) and comparison_key(nombre) not in no_ofrecer \
+                    and not nombre.endswith(",") and len(nombre.split()) <= 12:
+                materias.append((nombre, anio))
+        elif linea and not item:
+            anio = 0
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, anio_ in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, anio_))
+    return unicas
