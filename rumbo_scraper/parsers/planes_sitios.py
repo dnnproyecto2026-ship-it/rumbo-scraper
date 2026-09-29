@@ -404,7 +404,9 @@ def plan_ucse(texto_con_columnas: str) -> list[tuple[str, int]]:
             continue
         if not dentro:
             continue
-        izquierda = linea[:columna].rstrip()
+        # The right column's text may start a character before its bullets:
+        # what follows a wide gap after the left column's text is not its.
+        izquierda = re.sub(r"(?<=\S)\s{4,}\S.*$", "", linea[:columna]).rstrip()
         texto = clean_text(izquierda)
         if not texto:
             continue
