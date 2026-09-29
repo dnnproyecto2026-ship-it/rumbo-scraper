@@ -180,6 +180,8 @@ def leer_diseno(visitante: Any, url: str, lector: Any, carrera: str) -> list[tup
 def main() -> None:
     parser = argparse.ArgumentParser(description="Planes de los terciarios según el diseño curricular de su provincia")
     parser.add_argument("--apply", action="store_true", help="Escribir las materias en Supabase")
+    parser.add_argument("--fuentes", action="store_true",
+                        help="Sólo volver a escribir las fuentes de los planes ya cargados")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client, select_all
@@ -189,7 +191,11 @@ def main() -> None:
     registro = json.loads(REGISTRO.read_text())
     universidades = {u["id"]: u for u in select_all(
         client.table("universidades").select("id,nombre_oficial,nombre_corto,sitio_web"))}
-    con_materias = {m["carrera_id"] for m in select_all(client.table("materias").select("carrera_id")) if m["carrera_id"]}
+    materias_de: dict[str, set[str]] = {}
+    for m in select_all(client.table("materias").select("carrera_id,nombre_materia")):
+        if m["carrera_id"]:
+            materias_de.setdefault(m["carrera_id"], set()).add(m["nombre_materia"])
+    con_materias = set(materias_de)
     carreras = select_all(client.table("carreras").select("id,universidad_id,nombre_carrera"))
     planes, filas = [], []
     with Visitante(timeout=180) as visitante:
@@ -201,18 +207,31 @@ def main() -> None:
                 # Only where the design is on the institute's own domain: that is
                 # where the verifier reads its source.
                 destino = [c for c in carreras if c["universidad_id"] in institutos
-                           and _mismo_nombre(c["nombre_carrera"], carrera_nombre) and c["id"] not in con_materias
+                           and _mismo_nombre(c["nombre_carrera"], carrera_nombre)
+                           and (args.fuentes or c["id"] not in con_materias)
                            and es_oficial(url, universidades[c["universidad_id"]]["sitio_web"])]
                 print(f"{provincia:14} {carrera_nombre[:55]:55} {len(materias):3} materias "
                       f"{dict(Counter(a for _, a in materias))} -> {len(destino)} institutos", flush=True)
                 if not materias:
                     continue
                 for carrera in destino:
+                    # With --fuentes, only a career whose plan is this design's.
+                    if args.fuentes and materias_de.get(carrera["id"]) != {n for n, _ in materias}:
+                        continue
                     universidad = universidades[carrera["universidad_id"]]
+                    # The source goes under the institute's own name for the
+                    # career ("Profesorado de Educación Nivel Inicial"): that is
+                    # the name the verifier looks it up by.
                     planes.append({"universidad": universidad["nombre_corto"], "documento": url,
-                                   "carrera": {"nombre_carrera": carrera_nombre}})
+                                   "carrera": {"nombre_carrera": carrera["nombre_carrera"]}})
                     filas += [{"universidad_id": carrera["universidad_id"], "carrera_id": carrera["id"],
                                "nombre_materia": nombre, "anio_cursada": anio} for nombre, anio in materias]
+    if args.fuentes:
+        # Only the careers whose plan is this design's: a career loaded from
+        # elsewhere keeps its own source.
+        guardar_las_fuentes(planes)
+        print(f"Fuentes: {len(planes)}")
+        return
     if args.apply and filas:
         for inicio in range(0, len(filas), 500):
             client.table("materias").insert(filas[inicio:inicio + 500]).execute()
