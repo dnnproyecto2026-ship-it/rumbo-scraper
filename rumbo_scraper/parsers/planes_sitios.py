@@ -1008,6 +1008,69 @@ def plan_fcnym(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+_ANIO_DNGU = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\b")
+_REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|Semestral|Bimestral|Trimestral)"
+_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,3}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"\b")
+_NO_ES_NOMBRE_DNGU = re.compile(r"(?i)^(COD|CARGA|SEMANAL|HORARIA|MODALIDAD|DICTADO|T[ÍI]TULO|IF-\d|P[áa]gina|"
+                                r"Digitally|Date:|Anexo|N[úu]mero:|Referencia)")
+
+
+def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The plan in a Ministry resolution's annex (DNGU's table: "COD
+    ASIGNATURA REGIMEN CARGA HORARIA ..."), ``pdftotext -layout``: a
+    heading per term ("PRIMER AÑO-PRIMER CUATRIMESTRE") and a numbered row
+    per subject. The cell centres its name, so a name over two lines has
+    one above its number's row and one below ("Introducción a la" / "1
+    Cuatrimestral 6 90" / "Computación"). A row with its name empty takes
+    the loose line above and the one below; loose lines that cannot be
+    told to one row or the next leave no plan."""
+    if "ASIGNATURA" not in texto_con_columnas or not any(map(_ANIO_DNGU.match, texto_con_columnas.splitlines())):
+        return []
+    filas: list[dict] = []
+    sueltas: list[str] = []
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        if not linea.strip():
+            continue
+        encabezado = _ANIO_DNGU.match(linea)
+        if encabezado:
+            anio, sueltas = _ORDINALES_UHIBA[encabezado.group(1).lower()], []
+            continue
+        if re.match(r"^\s*T[ÍI]TULO:", linea) and filas:
+            break
+        fila = _FILA_DNGU.match(linea)
+        if fila and anio:
+            filas.append({"anio": anio, "nombre": clean_text(fila.group(2)), "antes": list(sueltas), "despues": []})
+            sueltas = []
+            continue
+        texto = clean_text(linea)
+        if anio and texto and not _NO_ES_NOMBRE_DNGU.match(texto) and not re.search(r"\d{2,}", texto):
+            # In lower case, or a part's numeral alone ("I"), it goes on from
+            # the row above ("Infraestructura para Ciencia" / "de Datos").
+            ultimo = " ".join([filas[-1]["nombre"]] + filas[-1]["despues"]).strip() if filas else ""
+            if filas and not sueltas and (texto[:1].islower() or re.fullmatch(r"[IVX]{1,4}", texto) or re.search(
+                    r"(?i)\b(de|del|la|las|los|el|y|e|en|para|a|al|con|por)$", ultimo)):
+                filas[-1]["despues"].append(texto)
+                continue
+            sueltas.append(texto)
+            # A loose line right under a row without its name is that row's.
+            if filas and not filas[-1]["nombre"] and not filas[-1]["despues"] and len(sueltas) == 1:
+                previa = filas[-1]
+                if previa["antes"]:
+                    previa["despues"].append(sueltas.pop())
+    materias: list[tuple[str, int]] = []
+    for fila in filas:
+        partes = fila["antes"] + ([fila["nombre"]] if fila["nombre"] else []) + fila["despues"]
+        # A named row with loose lines above (unless they end on a word that
+        # goes on: "Producción de Textos para la"), or a row with no name at
+        # all: unclear.
+        conectan = all(re.search(r"(?i)\b(de|del|la|las|los|el|y|e|en|para|a|al|con|por)$", a) for a in fila["antes"])
+        if (fila["nombre"] and fila["antes"] and not conectan) or not partes or len(fila["antes"]) > 2:
+            return []
+        _agregar(materias, " ".join(partes), fila["anio"])
+    return desde_el_primero(materias)
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number

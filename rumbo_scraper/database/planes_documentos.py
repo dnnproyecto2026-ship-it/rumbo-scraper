@@ -282,6 +282,17 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
 
 
 def _leer(archivo: Path) -> list[tuple[str, int | None]]:
+    # A Ministry resolution's annex (DNGU's table) has a reader of its own;
+    # the general ones split its centred names ("Introducción a la" / "Computación").
+    import subprocess
+
+    try:
+        texto = subprocess.run(["pdftotext", "-layout", str(archivo), "-"], capture_output=True,
+                               text=True, timeout=60).stdout
+    except Exception:
+        texto = ""
+    if "DNGU" in texto and "ASIGNATURA" in texto:
+        return [m for m in planes_sitios.plan_dngu(texto) if not _FUERA_DEL_PLAN.search(m[0])]
     try:
         materias = plan_por_columnas.leer_pdf(str(archivo))
         if not materias:
@@ -421,6 +432,18 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                 continue
             host = urlparse(url).netloc.removeprefix("www.")
             dominios = (host, host.split(".", 1)[-1]) if host.count(".") > 2 else (host,)
+            # A career whose own address is its plan's document (UNCA Exactas: ".../tcd.pdf").
+            if urlparse(url).path.lower().endswith(".pdf"):
+                archivo = CACHE / (hashlib.md5(url.encode()).hexdigest() + ".pdf")
+                if not archivo.exists():
+                    try:
+                        respuesta = visitante.client.get(url)
+                        archivo.write_bytes(respuesta.content if respuesta.status_code == 200 else b"")
+                    except Exception:
+                        archivo.write_bytes(b"")
+                    time.sleep(PAUSA)
+                documento_de[carrera["id"]] = url
+                continue
             html = visitante.get(url)
             time.sleep(PAUSA)
             # A guide that links a career to another's page (UNC's links its
