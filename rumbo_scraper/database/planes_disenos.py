@@ -21,6 +21,7 @@ unit against it.
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import subprocess
@@ -35,6 +36,8 @@ from rumbo_scraper.parsers import planes_sitios
 
 _PBA = "https://abc.gob.ar/secretarias/sites/default/files/"
 _SECUNDARIA = "Profesorado de Educación Secundaria en "
+_INICIAL_Y_PRIMARIA = _PBA + ("2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20Inicial"
+                              "%20y%20primaria.pdf")
 # The designs in force (the Dirección de Formación Docente Inicial's page
 # "Diseño y desarrollo curricular"), by the career's name as the province's
 # school map gives it.
@@ -51,6 +54,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         _SECUNDARIA + "Filosofía": (_PBA + "2024-03/FILOSOF%C3%8DA.pdf", planes_sitios.plan_diseno_pba),
         _SECUNDARIA + "Ciencia Política": (_PBA + "2024-03/C.%20Politica.pdf", planes_sitios.plan_diseno_pba),
         _SECUNDARIA + "Historia": (_PBA + "2024-03/Historia_0.pdf", planes_sitios.plan_diseno_pba),
+        "Profesorado de Educación Inicial": (_INICIAL_Y_PRIMARIA,
+                                             functools.partial(planes_sitios.plan_indice_pba, "Educación Inicial")),
+        "Profesorado de Educación Primaria": (_INICIAL_Y_PRIMARIA,
+                                              functools.partial(planes_sitios.plan_indice_pba, "Educación Primaria")),
     },
 }
 PAUSA = 2.0

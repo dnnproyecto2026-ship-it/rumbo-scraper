@@ -2120,3 +2120,50 @@ def plan_por_anios(html: str) -> list[tuple[str, int]]:
     if len(materias) < 10 or max(Counter(a for _, a in materias).values()) > 15:
         return []
     return materias
+
+
+_ANIO_INDICE = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5}
+_ENTRADA_INDICE = re.compile(r"^(.+?)\s*\.{2,}\s*\d+$")
+
+
+def plan_indice_pba(carrera: str, texto: str) -> list[tuple[str, int]]:
+    """A Province of Buenos Aires design that gives its units in its index
+    (the Profesorados de Educación Inicial y Primaria, both in one
+    document): under "Contenidos del profesorado de <carrera>", a year
+    ("Primer año ....49") and its units, one per line with its page, up to
+    "Correlatividades". A unit the index names "X I y II" in two years is
+    X I in the first of them and X II in the second."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    dentro = False
+    for linea in texto.splitlines():
+        linea = clean_text(linea.replace("\f", ""))
+        if not dentro:
+            dentro = bool(re.match(r"(?i)contenidos del profesorado de " + re.escape(carrera) + r"\b.*\.{2,}\s*\d+$", linea))
+            continue
+        if not linea:
+            continue
+        entrada = _ENTRADA_INDICE.match(linea)
+        if not entrada:
+            break
+        nombre = entrada.group(1).strip()
+        ano = re.match(r"(?i)(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", nombre)
+        if ano:
+            anio = _ANIO_INDICE[ano.group(1).lower()]
+        elif re.match(r"(?i)correlatividades", nombre):
+            break
+        elif anio:
+            materias.append((nombre, anio))
+    dobles = [n for n, _ in materias if n.endswith(" I y II")]
+    for nombre in set(dobles):
+        anios = sorted({a for n, a in materias if n == nombre})
+        if len(anios) == 2:
+            base = nombre[:-len(" I y II")]
+            materias = [(base + (" I" if a == anios[0] else " II"), a) if n == nombre else (n, a) for n, a in materias]
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, anio in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, anio))
+    return unicas
