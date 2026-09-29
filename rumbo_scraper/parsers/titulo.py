@@ -38,11 +38,11 @@ _ROTULO = re.compile(
 # "Se expide el título de ...", "¿Qué título obtengo? Técnico/a ..." (Siglo 21), "Actividades
 # Profesionales Reservadas al Título de Licenciado en Genética son" (Morón), "Los alcances
 # profesionales del título de Licenciado/a en Física son" (UNC).
-_FRASE = re.compile(r"(?i)(?:\b(?:expide|otorga|obtiene|recibe|obtendr[áa]s?|obten[ée]s)\s+(?:el\s+)?t[íi]tulo\s+de\s+"
+_FRASE = re.compile(r"(?i)(?:\b(?:expide|otorga|otorgar[áa]|obtiene|recibe|obtendr[áa]s?|obten[ée]s)\s+(?:el\s+)?t[íi]tulo\s+de\s+"
                     r"|qu[ée] t[íi]tulo obtengo\?\s*|\breservadas al t[íi]tulo de\s+"
                     r"|\balcances (?:profesionales )?del t[íi]tulo de\s+)(.+)")
 _CORTE = re.compile(r"\s*(?:[.;]\s|\.$|\(|\s[-–]\s|\s\|\s|,\s*(?:con|que|el|la|y)\b|\s+con\s+validez|\s+duraci[óo]n\b|"
-                    r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s|\s+son\b)")
+                    r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s|\s+son\b|\s+a\s+quienes\b|,?\s+previa\b)")
 
 
 def _limpio(texto: str) -> str | None:

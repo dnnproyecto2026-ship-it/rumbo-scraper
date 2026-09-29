@@ -54,6 +54,12 @@ class Titulo(unittest.TestCase):
         self.assertEqual(titulos_en("Los alcances profesionales del título de Licenciado/a en Física son los siguientes"),
                          ["Licenciado/a en Física"])
 
+    def test_otorgara(self):
+        self.assertEqual(titulos_en("La carrera otorgará el título de Licenciado en Sociología, previa aprobación de los requisitos."),
+                         ["Licenciado en Sociología"])
+        self.assertEqual(titulos_en("La Facultad otorgará el Título de Licenciado/a/e en Biología orientación Botánica a quienes cursen"),
+                         ["Licenciado/a/e en Biología orientación Botánica"])
+
     def test_sin_el_numero_de_la_seccion_siguiente(self):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
                          ["Técnico/a Universitario/a en Guía de Turismo"])
