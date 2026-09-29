@@ -978,6 +978,35 @@ def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
 plan_filo_unt.cajas = True
 
 
+def plan_fcnym(html: str) -> list[tuple[str, int]]:
+    """UNLP Naturales' plan pages: a table per year headed "Nº | Materia |
+    Duración | ...", the year in bold just before it ("Primer Año"). A row
+    is a subject when it has its number; the language test's table has
+    none, and an orientation's ("27-A0") is not every student's."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    # A former plan ("... ingreso anterior a 2019") is not the career's.
+    if re.search(r"(?i)anterior a \d{4}|plan anterior", _texto(soup.title) + " " + _texto(soup.find("h1"))):
+        return []
+    materias: list[tuple[str, int]] = []
+    for tabla in soup.find_all("table"):
+        filas = tabla.find_all("tr")
+        encabezado = [_texto(c).lower() for c in filas[0].find_all(["th", "td"])] if filas else []
+        if "materia" not in encabezado:
+            continue
+        columna = encabezado.index("materia")
+        titulo = tabla.find_previous(lambda e: e.name in ("strong", "b", "h2", "h3", "h4", "h5") and anio_de(_texto(e)))
+        anio = anio_de(_texto(titulo)) if titulo else None
+        # (The heading must be this table's, not an earlier one's.)
+        if not anio or (titulo.find_next("table") is not tabla):
+            continue
+        for fila in filas[1:]:
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            # ("27-A0": an orientation's subject, not every student's.)
+            if len(celdas) > columna and re.fullmatch(r"\d{1,2}", celdas[0]) and celdas[columna]:
+                _agregar(materias, celdas[columna], anio)
+    return desde_el_primero(materias)
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
