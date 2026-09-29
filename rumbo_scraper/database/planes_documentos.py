@@ -161,7 +161,12 @@ _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tec
 _FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s|^\(\*\)|^anuales$|^acreditaci[óo]n\b"
                              # What the subject filter of the site readers also turns away.
                              r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$"
-                             r"|^\d+\s+horas$|^(?:equipo|docentes|director(?:a)?|coordinador(?:a)?)$|^:\s")
+                             r"|^\d+\s+horas$|^(?:equipo|docentes|director(?:a)?|coordinador(?:a)?)$|^:\s"
+                             # A page's address, and notes about the plan, are not subjects
+                             # ("Avda. Benjamín Aráoz 800 | CP 4000", "Paseo del Bosque s/n",
+                             # "Computación se podrá acreditar en cualquier momento ...").
+                             r"|\bavda\.|\bcp\s*\d{4}\b|\bs/n\b|se podr[áa]n?\s+acreditar|^extracurricular\b"
+                             r"|^electivas:\s")
 
 
 def _nombra(texto: str, carrera: str) -> bool:
@@ -279,7 +284,7 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
                                        text=True, timeout=60).stdout
             except Exception:
                 return []
-            return lector(texto)
+            return [m for m in lector(texto) if not _FUERA_DEL_PLAN.search(m[0])]
     return _leer(archivo)
 
 
