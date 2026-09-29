@@ -194,7 +194,13 @@ def _materia_sin_mayusculas(nombre: str) -> str:
 # "Recuperado de"), a letter repeated down a column ("c c c c").
 _NO_ES_UN_NOMBRE = re.compile(
     r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|editorial|ediciones)\b"
-    r"|\b(?:ed|pp|vol)\.|recuperado de|\bet al\b|(?:\b\w\b\s+){3}", re.I)
+    r"|\b(?:ed|pp|vol)\.|recuperado de|\bet al\b|(?:\b\w\b\s+){3}"
+    # A page's banners, videos, address and notes read as a plan's lines ("A
+    # cincuenta años del Golpe Nunca Más", "▶ Ver video en YouTube", "Paseo del
+    # Bosque s/n", "Computación se podrá acreditar en cualquier momento ...").
+    r"|youtube|\bver video\b|nunca m[áa]s|a[ñn]os de democracia|aniversario de la creaci"
+    r"|^campus con\b|^otro requisito\b|\bavda\.|\bcp\s*\d{4}\b|\bs/n\b|se podr[áa]n?\s+acreditar"
+    r"|^extracurricular|^(?:anuales|universitarios)$", re.I)
 # The mark that sends a subject to a footnote: "(**) Análisis Político".
 _LLAMADA = re.compile(r"^\(\*+\)\s*")
 # A bullet or dash before the name, a period after it: "-Cambio climático."
@@ -297,6 +303,60 @@ def sin_planes_repartidos(materias: list[dict[str, Any]]) -> list[dict[str, Any]
                 for i, a in enumerate(programas) for b in programas[i + 1:]):
             repartidos |= set(programas)
     return [m for m in materias if m["carrera_o_programa"] not in repartidos]
+
+
+def sin_filas_sin_anio(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The subjects, without the rows of no year in a plan that gives years:
+    the electives' catalogue listed after the plan (ITBA's), or a banner of
+    the page ("Aniversario de la creación ..."). Neither is the plan's
+    sequence."""
+    con_anios = {m["carrera_o_programa"] for m in materias if m["anio_cursada"] is not None}
+    return [m for m in materias if m["anio_cursada"] is not None or m["carrera_o_programa"] not in con_anios]
+
+
+_PEGADA = re.compile(r"[a-záéíóúñ][A-ZÁÉÍÓÚÑ][a-záéíóúñ]")
+
+
+def palabras_conocidas(nombres: list[str]) -> dict[str, int]:
+    """How often each word shows in the plans' names: the vocabulary a name
+    the PDF ran together is taken apart with."""
+    cuenta: dict[str, int] = defaultdict(int)
+    for nombre in nombres:
+        for palabra in re.findall(r"[A-Za-zÁÉÍÓÚÑáéíóúñü]+", nombre or ""):
+            if not _PEGADA.search(palabra):
+                cuenta[palabra.lower()] += 1
+    return cuenta
+
+
+def con_espacios(nombre: str, conocidas: dict[str, int]) -> str:
+    """A name whose words the PDF ran together ("IntroducciónalFerrocarril",
+    "Ecuaciones Diferenciales yCálculo"), with them apart: only when every
+    piece is a word the plans' names use (seen at least three times);
+    otherwise as it was."""
+    def partir(palabra: str) -> list[str] | None:
+        minuscula = palabra.lower()
+        mejor: list[list[str] | None] = [[]] + [None] * len(minuscula)
+        for fin in range(1, len(minuscula) + 1):
+            for inicio in range(max(0, fin - 25), fin):
+                previo = mejor[inicio]
+                trozo = minuscula[inicio:fin]
+                # (A piece of one letter only as the words of one letter are, or
+                # a part's numeral at the end: "HistoriadelaArquitecturaI".)
+                corto = (len(trozo) == 1 and not (trozo in "yeaou" or (trozo == "i" and fin == len(minuscula)))
+                         or len(trozo) == 2 and trozo not in ("de", "la", "el", "en", "al", "lo", "un", "su"))
+                if previo is not None and not corto and (conocidas.get(trozo, 0) >= 3 or trozo == "i") and (
+                        mejor[fin] is None or len(previo) + 1 < len(mejor[fin])):
+                    mejor[fin] = previo + [palabra[inicio:fin]]
+        return mejor[-1]
+
+    def arreglar(match: re.Match) -> str:
+        palabra = match.group(0)
+        if not _PEGADA.search(palabra):
+            return palabra
+        partes = partir(palabra)
+        return " ".join(partes) if partes and len(partes) > 1 else palabra
+
+    return re.sub(r"[A-Za-zÁÉÍÓÚÑáéíóúñü]+", arreglar, nombre)
 
 
 def sin_planes_salteados(materias: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -450,9 +510,11 @@ def exportar(client: Any) -> dict[str, Any]:
     contradichas = materias_contradichas()
     corregidas = materias_corregidas()
     nombre_oficial = {u["id"]: u["nombre_oficial"] for u in universidades}
+    conocidas = palabras_conocidas([m["nombre_materia"] for m in materias])
     for m in materias:
         programa = carrera_nombre.get(m["carrera_id"]) or posgrado_nombre.get(m["posgrado_id"])
         materia = nombre_de_la_materia(m["nombre_materia"])
+        materia = con_espacios(materia, conocidas) if materia else materia
         if not programa or not materia:
             continue
         clave = (nombre_oficial.get(m["universidad_id"]), programa, materia)
@@ -464,7 +526,8 @@ def exportar(client: Any) -> dict[str, Any]:
             "anio_cursada": m["anio_cursada"], "descripcion_breve": m["descripcion_breve"],
         })
     for datos in por_uni.values():
-        datos["materias"] = sin_planes_repartidos(sin_planes_salteados(sin_planes_amontonados(datos["materias"])))
+        datos["materias"] = sin_planes_repartidos(sin_planes_salteados(sin_planes_amontonados(
+            sin_filas_sin_anio(datos["materias"]))))
 
     for b in becas:
         por_uni[b["universidad_id"]]["becas"].append({
