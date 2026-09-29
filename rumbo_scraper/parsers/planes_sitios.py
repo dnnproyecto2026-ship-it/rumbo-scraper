@@ -1095,6 +1095,65 @@ def plan_fcf_unam(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(sorted(materias, key=lambda m: m[1]))
 
 
+_ANIO_DISENO = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\b(?!\s+de\b)")
+_REGIMEN_DISENO = re.compile(r"(?i)^(anual|cuat(?:rim)?\.?|cuatrimestral|1er\.? cuat\.?|2do\.? cuat\.?)$")
+_NO_ES_UNIDAD = re.compile(r"(?i)^(unidad curricular|campo de la|total\b|r[ée]gi|formato|carga|m[óo]d\.|ch\b|\d|dise[ñn]o curricular$)")
+
+
+def plan_diseno_pba(cajas: str) -> list[tuple[str, int]]:
+    """A curricular design of the Province of Buenos Aires (``pdftotext
+    -bbox-layout``): its "Estructura curricular" a table per year ("Primer
+    año"), a row per unit with its name, its term ("Anual", "Cuat."), its
+    format and hours. Each cell is a block of text, a name over two lines
+    one block ("Educación y transformaciones sociales contemporáneas"). A
+    unit is a block of the name's column with a term's block at its height;
+    the year, the table's heading above it on the page. The page's prose
+    has no term beside it."""
+    materias: list[tuple[str, int]] = []
+    anio, crudo = None, ""
+    for pagina in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
+        bloques = []
+        for x0, y0, x1, y1, contenido in re.findall(
+                r'<block xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(.*?)</block>', pagina, re.S):
+            texto = clean_text(" ".join(re.findall(r">([^<]+)</word>", contenido)))
+            texto = re.sub(r"(\w)- (\w)", r"\1\2", texto)
+            bloques.append((float(x0), float(y0), float(x1), float(y1), texto))
+        titulos = sorted((y0, _ANIO_DISENO.match(t)) for x0, y0, x1, y1, t in bloques if _ANIO_DISENO.match(t))
+        regimenes = [(x0, y0, y1) for x0, y0, x1, y1, t in bloques if _REGIMEN_DISENO.match(t)]
+        if not titulos and anio is None:
+            continue
+        for x0, y0, x1, y1, texto in sorted(bloques, key=lambda b: b[1]):
+            previos = [m for y, m in titulos if y < y0]
+            if previos:
+                anio = _ORDINALES_UHIBA[previos[-1].group(1).lower()]
+            if not anio or _NO_ES_UNIDAD.match(texto) or _ANIO_DISENO.match(texto) or _REGIMEN_DISENO.match(texto):
+                continue
+            # A term's block to its right, at its height: a row of the table.
+            if any(rx > x1 and ry0 <= y1 + 4 and ry1 >= y0 - 4 and rx - x1 < 200 for rx, ry0, ry1 in regimenes):
+                # A name's end in a block of its own ("Física experi-" / "mental 1",
+                # "(UCO)") goes on from the one above it.
+                if (texto[:1].islower() or texto.startswith("(")) and materias and materias[-1][1] == anio:
+                    # (A word cut at the page's foot, "experi-" / "mental 1", is one word.)
+                    junta = "" if crudo.endswith("-") else " "
+                    materias[-1] = (f"{materias[-1][0]}{junta}{texto}", anio)
+                else:
+                    antes = len(materias)
+                    _agregar(materias, texto, anio)
+                    # A table's cell may name a unit at length ("Historia Latinoamericana I:
+                    # de la crisis del orden colonial a la conformación de los Estados
+                    # nacionales"): the row it sits in says it is one.
+                    if len(materias) == antes and 14 < len(texto.split()) <= 25:
+                        materias.append((texto, anio))
+                crudo = texto
+    # The institution's elective space, written in full or by its initials, is one.
+    if any(m.startswith("Espacio de Opción Institucional") for m, _ in materias):
+        materias = [m for m in materias if m[0] != "EOI"]
+    return desde_el_primero(sorted(materias, key=lambda m: m[1]))
+
+
+plan_diseno_pba.cajas = True
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
