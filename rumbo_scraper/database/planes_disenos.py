@@ -42,6 +42,9 @@ _FISICA = _PBA + "2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%
 _ESPECIAL = _PBA + "2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20Especial.pdf"
 _INGLES = _PBA + ("2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20Secundaria%20en"
                   "%20Ingl%C3%A9s.pdf")
+_TECNICA = "Profesorado de Educación Secundaria Técnico Profesional en "
+_TECNICA_MIN = "Profesorado de Educación Secundaria técnico profesional en "
+_DC_TECNICA = "2023-02/Dise%C3%B1o%20Curricular%20"
 # Especial: the first two years are common, then each orientation's own.
 _ESPECIAL_COMUN = r"^CONTENIDOS DEL DISEÑO CURRICULAR DEL PROFESORADO DE EDUCACIÓN$"
 
@@ -72,6 +75,24 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Física": (_FISICA, functools.partial(
             planes_sitios.plan_marco_orientador, (r"^3/ CONTENIDOS DEL PROFESORADO DE EDUCACIÓN FÍSICA",))),
         "Profesorado de Inglés": (_INGLES, planes_sitios.plan_formato_ubicacion),
+        _TECNICA + "Electromecánica": (_PBA + "2026-07/Prof.%20Sec%20Tec.%20Prof.%20Electromecanica.pdf",
+                                       planes_sitios.plan_formato_ubicacion),
+        _TECNICA + "Construcciones": (_PBA + "2026-07/Prof.%20Sec%20Tec.%20Prof.%20Construcciones.pdf",
+                                      planes_sitios.plan_formato_ubicacion),
+        _TECNICA + "Electrónica": (_PBA + "2026-07/Prof.%20Sec%20Tec.%20Prof.%20Electronica.pdf",
+                                   planes_sitios.plan_formato_ubicacion),
+        _TECNICA_MIN + "Industrias de Procesos y Alimentos": (
+            _PBA + _DC_TECNICA + "PROFESORADO%20DE%20EDUCACI%C3%93N%20SECUNDARIA%20T%C3%89CNICO%20PROFESIONAL"
+                                 "%20EN%20INDUSTRIAS%20DE%20PROCESOS%20Y%20DE%20ALIMENTOS.pdf",
+            planes_sitios.plan_formato_ubicacion),
+        _TECNICA_MIN + "Producción Agropecuaria": (
+            _PBA + _DC_TECNICA + "PROFESORADO%20DE%20EDUCACI%C3%93N%20SECUNDARIA%20T%C3%89CNICO%20PROFESIONAL"
+                                 "%20EN%20PRODUCCI%C3%93N%20AGROPECUARIA.pdf",
+            planes_sitios.plan_formato_ubicacion),
+        _TECNICA_MIN + "Automotores": (
+            _PBA + _DC_TECNICA + "Profesorado%20de%20Educaci%C3%B3n%20Secundaria%20T%C3%A9cnico%20Profesional"
+                                 "%20en%20Automotores.pdf",
+            planes_sitios.plan_formato_ubicacion),
         "Profesorado de Educación Especial Orientación en Discapacidad Intelectual": (
             _ESPECIAL, _especial("DISCAPACIDAD INTELECTUAL")),
         "Profesorado de Educación Especial Orientación en Discapacidad Neuromotora": (

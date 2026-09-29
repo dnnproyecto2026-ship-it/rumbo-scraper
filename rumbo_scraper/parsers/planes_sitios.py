@@ -2184,7 +2184,10 @@ def _titulo_de_unidad(lineas: list[str], i: int) -> str:
     while j >= 0 and lineas[j] and not _PIE_DISENO.match(lineas[j]) and len(bloque) < 3:
         bloque.insert(0, lineas[j])
         j -= 1
-    while len(bloque) > 1 and not (all(not l.endswith(".") for l in bloque[:-1])
+    rotulo = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^denominaci[óo]n\s*:", l)), None)
+    if rotulo is not None:  # a labelled name runs to its "Formato:"
+        bloque = bloque[rotulo:]
+    while rotulo is None and len(bloque) > 1 and not (all(not l.endswith(".") for l in bloque[:-1])
                                    and all(_CONECTOR_FINAL.search(a) or b[:1].islower()
                                            for a, b in zip(bloque, bloque[1:]))):
         bloque.pop(0)
@@ -2230,20 +2233,24 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
 
 
 def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
-    """A Province of Buenos Aires design of 2017 (Profesorado de Inglés):
-    each unit a heading over its "Formato:", whose "Ubicación en el Diseño
-    Curricular: Campo … – Primer año" a few lines below gives its year."""
+    """A Province of Buenos Aires design of 2017 on (Profesorado de Inglés;
+    the Técnico Profesional ones of 2023): each unit a heading ("Pedagogía",
+    or "Denominación: Pedagogía") over its "Formato:", whose "Ubicación en
+    el Diseño Curricular: Campo … – Primer año" (or "1° año") a few lines
+    below gives its year."""
     lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
     materias: list[tuple[str, int]] = []
     for i, linea in enumerate(lineas):
         if not re.match(r"(?i)^formato\s*:", linea):
             continue
         siguientes = [l for l in lineas[i + 1:i + 30] if l and not _PIE_DISENO.match(l)][:5]
-        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n en el dise[ñn]o", l)), "")
-        ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\b", ubicacion)
-        titulo = _titulo_de_unidad(lineas, i)
-        if ano and titulo and len(titulo.split()) <= 16 and not titulo.endswith(":"):
-            materias.append((titulo, _ANIO_INDICE[ano.group(1).lower()]))
+        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (sugerida )?en el dise[ñn]o", l)), "")
+        ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|[1-5])\s*[°º]?\s*a[ñn]o\b", ubicacion)
+        titulo = re.sub(r"(?i)^denominaci[óo]n\s*:\s*", "", _titulo_de_unidad(lineas, i))
+        if ano and titulo and len(titulo.split()) <= 25 and not titulo.endswith(":") \
+                and not re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\b", titulo):
+            clave = ano.group(1).lower()
+            materias.append((titulo, int(clave) if clave.isdigit() else _ANIO_INDICE[clave]))
     vistas: set[str] = set()
     unicas = []
     for nombre, anio in materias:
