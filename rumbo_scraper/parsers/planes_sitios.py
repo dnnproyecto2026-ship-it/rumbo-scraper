@@ -2294,3 +2294,58 @@ def plan_listas_sfe(texto: str) -> list[tuple[str, int]]:
             vistas.add(comparison_key(nombre))
             unicas.append((nombre, anio_))
     return unicas
+
+
+_ROMANO_FINAL = re.compile(r"\b(i{1,3}|iv|v)\b(?=[:\s.]|$)")
+
+
+def plan_codigos_salta(texto: str) -> list[tuple[str, int]]:
+    """A Province of Salta design (Profesorados de Educación Inicial and
+    Primaria, Res. 537 and 538 of 2009): its index lists each unit under
+    "9. CAMPOS DE LA FORMACIÓN" with a code whose first figure is its year
+    ("2.13 PEDAGOGÍA ..... 88"); a name the index wraps runs on to the line
+    that ends in its page. The plan's table ("2.13 Materia Pedagogía 5")
+    gives the same names in their own case, and the units the index leaves
+    out. The elective slot ("Propuesta variable o complementaria") is not a
+    unit."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    inicio = next((i for i, l in enumerate(lineas) if re.match(r"^9\.\s*CAMPOS DE LA FORMACI[ÓO]N\b.*\.{3,}", l)), None)
+    if inicio is None:
+        return []
+    fin = next((i for i in range(inicio + 1, len(lineas)) if re.match(r"^1\d\.\s", lineas[i])), len(lineas))
+    indice: dict[str, str] = {}
+    i = inicio + 1
+    while i < fin:
+        codigo = re.match(r"^([1-5]\.\d{2})\s+(.+)$", lineas[i])
+        if codigo:
+            nombre = codigo.group(2)
+            if not re.search(r"\.{3,}\s*\d*$", nombre) and i + 1 < fin and lineas[i + 1] \
+                    and not re.match(r"^[1-5]\.\d{2}\s|^\d\.\d\s", lineas[i + 1]) and lineas[i + 1].isupper():
+                nombre += " " + lineas[i + 1]
+                i += 1
+            nombre = re.sub(r"\s*\.{2,}\s*\d*$|…\s*\d*$|\s+\d+$", "", nombre).strip().rstrip(".").strip()
+            if nombre.isupper():
+                nombre = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), nombre[:1] + nombre[1:].lower())
+            indice.setdefault(codigo.group(1), nombre)
+        i += 1
+    tabla: dict[str, str] = {}
+    for linea in lineas[fin:]:
+        fila = re.match(r"^([1-5]\.\d{2})\s+(?:Materia|Taller|Seminario(?:\s*-?\s*Taller)?|Semin\.?-?|Trabajo)\s+"
+                        r"(.+?)\**\s+\d+\**(?:\s+\d+)*$", linea)
+        if fila and not _CONECTOR_FINAL.search(fila.group(2)) and not fila.group(2).endswith(":"):
+            tabla.setdefault(fila.group(1), fila.group(2).strip().rstrip("*").strip())
+    materias = []
+    for codigo in sorted(set(indice) | set(tabla), key=lambda c: (int(c[0]), c)):
+        nombre = indice.get(codigo)
+        propia = tabla.get(codigo)
+        if propia and (nombre is None or comparison_key(propia) == comparison_key(nombre)):
+            nombre = propia
+        if nombre and not re.match(r"(?i)^propuesta variable", nombre):
+            materias.append((nombre, int(codigo[0])))
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, anio in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, anio))
+    return unicas

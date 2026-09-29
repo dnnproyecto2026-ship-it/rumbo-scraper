@@ -26,6 +26,7 @@ import argparse
 import functools
 import hashlib
 import json
+import re
 import subprocess
 import time
 from collections import Counter
@@ -48,6 +49,7 @@ _INGLES = _PBA + ("2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci
 _TECNICA = "Profesorado de Educación Secundaria Técnico Profesional en "
 _TECNICA_MIN = "Profesorado de Educación Secundaria técnico profesional en "
 _DC_TECNICA = "2023-02/Dise%C3%B1o%20Curricular%20"
+_SALTA = "https://dges-sal.infd.edu.ar/sitio/wp-content/uploads/2018/07/"
 # Especial: the first two years are common, then each orientation's own.
 _ESPECIAL_COMUN = r"^CONTENIDOS DEL DISEÑO CURRICULAR DEL PROFESORADO DE EDUCACIÓN$"
 
@@ -115,8 +117,22 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://ens35-sfe.infd.edu.ar/sitio/wp-content/uploads/2026/03/Diseno-curricular-Prof.-Ed.-Inicial-529-09.pdf",
             planes_sitios.plan_listas_sfe),
     },
+    # Salta's (Res. 537 and 538 of 2009), as its Dirección General de
+    # Educación Superior publishes them on its INFoD site.
+    "Salta": {
+        "Profesorado de Educación Inicial": (
+            _SALTA + "Disenio_Curricular_Educacion_Inicial__Resolucion_537.pdf", planes_sitios.plan_codigos_salta),
+        "Profesorado de Educación Primaria": (
+            _SALTA + "Disenio_Curricular_Educacion_Primaria__Resolucion_538.pdf", planes_sitios.plan_codigos_salta),
+    },
 }
 PAUSA = 2.0
+
+
+def _mismo_nombre(a: str, b: str) -> bool:
+    """The same career, whether its name says "Profesorado de" or
+    "Profesorado en" ("Profesorado en Educación Primaria")."""
+    return re.sub(r"^Profesorado en ", "Profesorado de ", a) == re.sub(r"^Profesorado en ", "Profesorado de ", b)
 
 
 def leer_diseno(visitante: Any, url: str, lector: Any, carrera: str) -> list[tuple[str, int]]:
@@ -161,7 +177,7 @@ def main() -> None:
                 # Only where the design is on the institute's own domain: that is
                 # where the verifier reads its source.
                 destino = [c for c in carreras if c["universidad_id"] in institutos
-                           and c["nombre_carrera"] == carrera_nombre and c["id"] not in con_materias
+                           and _mismo_nombre(c["nombre_carrera"], carrera_nombre) and c["id"] not in con_materias
                            and es_oficial(url, universidades[c["universidad_id"]]["sitio_web"])]
                 print(f"{provincia:14} {carrera_nombre[:55]:55} {len(materias):3} materias "
                       f"{dict(Counter(a for _, a in materias))} -> {len(destino)} institutos", flush=True)
