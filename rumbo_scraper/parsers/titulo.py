@@ -97,8 +97,13 @@ def titulo_de_la_pagina(html: str, carrera: str) -> str | None:
     # Or a label alone on its line, with no colon (UPC's "Nombre del título
     # a otorgar" over "Técnico/a Universitario/a en ...").
     # Or "TÍTULO" alone (UADER), "Título/s que otorga" (UNER).
-    texto = re.sub(r"(?im)^\s*(?:nombre del )?t[íi]tulo(?:/s|s)?(?: (?:a otorgar|que (?:se )?otorga|a obtener|de grado|"
-                   r"de pregrado))?\s*\n+\s*", "Título: ", texto)
+    # Or "B . Título obtenido" (UNPSJB's lettered fields), "TÍTULO OTORGADO por la
+    # Universidad Provincial del Sudoeste" (UPSO).
+    texto = re.sub(r"(?im)^\s*(?:[A-Z]\s?\.\s+)?(?:nombre del )?t[íi]tulo(?:/s|s)?(?: (?:a otorgar|que (?:se )?otorga|a obtener|"
+                   r"obtenido|otorgado(?: por la universidad[^\n:]{0,60})?|de grado|de pregrado))?\s*\n+\s*", "Título: ", texto)
+    # A value broken after its kind (UNRC's "Título:" / "Licenciado" / " en Geografía").
+    texto = re.sub(r"(?im)^(t[íi]tulo[^\n:]{0,30}:\s*(?:licenciad|profesor|t[ée]cnic|ingenier)\S*)\s*\n\s*((?:en|de)\s)",
+                   r"\1 \2", texto)
     halladas = titulos_en(texto)
     if len(halladas) == 1:
         return halladas[0]

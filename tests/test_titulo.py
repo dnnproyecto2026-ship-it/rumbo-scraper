@@ -58,5 +58,15 @@ class Titulo(unittest.TestCase):
         self.assertEqual(titulos_en("Título: Técnico/a Universitario/a en Guía de Turismo 1.3"),
                          ["Técnico/a Universitario/a en Guía de Turismo"])
 
+    def test_rotulos_en_su_propia_linea(self):
+        pagina = "<main><p>B . Título obtenido</p><p>INGENIERO QUÍMICO</p><p>C . Grado académico</p></main>"
+        self.assertEqual(titulo_de_la_pagina(pagina, "Ingeniería Química"), "Ingeniero Químico")
+        pagina = ("<main><h3>TÍTULO OTORGADO por la Universidad Provincial del Sudoeste</h3>"
+                  "<p>TÉCNICO/A UNIVERSITARIO/A EN EMPRENDIMIENTOS INFORMÁTICOS</p></main>")
+        self.assertEqual(titulo_de_la_pagina(pagina, "Tecnicatura Universitaria en Emprendimientos Informáticos"),
+                         "Técnico/a Universitario/a en Emprendimientos Informáticos")
+        pagina = "<main><span>Título:</span> <span>Licenciado</span>\n<span> en Geografía</span></main>"
+        self.assertEqual(titulo_de_la_pagina(pagina, "Licenciatura en Geografía"), "Licenciado en Geografía")
+
 if __name__ == "__main__":
     unittest.main()
