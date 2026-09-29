@@ -2187,7 +2187,10 @@ def _titulo_de_unidad(lineas: list[str], i: int) -> str:
     rotulo = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^denominaci[óo]n\s*:", l)), None)
     if rotulo is not None:  # a labelled name runs to its "Formato:"
         bloque = bloque[rotulo:]
-    while rotulo is None and len(bloque) > 1 and not (all(not l.endswith(".") for l in bloque[:-1])
+    # A heading set in capitals over two lines ("TALLER DE JUEGOS Y MATERIALES"
+    # / "LÚDICOS") is one.
+    mayusculas = len(bloque) > 1 and all(l.isupper() for l in bloque[-2:])
+    while rotulo is None and not mayusculas and len(bloque) > 1 and not (all(not l.endswith(".") for l in bloque[:-1])
                                    and all(_CONECTOR_FINAL.search(a) or b[:1].islower()
                                            for a, b in zip(bloque, bloque[1:]))):
         bloque.pop(0)
@@ -2247,6 +2250,21 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
         ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (sugerida )?en el dise[ñn]o", l)), "")
         ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|[1-5])\s*[°º]?\s*a[ñn]o\b", ubicacion)
         titulo = re.sub(r"(?i)^denominaci[óo]n\s*:\s*", "", _titulo_de_unidad(lineas, i))
+        # A heading numbered as the document's section ("6.2.1.3 Pedagogía")
+        # or by its year ("1° AÑO PEDAGOGÍA"): the year must be the one its
+        # "Ubicación" gives, or the unit is not taken.
+        titulo = re.sub(r"^\d+(?:\.\d+)+\s+", "", titulo.strip())
+        prefijo = re.match(r"(?i)^([1-5])\s*[°º]\s*a[ñn]o\s+", titulo)
+        if prefijo:
+            titulo = titulo[prefijo.end():]
+            titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1].upper() + titulo[1:])
+            if ano and (ano.group(1) if ano.group(1).isdigit() else str(_ANIO_INDICE[ano.group(1).lower()])) != prefijo.group(1):
+                continue
+        letras = [c for c in titulo if c.isalpha()]
+        if len(letras) < 4:
+            continue
+        if sum(c.isupper() for c in letras) >= 0.8 * len(letras):
+            titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
         if ano and titulo and len(titulo.split()) <= 25 and not titulo.endswith(":") \
                 and not re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\b", titulo):
             clave = ano.group(1).lower()

@@ -134,6 +134,17 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             _SALTA + "Disenio_Curricular_Educacion_Especial_con_Or_Ciegos_y_Dism_Visual__Resolucion_536.pdf",
             planes_sitios.plan_codigos_salta),
     },
+    # Chaco's and Chubut's, as their institutes publish them on their INFoD
+    # sites (Chaco: ISP "Juan Mantovani"; Chubut: IES 813 and ISFD 804).
+    "Chaco": {
+        "Profesorado de Educación Inicial": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISENO_PROF._EDUC_INICIAL..pdf", planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Primaria": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISEN_O_PRIMARIA2.pdf", planes_sitios.plan_formato_ubicacion),
+    },
+    "Chubut": {
+        "Profesorado de Educación Primaria": ("https://ies813pabloluppi-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Inicial": ("https://isfd804-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Diseno_Curricular_Nivel_Inicial_1.pdf", planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Especial con orientación en Discapacidad Intelectual": ("https://isfd804-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Res._ME_315.14_Anexo_I_Disen_o_Curricular_Prof.Ed.Especial_Or._Disc.Int..pdf", planes_sitios.plan_formato_ubicacion),
+    },
 }
 PAUSA = 2.0
 
@@ -141,7 +152,11 @@ PAUSA = 2.0
 def _mismo_nombre(a: str, b: str) -> bool:
     """The same career, whether its name says "Profesorado de" or
     "Profesorado en" ("Profesorado en Educación Primaria")."""
-    return re.sub(r"^Profesorado en ", "Profesorado de ", a) == re.sub(r"^Profesorado en ", "Profesorado de ", b)
+    def clave(nombre: str) -> str:
+        # ... or "Educación Nivel Inicial", as the INFoD names it.
+        nombre = re.sub(r"^Profesorado en ", "Profesorado de ", nombre)
+        return re.sub(r"\bEducación Nivel Inicial$", "Educación Inicial", nombre).lower()
+    return clave(a) == clave(b)
 
 
 def leer_diseno(visitante: Any, url: str, lector: Any, carrera: str) -> list[tuple[str, int]]:
