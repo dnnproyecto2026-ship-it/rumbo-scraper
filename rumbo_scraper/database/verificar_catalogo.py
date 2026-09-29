@@ -195,6 +195,11 @@ def _texto_del_pdf(contenido: bytes) -> str:
             archivo.flush()
             partes.append(subprocess.run(["pdftotext", "-layout", archivo.name, "-"], capture_output=True,
                                          text=True, timeout=120).stdout)
+            # And in the order it was written: a table's centred name, whose
+            # lines the layout puts above and below its row ("Introducción a
+            # la" / "1 Cuatrimestral" / "Computación"), comes out whole there.
+            partes.append(subprocess.run(["pdftotext", "-raw", archivo.name, "-"], capture_output=True,
+                                         text=True, timeout=120).stdout)
     except Exception:
         pass
     return " ".join(partes)
