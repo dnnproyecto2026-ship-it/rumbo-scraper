@@ -2323,8 +2323,9 @@ def plan_codigos_salta(texto: str) -> list[tuple[str, int]]:
                     and not re.match(r"^[1-5]\.\d{2}\s|^\d\.\d\s", lineas[i + 1]) and lineas[i + 1].isupper():
                 nombre += " " + lineas[i + 1]
                 i += 1
-            nombre = re.sub(r"\s*\.{2,}\s*\d*$|…\s*\d*$|\s+\d+$", "", nombre).strip().rstrip(".").strip()
-            if nombre.isupper():
+            nombre = re.sub(r"[\s.…]*\d*$", "", nombre).strip().rstrip("*").strip()
+            letras = [c for c in nombre if c.isalpha()]
+            if letras and sum(c.isupper() for c in letras) >= 0.8 * len(letras):
                 nombre = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), nombre[:1] + nombre[1:].lower())
             indice.setdefault(codigo.group(1), nombre)
         i += 1

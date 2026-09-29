@@ -124,6 +124,15 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             _SALTA + "Disenio_Curricular_Educacion_Inicial__Resolucion_537.pdf", planes_sitios.plan_codigos_salta),
         "Profesorado de Educación Primaria": (
             _SALTA + "Disenio_Curricular_Educacion_Primaria__Resolucion_538.pdf", planes_sitios.plan_codigos_salta),
+        "Profesorado de Educación Especial con Orientación en Discapacidad Intelectual": (
+            _SALTA + "Disenio_Curricular_Educacion_Especial_con_Disc_Intelectual__Resolucion_539.pdf",
+            planes_sitios.plan_codigos_salta),
+        "Profesorado de Educación Especial con Orientación en Sordos e Hipoacúsicos": (
+            _SALTA + "Disenio_Curricular_Educacion_Especial_con_Or_Sordos_e_Hipoac__Resolucion_540.pdf",
+            planes_sitios.plan_codigos_salta),
+        "Profesorado de Educación Especial con Orientación en Ciegos y Disminuidos Visuales": (
+            _SALTA + "Disenio_Curricular_Educacion_Especial_con_Or_Ciegos_y_Dism_Visual__Resolucion_536.pdf",
+            planes_sitios.plan_codigos_salta),
     },
 }
 PAUSA = 2.0
