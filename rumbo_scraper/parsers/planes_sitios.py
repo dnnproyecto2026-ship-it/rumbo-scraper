@@ -2169,7 +2169,7 @@ def plan_indice_pba(carrera: str, texto: str) -> list[tuple[str, int]]:
     return unicas
 
 
-_PIE_DISENO = re.compile(r"(?i)^(\d+|\||corresponde al exp.*|(y\s+)?su agregado.*|total\b.*)$")
+_PIE_DISENO = re.compile(r"(?i)^(\d+|\||corresponde al exp.*|(y\s+)?su agregado.*|total\b.*|if-\d{4}-[\w-]+|p[áa]gina \d+ de \d+)$")
 _CONECTOR_FINAL = re.compile(r"(?i)\b(y|e|de|del|la|las|los|el|en|para|con|a|al|por)$")
 
 
@@ -2220,6 +2220,30 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
                 if titulo and not re.match(r"(?i)^(campos? de|herramientas? de la pr[áa]ctica)", titulo) \
                         and not titulo.endswith(":") and len(titulo.split()) <= 16:
                     materias.append((titulo, anio))
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, anio in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, anio))
+    return unicas
+
+
+def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
+    """A Province of Buenos Aires design of 2017 (Profesorado de Inglés):
+    each unit a heading over its "Formato:", whose "Ubicación en el Diseño
+    Curricular: Campo … – Primer año" a few lines below gives its year."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    materias: list[tuple[str, int]] = []
+    for i, linea in enumerate(lineas):
+        if not re.match(r"(?i)^formato\s*:", linea):
+            continue
+        siguientes = [l for l in lineas[i + 1:i + 30] if l and not _PIE_DISENO.match(l)][:5]
+        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n en el dise[ñn]o", l)), "")
+        ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\b", ubicacion)
+        titulo = _titulo_de_unidad(lineas, i)
+        if ano and titulo and len(titulo.split()) <= 16 and not titulo.endswith(":"):
+            materias.append((titulo, _ANIO_INDICE[ano.group(1).lower()]))
     vistas: set[str] = set()
     unicas = []
     for nombre, anio in materias:
