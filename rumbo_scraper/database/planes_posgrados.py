@@ -27,7 +27,7 @@ from urllib.parse import urlparse
 
 from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
 from rumbo_scraper.database.completar_posgrados import _documentos
-from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa, plan_de_posgrado, plan_en_lineas
+from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa, plan_de_posgrado, plan_economicas_uba, plan_en_lineas
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -67,7 +67,9 @@ def leer(client: Any, solo: set[str] = frozenset(), documentos: bool = False) ->
                 if not html or not (es_la_pagina_de(html, p["nombre_programa"])
                                     or nombra_el_programa(html, p["nombre_programa"])):
                     continue
-                materias, fuente = plan_de_posgrado(html), p["url_oficial"]
+                # A site whose plan has a layout of its own, read by its reader.
+                propio = plan_economicas_uba(html) if "economicas.uba.ar" in p["url_oficial"] else []
+                materias, fuente = propio or plan_de_posgrado(html), p["url_oficial"]
                 # A plan's PDF flattens its table: names run into their
                 # columns and teachers' names in (tried 2026-09-28, 17 plans,
                 # most unusable). Only on request.

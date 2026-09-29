@@ -295,6 +295,25 @@ _NO_ES_UN_PLAN = re.compile(
     r"^av(?:enida|\.)\s|\(\s*[a-z]?\d{4}[a-z]*\s*\)|\b\d{3,5}\s*,\s*\(")
 
 
+# "Mediación y Resolución de Conflictos (64 hs.)": a subject with its hours.
+_CON_SUS_HORAS = re.compile(r"^(.+?)\s*\(\s*\d{1,3}\s*hs?\.?\s*\)\s*$", re.I)
+
+
+def plan_economicas_uba(html: str) -> list[str]:
+    """UBA Económicas' programme pages: a tab "PLAN DE ESTUDIOS" (Elementor:
+    the title and its panel share ``data-tab``) listing each subject with its
+    hours; the rest of the tab (accreditation, totals, the degree) has none."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulo = next((t for t in soup.select(".elementor-tab-title") if "plan de estudio" in t.get_text().lower()), None)
+    panel = soup.select_one(f'.elementor-tab-content[data-tab="{titulo.get("data-tab")}"]') if titulo else None
+    materias: list[str] = []
+    for linea in (panel.get_text("\n", strip=True).split("\n") if panel else []):
+        encontrada = _CON_SUS_HORAS.match(clean_text(linea))
+        if encontrada and encontrada.group(1) not in materias:
+            materias.append(re.sub(r"\s+", " ", encontrada.group(1)).strip())
+    return materias
+
+
 def plan_de_posgrado(html: str) -> list[str]:
     """The subjects a postgraduate's page lists under its plan's heading.
 
