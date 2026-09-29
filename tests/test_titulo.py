@@ -54,6 +54,15 @@ class Titulo(unittest.TestCase):
         self.assertEqual(titulos_en("Los alcances profesionales del título de Licenciado/a en Física son los siguientes"),
                          ["Licenciado/a en Física"])
 
+    def test_mas_rotulos(self):
+        self.assertEqual(titulos_en("Título a otorgar: Licenciado/a en Sistemas de Información Estratégicos. Duración"),
+                         ["Licenciado/a en Sistemas de Información Estratégicos"])
+        self.assertEqual(titulos_en("Título de grado a obtener: Ingeniero/a electrónico/a. Modalidad"), ["Ingeniero/a electrónico/a"])
+        self.assertEqual(titulos_en("Título de Pregrado: Analista Universitario/a en Ciencias de Datos"),
+                         ["Analista Universitario/a en Ciencias de Datos"])
+        self.assertEqual(titulos_en("Te egresás como: Técnico/a Universitario/a en Gestión Turística"),
+                         ["Técnico/a Universitario/a en Gestión Turística"])
+
     def test_otorgara(self):
         self.assertEqual(titulos_en("La carrera otorgará el título de Licenciado en Sociología, previa aprobación de los requisitos."),
                          ["Licenciado en Sociología"])

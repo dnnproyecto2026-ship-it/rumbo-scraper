@@ -33,8 +33,8 @@ _GRADOS = (r"licenciad[oa]s?|ingenier[oa]s?|profesor(?:a|es)?|t[ée]cnic[oa]s?|c
            r"escen[óo]graf[oa]|cine[ae]sta|compositor(?:a)?|dramaturg[oa]|mec[áa]nic[oa]|piloto|oficial")
 _ES_UN_GRADO = re.compile(r"(?i)^(?:" + _GRADOS + r")\b")
 _ROTULO = re.compile(
-    r"(?i)\bt[íi]tulos?(?:\s+(?:que\s+(?:se\s+)?otorga|a\s+obtener|otorgado|obtenido|que\s+se\s+obtiene|de\s+grado|"
-    r"final|profesional|universitario))?\s*:\s*(.+)")
+    r"(?i)(?:\bt[íi]tulos?(?:\s+(?:que\s+(?:se\s+)?otorga|a\s+(?:obtener|otorgar)|otorgado|obtenido|que\s+se\s+obtiene|"
+    r"de\s+(?:pre)?grado(?:\s+a\s+obtener)?|final|profesional|universitario))?|\bte\s+egres[áa]s\s+como)\s*:\s*(.+)")
 # "Se expide el título de ...", "¿Qué título obtengo? Técnico/a ..." (Siglo 21), "Actividades
 # Profesionales Reservadas al Título de Licenciado en Genética son" (Morón), "Los alcances
 # profesionales del título de Licenciado/a en Física son" (UNC).
