@@ -200,7 +200,24 @@ _NO_ES_UN_NOMBRE = re.compile(
     # Bosque s/n", "Computación se podrá acreditar en cualquier momento ...").
     r"|youtube|\bver video\b|nunca m[áa]s|a[ñn]os de democracia|aniversario de la creaci"
     r"|^campus con\b|^otro requisito\b|\bavda\.|\bcp\s*\d{4}\b|\bs/n\b|se podr[áa]n?\s+acreditar"
-    r"|^extracurricular|^(?:anuales|universitarios)$", re.I)
+    r"|^extracurricular|^(?:anuales|universitarios)$"
+    # A postgraduate page's approvals, fees, staff and filters read as its
+    # plan ("Resolución Ministerial 1578/15", "Acreditada por CONEAU Res. Nº
+    # 497/2021", "1 matrícula + 8 cuotas", "Co-Director", "Días y horarios de
+    # cursada", "Discontinuado"), and its goals ("Impartir docencia a nivel
+    # superior").
+    r"|^resoluci[óo]n (?:ministerial|rectoral|decanal|de estudiante|por coneau)|^resoluci[óo]n n[°º]"
+    r"|acreditad[ao] por coneau|carrera aprobada por|aprobad[ao] por (?:rm|resoluci)"
+    r"|\bmatr[íi]cula\b.*\bcuotas?\b|procedimiento en caso de mora|^aranceles\b"
+    r"|^d[íi]as y horarios\b|^(?:equipo docente|co-?director[a]?|coordinador[a]? acad[ée]mic[oa]|presentaci[óo]n)$"
+    r"|^(?:cualquiera\s*-?|discontinuado|aplicar|vigente|trayecto (?:no )?estructurado)$"
+    r"|^(?:valorar|llevar a cabo|fortalecer|impartir) ", re.I)
+# What a plan adds after a subject's name: its hours, credits or
+# prerequisites ("Fenomenología (18hs.)", "Sanidad Vegetal – 4 UCAs",
+# "Planeamiento y Control Financiero (correlativa 3)").
+_AGREGADO_AL_NOMBRE = re.compile(
+    r"\s*(?:\(\s*\d+(?:[.,]\d+)?\s*(?:hs?\.?|horas?(?: reloj| c[áa]tedra)?|ucas?|cr[ée]ditos?)\.?\s*\)"
+    r"|[–-]\s*\d+(?:[.,]\d+)?\s*(?:ucas?|cr[ée]ditos?)|\(correlativas? [^)]*\))\s*$", re.I)
 # The mark that sends a subject to a footnote: "(**) Análisis Político".
 _LLAMADA = re.compile(r"^\(\*+\)\s*")
 # A bullet or dash before the name, a period after it: "-Cambio climático."
@@ -216,7 +233,7 @@ def nombre_de_la_materia(nombre: str | None) -> str | None:
     n = _LLAMADA.sub("", n)
     if n.startswith(("*", "(")):
         return None
-    n = _VINETA.sub("", n).rstrip(" .;,:")
+    n = _AGREGADO_AL_NOMBRE.sub("", _VINETA.sub("", n)).rstrip(" .;,:")
     # A name the page cut in two starts with the piece's first word in lower
     # case ("de Carga", "sector"); a subject's name starts with a capital.
     if n[:1].islower() or len(n) > MAS_LARGO or _NO_ES_UN_NOMBRE.search(n):
