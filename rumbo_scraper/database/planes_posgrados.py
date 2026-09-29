@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -33,6 +34,10 @@ from rumbo_scraper.spiders.visitante import Visitante
 PAUSA = 0.8
 SITIOS_A_LA_VEZ = 8
 HALLADOS = Path("data/planes_posgrados_hallados.json")
+# A programme page's asides read with its plan: a download, its director, the
+# fees, a requirement, its accreditation (ITBA, UDE, UNC, UNaM, UBA).
+_NO_ES_MATERIA = re.compile(r"(?i)descarg|^director|cuotas?\b|^otros? requisitos?|^acreditaci[óo]n|^generalidades$|^reglamentos?$"
+                            r"|^conoc[ée]\b|^ejes? centrales$")
 
 
 def leer(client: Any, solo: set[str] = frozenset(), documentos: bool = False) -> list[dict[str, Any]]:
@@ -81,6 +86,12 @@ def leer(client: Any, solo: set[str] = frozenset(), documentos: bool = False) ->
                         if materias:
                             fuente = documento
                             break
+                # "3.Gestión Medioambiental", "1-Teoría...", "\"Inglés\"": a number, quotes.
+                materias = [re.sub(r'^\d{1,2}\s*[.\-)]\s*|^["“]|["”]$', "", m).strip() for m in materias]
+                materias = [m for m in materias if not _NO_ES_MATERIA.search(m)]
+                # A plan of three lines is a fragment, not the programme's plan.
+                if len(materias) < 4:
+                    materias = []
                 if materias:
                     u = corto.get(p["universidad_id"], "")
                     print(f"{u:9} | {p['nombre_programa'][:50]:50} | {len(materias):2} | "
