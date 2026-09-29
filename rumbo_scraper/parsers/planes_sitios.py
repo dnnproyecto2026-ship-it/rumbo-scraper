@@ -1071,6 +1071,30 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+def plan_fcf_unam(html: str) -> list[tuple[str, int]]:
+    """UNaM Forestales: a table whose rows go in pairs, the years' titles
+    ("PRIMER AÑO", "SEGUNDO AÑO") over a cell per year, its subjects a list
+    ("Física I (A)", "(C) Dibujo Técnico (C)"): the term's mark, "(A)"
+    yearly or "(C)" by term, is not the name."""
+    tabla = BeautifulSoup(html or "", "html.parser").find("table")
+    materias: list[tuple[str, int]] = []
+    anios: list[int | None] = []
+    for fila in tabla.find_all("tr") if tabla else []:
+        celdas = fila.find_all(["td", "th"])
+        titulos = [anio_de(_texto(c)) for c in celdas]
+        if any(titulos) and not fila.find("li"):
+            anios = titulos
+            continue
+        for anio, celda in zip(anios, celdas):
+            for item in celda.find_all("li") if anio else []:
+                nombre = re.sub(r"^\((?:A|C)\)\s*|\s*\((?:A|C)\)$", "", _texto(item)).strip(" .")
+                # (The introductory module is the entrance course, not a subject.)
+                if nombre and not re.match(r"(?i)m[óo]dulo introductorio", nombre):
+                    _agregar(materias, nombre, anio)
+        anios = []
+    return desde_el_primero(sorted(materias, key=lambda m: m[1]))
+
+
 def plan_ude(texto_con_columnas: str) -> list[tuple[str, int]]:
     """Universidad del Este's plans (``pdftotext -layout``, one page): two
     columns, "1· CUATRIMESTRE" and "2· CUATRIMESTRE", and the year a number
