@@ -67,6 +67,8 @@ class Titulo(unittest.TestCase):
                          "Técnico/a Universitario/a en Emprendimientos Informáticos")
         pagina = "<main><span>Título:</span> <span>Licenciado</span>\n<span> en Geografía</span></main>"
         self.assertEqual(titulo_de_la_pagina(pagina, "Licenciatura en Geografía"), "Licenciado en Geografía")
+        pagina = "<main><h2>Título:</h2><h2>Profesor<br>en Educación<br>Física</h2></main>"
+        self.assertEqual(titulo_de_la_pagina(pagina, "Profesorado en Educación Física"), "Profesor en Educación Física")
 
 if __name__ == "__main__":
     unittest.main()

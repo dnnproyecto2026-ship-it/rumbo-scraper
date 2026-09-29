@@ -89,6 +89,10 @@ def titulo_de_la_pagina(html: str, carrera: str) -> str | None:
     # (A sidebar stays: FAyD's gives "Título: Arquitecto/a" there.)
     for parte in soup.find_all(["nav", "header", "footer", "script", "style"]):
         parte.decompose()
+    # A heading wrapped by hand is one value (UNRC's "<h2>Profesor<br>en Educación<br>Física</h2>").
+    for encabezado in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+        if encabezado.find("br"):
+            encabezado.string = " ".join(encabezado.get_text(" ").split())
     cuerpo = soup.find("main") or soup.body
     if cuerpo is None:
         return None
