@@ -25,7 +25,6 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
 from rumbo_scraper.parsers.datos_posgrado import (_ROTULO_DE_DURACION, _lineas, _primero,
                                                 datos_de_posgrado, duracion_mencionada, es_suyo, limpio,
                                                 minimo_de_meses, nombra_el_programa, titulo_mencionado)
@@ -36,6 +35,10 @@ from rumbo_scraper.spiders.visitante import Visitante
 PAUSA = 0.8
 SITIOS_A_LA_VEZ = 8
 HALLADOS = Path("data/posgrados_datos_hallados.json")
+# A news item, a tag's list or an article view is not a programme's page.
+# (The units' filter also turns away "/posgrado", which is in nearly every
+# programme's own address: UBA Económicas' were all skipped.)
+_NO_ES_SU_PAGINA = re.compile(r"\?view=article|/tag/|/noticias?/")
 CAMPOS = ("titulo_otorgado", "duracion_meses", "modalidad")
 
 

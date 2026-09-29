@@ -25,8 +25,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from rumbo_scraper.database.completar_unidades import _NO_ES_SU_PAGINA
-from rumbo_scraper.database.completar_posgrados import _documentos
+from rumbo_scraper.database.completar_posgrados import _NO_ES_SU_PAGINA, _documentos
 from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa, plan_de_posgrado, plan_economicas_uba, plan_en_lineas
 from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.visitante import Visitante
