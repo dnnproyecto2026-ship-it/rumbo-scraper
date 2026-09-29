@@ -2167,3 +2167,63 @@ def plan_indice_pba(carrera: str, texto: str) -> list[tuple[str, int]]:
             vistas.add(comparison_key(nombre))
             unicas.append((nombre, anio))
     return unicas
+
+
+_PIE_DISENO = re.compile(r"(?i)^(\d+|\||corresponde al exp.*|(y\s+)?su agregado.*|total\b.*)$")
+_CONECTOR_FINAL = re.compile(r"(?i)\b(y|e|de|del|la|las|los|el|en|para|con|a|al|por)$")
+
+
+def _titulo_de_unidad(lineas: list[str], i: int) -> str:
+    """The unit heading above line i (its "Marco orientador"): the lines
+    right above it, past the page's footer; a heading wrapped over two or
+    three lines is one when each line runs on into the next."""
+    j = i - 1
+    while j >= 0 and (not lineas[j] or _PIE_DISENO.match(lineas[j])):
+        j -= 1
+    bloque = []
+    while j >= 0 and lineas[j] and not _PIE_DISENO.match(lineas[j]) and len(bloque) < 3:
+        bloque.insert(0, lineas[j])
+        j -= 1
+    while len(bloque) > 1 and not (all(not l.endswith(".") for l in bloque[:-1])
+                                   and all(_CONECTOR_FINAL.search(a) or b[:1].islower()
+                                           for a, b in zip(bloque, bloque[1:]))):
+        bloque.pop(0)
+    titulo = re.sub(r"\.\s+(I{1,3})$", r" \1", " ".join(bloque).strip().rstrip(".").strip())
+    if titulo.isupper():
+        titulo = titulo[:1] + titulo[1:].lower()
+    return titulo
+
+
+def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[str, int]]:
+    """A Province of Buenos Aires design of 2008–2009 (Educación Física,
+    Educación Especial) that gives each unit as a heading followed by its
+    "Marco orientador", under its year ("PRIMER AÑO"). The units are read
+    in the sections that open with the given headings ("3/ CONTENIDOS DEL
+    PROFESORADO DE EDUCACIÓN FÍSICA"; Especial's common first years and one
+    orientation's), each up to the next "CONTENIDOS …" or numbered part."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    materias: list[tuple[str, int]] = []
+    for seccion in secciones:
+        inicio = next((i for i, l in enumerate(lineas) if re.match(seccion, l)), None)
+        if inicio is None:
+            return []
+        anio = 0
+        for i in range(inicio + 1, len(lineas)):
+            linea = lineas[i]
+            if re.match(r"^(CONTENIDOS\b|\d/ )", linea):
+                break
+            ano = re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", linea)
+            if ano:
+                anio = _ANIO_INDICE[ano.group(1).lower()]
+            elif anio and re.match(r"(?i)^marco orientador\s*[.:]?$", linea):
+                titulo = _titulo_de_unidad(lineas, i)
+                if titulo and not re.match(r"(?i)^(campos? de|herramientas? de la pr[áa]ctica)", titulo) \
+                        and not titulo.endswith(":") and len(titulo.split()) <= 16:
+                    materias.append((titulo, anio))
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, anio in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, anio))
+    return unicas

@@ -38,6 +38,15 @@ _PBA = "https://abc.gob.ar/secretarias/sites/default/files/"
 _SECUNDARIA = "Profesorado de Educación Secundaria en "
 _INICIAL_Y_PRIMARIA = _PBA + ("2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20Inicial"
                               "%20y%20primaria.pdf")
+_FISICA = _PBA + "2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20F%C3%ADsica.pdf"
+_ESPECIAL = _PBA + "2021-05/Dise%C3%B1o%20Curricular%20Profesorado%20de%20Educaci%C3%B3n%20Especial.pdf"
+# Especial: the first two years are common, then each orientation's own.
+_ESPECIAL_COMUN = r"^CONTENIDOS DEL DISEÑO CURRICULAR DEL PROFESORADO DE EDUCACIÓN$"
+
+
+def _especial(orientacion: str) -> Any:
+    return functools.partial(planes_sitios.plan_marco_orientador, (_ESPECIAL_COMUN, r"^CONTENIDOS " + orientacion))
+
 # The designs in force (the Dirección de Formación Docente Inicial's page
 # "Diseño y desarrollo curricular"), by the career's name as the province's
 # school map gives it.
@@ -58,6 +67,16 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
                                              functools.partial(planes_sitios.plan_indice_pba, "Educación Inicial")),
         "Profesorado de Educación Primaria": (_INICIAL_Y_PRIMARIA,
                                               functools.partial(planes_sitios.plan_indice_pba, "Educación Primaria")),
+        "Profesorado de Educación Física": (_FISICA, functools.partial(
+            planes_sitios.plan_marco_orientador, (r"^3/ CONTENIDOS DEL PROFESORADO DE EDUCACIÓN FÍSICA",))),
+        "Profesorado de Educación Especial Orientación en Discapacidad Intelectual": (
+            _ESPECIAL, _especial("DISCAPACIDAD INTELECTUAL")),
+        "Profesorado de Educación Especial Orientación en Discapacidad Neuromotora": (
+            _ESPECIAL, _especial("DISCAPACIDAD NEUROMOTORA")),
+        "Profesorado de Educación Especial Orientación en Ciegos y Disminuidos Visuales": (
+            _ESPECIAL, _especial("CIEGOS Y DISMINUIDOS VISUALES")),
+        "Profesorado de Educación Especial Orientación en Sordos e Hipoacúsicos": (
+            _ESPECIAL, _especial("SORDOS E HIPOACÚSICOS")),
     },
 }
 PAUSA = 2.0
