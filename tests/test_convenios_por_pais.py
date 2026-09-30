@@ -50,3 +50,11 @@ class LeerJsonLd(unittest.TestCase):
                 '"Universidades con vinculación internacional", "itemListElement": [{"@type": "ListItem", '
                 '"item": {"@type": "CollegeOrUniversity", "name": "Yale University"}}]}]}</script>')
         self.assertEqual([f["universidad_destino"] for f in c.leer_json_ld(html, "f")], ["Yale University"])
+
+
+class PaisDeLaEtiqueta(unittest.TestCase):
+    def test_the_last_country_named_is_the_label(self):
+        html = "<ul><li>Universidad Autónoma Metropolitana de los Estados Unidos Mexicanos – México</li></ul>"
+        filas = c.leer_convenios(html, "f", "Universidad Maimónides")
+        self.assertEqual([(f["universidad_destino"], f["pais"]) for f in filas],
+                         [("Universidad Autónoma Metropolitana de los Estados Unidos Mexicanos", "México")])

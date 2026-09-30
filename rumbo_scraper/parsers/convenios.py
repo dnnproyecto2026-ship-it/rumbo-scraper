@@ -107,7 +107,10 @@ def leer_convenios(html: str, pagina: str, propia: str) -> list[dict[str, Any]]:
             continue
         if not _UNA_UNIVERSIDAD.match(texto) or _NO_ES_UN_CONVENIO.match(texto):
             continue
-        pais = _UN_PAIS.search(comparison_key(texto))
+        # The label is the last country named: "Universidad Autónoma
+        # Metropolitana de los Estados Unidos Mexicanos – México" (Maimónides).
+        paises = list(_UN_PAIS.finditer(comparison_key(texto)))
+        pais = paises[-1] if paises else None
         if not pais:
             continue
         # An exchange is with a university abroad. What names Argentina on
