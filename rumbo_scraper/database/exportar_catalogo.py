@@ -633,6 +633,19 @@ def exportar(client: Any) -> dict[str, Any]:
             "carrera_origen": fila["programa_origen"] or carrera_de.get(fila["carrera_id"]),
             "universidad_destino": fila["universidad_destino"], "pais": fila["pais"],
             "ciudad": fila["ciudad"], "fuente_url": fila["fuente_url"]})
+    # The agreements a university publishes for all its students, one list
+    # for the whole institution (``load_convenios --propios``): they say no
+    # career, and a university that lists them by career (Di Tella) keeps its.
+    generales = Path("data/convenios_universidad.json")
+    if generales.exists():
+        por_nombre = json.loads(generales.read_text())
+        for uid, nombre in nombre_uni.items():
+            if por_uni[uid]["convenios_intercambio"]:
+                continue
+            for c in por_nombre.get(nombre) or []:
+                por_uni[uid]["convenios_intercambio"].append({
+                    "carrera_origen": None, "universidad_destino": c["universidad_destino"],
+                    "pais": c.get("pais"), "ciudad": c.get("ciudad"), "fuente_url": c.get("fuente")})
     for fila in todo("alojamientos"):
         por_uni[fila["universidad_id"]]["alojamientos"].append({
             "tipo": fila["tipo_alojamiento"], "descripcion": fila["descripcion"],

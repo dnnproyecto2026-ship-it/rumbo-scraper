@@ -84,6 +84,64 @@ def leer(universidad: dict[str, Any]) -> list[dict[str, Any]]:
     return hallados
 
 
+# Universities whose list of partners is read from the source it is published
+# in, each with its own reader: a page grouped by country (Palermo), a
+# brochure in columns (UB), a table by country with each partner's city
+# (UADE, grado and posgrado). Written to ``data/convenios_universidad.json``,
+# which the export adds as agreements of the whole university.
+FUENTES_PROPIAS: dict[str, list[tuple[str, str]]] = {
+    "Universidad de Palermo": [
+        ("pagina_por_pais", "https://www.palermo.edu/estudiantes_internacionales/vinculaciones.html")],
+    "Universidad de Belgrano": [
+        ("folleto_en_columnas", "https://ub.edu.ar/sites/default/files/movilidad_internacional.pdf")],
+    "Universidad Argentina de la Empresa": [
+        ("tabla_por_pais", "https://www.uade.edu.ar/media/j2gofmnw/grado-convenios-vf.pdf"),
+        ("tabla_por_pais", "https://www.uade.edu.ar/media/pv4pfdap/posgrado-convenios-uade-1.pdf")],
+}
+PROPIOS = Path("data/convenios_universidad.json")
+
+
+def leer_propios(nombre_oficial: str) -> list[dict[str, Any]]:
+    """The partners of one university from its own sources, without repeats."""
+    import subprocess
+    import tempfile
+
+    from bs4 import BeautifulSoup
+
+    from rumbo_scraper.parsers.convenios import (leer_json_ld, leer_por_pais, leer_tabla_por_pais,
+                                                 lineas_por_columnas)
+    from rumbo_scraper.normalizers.text import comparison_key
+
+    hallados: list[dict[str, Any]] = []
+    vistos: set[str] = set()
+    with httpx.Client(headers={"User-Agent": USER_AGENT}, follow_redirects=True, timeout=60) as client:
+        for forma, url in FUENTES_PROPIAS[nombre_oficial]:
+            respuesta = client.get(url)
+            respuesta.raise_for_status()
+            if forma == "pagina_por_pais":
+                soup = BeautifulSoup(respuesta.text, "html.parser")
+                for sobra in soup(["script", "style", "nav", "header", "footer"]):
+                    sobra.decompose()
+                filas = (leer_por_pais(soup.get_text("\n").split("\n"), url, nombre_oficial)
+                         + leer_json_ld(respuesta.text, url))
+            else:
+                with tempfile.NamedTemporaryFile(suffix=".pdf") as archivo:
+                    archivo.write(respuesta.content)
+                    archivo.flush()
+                    if forma == "folleto_en_columnas":
+                        filas = leer_por_pais(lineas_por_columnas(archivo.name), url, nombre_oficial)
+                    else:
+                        texto = subprocess.run(["pdftotext", "-layout", archivo.name, "-"],
+                                               capture_output=True, text=True, timeout=60).stdout
+                        filas = leer_tabla_por_pais(texto, url, nombre_oficial)
+            for fila in filas:
+                clave = comparison_key(fila["universidad_destino"])
+                if clave not in vistos:
+                    vistos.add(clave)
+                    hallados.append(fila)
+    return hallados
+
+
 def aplicar(client: Any, universidad: dict[str, Any],
             convenios: list[dict[str, Any]]) -> int:
     """Nothing is written: see the module docstring. Kept so the day the
@@ -112,7 +170,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Completar los convenios de intercambio")
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
     parser.add_argument("--output", type=Path, default=Path("data/convenios.json"))
+    parser.add_argument("--propios", action="store_true",
+                        help=f"Leer las fuentes revisadas una por una y guardarlas en {PROPIOS}")
     args = parser.parse_args()
+
+    if args.propios:
+        todo_propio = json.loads(PROPIOS.read_text()) if PROPIOS.exists() else {}
+        for nombre in FUENTES_PROPIAS:
+            todo_propio[nombre] = leer_propios(nombre)
+            print(f"{nombre}: {len(todo_propio[nombre])} universidades de destino")
+        PROPIOS.write_text(json.dumps(todo_propio, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        return
 
     from rumbo_scraper.database.supabase import get_supabase_client, select_all
     client = get_supabase_client()

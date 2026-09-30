@@ -58,6 +58,20 @@ PAISES: dict[str, str] = {
     "israel": "Israel", "marruecos": "Marruecos", "egipto": "Egipto",
     "taiwan": "Taiwán", "singapur": "Singapur", "tailandia": "Tailandia",
     "vietnam": "Vietnam", "indonesia": "Indonesia", "filipinas": "Filipinas",
+    "botswana": "Botsuana", "botsuana": "Botsuana", "bulgaria": "Bulgaria",
+    "emiratos arabes": "Emiratos Árabes Unidos", "emiratos arabes unidos": "Emiratos Árabes Unidos",
+    "eslovenia": "Eslovenia", "eslovaquia": "Eslovaquia", "croacia": "Croacia",
+    "serbia": "Serbia", "estonia": "Estonia", "letonia": "Letonia", "lituania": "Lituania",
+    "ucrania": "Ucrania", "chipre": "Chipre", "malta": "Malta", "islandia": "Islandia",
+    "luxemburgo": "Luxemburgo", "monaco": "Mónaco", "escocia ": "Reino Unido",
+    "puerto rico": "Puerto Rico", "hong kong": "China", "macao": "China",
+    "malasia": "Malasia", "libano": "Líbano", "jordania": "Jordania", "qatar": "Catar",
+    "catar": "Catar", "arabia saudita": "Arabia Saudita", "kenia": "Kenia",
+    "nigeria": "Nigeria", "ghana": "Ghana", "tunez": "Túnez", "argelia": "Argelia",
+    "pakistan": "Pakistán", "bangladesh": "Bangladés", "sri lanka": "Sri Lanka",
+    "nepal": "Nepal", "kazajistan": "Kazajistán", "mongolia": "Mongolia",
+    "corea del norte": "Corea del Norte", "republica de corea": "Corea del Sur",
+    "haiti": "Haití", "jamaica": "Jamaica", "trinidad y tobago": "Trinidad y Tobago",
 }
 _UN_PAIS = re.compile(
     r"(?i)\b(" + "|".join(sorted((re.escape(p) for p in PAISES), key=len, reverse=True))
@@ -189,3 +203,213 @@ def _cerrado(nombre: str) -> str:
     if nombre.count(")") > nombre.count("("):
         return nombre.rstrip(") ")
     return nombre.strip()
+
+
+# ---------------------------------------------------------------- by country
+#
+# Many lists do not write the country beside each university: a heading with
+# the country's name ("ALEMANIA", "Australia") stands over the universities
+# of that country, one per line, or one per bullet when the list comes from a
+# brochure. A double degree's list is left out: the lines under each of its
+# universities are the careers it is for, not the rest of its name.
+
+_UNA_INSTITUCION = re.compile(
+    r"(?i:universi|college|coll[èe]ge|institut|school|[ée]cole|escuela|hochschule|"
+    r"polit[ée]cni|polytechni|academ|akademi|conservatori|faculdade|facultad|"
+    r"centro universitario|business)|\b[A-Z]{2,6}\b")
+_SECCION = re.compile(r"(?i)^convenios? de (intercambio|doble t[íi]tulo|doble titulaci[óo]n)")
+
+
+def pais_del_encabezado(linea: str) -> str | None:
+    """The country a line names when the line is nothing but the country."""
+    clave = comparison_key(clean_text(linea)).strip(" :.")
+    return PAISES.get(clave) or PAISES.get(clave.replace(" ", " "))
+
+
+def leer_por_pais(lineas: list[str], fuente: str, propia: str) -> list[dict[str, Any]]:
+    """The universities a list gives under each country's heading.
+
+    With bullets ("• Griffith University"), a line without one continues the
+    name above it ("• Flinders University of South" / "Australia"); without
+    bullets each line is a university. A line that names no institution ends
+    the country's list, and so does a double degree's heading."""
+    con_vinetas = sum(1 for linea in lineas if linea.lstrip().startswith("•")) >= 3
+    clave_propia = comparison_key(propia)
+    convenios: list[dict[str, Any]] = []
+    vistas: set[str] = set()
+    pais: str | None = None
+    en_doble = False
+    actual: list[str] = []
+
+    def cerrar() -> None:
+        if actual and pais and not en_doble:
+            nombre = clean_text(" ".join(actual)).strip(" .,;-–")
+            clave = comparison_key(nombre)
+            if (6 <= len(nombre) <= 140 and pais != "Argentina" and clave not in vistas
+                    and not (clave_propia and clave_propia in clave)):
+                vistas.add(clave)
+                convenios.append({"universidad_destino": nombre, "pais": pais, "ciudad": None,
+                                  "programa": None, "fuente": fuente})
+        actual.clear()
+
+    for bruta in lineas:
+        # A column's end: what runs on is the next column's, not this name's.
+        if bruta == _OTRA_COLUMNA:
+            cerrar()
+            continue
+        linea = clean_text(bruta)
+        if not linea:
+            continue
+        nuevo = pais_del_encabezado(linea)
+        # "• Flinders University of South" / "Australia": in a brochure the
+        # headings are in capitals, and a country in a name's case goes on it.
+        if nuevo and con_vinetas and actual and not linea.isupper():
+            nuevo = None
+        if nuevo:
+            cerrar()
+            pais, en_doble = nuevo, False
+            continue
+        seccion = _SECCION.match(linea)
+        if seccion:
+            cerrar()
+            en_doble = not seccion.group(1).lower().startswith("intercambio")
+            continue
+        if not pais:
+            continue
+        if con_vinetas:
+            if linea.startswith("•"):
+                cerrar()
+                actual.append(linea.lstrip("• ").strip())
+            elif actual and not linea.isupper():
+                actual.append(linea)
+            continue
+        # One university per line: a line naming no institution ends the list.
+        if _UNA_INSTITUCION.search(linea) and len(linea) <= 110 and not linea.endswith("."):
+            cerrar()
+            actual.append(linea)
+            cerrar()
+        else:
+            cerrar()
+            pais = None
+    cerrar()
+    return convenios
+
+
+def leer_json_ld(html: str, fuente: str) -> list[dict[str, Any]]:
+    """The universities a page declares in its structured data as the ones it
+    has agreements with (``CollegeOrUniversity`` items of an ``ItemList``).
+    The page does not give their country."""
+    import json
+
+    convenios: list[dict[str, Any]] = []
+    for bloque in re.findall(r'<script[^>]+application/ld\+json[^>]*>(.*?)</script>', html or "", re.S):
+        try:
+            datos = json.loads(bloque)
+        except ValueError:
+            continue
+        pila = [datos]
+        while pila:
+            nodo = pila.pop()
+            if isinstance(nodo, list):
+                pila.extend(nodo)
+            elif isinstance(nodo, dict):
+                if nodo.get("@type") == "ItemList" and re.search(
+                        r"(?i)convenio|intercambio|vinculaci", f'{nodo.get("name", "")} {nodo.get("description", "")}'):
+                    for item in nodo.get("itemListElement") or []:
+                        cosa = (item or {}).get("item") or {}
+                        if cosa.get("@type") == "CollegeOrUniversity" and cosa.get("name"):
+                            convenios.append({"universidad_destino": clean_text(cosa["name"]), "pais": None,
+                                              "ciudad": None, "programa": None, "fuente": fuente})
+                else:
+                    pila.extend(nodo.values())
+    return convenios
+
+
+_OTRA_COLUMNA = "\x00columna"
+
+
+def lineas_por_columnas(pdf_path: str) -> list[str]:
+    """A brochure's lines read column by column, each page's columns found
+    where its bullets start ("•"), so a country's heading stays over its
+    list (UB)."""
+    import pdfplumber
+    from collections import Counter
+
+    lineas: list[str] = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for pagina in pdf.pages:
+            palabras = pagina.extract_words()
+            comienzos = Counter(round(p["x0"] / 10) * 10 for p in palabras if p["text"] == "•")
+            columnas: list[float] = []
+            for x in sorted(x for x, veces in comienzos.items() if veces >= 2):
+                if not columnas or x - columnas[-1] > 60:
+                    columnas.append(x)
+            bordes = [max(0, c - 8) for c in columnas] or [0]
+            bordes.append(pagina.width)
+            for i in range(len(bordes) - 1):
+                texto = pagina.crop((bordes[i], 0, bordes[i + 1], pagina.height)).extract_text() or ""
+                lineas += texto.split("\n") + [_OTRA_COLUMNA]
+    return lineas
+
+
+# UADE's brochure (``pdftotext -layout``): a country's heading ("    ALEMANIA")
+# over a table "Universidad  Ciudad  Demanda  Áreas Sugeridas", a row per
+# block of lines; a long name or city wraps within its column, above and
+# below the row's middle line.
+_TROZO = re.compile(r"\S+(?: \S+)*")
+
+
+def leer_tabla_por_pais(texto_con_columnas: str, fuente: str, propia: str) -> list[dict[str, Any]]:
+    """The universities a table gives under each country's heading, with the
+    city in the column after the name; a row's pieces go to the column their
+    start falls in, by the positions of the table's own heading."""
+    clave_propia = comparison_key(propia)
+    convenios: list[dict[str, Any]] = []
+    vistas: set[str] = set()
+    pais = None
+    ciudad_desde = demanda_desde = None
+    bloque: list[str] = []
+
+    def cerrar() -> None:
+        if pais and ciudad_desde is not None and bloque:
+            nombre, ciudad = [], []
+            for linea in bloque:
+                for trozo in _TROZO.finditer(linea):
+                    if trozo.start() < ciudad_desde - 2:
+                        nombre.append(trozo.group())
+                    elif demanda_desde is None or trozo.start() < demanda_desde - 2:
+                        ciudad.append(trozo.group())
+            texto = clean_text(" ".join(nombre))
+            ciudad_texto = clean_text(" ".join(ciudad))
+            clave = comparison_key(texto)
+            # A section's heading, a note, the university's own addresses;
+            # a row of several cities, whose wrap runs into the name's column
+            # ("ISM - International School of Munich, Frankfurt, ...").
+            if (re.match(r"(?i)convenios en|la oferta|uade\b", texto) or re.search(r"\d{4}", texto)
+                    or texto.count(",") >= 2 or ciudad_texto.endswith(",")):
+                bloque.clear()
+                return
+            if (texto and _UNA_INSTITUCION.search(texto) and pais != "Argentina" and clave not in vistas
+                    and not (clave_propia and clave_propia in clave)):
+                vistas.add(clave)
+                convenios.append({"universidad_destino": texto, "pais": pais,
+                                  "ciudad": ciudad_texto or None,
+                                  "programa": None, "fuente": fuente})
+        bloque.clear()
+
+    for linea in (texto_con_columnas or "").splitlines():
+        if not linea.strip():
+            cerrar()
+            continue
+        nuevo = pais_del_encabezado(linea)
+        if nuevo:
+            cerrar()
+            pais = nuevo
+            continue
+        if re.search(r"Universidad\s{2,}Ciudad", linea):
+            cerrar()
+            ciudad_desde, demanda_desde = linea.index("Ciudad"), (linea.index("Demanda") if "Demanda" in linea else None)
+            continue
+        bloque.append(linea)
+    cerrar()
+    return convenios
