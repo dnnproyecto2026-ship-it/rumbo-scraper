@@ -51,6 +51,10 @@ def nombre_de_la_carrera(titulo: str) -> str | None:
             return carrera
     titulo = re.sub(r"(?i)^t[ée]cnic[oa](?:/[oa])?\s+superior\b", "Tecnicatura Superior", titulo)
     titulo = re.sub(r"(?i)^profesor(?:/a|a)?\s+(de|en)\b", r"Profesorado \1", titulo)
+    # The INFoD's "Profesorado de Educación Nivel Inicial" is the career the
+    # province and INET call "Profesorado de Educación Inicial": one career,
+    # not two beside each other.
+    titulo = re.sub(r"(?i)\bEducación Nivel Inicial$", "Educación Inicial", titulo)
     return titulo[0].upper() + titulo[1:]
 
 
