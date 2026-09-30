@@ -142,15 +142,33 @@ def formas_nacionales(nombres: list[str]) -> dict[str, str]:
     most accents, then the most used, then the one with more capitals."""
     variantes: dict[str, Counter[str]] = defaultdict(Counter)
     for nombre in nombres:
-        variantes[comparison_key(nombre)][nombre] += 1
+        variantes[clave_nacional(nombre)][nombre] += 1
 
     def puntaje(nombre: str, veces: int) -> tuple[int, int, int, int]:
         rara = len(re.findall(r"[a-záéíóúñ][A-ZÁÉÍÓÚÑ]", nombre))
         tildes = sum(ch in "áéíóúÁÉÍÓÚ" for ch in nombre)
-        return (-rara, tildes, veces, sum(ch.isupper() for ch in nombre))
+        # The name most places use: "Profesorado de Educación Primaria" (620)
+        # over "Profesorado en Educación Primaria" (35).
+        return (-rara, veces, tildes, sum(ch.isupper() for ch in nombre))
 
     return {clave: max(cuenta.items(), key=lambda item: puntaje(*item))[0]
             for clave, cuenta in variantes.items() if len(cuenta) > 1}
+
+
+# The words that join a career's name and change nothing of what it is:
+# "Ingeniería en Informática" and "Ingeniería Informática", "Profesorado de
+# Historia" and "Profesorado en Historia", "Higiene y Seguridad en el
+# Trabajo" and "del Trabajo".
+_CONECTORES = {"en", "de", "del", "la", "las", "los", "el", "para", "a", "al"}
+
+
+def clave_nacional(nombre: str) -> str:
+    """Two spellings of one career: accents, capitals, punctuation, the
+    connecting words and the gendered endings ("Contador/a Público/a") left
+    out. The words that name a different degree ("Universitario", "Sistemas
+    de Información") stay."""
+    k = comparison_key(re.sub(r"(?<=\w)/(?:a|as|o|os)\b", "", nombre))
+    return " ".join(w for w in re.findall(r"[a-z0-9]+", k) if w not in _CONECTORES)
 
 
 def clave_de_carrera(nombre: str) -> str:
@@ -498,7 +516,7 @@ def exportar(client: Any) -> dict[str, Any]:
             c["denominacion_canonica"] or c["nombre_carrera"], sedes_de[uid])
         if not base:
             continue
-        base = forma.get(comparison_key(base), base)
+        base = forma.get(clave_nacional(base), base)
         clave = (uid, clave_de_carrera(base))
         nuevo = clave not in representante
         nombre = representante.setdefault(clave, base)
@@ -537,7 +555,7 @@ def exportar(client: Any) -> dict[str, Any]:
             p["nombre_programa"], sedes_de[p["universidad_id"]])
         if not base:
             continue
-        base = forma.get(comparison_key(base), base)
+        base = forma.get(clave_nacional(base), base)
         clave = (p["universidad_id"], clave_de_carrera(base))
         nuevo = clave not in vistos_posgrado
         posgrado_nombre[p["id"]] = vistos_posgrado.setdefault(clave, base)
