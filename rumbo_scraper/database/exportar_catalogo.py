@@ -21,7 +21,7 @@ import argparse
 import glob
 import json
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -134,6 +134,25 @@ def nombre_de_la_carrera(nombre: str, sedes: list[str]) -> tuple[str, str | None
     return n, modalidad, sede
 
 
+def formas_nacionales(nombres: list[str]) -> dict[str, str]:
+    """One spelling per career name across the country: "Ingenieria
+    electrica" at one university and "Ingeniería Eléctrica" at another are
+    one career, not two in the catalogue. The spelling kept is the one
+    without a capital inside a word ("AntropologÍa"), then the one with the
+    most accents, then the most used, then the one with more capitals."""
+    variantes: dict[str, Counter[str]] = defaultdict(Counter)
+    for nombre in nombres:
+        variantes[comparison_key(nombre)][nombre] += 1
+
+    def puntaje(nombre: str, veces: int) -> tuple[int, int, int, int]:
+        rara = len(re.findall(r"[a-záéíóúñ][A-ZÁÉÍÓÚÑ]", nombre))
+        tildes = sum(ch in "áéíóúÁÉÍÓÚ" for ch in nombre)
+        return (-rara, tildes, veces, sum(ch.isupper() for ch in nombre))
+
+    return {clave: max(cuenta.items(), key=lambda item: puntaje(*item))[0]
+            for clave, cuenta in variantes.items() if len(cuenta) > 1}
+
+
 def clave_de_carrera(nombre: str) -> str:
     """Two names of one career share this: accents, punctuation, connecting
     words and word order left out."""
@@ -211,7 +230,7 @@ _NO_ES_UN_NOMBRE = re.compile(
     r"|\bmatr[íi]cula\b.*\bcuotas?\b|procedimiento en caso de mora|^aranceles\b"
     r"|^d[íi]as y horarios\b|^(?:equipo docente|co-?director[a]?|coordinador[a]? acad[ée]mic[oa]|presentaci[óo]n)$"
     r"|^(?:cualquiera\s*-?|discontinuado|aplicar|vigente|trayecto (?:no )?estructurado)$"
-    r"|^(?:valorar|llevar a cabo|fortalecer|impartir) ", re.I)
+    r"|^(?:valorar|llevar a cabo|fortalecer|impartir) |^eje tem[áa]tico\b", re.I)
 # What a plan adds after a subject's name: its hours, credits or
 # prerequisites ("Fenomenología (18hs.)", "Sanidad Vegetal – 4 UCAs",
 # "Planeamiento y Control Financiero (correlativa 3)").
@@ -467,6 +486,10 @@ def exportar(client: Any) -> dict[str, Any]:
     # Each career under the name of the career it is, merged with the others
     # of its university that come out the same.
     representante: dict[tuple[str, str], str] = {}
+    forma = formas_nacionales(
+        [n for c in carreras if (n := nombre_de_la_carrera(c["denominacion_canonica"] or c["nombre_carrera"],
+                                                             sedes_de[c["universidad_id"]])[0])]
+        + [n for p in posgrados if (n := nombre_de_la_carrera(p["nombre_programa"], sedes_de[p["universidad_id"]])[0])])
     for c in sorted(carreras, key=lambda c: len(c["nombre_carrera"])):
         uid = c["universidad_id"]
         if _UN_BLOQUE_DE_MATERIAS.search(comparison_key(c["nombre_carrera"])):
@@ -475,6 +498,7 @@ def exportar(client: Any) -> dict[str, Any]:
             c["denominacion_canonica"] or c["nombre_carrera"], sedes_de[uid])
         if not base:
             continue
+        base = forma.get(comparison_key(base), base)
         clave = (uid, clave_de_carrera(base))
         nuevo = clave not in representante
         nombre = representante.setdefault(clave, base)
@@ -484,7 +508,11 @@ def exportar(client: Any) -> dict[str, Any]:
         if nuevo:
             por_uni[uid]["carreras"].append({
                 "nombre_carrera": nombre, "denominacion_canonica": nombre,
-                "nivel": c["nivel"], "titulo_otorgado": c["titulo_otorgado"],
+                # A master's, doctorate or specialization a university listed
+                # among its degrees is a postgraduate programme all the same.
+                "nivel": "posgrado" if re.match(r"(?i)^(?:maestr[íi]a|doctorado|especializaci[óo]n)\b", nombre)
+                else c["nivel"],
+                "titulo_otorgado": c["titulo_otorgado"],
                 "duracion_anios": c["duracion_anios"],
                 "descripcion_breve": c["descripcion_breve"],
                 "facultad_nombre": facultad_nombre,
@@ -509,6 +537,7 @@ def exportar(client: Any) -> dict[str, Any]:
             p["nombre_programa"], sedes_de[p["universidad_id"]])
         if not base:
             continue
+        base = forma.get(comparison_key(base), base)
         clave = (p["universidad_id"], clave_de_carrera(base))
         nuevo = clave not in vistos_posgrado
         posgrado_nombre[p["id"]] = vistos_posgrado.setdefault(clave, base)
@@ -628,6 +657,10 @@ def exportar(client: Any) -> dict[str, Any]:
         por_uni[uid]["descripciones_materias"].append({"materia": nombre, "descripcion": texto})
     for persona in todo("personas"):
         if not persona["universidad_id"] or persona["activa"] is False:
+            continue
+        # A teacher is a name: "a definir", "con inicio de clases" or a
+        # lone surname in lower case ("dotto") are a timetable's blanks.
+        if not re.match(r"^[A-ZÁÉÍÓÚÑ][^\s]*\s+\S", (persona["nombre_completo"] or "").strip()):
             continue
         por_uni[persona["universidad_id"]]["docentes"].append({
             "nombre": persona["nombre_completo"],
