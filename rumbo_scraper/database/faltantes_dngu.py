@@ -47,6 +47,8 @@ _LLAMADA = {
     "Instituto Universitario Escuela Argentina de Negocios": "UEAN",
     "Universidad de San Pablo - T": "USPT",
     "Universidad Nacional José C. Paz": "UNPAZ",
+    "Instituto Universitario Escuela Superior de Economía y Administración de Empresas": "ESEADE",
+    "Instituto Universitario de Ciencias de la Salud de la Fundación Barceló": "IUCSB",
 }
 
 

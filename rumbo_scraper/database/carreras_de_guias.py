@@ -384,6 +384,34 @@ GUIAS.update({
 })
 
 
+# The universities whose own sites turn automated readers away (Cloudflare,
+# 403): their careers come from the Ministry's national guide (DNGU), the
+# official list of the degrees each one gives. Campus and street are the ones
+# the guide gives for most of its rows.
+def _dngu(nombre: str) -> tuple[tuple[str, Callable[[str, str], list[CarreraDeLaGuia]]], ...]:
+    return ((gn.DNGU, gn.leer_dngu(nombre)),)
+
+
+GUIAS.update({
+    "UNSAM": Guia("Universidad Nacional de San Martín", "UNSAM", "Estatal", "https://www.unsam.edu.ar",
+                  _dngu("Universidad Nacional de San Martín"), "San Martín", "Martín de Irigoyen 3100", 30),
+    "UNLaR": Guia("Universidad Nacional de La Rioja", "UNLaR", "Estatal", "https://www.unlar.edu.ar",
+                  _dngu("Universidad Nacional de La Rioja"), "La Rioja", "Luis M. de la Fuente S/N", 30),
+    "UNdeC": Guia("Universidad Nacional de Chilecito", "UNdeC", "Estatal", "https://www.undec.edu.ar",
+                  _dngu("Universidad Nacional de Chilecito"), "Chilecito", "Ruta Los Peregrinos s/n, Los Sarmientos", 10),
+    "UPLaB": Guia("Universidad Provincial de Laguna Blanca", "UPLaB", "Estatal", "https://www.uplab.edu.ar",
+                  _dngu("Universidad Provincial de Laguna Blanca"), "Laguna Blanca", "Ruta Nacional 86 km 1352", 3),
+    "UFASTA": Guia("Universidad de la Fraternidad de Agrupaciones Santo Tomás de Aquino", "UFASTA", "Privada",
+                   "https://www.ufasta.edu.ar",
+                   _dngu("Universidad de la Fraternidad de Agrupaciones Santo Tomás de Aquino"),
+                   "Mar del Plata", "Gascón 3145", 20),
+    "UCEL": Guia("Universidad del Centro Educativo Latinoamericano", "UCEL", "Privada", "https://www.ucel.edu.ar",
+                 _dngu("Universidad del Centro Educativo Latinoamericano"), "Rosario", "Av. Carlos Pellegrini 1332", 10),
+    "EUT": Guia("Escuela Universitaria de Teología", "EUT", "Privada", "https://www.cedier.org.ar",
+                _dngu("Escuela Universitaria de Teología"), "Mar del Plata", "Pasaje Catedral 1750", 1,
+                ("Grado", "Pregrado"), "instituto_universitario"),
+})
+
 def clave(nombre: str) -> str:
     """"Licenciatura Universitaria en Astronomía" and "Licenciatura en
     Astronomía" are one career."""

@@ -2741,3 +2741,80 @@ def leer_titulo_terciario(html: str, pagina: str) -> list[CarreraDeLaGuia]:
             carrera = _terciaria(texto, pagina)
             return [carrera] if carrera else []
     return []
+
+
+# --- the national guide (DNGU) ------------------------------------------------
+#
+# The Ministry's guide (``parsers.guia_dngu``, read into data/guia_dngu.json)
+# names degrees, not careers: "Ingeniero/a Civil", "Abogado", "Licenciado/a
+# en Nutrición". A career is what it is a degree of: "Ingeniería Civil",
+# "Abogacía", "Licenciatura en Nutrición". It is the source for a university
+# whose own site turns automated readers away (Cloudflare, 403): the guide is
+# official, but not the university's own domain.
+
+DNGU = "https://guiadecarreras.siu.edu.ar/carreras_de_pregrado_y_grado.php"
+_PROFESIONES_DNGU = (
+    (r"m[ée]dico veterinario", "Veterinaria"), (r"veterinario", "Veterinaria"), (r"m[ée]dico", "Medicina"),
+    (r"abogado", "Abogacía"), (r"escribano", "Escribanía"), (r"procurador", "Procuración"),
+    (r"arquitecto", "Arquitectura"), (r"bioqu[íi]mico", "Bioquímica"), (r"farmac[ée]utico", "Farmacia"),
+    (r"odont[óo]logo", "Odontología"), (r"psic[óo]logo", "Psicología"), (r"kinesi[óo]logo.*", "Kinesiología y Fisiatría"),
+    (r"nutricionista", "Nutrición"), (r"contador p[úu]blico(?: nacional)?", "Contador Público"),
+    (r"ge[óo]logo", "Geología"), (r"comunicador social", "Comunicación Social"),
+)
+_GENERO_DNGU = re.compile(r"/(?:as?|os?|e)\b")
+
+
+def carrera_del_titulo(titulo: str) -> str:
+    """ "Ingeniero/a Mecánico/a" -> "Ingeniería Mecánica", "Abogado" -> "Abogacía"."""
+    t = clean_text(_GENERO_DNGU.sub("", titulo)).rstrip(" .")
+    for patron, carrera in _PROFESIONES_DNGU:
+        if re.fullmatch(patron, t, re.I):
+            return carrera
+    reglas = (
+        (r"^ingeniero\s+agr[óo]nomo$", lambda m: "Ingeniería Agronómica"),
+        (r"^ingeniero\s+(en\s+.+)$", lambda m: "Ingeniería " + m.group(1)),
+        (r"^ingeniero\s+(.+)$", lambda m: "Ingeniería " + " ".join(re.sub(r"o$", "a", w) for w in m.group(1).split())),
+        (r"^licenciad[oa]\s+(en\s+.+)$", lambda m: "Licenciatura " + m.group(1)),
+        (r"^t[ée]cnico\s+universitario\s+(.+)$", lambda m: "Tecnicatura Universitaria " + m.group(1)),
+        (r"^t[ée]cnico\s+superior\s+(.+)$", lambda m: "Tecnicatura Superior " + m.group(1)),
+        (r"^t[ée]cnico\s+(.+)$", lambda m: "Tecnicatura " + m.group(1)),
+        (r"^profesor\s+(.+)$", lambda m: "Profesorado " + m.group(1)),
+        (r"^traductor\s+(.+)$", lambda m: "Traductorado " + m.group(1)),
+        (r"^int[ée]rprete\s+(.+)$", lambda m: "Interpretariado " + m.group(1)),
+        (r"^enfermero(\s+universitario)?$", lambda m: "Enfermería" + (" Universitaria" if m.group(1) else "")),
+        (r"^dise[ñn]ador\s+(.+)$", lambda m: "Diseño " + m.group(1)),
+    )
+    for patron, hacer in reglas:
+        m = re.match(patron, t, re.I)
+        if m:
+            return hacer(m)
+    return t[:1].upper() + t[1:]
+
+
+def leer_dngu(universidad: str) -> Callable[[str, str], list[CarreraDeLaGuia]]:
+    """The reader of one university's careers in the national guide."""
+    import json
+    from pathlib import Path
+
+    def leer(_html: str, pagina: str) -> list[CarreraDeLaGuia]:
+        carreras: list[CarreraDeLaGuia] = []
+        vistas: set[str] = set()
+        for fila in json.loads(Path("data/guia_dngu.json").read_text()):
+            if fila["universidad"] != universidad or re.match(r"(?i)t[íi]tulo intermedio", fila["tipo"]):
+                continue
+            if re.search(r"(?i)ciclo de (complementaci|licenciatura)|^cbc\b|^ciclo b[áa]sico|t[íi]tulo de base", fila["titulo"]):
+                continue
+            titulo = re.sub(r"\s+-\s*(MD|\d+a|Presencial)\b.*$", "", fila["titulo"]).strip()
+            nombre = carrera_del_titulo(titulo)
+            if nombre.lower() in vistas:
+                continue
+            m = re.match(r"(\d+(?:[.,]\d+)?)\s*(a|semestre|cuatrimestre)", fila["duracion"].lower())
+            duracion = (float(m.group(1).replace(",", ".")) / (1 if m.group(2) == "a" else 2)) if m else None
+            # The guide files a "Técnico Universitario" under "Grado" too: the
+            # level is the name's, as everywhere else.
+            carrera = _carrera(nombre, fila["facultad"], pagina, None, duracion)
+            if carrera:
+                vistas.add(nombre.lower())
+                carreras.append(carrera)
+        return carreras
+    return leer
