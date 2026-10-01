@@ -76,6 +76,8 @@ _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicio
 _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
+                        # UNSE Forestales: the curriculum tab its "Plan de estudio" links.
+                        ("fcf.unse.edu.ar", planes_sitios.plan_fcf_unse),
                         ("fcyt.uader.edu.ar", planes_sitios.plan_fcyt_uader),
                         # UNaM Forestales (both its domains): numbered rows under each year.
                         ("facfor.unam.edu.ar", planes_sitios.plan_forestales_unam),

@@ -2693,3 +2693,34 @@ def plan_eco_unrc(ruta: str) -> list[tuple[str, int]]:
 
 
 plan_eco_unrc.ruta = True
+
+
+def plan_fcf_unse(html: str) -> list[tuple[str, int]]:
+    """UNSE Forestales: the career's curriculum tab, a heading per year
+    ("Primer Año") over its subjects, each its code and name ("57 Botánica
+    Forestal"); a subject given in two halves ("Taller I: ... (1º Parte)",
+    "(2º Parte)") is one. The elective slots have no code ("Asignatura
+    Optativa I (IF)") and the pool after "Optativas" is not the plan."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for parte in soup(["script", "style"]):
+        parte.decompose()
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in soup.get_text("\n").split("\n"):
+        linea = clean_text(linea).replace("\xa0", " ").strip()
+        if not linea:
+            continue
+        nuevo = anio_de(linea)
+        if nuevo:
+            if materias and nuevo <= max(a for _, a in materias):
+                break  # the same plan again, further down the page
+            anio = nuevo
+            continue
+        if anio and re.match(r"(?i)^optativas?$|^×$", linea):
+            break
+        fila = re.match(r"^\d{1,3}\s+(\S.*)$", linea)
+        if anio and fila:
+            nombre = re.sub(r"(?i)\s*\(\s*\d\s*[°º]?\s*parte\s*\)\s*$", "", fila.group(1)).rstrip(" .")
+            if all(nombre.lower() != m.lower() for m, _ in materias):
+                _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
