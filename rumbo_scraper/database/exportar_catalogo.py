@@ -263,8 +263,9 @@ _NO_ES_UN_NOMBRE = re.compile(
 _AGREGADO_AL_NOMBRE = re.compile(
     r"\s*(?:\(\s*\d+(?:[.,]\d+)?\s*(?:hs?\.?|horas?(?: reloj| c[áa]tedra)?|ucas?|cr[ée]ditos?)\.?\s*\)"
     r"|[–-]\s*\d+(?:[.,]\d+)?\s*(?:ucas?|cr[ée]ditos?)|\(correlativas? [^)]*\))\s*$", re.I)
-# The mark that sends a subject to a footnote: "(**) Análisis Político".
-_LLAMADA = re.compile(r"^\(\*+\)\s*")
+# The mark that sends a subject to a footnote: "(**) Análisis Político",
+# also after the name: "Bioprocesos I (***)", "Práctica Pre-Profesional (***) (****)".
+_LLAMADA = re.compile(r"^\(\*+\)\s*|(?:\s*\(\*+\))+$")
 # A bullet or dash before the name, a period after it: "-Cambio climático."
 _VINETA = re.compile(r"^[-–—•·>]+\s*")
 MAS_LARGO = 150

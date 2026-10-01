@@ -37,7 +37,9 @@ _TILDES = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
 # The whole cell is the column's name: a subject can start with "Materia".
 _MATERIA = re.compile(r"(asignaturas?|materias?|asignatura-actividad|espacios? curricular(es)?|"
                       r"unidad(es)? curricular(es)?|actividad(es)? curricular(es)?|"
-                      r"nombre de la (asignatura|materia)|asignaturas? obligatorias?)")
+                      r"nombre de la (asignatura|materia)|asignaturas? obligatorias?|"
+                      # UNMdP Económicas: "Año | Cuat. | Área | Cód. | Denominación".
+                      r"denominacion( de la (asignatura|materia))?)")
 _ANIO = re.compile(r"^(ano|anio|ano de cursada|nivel)$")
 _CUATRIMESTRE = re.compile(r"^(cuat\.?|cuatr\.?|cuatrimestre|semestre|periodo)$")
 _ORDINAL = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
@@ -49,7 +51,9 @@ _ORDINAL_TERMINO = {**_ORDINAL, "octavo": 8, "noveno": 9, "decimo": 10, "undecim
 # A row that only says which term follows: "Segundo Cuatrimestre" (UNQ).
 _TERMINO_EN_FILA = re.compile(r"^(" + "|".join(_ORDINAL_TERMINO) + r")\s+(cuatrimestre|semestre)$")
 _NO_ES_MATERIA = re.compile(r"^(total|subtotal|carga horaria|horas|creditos|optativ|electiv|"
-                            r"seminarios? optativ|ciclo|nucleo|bloque|area)\b")
+                            r"seminarios? optativ|ciclo|nucleo|bloque|area)\b|"
+                            # The bare pool of electives ("Optativas"), not a subject.
+                            r"^(optativas|electivas)$")
 
 MINIMO = 10
 PARTE_CON_ANIO = 0.8
@@ -106,6 +110,11 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
         for fila in tabla[inicio:]:
             llenas = [c for c in fila if c]
             if len(llenas) == 1:
+                # Each orientation's own subjects follow (UNMdP's Contador
+                # Público, one per orientation): a student takes one, so
+                # they are not the plan's sequence.
+                if re.match(r"orientacion(es)?\b", _plano(llenas[0])):
+                    break
                 en_termino = _TERMINO_EN_FILA.match(_plano(llenas[0]))
                 if en_termino:
                     termino_de_fila = _ORDINAL_TERMINO[en_termino.group(1)]
