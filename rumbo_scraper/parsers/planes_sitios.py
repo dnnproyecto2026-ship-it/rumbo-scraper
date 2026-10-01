@@ -83,6 +83,10 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
     # "Algebra I (anual)", "Rítmica (Cuatr.)", "Proyecto I Anual", "Matemática 1°C",
     # "(1° Cuatrimestre)", "(2do cuatrimestre)", "(Anual) Créditos 10.00": how long it runs, not its name.
     nombre = re.sub(r"(?i)\s*cr[ée]ditos\s*[\d.,]+\s*$", "", nombre)
+    # "Optativa 1 (***)": the mark of a footnote.
+    nombre = re.sub(r"\s*\(\*+\)\s*$", "", nombre)
+    # "Redes y Comunicaciones (Sexto Semestre)": when it is taken.
+    nombre = re.sub(r"(?i)\s*\((?:primer|segundo|tercer|cuarto|quinto|sexto|s[ée]ptimo|octavo|noveno|d[ée]cimo)\s+semestre\)\s*$", "", nombre)
     nombre = re.sub(r"(?i)\s*\(\s*(?:anual|cuatrimestral|semestral|cuatr\.?|\d\s*(?:[°º]|er|do|ro|to)?\s*(?:cuatr\.?|cuatrimestre|semestre|c))\s*\)\s*$", "", nombre)
     # A code before or after the name: "0401 Cálculo I" (UNRC Ingeniería), "Física I (00131)" (UNNOBA).
     nombre = re.sub(r"^\d{3,5}\s+(?=[A-ZÁÉÍÓÚÑ])", "", nombre)
@@ -2912,4 +2916,49 @@ def plan_famaf(html: str) -> list[tuple[str, int]]:
             if anio and enlace:
                 # "Análisis Matemático I (LC - LMA - LHM)": the careers that share it.
                 _agregar(materias, re.sub(r"\s*\([A-Z]{2,4}(?:\s*-\s*[A-Z]{2,4})*\)\s*$", "", _texto(enlace)), anio)
+    return desde_el_primero(materias)
+
+
+def plan_tabla_por_encabezados(html: str) -> list[tuple[str, int]]:
+    """A plan's table whose header names its columns: the subject's
+    ("Nombre", "Asignatura", "Cursos", "Materia") and the year's ("Año"), or
+    the year in a row of its own above ("PRIMER AÑO"). UNLP Informática (a
+    code, the name, how long, prerequisites) and Económicas (the cycle in a
+    cell spanning its rows, then course, term, year, hours): rows are aligned
+    from the right, where a spanning cell does not shift them. A course of
+    weeks before the first term (Informática's "6 Semanas") is the levelling
+    course, not the plan; a row announcing the electives ends it."""
+    materias: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        cabecera: list[str] | None = None
+        anio_de_la_fila: int | None = None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) == 1 or (celdas and all(not c for c in celdas[1:])):
+                # "ELEGIR DOS OPTATIVAS SEGÚN LA ORIENTACIÓN": the pool of
+                # electives that follows is not the plan.
+                if re.search(r"(?i)optativ|orientaci[óo]n|electiv", celdas[0]):
+                    break
+                anio_de_la_fila = anio_de(celdas[0]) or anio_de_la_fila
+                continue
+            claves = [comparison_key(c) for c in celdas]
+            if any(c in ("nombre", "asignatura", "asignaturas", "cursos", "materia", "materias") for c in claves):
+                cabecera = claves
+                continue
+            if not cabecera:
+                continue
+            nombre_i = next(i for i, c in enumerate(cabecera)
+                            if c in ("nombre", "asignatura", "asignaturas", "cursos", "materia", "materias"))
+            desde_la_derecha = len(cabecera) - nombre_i
+            if len(celdas) < desde_la_derecha:
+                continue
+            nombre = celdas[-desde_la_derecha]
+            anio = anio_de_la_fila
+            if "ano" in cabecera:
+                atras = len(cabecera) - cabecera.index("ano")
+                numero = re.match(r"\s*(\d)", celdas[-atras]) if len(celdas) >= atras else None
+                anio = int(numero.group(1)) if numero else None
+            if any(re.search(r"(?i)\d+\s*semanas", c) for c in celdas) or not re.search(r"[A-Za-zÁÉÍÓÚáéíóú]{3}", nombre):
+                continue
+            _agregar(materias, nombre, anio)
     return desde_el_primero(materias)

@@ -215,6 +215,18 @@ def plan_mas_nuevo(html: str, pagina: str) -> str | None:
     return max(planes)[1] if planes else None
 
 
+def planes_con_anio(html: str, pagina: str) -> list[str]:
+    """The plans a career page links by year ("Plan 2021"), newest first; a
+    menu may link other careers' plans of the same year."""
+    planes = []
+    for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
+        anio = _PLAN_CON_ANIO.match(clean_text(enlace.get_text(" ")))
+        url = urljoin(pagina, enlace["href"].strip())
+        if anio and url not in [u for _, u in planes]:
+            planes.append((int(anio.group(1)), url))
+    return [u for _, u in sorted(planes, key=lambda p: -p[0])]
+
+
 def leer_plan_fcefyn(html: str) -> list[tuple[str, int]]:
     soup = BeautifulSoup(html or "", "html.parser")
     for parte in soup.find_all(["script", "style", "nav", "header", "footer"]):

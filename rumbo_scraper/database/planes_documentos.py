@@ -61,7 +61,8 @@ import math
 
 from rumbo_scraper.parsers import plan_por_ciclos, plan_por_columnas, plan_por_cuatrimestre, planes_sitios
 from rumbo_scraper.parsers import uncuyo, unl
-from rumbo_scraper.parsers.unc import leer_plan_fcefyn, plan_mas_nuevo
+from rumbo_scraper.parsers.unc import leer_plan_fcefyn, plan_mas_nuevo, planes_con_anio
+from rumbo_scraper.parsers.unidad import es_la_pagina_de
 from rumbo_scraper.spiders.generico import _documento_del_plan, _enlace_al_plan
 from rumbo_scraper.spiders.visitante import Visitante
 
@@ -73,7 +74,7 @@ _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicio
                        "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
                        "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
                        "artes.unne.edu.ar", "unicen.edu.ar")
-_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
+_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("info.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("econo.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
                         # UNSE Forestales: the curriculum tab its "Plan de estudio" links.
@@ -537,6 +538,13 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             propia = [p for p in urlparse(url).path.split("/") if len(p) > 5]
             if nuevo and propia and propia[-1] not in nuevo:
                 nuevo = None
+                # Of the year's plans the menu links (UNLP Informática links every
+                # career's "Plan 2021"), the newest whose page names this career.
+                for otro in planes_con_anio(html, url)[:4]:
+                    if es_la_pagina_de(visitante.get(otro), carrera["nombre_carrera"]):
+                        nuevo = otro
+                        break
+                    time.sleep(PAUSA)
             nuevo = nuevo or _enlace_al_plan(html, url, dominios)
             if nuevo:
                 html_del_plan = visitante.get(nuevo)
