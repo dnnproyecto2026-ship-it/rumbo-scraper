@@ -253,7 +253,10 @@ _NO_ES_UN_NOMBRE = re.compile(
     # and the headings of its annex ("Contenidos mínimos de las materias",
     # "Tabla").
     r"|^(?:ingenier|licenciad|t[ée]cnic|profesor|bachiller|analista)[oa]?/[oa]s?\b"
-    r"|^contenidos m[íi]nimos\b|^tabla$", re.I)
+    r"|^contenidos m[íi]nimos\b|^tabla$"
+    # A plan table's sum and a prerequisite note: "Totales", "TODO 1º AÑO
+    # APROBADO (1-9)".
+    r"|^totales?$|^todo \d", re.I)
 # What a plan adds after a subject's name: its hours, credits or
 # prerequisites ("Fenomenología (18hs.)", "Sanidad Vegetal – 4 UCAs",
 # "Planeamiento y Control Financiero (correlativa 3)").
