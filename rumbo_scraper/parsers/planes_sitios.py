@@ -2508,3 +2508,74 @@ def plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
         if materias:
             break
     return desde_el_primero(materias)
+
+
+_FILA_UNPAZ = re.compile(r"^(\s*)(\d{2})\s{2,}(\S.*?)(?:\s{2,}(?:Anual|Cuatrimestral|Bimestral|Semestral|Trimestral)\b.*)?$")
+
+
+def plan_unpaz(texto: str) -> list[tuple[str, int]]:
+    """UNPAZ's career brochures (``pdftotext -layout``): one table per year,
+    each under its header ("Código  Asignatura  Régimen  Horas  Correlatividad")
+    with the year's name beside it ("Primer año", wherever the table's
+    middle falls, or just over the header), each subject its two-digit code,
+    its name and its term; a name too long for its cell goes on in the line
+    right below, at the name's column ("Introducción a los Procedimientos" /
+    "de Quirófano"). The options of an elective slot ("35 Optativa 1" over
+    "OP1. 1 – ...") are not the sequence: the slot is. The degree's lines
+    ("Título intermedio", "Título") close a table. A table whose year is not
+    named, or named twice, makes the plan unreadable."""
+    lineas = [l for l in texto.splitlines() if l.strip() and l.strip().lower() not in {"horas", "semanales"}]
+    bloques: list[dict] = []
+    actual: dict | None = None
+    pendiente: int | None = None
+    seguida = False
+    for numero, linea in enumerate(lineas):
+        limpia = linea.strip()
+        if re.search(r"C[óo]digo\s+Asignatura", linea):
+            actual = {"anios": set() if pendiente is None else {pendiente}, "filas": []}
+            bloques.append(actual)
+            pendiente, seguida = None, False
+            continue
+        nombre_del_anio = re.match(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\b", limpia)
+        if nombre_del_anio:
+            anio = _ORDINALES[nombre_del_anio.group(1).lower()]
+            # Just over the next table's header: that table's year.
+            if numero + 1 < len(lineas) and re.search(r"C[óo]digo\s+Asignatura", lineas[numero + 1]):
+                pendiente = anio
+                continue
+            if actual is not None:
+                actual["anios"].add(anio)
+            resto = limpia[nombre_del_anio.end():]
+            if not resto.strip():
+                continue
+            linea = " " * (len(linea) - len(resto)) + resto
+            limpia = linea.strip()
+        if actual is None:
+            continue
+        if re.match(r"(?i)t[íi]tulo\b", limpia):
+            actual, seguida = None, False
+            continue
+        fila = _FILA_UNPAZ.match(linea)
+        if fila:
+            nombre = re.split(r"\s{2,}", fila.group(3).strip())[0]
+            actual["filas"].append([len(fila.group(1)) + len(fila.group(2)), nombre])
+            seguida = True
+            continue
+        # The rest of a name, right below it at its column.
+        sangria = len(linea) - len(linea.lstrip())
+        if (seguida and re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", limpia)
+                and actual["filas"][-1][0] < sangria <= actual["filas"][-1][0] + 12
+                and not re.search(r"\s{2,}", limpia)):
+            actual["filas"][-1][1] += " " + limpia
+            continue
+        seguida = False
+    materias: list[tuple[str, int]] = []
+    for bloque in bloques:
+        if not bloque["filas"]:
+            continue
+        if len(bloque["anios"]) != 1:
+            return []
+        anio = next(iter(bloque["anios"]))
+        for _, nombre in bloque["filas"]:
+            _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
