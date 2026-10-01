@@ -50,6 +50,9 @@ LISTADOS: dict[str, tuple[str, ...]] = {
     "UNR": ("https://fhumyar.unr.edu.ar/carreras-de-grado/", "https://fhumyar.unr.edu.ar/pregrado/"),
     # The UNSJ's guide points its careers at their faculty's page.
     "UNSJ": ("https://www.ffha.unsj.edu.ar/?page_id=171",),
+    # Its careers had no page (the site was down when they were read); its
+    # list of careers links each one's, with the plan and its itinerary.
+    "UNGS": ("https://www.ungs.edu.ar/carreras",),
 }
 
 

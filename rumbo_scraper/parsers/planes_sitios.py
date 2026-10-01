@@ -2447,3 +2447,29 @@ def plan_estructura_jujuy(texto: str) -> list[tuple[str, int]]:
             unidades.append(unidad)
             pendientes.append(unidad)
     return materias
+
+
+def plan_ungs(html: str) -> list[tuple[str, int]]:
+    """UNGS: the plan's table has every subject and no year; the career's
+    itinerary (on the same page, under "Itinerario") lays the subjects out by
+    semester, a number in a heading beside a list: semester 1 and 2 are the
+    first year. The itinerary for a student starting in the first semester is
+    the one read; the one starting in the second shifts every subject by a
+    term. Where a page has two itineraries (an old plan and the current one),
+    the first is the current."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    for tabla in soup.find_all("table"):
+        if not re.search(r"(?i)iniciando la carrera en el primer", _texto(tabla)):
+            continue
+        for fila in tabla.find_all("tr"):
+            celdas = fila.find_all("td")
+            for i, celda in enumerate(celdas):
+                numero = re.fullmatch(r"\d{1,2}", _texto(celda.find(["h1", "h2", "h3", "h4"])))
+                if not numero or i + 1 >= len(celdas):
+                    continue
+                anio = (int(numero.group(0)) + 1) // 2
+                for item in celdas[i + 1].find_all("li"):
+                    _agregar(materias, _texto(item), anio)
+        break
+    return desde_el_primero(materias)
