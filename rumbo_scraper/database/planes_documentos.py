@@ -427,7 +427,7 @@ def _documento_con_su_nombre(html: str, pagina: str, carrera: str) -> str | None
     # the plan is the one that is not a resolution, a FAQ or the prerequisites.
     if len(candidatos) > 1:
         candidatos = {url for url in candidatos if not re.match(
-            r"(?i)(res|resoluci[oó]n|di|rm|rcs|disp)[-_ ]|.*preguntas|.*correlativ",
+            r"(?i)(res|resoluci[oó]n|di|rm|rcs|dispo?)[-_ ]|.*preguntas|.*correlativ",
             unquote(urlparse(url).path.rsplit("/", 1)[-1]))}
     return candidatos.pop() if len(candidatos) == 1 else None
 
