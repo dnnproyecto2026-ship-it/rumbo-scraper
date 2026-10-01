@@ -416,3 +416,45 @@ def leer_tabla_por_pais(texto_con_columnas: str, fuente: str, propia: str) -> li
         bloque.append(linea)
     cerrar()
     return convenios
+
+
+# Words every university's name has, in the languages its partners are named
+# in: they say nothing about which university a page names.
+_GENERICAS = {
+    "universidad", "universidade", "universita", "universitat", "university", "universite",
+    "universiteit", "uniwersytet", "univerzita", "univerza", "universitet", "hochschule",
+    "instituto", "institut", "institute", "instituicao", "institucion", "escuela", "escola",
+    "school", "ecole", "college", "colegio", "facultad", "faculdade", "centro", "center",
+    "centre", "corporacion", "fundacion", "fundacao", "nacional", "national", "nazionale",
+    "studi", "studies", "degli", "della", "delle", "dello", "del", "de", "di", "da", "do",
+    "dos", "das", "des", "du", "la", "las", "los", "le", "les", "el", "lo", "il", "y", "e",
+    "et", "and", "und", "of", "the", "for", "en", "in", "a", "al", "fur", "der", "die",
+    "ex", "sede", "campus",
+}
+
+
+def _palabras(texto: str) -> list[str]:
+    return re.findall(r"[a-z0-9]+", comparison_key(texto))
+
+
+def nombrada_en(nombre: str, texto: str) -> bool:
+    """Whether a page's text names a university.
+
+    By its acronym, when the name carries one in parentheses and the page
+    writes it as a word in capitals, or by every word of its name that is not
+    one every university has ("Brasília" is in "Universidade de Brasília",
+    "Universidad de Brasilia" too). A name of four such words or more may
+    miss one, the way a page drops "Campus" or a city. A name made only of
+    common words has to be on the page whole.
+    """
+    for sigla in re.findall(r"\(([A-Z][A-Za-z]{2,11})\)", nombre):
+        if re.search(rf"(?<![A-Za-z]){re.escape(sigla)}(?![A-Za-z])", texto):
+            return True
+    sin_parentesis = re.sub(r"\([^)]*\)", " ", nombre)
+    propias = [p for p in _palabras(sin_parentesis) if p not in _GENERICAS and len(p) > 1]
+    en_pagina = set(_palabras(texto))
+    if not propias:
+        clave = " ".join(_palabras(sin_parentesis))
+        return bool(clave) and clave in " ".join(_palabras(texto))
+    faltan = sum(1 for p in propias if p not in en_pagina)
+    return faltan == 0 or (len(propias) >= 4 and faltan == 1)
