@@ -132,8 +132,25 @@ def _plan_uns(html: str) -> list[tuple[str, int]]:
         if tabla.find("table"):
             continue
         for fila in tabla.find_all("tr"):
-            celdas = [_texto(td) for td in fila.find_all(["td", "th"])]
+            columnas = fila.find_all(["td", "th"])
+            celdas = [_texto(td) for td in columnas]
             celdas = [c for c in celdas if c] or [""]
+            # A subject's row: its code and name, then its hours or, when the
+            # hours cell is empty, its prerequisites ("3338 PRACTICAS Y
+            # COMUNICACION EN FISICA | | 3022"). The cell also holds the
+            # subject's notes ("... Para aprobar 1- Debe rendir la Prueba de
+            # Suficiencia..."), and the name ends in the department's mark
+            # ("MATEMATICA I C", "INTRODUCCION AL DERECHO C.A.").
+            nombre_y_notas = re.split(r"\s+Para (?:aprobar|cursar|rendir)\b", celdas[0])[0]
+            materia = _MATERIA_UNS.match(nombre_y_notas)
+            if materia and len(columnas) > 1:
+                # (A Roman numeral is the name's: "MATEMATICA I C" keeps the I.)
+                nombre = re.sub(r"(?:\s+-)?\s+(?!(?:I{1,3}|IV|VI{0,3}|IX|X)$)[A-Z]{1,2}\.?(?:[A-Z]\.)?$", "",
+                                materia.group(2).strip())
+                # A requirement taken as an exam, not a subject ("PRUEBA DE SUFICIENCIA EN INGLES").
+                if not re.match(r"(?i)prueba de suficiencia", nombre):
+                    _agregar(materias, nombre, anio)
+                continue
             if len(celdas) == 1:
                 # The electives listed after a year are a pool, not that
                 # year's subjects: skipped until the next year's heading.
@@ -150,19 +167,6 @@ def _plan_uns(html: str) -> list[tuple[str, int]]:
                     # (Oceanografía's four), not one plan.
                     if materias and anio < max(a for _, a in materias if a):
                         return []
-                continue
-            # The cell also holds the subject's notes ("... Para aprobar 1- Debe
-            # rendir la Prueba de Suficiencia..."), and the name ends in the
-            # department's mark ("MATEMATICA I C", "INTRODUCCION AL DERECHO C.A.").
-            nombre_y_notas = re.split(r"\s+Para (?:aprobar|cursar|rendir)\b", celdas[0])[0]
-            materia = _MATERIA_UNS.match(nombre_y_notas)
-            if materia and len(celdas) > 1 and "hs" in celdas[1].lower():
-                # (A Roman numeral is the name's: "MATEMATICA I C" keeps the I.)
-                nombre = re.sub(r"(?:\s+-)?\s+(?!(?:I{1,3}|IV|VI{0,3}|IX|X)$)[A-Z]{1,2}\.?(?:[A-Z]\.)?$", "",
-                                materia.group(2).strip())
-                # A requirement taken as an exam, not a subject ("PRUEBA DE SUFICIENCIA EN INGLES").
-                if not re.match(r"(?i)prueba de suficiencia", nombre):
-                    _agregar(materias, nombre, anio)
     return materias
 
 
