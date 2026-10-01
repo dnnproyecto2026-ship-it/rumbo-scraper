@@ -2486,3 +2486,25 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
         if materias:
             return desde_el_primero(materias)
     return []
+
+
+def plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
+    """UNaM Forestales: one table, each year a row of its own ("PRIMER AÑO:")
+    over the rows of its subjects, each its number, its name and its term
+    ("5 | Introducción a las Ciencias Forestales | 1º Cuatr."). A row without
+    a number is not in the sequence ("MI | Módulo Introductorio", the
+    entrance course)."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    for tabla in soup.find_all("table"):
+        anio = None
+        for fila in tabla.find_all("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            llenas = [c for c in celdas if c]
+            if len(llenas) == 1 and anio_de(llenas[0]):
+                anio = anio_de(llenas[0])
+            elif anio and len(celdas) >= 2 and re.fullmatch(r"\d{1,2}", celdas[0]) and celdas[1]:
+                _agregar(materias, celdas[1], anio)
+        if materias:
+            break
+    return desde_el_primero(materias)
