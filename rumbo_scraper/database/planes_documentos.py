@@ -163,7 +163,7 @@ _VACIAS = frozenset("de del la las los el y e en a con para por licenciatura tec
 # Enfermería), not a subject.
 # "(*) Régimen promocional: 9 espacios curriculares", "Anuales", "Acreditación
 # de Inglés" (UDA, UNSL): a note, a heading, a requirement.
-_FUERA_DEL_PLAN = re.compile(r"(?i)\(optativa\)|^t[íi]tulo\s*:|^mat\.\s|^\(\*\)|^anuales$|^acreditaci[óo]n\b"
+_FUERA_DEL_PLAN = re.compile(r"(?i)^cbc$|\(optativa\)|^t[íi]tulo\s*:|^mat\.\s|^\(\*\)|^anuales$|^acreditaci[óo]n\b"
                              # What the subject filter of the site readers also turns away.
                              r"|^\d+\s*[°º]?\s*cuatrimestre\.?$|^\d+\s+a[ñn]os(?:\s+y\s+medio)?\.?$|^(?:sub)?total$"
                              r"|^\d+\s+horas$|^(?:equipo|docentes|director(?:a)?|coordinador(?:a)?)$|^:\s"
@@ -301,7 +301,11 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
                                        text=True, timeout=60).stdout
             except Exception:
                 return []
-            return [m for m in lector(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+            leidas = [m for m in lector(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+            # A site whose documents come in several layouts (UBA's Medicina):
+            # the ones its reader does not know go to the general reader.
+            if leidas or not getattr(lector, "respaldo", False):
+                return leidas
     return _leer(archivo)
 
 

@@ -201,9 +201,17 @@ def es_la_pagina_de(html: str, carrera: str) -> bool:
     soup = BeautifulSoup(html or "", "html.parser")
     lugares = [soup.title.string if soup.title and soup.title.string else ""]
     lugares += [h.get_text(" ") for h in soup.find_all("h1")[:2]]
-    texto = set(_palabras(" ".join(lugares)))
     propias = [p for p in _palabras(carrera) if p not in _VACIAS] or _palabras(carrera)
-    return sum(p in texto for p in propias) * 2 >= len(propias) + (len(propias) > 1)
+
+    def la_nombra(lugares: list[str]) -> bool:
+        texto = set(_palabras(" ".join(lugares)))
+        return sum(p in texto for p in propias) * 2 >= len(propias) + (len(propias) > 1)
+
+    # Medicina (UBA) titles every page with the section's name and has no h1:
+    # the career is the first h2 that is not the search box's.
+    segundos = [h.get_text(" ") for h in soup.find_all("h2")
+                if not re.fullmatch(r"(?i)\s*(buscar|search|men[uú])\s*", h.get_text(" "))]
+    return la_nombra(lugares) or (not soup.find("h1") and la_nombra(segundos[:1]))
 
 
 def _firmada(cuerpo: str, conocidas: list[str], universidad: tuple[str, ...]) -> Unidad | None:

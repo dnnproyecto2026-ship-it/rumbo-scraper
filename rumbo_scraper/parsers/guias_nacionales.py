@@ -2232,6 +2232,9 @@ UNLZ_FACULTADES = {
 }
 
 
+_PARTE_COMUN = re.compile(r"(?i)informacion-general|presentacion|index(?:\.\w+)?|inicio|plan-de-estudios?")
+
+
 def paginas_por_nombre(html: str, pagina: str) -> dict[str, str]:
     """The pages a faculty's list links, by the career each is for: the
     link's text ("Contador Público"), the heading of the card it is in
@@ -2250,7 +2253,12 @@ def paginas_por_nombre(html: str, pagina: str) -> dict[str, str]:
         if pagina.startswith("https://") and url.startswith("http://"):
             url = "https://" + url.removeprefix("http://")
         titulo = a.find_previous(["h2", "h3", "h4", "h5"])
-        archivo = re.sub(r"[-_]+", " ", unquote(urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]).rsplit(".", 1)[0])
+        # The career's part of the address: Medicina's "/carreras/medicina/informacion-general"
+        # is under the career's name, its last part the same in every career's.
+        partes = [p for p in unquote(urlparse(url).path).split("/") if p]
+        while len(partes) > 1 and _PARTE_COMUN.fullmatch(partes[-1]):
+            partes.pop()
+        archivo = re.sub(r"[-_]+", " ", re.sub(r"^carrera-", "", partes[-1] if partes else "").rsplit(".", 1)[0])
         for nombre in (_texto(a), _texto(titulo) if titulo else "", archivo):
             nombre = re.sub(r"(?i)^ing\.\s*", "Ingeniería ", re.sub(r"(?i)^lic\.\s*", "Licenciatura ", nombre))
             if nombre:

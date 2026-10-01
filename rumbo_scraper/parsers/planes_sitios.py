@@ -2635,6 +2635,9 @@ def plan_fmed_uba(texto: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+plan_fmed_uba.respaldo = True  # its other layouts go to the general reader
+
+
 def plan_uno(ruta: str) -> list[tuple[str, int]]:
     """UNO's plan PDFs, read as pdfplumber's tables: each subject a row with
     its term of study ("Cuatrimestral", "Anual"), and three cells on the
