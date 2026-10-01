@@ -2863,3 +2863,53 @@ def plan_ffyb_uba(texto: str) -> list[tuple[str, int]]:
 
 
 plan_ffyb_uba.respaldo = True
+
+
+_SEMESTRES = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
+              "quinto": 5, "sexto": 6, "séptimo": 7, "septimo": 7, "octavo": 8, "noveno": 9,
+              "décimo": 10, "decimo": 10, "undécimo": 11, "undecimo": 11, "duodécimo": 12, "duodecimo": 12}
+
+
+def plan_por_semestres(html: str) -> list[tuple[str, int]]:
+    """UNC Ciencias Económicas: the plan on the career's page, a heading per
+    term ("Primer semestre", "Décimo semestre", "3° semestre") and its
+    subjects in bullets below it; two terms a year. The levelling cycle
+    before the first term is not the plan."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for sobra in soup(["script", "style", "nav", "header", "footer"]):
+        sobra.decompose()
+    materias: list[tuple[str, int]] = []
+    anio: int | None = None
+    for linea in soup.get_text("\n").split("\n"):
+        linea = clean_text(linea).replace("\xa0", " ").strip()
+        if not linea:
+            continue
+        semestre = re.fullmatch(r"(?i)(\w+|\d{1,2}\s*[°º])\s+(?:semestre|cuatrimestre)", linea)
+        if semestre:
+            clave = semestre.group(1).lower().rstrip("°º ").strip()
+            numero = int(clave) if clave.isdigit() else _SEMESTRES.get(clave)
+            anio = (numero + 1) // 2 if numero else None
+            continue
+        if re.match(r"(?i)^(?:::|ciclo\b|>|consultar)", linea):
+            continue
+        viñeta = re.match(r"^[•·▪]\s*(.+)$", linea)
+        if anio and viñeta:
+            _agregar(materias, viñeta.group(1).rstrip("."), anio)
+        elif materias and re.match(r"(?i)^(diálogo|dialogo|requisitos|título|titulo)", linea):
+            break
+    return desde_el_primero(materias)
+
+
+def plan_famaf(html: str) -> list[tuple[str, int]]:
+    """UNC, FAMAF: the career's plan as cards, a ``div.year`` per year (its
+    label "1º año") and a ``div.subject`` per subject, its name the card's
+    first link. The levelling course is not in a year."""
+    materias: list[tuple[str, int]] = []
+    for bloque in BeautifulSoup(html or "", "html.parser").select("div.year"):
+        anio = anio_de(_texto(bloque.select_one(".label")))
+        for materia in bloque.select("div.subject"):
+            enlace = materia.find("a")
+            if anio and enlace:
+                # "Análisis Matemático I (LC - LMA - LHM)": the careers that share it.
+                _agregar(materias, re.sub(r"\s*\([A-Z]{2,4}(?:\s*-\s*[A-Z]{2,4})*\)\s*$", "", _texto(enlace)), anio)
+    return desde_el_primero(materias)

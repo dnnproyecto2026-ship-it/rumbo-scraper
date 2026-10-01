@@ -73,7 +73,7 @@ _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicio
                        "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
                        "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
                        "artes.unne.edu.ar", "unicen.edu.ar")
-_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
+_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
                         # UNSE Forestales: the curriculum tab its "Plan de estudio" links.
