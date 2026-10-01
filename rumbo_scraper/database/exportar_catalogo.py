@@ -87,6 +87,9 @@ _SIN_MAYUSCULA = frozenset("de del la las los el y e en a al con para por o u".s
 _STOP = frozenset("de del la las los el y e en con".split())
 # A block of subjects published as if it were a degree: "Arquitectura I a V y PFC".
 _UN_BLOQUE_DE_MATERIAS = re.compile(r"\b[ivx]+ a [ivx]+\b")
+# A university's department read as a career from its menu (UNLaM's
+# "Ingeniería e Investigaciones Tecnológicas" gives several engineerings).
+_UN_DEPARTAMENTO = re.compile(r"^(departamento de )?ingenieria e investigaciones tecnologicas$")
 
 
 def _titulo(nombre: str) -> str:
@@ -521,7 +524,8 @@ def exportar(client: Any) -> dict[str, Any]:
         + [n for p in posgrados if (n := nombre_de_la_carrera(p["nombre_programa"], sedes_de[p["universidad_id"]])[0])])
     for c in sorted(carreras, key=lambda c: len(c["nombre_carrera"])):
         uid = c["universidad_id"]
-        if _UN_BLOQUE_DE_MATERIAS.search(comparison_key(c["nombre_carrera"])):
+        if (_UN_BLOQUE_DE_MATERIAS.search(comparison_key(c["nombre_carrera"]))
+                or _UN_DEPARTAMENTO.match(comparison_key(c["nombre_carrera"]))):
             continue
         base, modalidad_del_nombre, sede_del_nombre = nombre_de_la_carrera(
             c["denominacion_canonica"] or c["nombre_carrera"], sedes_de[uid])
