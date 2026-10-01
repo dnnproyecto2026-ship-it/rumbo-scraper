@@ -1010,7 +1010,8 @@ def plan_fcnym(html: str) -> list[tuple[str, int]]:
 
 _ANIO_DNGU = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\b")
 _REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|Semestral|Bimestral|Trimestral)"
-_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,3}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"\b")
+# (UNSAdA numbers its subjects with four digits: "0279".)
+_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,4}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"\b")
 _NO_ES_NOMBRE_DNGU = re.compile(r"(?i)^(COD|CARGA|SEMANAL|HORARIA|MODALIDAD|DICTADO|T[ÍI]TULO|IF-\d|P[áa]gina|"
                                 r"Digitally|Date:|Anexo|N[úu]mero:|Referencia)")
 
