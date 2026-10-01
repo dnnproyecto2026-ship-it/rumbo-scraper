@@ -2458,18 +2458,31 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
     term. Where a page has two itineraries (an old plan and the current one),
     the first is the current."""
     soup = BeautifulSoup(html or "", "html.parser")
-    materias: list[tuple[str, int]] = []
-    for tabla in soup.find_all("table"):
-        if not re.search(r"(?i)iniciando la carrera en el primer", _texto(tabla)):
-            continue
-        for fila in tabla.find_all("tr"):
-            celdas = fila.find_all("td")
-            for i, celda in enumerate(celdas):
-                numero = re.fullmatch(r"\d{1,2}", _texto(celda.find(["h1", "h2", "h3", "h4"])))
-                if not numero or i + 1 >= len(celdas):
-                    continue
-                anio = (int(numero.group(0)) + 1) // 2
-                for item in celdas[i + 1].find_all("li"):
-                    _agregar(materias, _texto(item), anio)
-        break
-    return desde_el_primero(materias)
+    tablas = soup.find_all("table")
+    # Some careers publish only the itinerary for a student starting in the
+    # second semester (Sistemas de Información Geográfica): its semester 1 is
+    # the second half of the first year.
+    for patron, desfasaje in ((r"(?i)iniciando la carrera en el primer", 1),
+                              (r"(?i)iniciando la carrera en el segundo", 2)):
+        materias: list[tuple[str, int]] = []
+        for tabla in tablas:
+            if not re.search(patron, _texto(tabla)):
+                continue
+            for fila in tabla.find_all("tr"):
+                celdas = fila.find_all("td")
+                for i, celda in enumerate(celdas):
+                    numero = re.fullmatch(r"\d{1,2}", _texto(celda.find(["h1", "h2", "h3", "h4"])))
+                    if not numero or i + 1 >= len(celdas):
+                        continue
+                    anio = (int(numero.group(0)) + desfasaje) // 2
+                    for item in celdas[i + 1].find_all("li"):
+                        # Several subjects in one item, one per line:
+                        # "Taller de Radio I<br/>Planificación y evaluación…"
+                        # (Comunicación).
+                        for linea in item.get_text("\n").split("\n"):
+                            if clean_text(linea).strip():
+                                _agregar(materias, linea, anio)
+            break
+        if materias:
+            return desde_el_primero(materias)
+    return []
