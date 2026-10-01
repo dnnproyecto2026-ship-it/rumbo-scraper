@@ -273,7 +273,9 @@ MAS_LARGO = 150
 
 def nombre_de_la_materia(nombre: str | None) -> str | None:
     """The subject a plan line names, or None when the line names none."""
-    n = _CODIGO_DE_MATERIA.split(" ".join((nombre or "").split()), maxsplit=1)[0].strip()
+    # A PDF's typographic ligatures ("Planiﬁcación") are two letters.
+    n = (nombre or "").replace("\ufb01", "fi").replace("\ufb02", "fl")
+    n = _CODIGO_DE_MATERIA.split(" ".join(n.split()), maxsplit=1)[0].strip()
     # A footnote of the plan ("* a partir del plan 2017...", "(***) La carga
     # horaria...") is not a subject; a bullet in front of one is not its name.
     n = _LLAMADA.sub("", n)
