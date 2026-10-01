@@ -15,22 +15,27 @@ ITINERARIO = """
 
 
 class PlanUngs(unittest.TestCase):
-    def test_semestres_de_a_dos_por_anio_del_primer_itinerario(self):
+    def test_los_talleres_iniciales_y_dos_semestres_son_el_primer_anio(self):
         self.assertEqual(plan_ungs(ITINERARIO), [("Taller de tecnología", 1), ("Química general", 1),
-                                                 ("Física I", 1), ("Física II", 2), ("Termodinámica", 2)])
+                                                 ("Física I", 1), ("Física II", 1), ("Termodinámica", 2)])
 
     def test_varias_asignaturas_en_un_mismo_item(self):
         html = ITINERARIO.replace("<li>Física II</li>", "<li>Física II<br />Taller de radio I<br/> Óptica</li>")
-        self.assertIn(("Taller de radio I", 2), plan_ungs(html))
-        self.assertIn(("Óptica", 2), plan_ungs(html))
+        self.assertIn(("Taller de radio I", 1), plan_ungs(html))
+        self.assertIn(("Óptica", 1), plan_ungs(html))
         self.assertNotIn("Física II Taller de radio I", [n for n, _ in plan_ungs(html)])
+
+    def test_un_nombre_partido_en_dos_lineas_es_uno(self):
+        html = ITINERARIO.replace("<li>Física II</li>", "<li>Cartografía y Sistemas de<br/>Información Geográfica</li>")
+        self.assertIn(("Cartografía y Sistemas de Información Geográfica", 1), plan_ungs(html))
 
     def test_solo_el_itinerario_que_arranca_en_el_segundo_semestre(self):
         html = """<table><tr><td>2) INICIANDO LA CARRERA EN EL SEGUNDO SEMESTRE</td></tr>
         <tr><td><h1>1</h1></td><td><ul><li>Cartografía</li></ul></td></tr>
         <tr><td><h1>2</h1></td><td><ul><li>Geodesia</li></ul></td></tr>
-        <tr><td><h1>3</h1></td><td><ul><li>Teledetección</li></ul></td></tr></table>"""
-        self.assertEqual(plan_ungs(html), [("Cartografía", 1), ("Geodesia", 2), ("Teledetección", 2)])
+        <tr><td><h1>3</h1></td><td><ul><li>Teledetección</li></ul></td></tr>
+        <tr><td><h1>4</h1></td><td><ul><li>SIG</li></ul></td></tr></table>"""
+        self.assertEqual(plan_ungs(html), [("Cartografía", 1), ("Geodesia", 1), ("Teledetección", 1), ("SIG", 2)])
 
     def test_sin_itinerario_no_hay_plan(self):
         self.assertEqual(plan_ungs("<table><tr><td>Asignatura</td></tr></table>"), [])

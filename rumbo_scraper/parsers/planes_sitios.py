@@ -2474,8 +2474,8 @@ def plan_estructura_jujuy(texto: str) -> list[tuple[str, int]]:
 def plan_ungs(html: str) -> list[tuple[str, int]]:
     """UNGS: the plan's table has every subject and no year; the career's
     itinerary (on the same page, under "Itinerario") lays the subjects out by
-    semester, a number in a heading beside a list: semester 1 and 2 are the
-    first year. The itinerary for a student starting in the first semester is
+    semester, a number in a heading beside a list (semesters 1 to 3 the first
+    year, see below). The itinerary for a student starting in the first semester is
     the one read; the one starting in the second shifts every subject by a
     term. Where a page has two itineraries (an old plan and the current one),
     the first is the current."""
@@ -2484,8 +2484,7 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
     # Some careers publish only the itinerary for a student starting in the
     # second semester (Sistemas de Información Geográfica): its semester 1 is
     # the second half of the first year.
-    for patron, desfasaje in ((r"(?i)iniciando la carrera en el primer", 1),
-                              (r"(?i)iniciando la carrera en el segundo", 2)):
+    for patron in (r"(?i)iniciando la carrera en el primer", r"(?i)iniciando la carrera en el segundo"):
         materias: list[tuple[str, int]] = []
         for tabla in tablas:
             if not re.search(patron, _texto(tabla)):
@@ -2496,14 +2495,30 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
                     numero = re.fullmatch(r"\d{1,2}", _texto(celda.find(["h1", "h2", "h3", "h4"])))
                     if not numero or i + 1 >= len(celdas):
                         continue
-                    anio = (int(numero.group(0)) + desfasaje) // 2
+                    # The first semester is the initial workshops: a five-year
+                    # degree runs to an eleventh, a three-year tecnicatura to a
+                    # seventh. Semesters 1 to 3 are the first year, then two a
+                    # year, whichever half of the year the student starts in.
+                    anio = max(1, int(numero.group(0)) // 2)
                     for item in celdas[i + 1].find_all("li"):
                         # Several subjects in one item, one per line:
                         # "Taller de Radio I<br/>Planificación y evaluación…"
                         # (Comunicación).
+                        # A name wrapped at a line break ("…Sistemas de<br/>Información
+                        # Geográfica", Ecología) goes on after a word that
+                        # cannot end it, or into a line in lower case.
+                        nombres: list[str] = []
                         for linea in item.get_text("\n").split("\n"):
-                            if clean_text(linea).strip():
-                                _agregar(materias, linea, anio)
+                            linea = clean_text(linea).strip()
+                            if not linea:
+                                continue
+                            if nombres and (re.search(r"(?i)\b(de|del|la|las|los|el|y|e|en|a|con|para|por)$", nombres[-1])
+                                            or linea[:1].islower()):
+                                nombres[-1] += " " + linea
+                            else:
+                                nombres.append(linea)
+                        for nombre in nombres:
+                            _agregar(materias, nombre, anio)
             break
         if materias:
             return desde_el_primero(materias)
