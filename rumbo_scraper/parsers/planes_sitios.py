@@ -2579,3 +2579,69 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
         for _, nombre in bloque["filas"]:
             _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
+
+
+def plan_fmed_uba(texto: str) -> list[tuple[str, int]]:
+    """UBA, Medicina: the plan PDF as ``pdftotext -layout`` gives it, the
+    years headed "* 2° AÑO *", each subject numbered at the left margin
+    ("7. Fisiología   Cuatrimestral ...") and its name wrapped on the lines
+    below it until a blank line or the next number. The other columns (how
+    long it runs, its prerequisites) are cut at the first wide gap; "(Se
+    realiza en el CBC)" says where, not what."""
+    materias: list[tuple[str, int]] = []
+    anio: int | None = None
+    actual: list[str] = []
+
+    def cerrar() -> None:
+        if actual and anio:
+            nombre = re.sub(r"\s*\(se realiza en el cbc\)", "", " ".join(actual), flags=re.I)
+            _agregar(materias, nombre, anio)
+        actual.clear()
+
+    for linea in (texto or "").splitlines():
+        encabezado = re.search(r"\*\s*(\d)\s*[°º]?\s*AÑO\s*\*", linea, re.I)
+        if encabezado:
+            cerrar()
+            anio = int(encabezado.group(1))
+            continue
+        izquierda = re.split(r"\s{3,}", linea.strip())[0] if linea.strip() else ""
+        numero = re.match(r"^(\d{1,2})\.\s+(\S.*)$", linea) if not linea.startswith(" ") else None
+        if numero:
+            cerrar()
+            actual.append(re.split(r"\s{3,}", numero.group(2))[0])
+        elif not linea.strip():
+            cerrar()
+        elif actual and not linea.startswith(" ") and not re.search(r"(?i)cuatrimestre|aprobad|regular", izquierda):
+            actual.append(izquierda)
+    cerrar()
+    return desde_el_primero(materias)
+
+
+def plan_uno(ruta: str) -> list[tuple[str, int]]:
+    """UNO's plan PDFs, read as pdfplumber's tables: each subject a row with
+    its term of study ("Cuatrimestral", "Anual"), and three cells on the
+    term it is taken in, counted from the start ("5", "5-6": the fifth and
+    sixth, the third year). Its name is the cell before the term of study
+    (a wrapped name comes whole). A subject row without its term counted
+    makes the plan unreadable."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.extract_tables():
+                for fila in tabla:
+                    celdas = [" ".join((c or "").split()) for c in fila]
+                    regimen = next((i for i, c in enumerate(celdas)
+                                    if re.fullmatch(r"(?i)cuatrimestral|anual|semestral|bimestral", c)), None)
+                    if regimen is None or regimen == 0 or not celdas[regimen - 1]:
+                        continue
+                    termino = celdas[regimen + 3] if regimen + 3 < len(celdas) else ""
+                    contado = re.fullmatch(r"(\d{1,2})(?:\s*-\s*\d{1,2})?", termino)
+                    if not contado:
+                        return []
+                    _agregar(materias, celdas[regimen - 1], (int(contado.group(1)) + 1) // 2)
+    return desde_el_primero(materias)
+
+
+plan_uno.ruta = True

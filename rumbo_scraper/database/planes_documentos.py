@@ -239,7 +239,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
-_DOCUMENTOS_PROPIOS = (("unahur.edu.ar", planes_sitios.plan_unahur), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
+_DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("unahur.edu.ar", planes_sitios.plan_unahur), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
@@ -254,7 +254,8 @@ _DOCUMENTOS_PROPIOS = (("unahur.edu.ar", planes_sitios.plan_unahur), ("ucse.edu.
                        ("ing.unlp.edu.ar", planes_sitios.plan_ing_unlp),
                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
                        # UNPAZ's career brochures: a table per year.
-                       ("unpaz.edu.ar", planes_sitios.plan_unpaz))
+                       ("unpaz.edu.ar", planes_sitios.plan_unpaz),
+                       ("uno.edu.ar", planes_sitios.plan_uno))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
@@ -282,6 +283,12 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
         if host.endswith(dominio):
             import subprocess
 
+            # A reader of the PDF's own tables takes the file.
+            if getattr(lector, "ruta", False):
+                try:
+                    return [m for m in lector(str(archivo)) if not _FUERA_DEL_PLAN.search(m[0])]
+                except Exception:
+                    return []
             # A reader of a table's cells takes the text's boxes (``-bbox-layout``).
             modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
             try:
