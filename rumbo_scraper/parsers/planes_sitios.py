@@ -2388,3 +2388,62 @@ def plan_codigos_salta(texto: str) -> list[tuple[str, int]]:
             vistas.add(comparison_key(nombre))
             unicas.append((nombre, anio))
     return unicas
+
+
+def plan_estructura_jujuy(texto: str) -> list[tuple[str, int]]:
+    """Jujuy's designs (Profesorado de Educación Primaria): an "ESTRUCTURA
+    CURRICULAR" table of numbered units ("7  Esp  <name>  Taller  4"), each
+    year closed by its "TOTAL HORAS 1º AÑO". A unit whose name the table set
+    over two lines leaves its own row without one: the name is the line
+    above it and the line below it ("Problemática Contemporánea de la" /
+    "Educación Primaria"). The institution's optional spaces ("Opción
+    Institucional I") are not units of the plan."""
+    lineas = texto.replace("\f", "\n").splitlines()
+    inicio = next((i for i, l in enumerate(lineas) if re.search(r"ESTRUCTURA CURRICULAR", l)), None)
+    cabecera = next((i for i in range(inicio or 0, len(lineas)) if "UNIDAD CURRICULAR" in lineas[i] and "Formato" in lineas[i]), None)
+    if inicio is None or cabecera is None:
+        return []
+    x_nombre = lineas[cabecera].index("UNIDAD CURRICULAR") - 18
+    x_formato = lineas[cabecera].index("Formato") - 2
+    fila = re.compile(r"^\s*(\d{1,2})\s+(?:Gral|Esp|P\s*Prof)?\b")
+
+    def nombre_en(linea: str) -> str:
+        parte = linea[x_nombre:x_formato] if len(linea) > x_nombre else ""
+        parte = re.sub(r"^\s*(?:\d{1,2}\s+)?(?:Gral|Esp|P\s*Prof|Prof)\b", "", parte)
+        parte = re.sub(r"\s{2,}\d+\s*$", "", parte)
+        return clean_text(parte)
+
+    unidades: list[list[Any]] = []
+    pendientes: list[list[Any]] = []
+    usadas: set[int] = set()
+    materias: list[tuple[str, int]] = []
+    for i in range(cabecera + 1, len(lineas)):
+        linea = lineas[i]
+        total = re.search(r"TOTAL HORAS\s+(\d)\s*[º°]?\s*A[ÑN]O", linea)
+        if total:
+            for u in pendientes:
+                if u[1] and not re.match(r"(?i)opci[óo]n institucional", u[1]):
+                    materias.append((u[1], int(total.group(1))))
+            pendientes = []
+            if total.group(1) == "4" or not any(fila.match(l) for l in lineas[i + 1:i + 30]):
+                break
+            continue
+        if fila.match(linea):
+            propio = nombre_en(linea)
+            if not propio:
+                # Each piece of a wrapped name belongs to one row only.
+                arriba = next((j for j in range(i - 1, max(i - 3, cabecera), -1)
+                               if fila.match(lineas[j]) or (j not in usadas and nombre_en(lineas[j]))), None)
+                abajo = next((j for j in range(i + 1, min(i + 4, len(lineas)))
+                              if fila.match(lineas[j]) or "TOTAL" in lineas[j]
+                              or (j not in usadas and nombre_en(lineas[j]))), None)
+                partes = []
+                for j in (arriba, abajo):
+                    if j is not None and not fila.match(lineas[j]) and "TOTAL" not in lineas[j]:
+                        partes.append(nombre_en(lineas[j]))
+                        usadas.add(j)
+                propio = clean_text(" ".join(partes))
+            unidad = [int(fila.match(linea).group(1)), propio]
+            unidades.append(unidad)
+            pendientes.append(unidad)
+    return materias

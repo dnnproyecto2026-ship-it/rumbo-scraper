@@ -153,6 +153,12 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
     "La Rioja": {
         "Profesorado de Educación Primaria": ("https://ifdcjvgonzalez-lrj.infd.edu.ar/sitio/wp-content/uploads/2019/03/Diseño-Curricular-Educación-Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },
+    # Jujuy's, as the IFDC N° 3 publishes it (its "Estructura curricular").
+    "Jujuy": {
+        "Profesorado de Educación Primaria": (
+            "https://ifdc3-juj.infd.edu.ar/sitio/wp-content/uploads/sitio/Disenio_curricular_E_primaria.pdf",
+            planes_sitios.plan_estructura_jujuy),
+    },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },
