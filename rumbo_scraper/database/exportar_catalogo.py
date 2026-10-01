@@ -248,7 +248,12 @@ _NO_ES_UN_NOMBRE = re.compile(
     r"|\bmatr[íi]cula\b.*\bcuotas?\b|procedimiento en caso de mora|^aranceles\b"
     r"|^d[íi]as y horarios\b|^(?:equipo docente|co-?director[a]?|coordinador[a]? acad[ée]mic[oa]|presentaci[óo]n)$"
     r"|^(?:cualquiera\s*-?|discontinuado|aplicar|vigente|trayecto (?:no )?estructurado)$"
-    r"|^(?:valorar|llevar a cabo|fortalecer|impartir) |^eje tem[áa]tico\b", re.I)
+    r"|^(?:valorar|llevar a cabo|fortalecer|impartir) |^eje tem[áa]tico\b"
+    # The degree a plan awards, gendered ("Ingeniero/a electromecánico/a"),
+    # and the headings of its annex ("Contenidos mínimos de las materias",
+    # "Tabla").
+    r"|^(?:ingenier|licenciad|t[ée]cnic|profesor|bachiller|analista)[oa]?/[oa]s?\b"
+    r"|^contenidos m[íi]nimos\b|^tabla$", re.I)
 # What a plan adds after a subject's name: its hours, credits or
 # prerequisites ("Fenomenología (18hs.)", "Sanidad Vegetal – 4 UCAs",
 # "Planeamiento y Control Financiero (correlativa 3)").
