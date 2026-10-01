@@ -18,6 +18,7 @@ data/*.json
 !data/.gitkeep
 data/planes_uba/
 data/planes_documentos/
+data/planes_folletos/
 data/verificacion/
 data/verificaciones.json
 .cache/
