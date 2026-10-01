@@ -475,8 +475,13 @@ def _vocabulario() -> dict[str, str]:
         catalogo = Path("data/catalogo_depurado.json")
         if catalogo.exists():
             for universidad in json.loads(catalogo.read_text()).get("universidades") or []:
-                for carrera in universidad["datos"].get("carreras") or []:
-                    for palabra in re.findall(r"[A-Za-zÁÉÍÓÚÑáéíóúñÜü]+", carrera["nombre_carrera"]):
+                # The careers' names, and the subjects' (a plan printed in
+                # capitals: "INTRODUCCION A LA OCEANOGRAFIA").
+                nombres = [c["nombre_carrera"] for c in universidad["datos"].get("carreras") or []]
+                nombres += [m["nombre_materia"] for m in universidad["datos"].get("materias") or []
+                            if m.get("nombre_materia") and not m["nombre_materia"].isupper()]
+                for nombre in nombres:
+                    for palabra in re.findall(r"[A-Za-zÁÉÍÓÚÑáéíóúñÜü]+", nombre):
                         formas.setdefault(comparison_key(palabra), Counter())[palabra.lower()] += 1
         _VOCABULARIO = {clave: contador.most_common(1)[0][0] for clave, contador in formas.items()}
     return _VOCABULARIO

@@ -146,10 +146,23 @@ def _plan_uns(html: str) -> list[tuple[str, int]]:
                 encabezado = _ANIO_UNS.search(celdas[0])
                 if encabezado:
                     anio = _ORDINALES.get((encabezado.group(1) or "").lower()) or int(encabezado.group(2))
+                    # Years starting over: each orientation's own years
+                    # (Oceanografía's four), not one plan.
+                    if materias and anio < max(a for _, a in materias if a):
+                        return []
                 continue
-            materia = _MATERIA_UNS.match(celdas[0])
+            # The cell also holds the subject's notes ("... Para aprobar 1- Debe
+            # rendir la Prueba de Suficiencia..."), and the name ends in the
+            # department's mark ("MATEMATICA I C", "INTRODUCCION AL DERECHO C.A.").
+            nombre_y_notas = re.split(r"\s+Para (?:aprobar|cursar|rendir)\b", celdas[0])[0]
+            materia = _MATERIA_UNS.match(nombre_y_notas)
             if materia and len(celdas) > 1 and "hs" in celdas[1].lower():
-                _agregar(materias, materia.group(2), anio)
+                # (A Roman numeral is the name's: "MATEMATICA I C" keeps the I.)
+                nombre = re.sub(r"(?:\s+-)?\s+(?!(?:I{1,3}|IV|VI{0,3}|IX|X)$)[A-Z]{1,2}\.?(?:[A-Z]\.)?$", "",
+                                materia.group(2).strip())
+                # A requirement taken as an exam, not a subject ("PRUEBA DE SUFICIENCIA EN INGLES").
+                if not re.match(r"(?i)prueba de suficiencia", nombre):
+                    _agregar(materias, nombre, anio)
     return materias
 
 
@@ -2489,7 +2502,7 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
     return []
 
 
-def plan_filas_numeradas(html: str) -> list[tuple[str, int]]:
+def plan_forestales_unam(html: str) -> list[tuple[str, int]]:
     """UNaM Forestales: one table, each year a row of its own ("PRIMER AÑO:")
     over the rows of its subjects, each its number, its name and its term
     ("5 | Introducción a las Ciencias Forestales | 1º Cuatr."). A row without
