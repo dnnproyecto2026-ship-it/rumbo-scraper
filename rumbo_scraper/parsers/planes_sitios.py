@@ -3016,3 +3016,20 @@ def plan_odn_unne(html: str) -> list[tuple[str, int]]:
         else:
             materias[-1] = (materias[-1][0] + " " + nombre, materias[-1][1])
     return desde_el_primero(materias)
+
+
+def plan_unicen_sin_anios(html: str) -> list[tuple[str, int | None]]:
+    """UNICEN's central career pages that list the plan without years (its
+    Licenciatura en Historia): the list under "Plan de estudios", only when
+    nothing in it says a year or a term. Read without years, so the plan
+    counts only with twenty subjects or more (``MINIMO_SIN_ANIO``)."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    seccion = next((s for s in soup.select("div.seccion-carrera")
+                    if "plan de estudio" in _texto(s.select_one("h3.titulo")).lower()), None)
+    cuerpo = seccion.select_one("div.cuerpo") if seccion else None
+    if not cuerpo or re.search(r"(?i)\b(a[ñn]o|cuatrimestre|semestre)\b", _texto(cuerpo)):
+        return []
+    materias: list[tuple[str, int]] = []
+    for item in cuerpo.find_all("li"):
+        _agregar(materias, _texto(item), 1)
+    return [(nombre, None) for nombre, _ in materias]
