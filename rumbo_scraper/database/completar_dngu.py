@@ -79,10 +79,12 @@ def hallar(carrera: dict[str, Any], filas: list[dict[str, Any]]) -> dict[str, An
     if not propio:
         return None
     candidatas = [f for f in filas if campo(f["titulo"]) == propio and misma_clase(f["titulo"], carrera["nombre_carrera"])]
-    if len({comparison_key(f["titulo"]) for f in candidatas}) != 1:
+    # "Médico" and "Médico/a" are the same degree written two ways.
+    if len({re.sub(r"/\w+", "", comparison_key(f["titulo"])) for f in candidatas}) != 1:
         return None
     duraciones = {anios(f["duracion"]) for f in candidatas} - {None}
-    titulo = None if carrera.get("titulo_otorgado") else candidatas[0]["titulo"]
+    preferido = next((f for f in candidatas if "/" in f["titulo"]), candidatas[0])
+    titulo = None if carrera.get("titulo_otorgado") else preferido["titulo"]
     duracion = None if carrera.get("duracion_anios") else (duraciones.pop() if len(duraciones) == 1 else None)
     if duracion and re.match(r"(tecnic|analista)", comparison_key(carrera["nombre_carrera"])) and duracion > 4:
         duracion = None
