@@ -2727,3 +2727,72 @@ def plan_fcf_unse(html: str) -> list[tuple[str, int]]:
             if all(nombre.lower() != m.lower() for m, _ in materias):
                 _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
+
+
+_FILA_UNAHUR_2025 = re.compile(r"^\s*(\d{1,2})\s+(\S.*?)\s{2,}(?:C|A|Anual|Cuatrimestral|Bimestral)\s+C[A-Z]{1,3}\b")
+_RUIDO_UNAHUR = re.compile(r"ANIVERSARIO|^\d{6}$")
+
+
+def plan_unahur_2025(texto: str) -> list[tuple[str, int]]:
+    """UNAHUR's plan resolutions from 2025 on (``pdftotext -layout``): a
+    table per title ("UNIDAD CURRICULAR  D  CP  IPS ..."), the intermediate
+    title's first (a part of the plan: its numbers skip the subjects it
+    leaves out) and the degree's last; a heading per year ("PRIMER AÑO"),
+    each subject its number, name, length ("C") and field ("CFE"). A name
+    too long for its cell starts in the line above ("Laboratorio de Análisis
+    de Alimentos," / "15  Medicamentos y Cosméticos"). The table read is the
+    last one numbered from 1 without a gap."""
+    tablas: list[list[tuple[int, str, int | None]]] = []
+    filas: list[tuple[int, str, int | None]] | None = None
+    anio = None
+    suelta = ""
+    for linea in texto.splitlines():
+        limpia = clean_text(linea)
+        if not limpia or _RUIDO_UNAHUR.search(limpia):
+            continue
+        if "UNIDAD CURRICULAR" in limpia:
+            filas, anio, suelta = [], None, ""
+            tablas.append(filas)
+            continue
+        if filas is None:
+            continue
+        if re.match(r"(?i)total carrera|titulaci[óo]n final|t[íi]tulo intermedio", limpia):
+            filas = None
+            continue
+        encabezado = re.fullmatch(r"(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO) AÑO", limpia)
+        if encabezado:
+            anio, suelta = _ORDINALES[encabezado.group(1).lower()], ""
+            continue
+        fila = _FILA_UNAHUR_2025.match(linea)
+        if fila:
+            filas.append((int(fila.group(1)), clean_text(f"{suelta} {fila.group(2)}"), anio))
+            suelta = ""
+            continue
+        # Or the row's data beside the name's first part, its number beside
+        # the rest in the line below ("Cultura y alfabetización digital en la
+        # C CFC 2 ..." / "5 universidad").
+        datos = re.match(r"^\s*(\D\S.*?)\s{2,}(?:C|A|Anual|Cuatrimestral|Bimestral)\s+C[A-Z]{1,3}\b", linea)
+        if datos and not re.search(r"(?i)total|actividades", limpia):
+            suelta = "\x00" + clean_text(datos.group(1))
+            continue
+        resto = re.match(r"^\s*(\d{1,2})\s+(\S.*)$", linea)
+        if resto and suelta.startswith("\x00") and not re.search(r"\d", resto.group(2)):
+            filas.append((int(resto.group(1)), clean_text(f"{suelta[1:]} {resto.group(2)}"), anio))
+            suelta = ""
+            continue
+        # The first part of a name, over its row (no number, no hours).
+        suelta = limpia if not re.search(r"\d|CUATRIMESTRE|TOTAL|ACTIVIDADES", limpia) else ""
+    for tabla in reversed(tablas):
+        numeros = [n for n, _, _ in tabla]
+        if tabla and numeros == list(range(1, len(numeros) + 1)) and all(a for _, _, a in tabla):
+            materias: list[tuple[str, int]] = []
+            for _, nombre, anio in tabla:
+                _agregar(materias, nombre, anio)
+            return desde_el_primero(materias)
+    return []
+
+
+def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
+    then the older brochures'."""
+    return plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
