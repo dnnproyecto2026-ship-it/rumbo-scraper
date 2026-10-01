@@ -263,7 +263,8 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("unahur.ed
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
-                            ("eco.unrc.edu.ar", "descargar"),
+                            # (Its "DESCARGAR" also links a Drive folder: the PDF by its address.)
+                            ("eco.unrc.edu.ar", re.compile(r"eco\.unrc\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/[^/]+-MODALIDAD-PRESENCIAL\.pdf$")),
                             ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"),
                             ("unpilar.edu.ar", "plan de la licenciatura"),
                             # The Federal Police's: or by its address ("pdf/PlanesEstudio/plan-Abogacia-...").
