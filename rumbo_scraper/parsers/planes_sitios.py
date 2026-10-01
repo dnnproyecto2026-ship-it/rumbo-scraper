@@ -2659,3 +2659,33 @@ def plan_uno(ruta: str) -> list[tuple[str, int]]:
 
 
 plan_uno.ruta = True
+
+
+def plan_eco_unrc(ruta: str) -> list[tuple[str, int]]:
+    """UNRC Económicas: its current plans are PDFs of minimum contents (its
+    pages still list the old plan, "No vigente"), read as pdfplumber's
+    tables: a row per subject, the year and term in the first cell of the
+    term's first row ("1° año- 2° cuatrimestre"), the name in capitals
+    ("SISTEMAS DE INFORMACIÓN CONTABLE I"), its contents in mixed case. A
+    row of contents alone goes on from the subject above."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    anio = None
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.extract_tables():
+                for fila in tabla:
+                    celdas = [" ".join((c or "").split()) for c in fila]
+                    for celda in celdas:
+                        nuevo = re.match(r"(\d)\s*[°º]\s*a[ñn]o\b", celda, re.I)
+                        if nuevo:
+                            anio = int(nuevo.group(1))
+                    nombre = next((c for c in celdas if c and c.isupper() and re.search(r"[A-ZÁÉÍÓÚÑ]{3}", c)
+                                   and not re.match(r"(?i)\d\s*[°º]\s*a[ñn]o|materia$|contenidos", c)), None)
+                    if nombre and anio:
+                        _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
+plan_eco_unrc.ruta = True

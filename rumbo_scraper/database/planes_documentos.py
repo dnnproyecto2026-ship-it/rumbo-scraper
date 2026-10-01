@@ -255,10 +255,13 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("unahur.ed
                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
                        # UNPAZ's career brochures: a table per year.
                        ("unpaz.edu.ar", planes_sitios.plan_unpaz),
-                       ("uno.edu.ar", planes_sitios.plan_uno))
+                       ("uno.edu.ar", planes_sitios.plan_uno),
+                       # UNRC Económicas: the current plans' PDFs (its pages list the old ones).
+                       ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
+                            ("eco.unrc.edu.ar", "descargar"),
                             ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"),
                             ("unpilar.edu.ar", "plan de la licenciatura"),
                             # The Federal Police's: or by its address ("pdf/PlanesEstudio/plan-Abogacia-...").
