@@ -2816,3 +2816,50 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
     then the older brochures'."""
     return plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
+
+
+def plan_ffyb_uba(texto: str) -> list[tuple[str, int]]:
+    """UBA, Farmacia y Bioquímica: the plan's resolution as ``pdftotext
+    -layout`` gives it, its subjects under "3° Cuatrimestre" headings (two
+    terms a year), each numbered and with its CBC code ("01. Matemática
+    (51)"), the name wrapped on the lines below (across a page break too)
+    until the next number or the term's note. The other columns (character,
+    duration, hours, prerequisites) start where "Obligatoria" or a wide gap
+    does. The elective slots ("38. Asignatura Optativa 1") name no subject;
+    the plan ends at the resolution's next numbered section ("13) Carga
+    horaria...")."""
+    materias: list[tuple[str, int]] = []
+    anio: int | None = None
+    actual: list[str] = []
+    columna = re.compile(r"\s{2,}|\s+(?:Obligatoria|Optativa|Electiva|optativa|obligatoria)\b")
+
+    def cerrar() -> None:
+        if actual and anio:
+            nombre = re.sub(r"\s*\(\d{1,3}\)\s*$", "", " ".join(actual))
+            if not re.match(r"(?i)^asignatura\b", nombre):
+                _agregar(materias, nombre, anio)
+        actual.clear()
+
+    for linea in (texto or "").splitlines():
+        cuatrimestre = re.match(r"^\s*(\d{1,2})\s*[°º]\s*Cuatrimestre\b", linea)
+        if cuatrimestre:
+            cerrar()
+            anio = (int(cuatrimestre.group(1)) + 1) // 2
+            continue
+        if anio and re.match(r"^\s*\d{1,2}\)\s", linea):
+            break
+        numero = re.match(r"^\s{0,3}\d{2}\.\s*(\S.*)$", linea)
+        if numero and anio:
+            cerrar()
+            actual.append(columna.split(numero.group(1).strip())[0])
+        elif re.match(r"(?i)^\s*(\(duraci[óo]n|estas asignaturas|asignaturas con|\(\d+\s*hs?\))", linea):
+            cerrar()
+        elif actual and re.match(r"^\s{0,6}\S", linea):
+            izquierda = columna.split(linea.strip())[0]
+            if not re.match(r"(?i)^(cbc|tp|final|aprobad|p[áa]gina)", izquierda):
+                actual.append(izquierda)
+    cerrar()
+    return desde_el_primero(materias)
+
+
+plan_ffyb_uba.respaldo = True
