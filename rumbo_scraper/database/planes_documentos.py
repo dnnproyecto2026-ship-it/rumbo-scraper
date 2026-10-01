@@ -74,7 +74,7 @@ _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicio
                        "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
                        "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
                        "artes.unne.edu.ar", "unicen.edu.ar")
-_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("info.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("econo.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("fi.unju.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
+_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("info.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("econo.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("fi.unju.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("odn.unne.edu.ar", planes_sitios.plan_odn_unne), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen), ("unp.edu.ar", planes_sitios.plan_unpsjb),
                         ("unne.edu.ar", planes_sitios.plan_unne), ("unse.edu.ar", planes_sitios.plan_tabla_con_anios),
                         # UNSE Forestales: the curriculum tab its "Plan de estudio" links.
@@ -242,7 +242,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
-_DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_todos), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
+_DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.edu.ar", planes_sitios.plan_bloques_numerados), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_todos), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.

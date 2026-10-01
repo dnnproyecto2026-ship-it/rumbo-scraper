@@ -2977,3 +2977,42 @@ def plan_tabla_por_encabezados(html: str) -> list[tuple[str, int]]:
                 continue
             _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
+
+
+def plan_bloques_numerados(texto: str) -> list[tuple[str, int]]:
+    """UNNE Derecho: the plan PDF as ``pdftotext -layout`` gives it, each
+    year a block of numbered subjects ("8. Derecho de las obligaciones")
+    with the year written beside the middle of the block ("Segundo año
+    Obligatorias") and two blank lines between blocks. An orientation's
+    elective ("36-A. Defensa del Estado en juicio") is not the plan."""
+    materias: list[tuple[str, int]] = []
+    texto = (texto or "").replace("\ufb01", "fi").replace("\ufb02", "fl")
+    # Blocks part at two blank lines, and at the table's header repeated on a new page.
+    for bloque in re.split(r"\n\s*\n\s*\n|\n\s*A[ñn]o\s+Car[áa]cter[^\n]*", texto):
+        rotulo = re.search(r"(?im)^\s*(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\b", bloque)
+        if not rotulo:
+            continue
+        anio = _ORDINALES[rotulo.group(1).lower()]
+        for numerada in re.finditer(r"(?m)(?:^|\s{2,})\d{1,2}\.\s+(\S.*?)(?=\s{2,}|$)", bloque):
+            _agregar(materias, numerada.group(1), anio)
+    return desde_el_primero(materias)
+
+
+plan_bloques_numerados.respaldo = True
+
+
+def plan_odn_unne(html: str) -> list[tuple[str, int]]:
+    """UNNE Odontología: the plan on its page year by year, each "unidad
+    curricular" marked "UC." (or a "Seminario") and followed by a row of how
+    it runs ("Cuatrimestral Presencial 6 hs 96 hs"); a name that does not
+    fit wraps to a row of its own ("UC. Odontología Integral–Práctica" /
+    "Profesional Supervisada")."""
+    materias: list[tuple[str, int]] = []
+    for nombre, anio in plan_texto_por_anio(html):
+        if re.match(r"(?i)^(cuatrimestral|semestral|anual|bimestral)\b", nombre):
+            continue
+        if re.match(r"(?i)^(uc\.|seminario)\s*", nombre) or not materias:
+            materias.append((re.sub(r"(?i)^uc\.\s*", "", nombre), anio))
+        else:
+            materias[-1] = (materias[-1][0] + " " + nombre, materias[-1][1])
+    return desde_el_primero(materias)
