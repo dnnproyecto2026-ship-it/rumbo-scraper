@@ -1000,6 +1000,106 @@ def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
 plan_filo_unt.cajas = True
 
 
+def _renglones(cajas: str) -> list[tuple[int, float, float, str]]:
+    """The lines of ``pdftotext -bbox-layout``: (page, left edge, top, text)."""
+    renglones = []
+    for pagina, contenido in enumerate(re.findall(r"<page\b.*?</page>", cajas or "", re.S)):
+        for x, y, linea in re.findall(r'<line xMin="([\d.]+)" yMin="([\d.]+)"[^>]*>(.*?)</line>', contenido, re.S):
+            texto = clean_text(" ".join(re.findall(r">([^<]+)</word>", linea)))
+            if texto:
+                renglones.append((pagina, float(x), float(y), texto))
+    return renglones
+
+
+def plan_iuce(cajas: str) -> list[tuple[str, int]]:
+    """The IUCE's career brochures (Mendoza): the plan a column per year
+    ("1° Año" ... "4° Año"), each subject marked "॰" and wrapped over lines
+    ("॰Marco legal" / "de las organizaciones"). A line goes to the column its
+    left edge is under the mark of; "Talleres de aplicación ágil:" heads the
+    workshops that follow, which are subjects too. "Tecnicatura Universitaria",
+    between the columns, marks the intermediate degree."""
+    renglones = _renglones(cajas)
+    columnas = {}
+    for pagina, x, y, texto in renglones:
+        anio = re.fullmatch(r"(\d)\s*[°º]\s*Año", texto)
+        if anio:
+            columnas[int(anio.group(1))] = (pagina, x, y)
+    if not columnas or len({(p, round(y)) for p, _, y in columnas.values()}) != 1:
+        return []
+    pagina, _, arriba = next(iter(columnas.values()))
+    materias: list[list] = []
+    for anio, (_, cx, _) in sorted(columnas.items()):
+        bajo = sorted((y, x, t) for p, x, y, t in renglones if p == pagina and y > arriba)
+        marca = next((x for y, x, t in bajo if t.startswith("॰") and 0 < x - cx < 40), None)
+        if marca is None:
+            return []
+        ultima, abajo = None, arriba
+        for y, x, texto in bajo:
+            if abs(x - marca) > 3:
+                continue
+            # The column ends where its list does (the brochure's icons and addresses below).
+            if y - abajo > 45:
+                break
+            abajo = y
+            # Logística's brochure marks one subject twice: "॰Transporte" / "॰Terrestre y en FFRR".
+            if texto.startswith("॰") and not (ultima and ultima[0] == "Transporte" and texto.startswith("॰Terrestre")):
+                ultima = [texto.lstrip("॰ "), anio]
+                materias.append(ultima)
+            elif texto.startswith("॰"):
+                ultima[0] += " " + texto.lstrip("॰ ")
+            elif re.fullmatch(r"(?i)talleres de aplicaci[oó]n [aá]gil:?", texto):
+                ultima = None
+            elif ultima:
+                ultima[0] += " " + texto
+            else:
+                return []
+    plan: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        _agregar(plan, nombre, anio)
+    return desde_el_primero(plan)
+
+
+plan_iuce.cajas = True
+
+
+def plan_iuas(cajas: str) -> list[tuple[str, int]]:
+    """The IUAS's career brochures (Mendoza): "Primer año" or "1er Año"...
+    each followed by its subjects, one per line and marked "*" or "•". Some pages
+    print every word twice, the copy a little to the right: a word with its
+    twin to its left on the same line is the copy."""
+    palabras = []
+    for pagina, contenido in enumerate(re.findall(r"<page\b.*?</page>", cajas or "", re.S)):
+        for x, y, texto in re.findall(r'<word xMin="([\d.]+)" yMin="([\d.]+)"[^>]*>([^<]+)</word>', contenido):
+            palabras.append((pagina, round(float(y), 1), float(x), texto))
+    copias = {(p, y, round(x), t) for p, y, x, t in palabras}
+    lineas: dict[tuple[int, float], list[tuple[float, str]]] = {}
+    for p, y, x, t in palabras:
+        if not any((p, y, round(x) - d, t) in copias for d in (17, 18, 19)):
+            lineas.setdefault((p, y), []).append((x, t))
+    materias: list[list] = []
+    anio, ultima = None, None
+    for clave in sorted(lineas):
+        texto = clean_text(" ".join(t for _, t in sorted(lineas[clave])))
+        if len(texto) < 15 and re.search(r"(?i)\baño$", texto) and anio_de(texto):
+            anio, ultima = anio_de(texto), None
+        # Marked "*", "•" (or, once, "¨").
+        elif anio and texto[:1] in "*•¨":
+            ultima = [texto.lstrip("*•¨ "), anio]
+            materias.append(ultima)
+        # A name wrapped after a word that cannot end it ("... Sistemas de Agua y el" / "Saneamiento").
+        elif ultima and re.search(r"(?i)\s(?:de|del|la|las|el|los|y|e|en|a|para)$", ultima[0]):
+            ultima[0] += " " + texto
+        else:
+            anio, ultima = None, None
+    plan: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        _agregar(plan, nombre, anio)
+    return desde_el_primero(plan)
+
+
+plan_iuas.cajas = True
+
+
 def plan_fcnym(html: str) -> list[tuple[str, int]]:
     """UNLP Naturales' plan pages: a table per year headed "Nº | Materia |
     Duración | ...", the year in bold just before it ("Primer Año"). A row

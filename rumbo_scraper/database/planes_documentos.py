@@ -262,7 +262,10 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
                        ("unpaz.edu.ar", planes_sitios.plan_unpaz),
                        ("uno.edu.ar", planes_sitios.plan_uno),
                        # UNRC Económicas: the current plans' PDFs (its pages list the old ones).
-                       ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc))
+                       ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc),
+                       # Mendoza's IUCE and IUAS: their career brochures.
+                       ("i-uce.edu.ar", planes_sitios.plan_iuce),
+                       ("iuas.edu.ar", planes_sitios.plan_iuas))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
@@ -274,7 +277,10 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             ("universidad-policial.edu.ar", re.compile(r"(?i)/PlanesEstudio/plan[_-]")),
                             ("ing.unlp.edu.ar", re.compile(r"asignaturas/plan\.php\?carrera=")),
                             # UNT Filosofía: the career's brochure has its plan.
-                            ("filo.unt.edu.ar", re.compile(r"/folleto_[^/]+\.pdf$")))
+                            ("filo.unt.edu.ar", re.compile(r"/folleto_[^/]+\.pdf$")),
+                            # The IUCE's brochure is on its API's host, the IUAS's beside the page.
+                            ("i-uce.edu.ar", re.compile(r"//api\.i-uce\.edu\.ar/wp-content/uploads/[^#?]+\.pdf$")),
+                            ("iuas.edu.ar", re.compile(r"iuas\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/PDF-[^/]+\.pdf$")))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
