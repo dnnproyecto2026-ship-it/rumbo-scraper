@@ -123,3 +123,13 @@ class VerificacionTest(unittest.TestCase):
         ]}
         self.assertEqual([f["materia"] for f in _veredictos_que_siguen(anterior, hallado)],
                          ["norma.htm Ley", "Agroecología CFB"])
+
+
+class PlanEnDrive(unittest.TestCase):
+    def test_plan_en_drive_enlazado_por_la_pagina(self):
+        from rumbo_scraper.database.verificar_catalogo import _planes_enlazados
+
+        html = ('<a href="https://drive.google.com/file/d/AB-1/view">Formulario Inscripción</a>'
+                '<a href="https://drive.google.com/file/d/CD_2/view?usp=drive_link">Plan de Estudio</a>')
+        self.assertEqual(_planes_enlazados(html, "https://iuymca.edu.ar/profesorado/"),
+                         ["https://drive.google.com/uc?export=download&id=CD_2"])

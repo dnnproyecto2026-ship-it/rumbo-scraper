@@ -119,7 +119,7 @@ class Fuentes:
         if respuesta is None or respuesta.status_code >= 400:
             return {"ok": False, "html": "", "texto": ""}
         tipo = respuesta.headers.get("content-type", "")
-        if "pdf" in tipo or url.lower().split("?")[0].endswith(".pdf"):
+        if "pdf" in tipo or url.lower().split("?")[0].endswith(".pdf") or respuesta.content[:5] == b"%PDF-":
             return {"ok": True, "html": "", "texto": v.plano(_texto_del_pdf(respuesta.content))}
         # A catalogue's spreadsheet (INET's institutes per degree): its cells.
         if "spreadsheet" in tipo or url.lower().split("?")[0].endswith(".xlsx"):
@@ -186,6 +186,7 @@ def _texto_del_pdf(contenido: bytes) -> str:
         pass
     # And the text as laid out: a name pdfplumber glues to the next column
     # comes apart there.
+    import html
     import subprocess
     import tempfile
 
@@ -200,6 +201,13 @@ def _texto_del_pdf(contenido: bytes) -> str:
             # la" / "1 Cuatrimestral" / "Computación"), comes out whole there.
             partes.append(subprocess.run(["pdftotext", "-raw", archivo.name, "-"], capture_output=True,
                                          text=True, timeout=120).stdout)
+            # And each block of text on its own: a name wrapped within its
+            # column, beside other columns (the YMCA's plans), is one block.
+            cajas = subprocess.run(["pdftotext", "-bbox-layout", archivo.name, "-"], capture_output=True,
+                                   text=True, timeout=120).stdout
+            for bloque in re.findall(r"<block\b.*?</block>", cajas, re.S):
+                partes.append(" ".join(html.unescape(p) for p in re.findall(r">([^<]+)</word>", bloque)))
+                partes.append(v.CORTE)
     except Exception:
         pass
     return " ".join(partes)
@@ -213,7 +221,8 @@ def _dominios(url: str) -> tuple[str, ...]:
 def _planes_enlazados(html: str, pagina: str) -> list[str]:
     """The documents an official page links as its plan, wherever they are
     kept: the ITBA keeps its plans on its own Amazon storage, and the page
-    that links them is the university saying they are its plans."""
+    that links them is the university saying they are its plans (the
+    YMCA's, on Drive)."""
     from urllib.parse import urljoin
 
     from bs4 import BeautifulSoup
@@ -223,7 +232,11 @@ def _planes_enlazados(html: str, pagina: str) -> list[str]:
     halladas = []
     for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
         url = urljoin(pagina, enlace["href"].strip())
-        if not urlparse(url).path.lower().endswith(".pdf"):
+        # A file on Drive (the YMCA's plans), read from its own address.
+        en_drive = re.search(r"drive\.google\.com/file/d/([\w-]+)", url)
+        if en_drive:
+            url = f"https://drive.google.com/uc?export=download&id={en_drive.group(1)}"
+        elif not urlparse(url).path.lower().endswith(".pdf"):
             continue
         junto = re.sub(r"[-_+]+|%20", " ", f"{enlace.get_text(' ', strip=True)} {url}")
         if _PLAN.search(junto) and not _NO_ES_EL_PLAN.search(junto) and url not in halladas:
