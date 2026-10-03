@@ -265,7 +265,9 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
                        ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc),
                        # Mendoza's IUCE and IUAS: their career brochures.
                        ("i-uce.edu.ar", planes_sitios.plan_iuce),
-                       ("iuas.edu.ar", planes_sitios.plan_iuas))
+                       ("iuas.edu.ar", planes_sitios.plan_iuas),
+                       # The YMCA university's career sheets, on Drive.
+                       ("drive.google.com", planes_sitios.plan_iuymca))
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
@@ -280,7 +282,9 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             ("filo.unt.edu.ar", re.compile(r"/folleto_[^/]+\.pdf$")),
                             # The IUCE's brochure is on its API's host, the IUAS's beside the page.
                             ("i-uce.edu.ar", re.compile(r"//api\.i-uce\.edu\.ar/wp-content/uploads/[^#?]+\.pdf$")),
-                            ("iuas.edu.ar", re.compile(r"iuas\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/PDF-[^/]+\.pdf$")))
+                            ("iuas.edu.ar", re.compile(r"iuas\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/PDF-[^/]+\.pdf$")),
+                            # The YMCA's: on Drive, beside its enrolment form; the link says "plan de estudio(s)".
+                            ("iuymca.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
@@ -288,6 +292,9 @@ def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
         if host.endswith(dominio):
             return next((urljoin(url, a["href"]) for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)
                          if (texto.search(a["href"]) if isinstance(texto, re.Pattern)
+                             # (A pattern for the link's text and one for its address.)
+                             else texto[0].search(clean_text(a.get_text(" "))) and texto[1].search(a["href"])
+                             if isinstance(texto, tuple)
                              else clean_text(a.get_text(" ")).lower() == texto)), None)
     return None
 
@@ -584,6 +591,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             if (url.startswith("https://") and documento.startswith("http://")
                     and urlparse(documento).netloc == urlparse(url).netloc):
                 documento = "https://" + documento.removeprefix("http://")
+            # A file on Drive is downloaded from its own address, not its viewer's.
+            en_drive = re.search(r"drive\.google\.com/file/d/([\w-]+)", documento)
+            if en_drive:
+                documento = f"https://drive.google.com/uc?export=download&id={en_drive.group(1)}"
             archivo = CACHE / (hashlib.md5(documento.encode()).hexdigest() + ".pdf")
             if not archivo.exists():
                 try:

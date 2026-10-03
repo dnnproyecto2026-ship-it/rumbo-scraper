@@ -1100,6 +1100,59 @@ def plan_iuas(cajas: str) -> list[tuple[str, int]]:
 plan_iuas.cajas = True
 
 
+def plan_iuymca(cajas: str) -> list[tuple[str, int]]:
+    """The YMCA university's career sheets (PDFs on Drive): "Plan de
+    estudio", a column per year, its subjects numbered through the whole
+    plan ("1. Anatomía", "14. Natación y su didáctica", "01 - Teoría e
+    Historia...") and wrapped over lines. The numbered lines' left edges
+    make the columns, left to right the years; a line without a number
+    continues the one above it in its column. The table ends at the
+    electives ("Espacios curriculares a cursar...") or the entry
+    requirements. The numbers must run on with no gap from the first year
+    to the last, or it is not read."""
+    renglones = _renglones(cajas)
+    inicio = next(((p, y) for p, x, y, t in renglones if re.fullmatch(r"(?i)plan de estudios?", t)), None)
+    if not inicio:
+        return []
+    pagina, arriba = inicio
+    fin = min((y for p, x, y, t in renglones if p == pagina and y > arriba
+               and re.match(r"(?i)(espacios curriculares|requisitos de ingreso|talleres)", t)), default=1e9)
+    tabla = sorted((y, x, t) for p, x, y, t in renglones if p == pagina and arriba < y < fin)
+    numerados = [(y, x, t) for y, x, t in tabla if re.match(r"\d{1,2}\s*(?:\.|-)\s+\S", t)]
+    columnas: list[list[float]] = []
+    for x in sorted(x for _, x, _ in numerados):
+        if columnas and x - columnas[-1][-1] < 50:
+            columnas[-1].append(x)
+        else:
+            columnas.append([x])
+    if not 2 <= len(columnas) <= 6:
+        return []
+    bordes = [(min(c) - 15, max(c) + 15) for c in columnas]
+    por_columna: list[list[list]] = [[] for _ in columnas]
+    for y, x, texto in tabla:
+        anio = next((i for i, (a, b) in enumerate(bordes) if a <= x <= b), None)
+        if anio is None:
+            continue
+        numero = re.match(r"(\d{1,2})\s*(?:\.|-)\s+(\S.*)", texto)
+        if numero:
+            por_columna[anio].append([int(numero.group(1)), numero.group(2)])
+        elif por_columna[anio]:
+            por_columna[anio][-1][1] += " " + texto
+    numeros = [n for columna in por_columna for n, _ in columna]
+    if not numeros or numeros != list(range(numeros[0], numeros[0] + len(numeros))):
+        return []
+    plan: list[tuple[str, int]] = []
+    for anio, columna in enumerate(por_columna, 1):
+        for _, nombre in columna:
+            _agregar(plan, nombre, anio)
+    return desde_el_primero(plan)
+
+
+plan_iuymca.cajas = True
+# Its sheets are on Drive, with other sites' documents: what it does not read goes to the general reader.
+plan_iuymca.respaldo = True
+
+
 def plan_fcnym(html: str) -> list[tuple[str, int]]:
     """UNLP Naturales' plan pages: a table per year headed "Nº | Materia |
     Duración | ...", the year in bold just before it ("Primer Año"). A row
