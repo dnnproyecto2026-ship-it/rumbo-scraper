@@ -138,7 +138,11 @@ class Fuentes:
                 return {"ok": False, "html": "", "texto": ""}
             return {"ok": True, "html": "", "crudo": respuesta.text,
                     "texto": v.plano(f" {v.CORTE} ".join(_textos_del_json(datos)))}
-        html = respuesta.text
+        try:
+            html = respuesta.text
+        except UnicodeDecodeError:
+            # A page whose header names an encoding it is not in (IUSM's says UTF-32).
+            html = respuesta.content.decode("utf-8", errors="replace")
         # A piece of a site's script says its texts with escapes ("P\xfablica").
         if url.split("?")[0].endswith(".js"):
             return {"ok": True, "html": html, "texto": v.plano(gn._texto_js(html))}
