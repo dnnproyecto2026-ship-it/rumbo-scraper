@@ -1227,11 +1227,13 @@ def plan_fcnym(html: str) -> list[tuple[str, int]]:
 
 
 _ANIO_DNGU = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\b")
+# (UADER's Economics plans head each year "1º Año".)
+_ANIO_NUMERO_DNGU = re.compile(r"^\s*([1-6])\s*[º°]\s*Año\s*$")
 # ("---" where a row has no term: UNRN's "38 Trabajo Final Integrador --- 0 128".)
-_REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|Semestral|Bimestral|Trimestral|-{3}(?=\s))"
-# (UNSAdA numbers its subjects with four digits: "0279".)
-_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,4}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"(?:\b|\s)")
-_NO_ES_NOMBRE_DNGU = re.compile(r"(?i)^(COD|CARGA|SEMANAL|HORARIA|MODALIDAD|DICTADO|T[ÍI]TULO|IF-\d|P[áa]gina|"
+_REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|ANUAL|Semestral|Bimestral|Trimestral|C[12](?=\s)|-{3}(?=\s))"
+# (UNSAdA numbers its subjects with four digits: "0279"; UADER's Economics with six: "205101".)
+_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,4}(?:\.\d{1,2}){0,3}\.?|\d{6})\s+(.*?)\s*" + _REGIMEN_DNGU + r"(?:\b|\s)")
+_NO_ES_NOMBRE_DNGU = re.compile(r"(?i)^(C[OÓ]D|CARGA|SEMANAL|HORARIA|TOTAL$|MODALIDAD|DICTADO|T[ÍI]TULO|IF-\d|P[áa]gina|"
                                 r"Digitally|Date:|Anexo|N[úu]mero:|Referencia)")
 
 
@@ -1244,7 +1246,9 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
     Cuatrimestral 6 90" / "Computación"). A row with its name empty takes
     the loose line above and the one below; loose lines that cannot be
     told to one row or the next leave no plan."""
-    if "ASIGNATURA" not in texto_con_columnas or not any(map(_ANIO_DNGU.match, texto_con_columnas.splitlines())):
+    lineas = texto_con_columnas.splitlines()
+    if "ASIGNATURA" not in texto_con_columnas.upper() or not any(
+            _ANIO_DNGU.match(l) or _ANIO_NUMERO_DNGU.match(l) for l in lineas):
         return []
     filas: list[dict] = []
     sueltas: list[str] = []
@@ -1256,6 +1260,10 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
         if encabezado:
             anio, sueltas = _ORDINALES_UHIBA[encabezado.group(1).lower()], []
             continue
+        encabezado = _ANIO_NUMERO_DNGU.match(linea)
+        if encabezado:
+            anio, sueltas = int(encabezado.group(1)), []
+            continue
         if re.match(r"^\s*T[ÍI]TULO:", linea) and filas:
             break
         fila = _FILA_DNGU.match(linea)
@@ -1263,11 +1271,13 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
             filas.append({"anio": anio, "nombre": clean_text(fila.group(2)), "antes": list(sueltas), "despues": []})
             sueltas = []
             continue
-        texto = clean_text(linea)
         # A loose line far to the right is another column's (UNRN's
-        # correlatives, "Curso nivelatorio-" / "1"), not a name's.
+        # correlatives, "Curso nivelatorio-" / "1"), not a name's; and a
+        # name's piece keeps only what comes before the next column
+        # (UADER's "Estructura y Política      213-318-").
         if len(linea) - len(linea.lstrip()) > 45:
             continue
+        texto = clean_text(re.split(r"\s{3,}", linea.strip())[0])
         if anio and texto and not _NO_ES_NOMBRE_DNGU.match(texto) and not re.search(r"\d{2,}", texto):
             # In lower case, or a part's numeral alone ("I"), it goes on from
             # the row above ("Infraestructura para Ciencia" / "de Datos").

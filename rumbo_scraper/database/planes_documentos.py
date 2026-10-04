@@ -327,7 +327,9 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             ("i-uce.edu.ar", re.compile(r"//api\.i-uce\.edu\.ar/wp-content/uploads/[^#?]+\.pdf$")),
                             ("iuas.edu.ar", re.compile(r"iuas\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/PDF-[^/]+\.pdf$")),
                             # The YMCA's: on Drive, beside its enrolment form; the link says "plan de estudio(s)".
-                            ("iuymca.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))))
+                            ("iuymca.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))),
+                            # UADER's entrants' pages: "Plan de Estudios", on Drive too.
+                            ("ingresantes.uader.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))))
 
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
@@ -381,6 +383,12 @@ def _leer(archivo: Path) -> list[tuple[str, int | None]]:
         texto = ""
     if "DNGU" in texto and "ASIGNATURA" in texto:
         return [m for m in planes_sitios.plan_dngu(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+    # The same table with its years as "1º Año" (UADER's Economics plans):
+    # read as the annex, or by the general readers if it is not one.
+    if re.search(r"(?m)^\s*[1-6]\s*[º°]\s*Año\s*$", texto) and "asignatura" in texto.lower():
+        leidas = [m for m in planes_sitios.plan_dngu(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+        if leidas:
+            return leidas
     try:
         materias = plan_por_columnas.leer_pdf(str(archivo))
         if not materias:

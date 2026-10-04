@@ -28,5 +28,29 @@ class AnexoUnrn(unittest.TestCase):
             ("Trabajo Final Integrador", 2)])
 
 
+UADER = """Plan de Estudio
+1º Año
+Código Asignatura                         Dedicación      Carga horaria semanal
+205101 Introducción a la Economía         ANUAL         5                 160
+2º Año
+Código   Asignatura                 Dedicación                   horaria   Correlat.
+                                                                 total
+205209 Macroeconomía                ANUAL        5               160       101
+         Metodología de la
+205214                              C2           4               64
+         Investigación
+         Estructura y Política                                              213-318-
+205215                              ANUAL        4               128
+         Económica Argentina                                                319
+"""
+
+
+class PlanEconomiaUader(unittest.TestCase):
+    def test_codigo_de_seis_cifras_anio_numerado_y_correlativas_al_costado(self):
+        self.assertEqual(plan_dngu(UADER), [
+            ("Introducción a la Economía", 1), ("Macroeconomía", 2), ("Metodología de la Investigación", 2),
+            ("Estructura y Política Económica Argentina", 2)])
+
+
 if __name__ == "__main__":
     unittest.main()
