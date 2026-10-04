@@ -1000,6 +1000,31 @@ def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
 plan_filo_unt.cajas = True
 
 
+def plan_ubp(html: str) -> list[tuple[str, int]]:
+    """Blas Pascal's career pages: the plan in ``section#plan``, an accordion
+    with a card per year ("PRIMER AÑO"), its subjects one per line under
+    each term ("1º Cuatrimestre"), most marked ">" (Relaciones Públicas'
+    sixth term is not)."""
+    seccion = BeautifulSoup(html or "", "html.parser").find("section", id="plan")
+    if not seccion:
+        return []
+    materias: list[tuple[str, int]] = []
+    for tarjeta in seccion.select(".card"):
+        anio = anio_de(_texto(tarjeta.select_one(".card-header")))
+        cuerpo = tarjeta.select_one(".card-body")
+        if not anio or not cuerpo:
+            continue
+        en_un_termino = False
+        for linea in cuerpo.get_text("\n").splitlines():
+            linea = clean_text(linea).replace("\xa0", " ").strip()
+            if re.match(r"(?i)^\d+\s*[º°]?\s*(cuatrimestre|semestre)$", linea):
+                en_un_termino = True
+            elif linea.startswith(">") or (en_un_termino and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", linea)):
+                # (Psicología marks how each is taken: "Psicoanálisis (D)", "Psicopatología | (D)".)
+                _agregar(materias, re.sub(r"\s*\|?\s*\([DP]\)\s*$", "", linea.lstrip("> ")), anio)
+    return desde_el_primero(materias)
+
+
 def _renglones(cajas: str) -> list[tuple[int, float, float, str]]:
     """The lines of ``pdftotext -bbox-layout``: (page, left edge, top, text)."""
     renglones = []
