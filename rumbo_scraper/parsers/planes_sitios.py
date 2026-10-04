@@ -1000,6 +1000,25 @@ def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
 plan_filo_unt.cajas = True
 
 
+def plan_um(html: str) -> list[tuple[str, int]]:
+    """Morón's career pages since its new site: "PLAN DE ESTUDIO", a
+    ``<details>`` per year ("Primer Año") holding a table, a subject a row
+    (``td[rel=desc]``, in capitals). The sections that are not a year (the
+    electives' pool, "ASIG.OPTATIV.") are left out, and so are the rows a
+    year marks as one option among several ("Opt.A")."""
+    materias: list[tuple[str, int]] = []
+    for seccion in BeautifulSoup(html or "", "html.parser").find_all("details"):
+        resumen = seccion.find("summary")
+        anio = anio_de(_texto(resumen)) if resumen and len(_texto(resumen)) < 20 else None
+        if not anio:
+            continue
+        for fila in seccion.find_all("tr"):
+            nombre, opcion = fila.find("td", rel="desc"), fila.find("td", rel="opcion")
+            if nombre and _texto(nombre) and not (opcion and _texto(opcion)):
+                _agregar(materias, _texto(nombre), anio)
+    return desde_el_primero(materias)
+
+
 def plan_ubp(html: str) -> list[tuple[str, int]]:
     """Blas Pascal's career pages: the plan in ``section#plan``, an accordion
     with a card per year ("PRIMER AÑO"), its subjects one per line under

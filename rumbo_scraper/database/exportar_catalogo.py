@@ -533,6 +533,13 @@ def exportar(client: Any) -> dict[str, Any]:
     # Each career under the name of the career it is, merged with the others
     # of its university that come out the same.
     representante: dict[tuple[str, str], str] = {}
+    # The plan of a merged career is one of theirs, not all of them put
+    # together: Morón's "Abogacía" and "Abogacía a distancia" each list the
+    # fourth year, and both at once made a year of 22 subjects that dropped
+    # the plan as crowded. The first one that has subjects (the shortest
+    # name: the one without a modality) gives it.
+    con_materias = {m["carrera_id"] for m in materias if m["carrera_id"]}
+    plan_de: dict[tuple[str, str], str] = {}
     forma = formas_nacionales(
         [n for c in carreras if (n := nombre_de_la_carrera(c["denominacion_canonica"] or c["nombre_carrera"],
                                                              sedes_de[c["universidad_id"]])[0])]
@@ -551,6 +558,8 @@ def exportar(client: Any) -> dict[str, Any]:
         nuevo = clave not in representante
         nombre = representante.setdefault(clave, base)
         carrera_nombre[c["id"]] = nombre
+        if c["id"] in con_materias:
+            plan_de.setdefault((uid, nombre), c["id"])
         facultad = facultades.get(c["facultad_id"])
         facultad_nombre = facultad["nombre_facultad"] if facultad else None
         if nuevo:
@@ -610,6 +619,8 @@ def exportar(client: Any) -> dict[str, Any]:
         materia = nombre_de_la_materia(m["nombre_materia"])
         materia = con_espacios(materia, conocidas) if materia else materia
         if not programa or not materia:
+            continue
+        if m["carrera_id"] and plan_de.get((m["universidad_id"], programa), m["carrera_id"]) != m["carrera_id"]:
             continue
         clave = (nombre_oficial.get(m["universidad_id"]), programa, materia)
         if clave in contradichas:

@@ -136,6 +136,8 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("ubp.edu.ar",
                         ("unsta.edu.ar", planes_sitios.plan_texto_por_anio),
                         ("uean.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("unimoron.edu.ar", planes_sitios.plan_tabla_con_anios),
+                        # (Its new site, since 2026: a <details> per year.)
+                        ("unimoron.edu.ar", planes_sitios.plan_um),
                         ("uda.edu.ar", planes_sitios.plan_upso),
                         ("unisud.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("faud.mdp.edu.ar", planes_sitios.plan_titulo_y_lista),
