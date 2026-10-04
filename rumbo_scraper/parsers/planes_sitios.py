@@ -1183,9 +1183,10 @@ def plan_fcnym(html: str) -> list[tuple[str, int]]:
 
 
 _ANIO_DNGU = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\b")
-_REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|Semestral|Bimestral|Trimestral)"
+# ("---" where a row has no term: UNRN's "38 Trabajo Final Integrador --- 0 128".)
+_REGIMEN_DNGU = r"(?:Cuatrimestral|Anual|Semestral|Bimestral|Trimestral|-{3}(?=\s))"
 # (UNSAdA numbers its subjects with four digits: "0279".)
-_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,4}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"\b")
+_FILA_DNGU = re.compile(r"^\s{0,3}(\d{1,4}(?:\.\d{1,2}){0,3}\.?)\s+(.*?)\s*" + _REGIMEN_DNGU + r"(?:\b|\s)")
 _NO_ES_NOMBRE_DNGU = re.compile(r"(?i)^(COD|CARGA|SEMANAL|HORARIA|MODALIDAD|DICTADO|T[ÍI]TULO|IF-\d|P[áa]gina|"
                                 r"Digitally|Date:|Anexo|N[úu]mero:|Referencia)")
 
@@ -1219,6 +1220,10 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
             sueltas = []
             continue
         texto = clean_text(linea)
+        # A loose line far to the right is another column's (UNRN's
+        # correlatives, "Curso nivelatorio-" / "1"), not a name's.
+        if len(linea) - len(linea.lstrip()) > 45:
+            continue
         if anio and texto and not _NO_ES_NOMBRE_DNGU.match(texto) and not re.search(r"\d{2,}", texto):
             # In lower case, or a part's numeral alone ("I"), it goes on from
             # the row above ("Infraestructura para Ciencia" / "de Datos").
@@ -1240,7 +1245,10 @@ def plan_dngu(texto_con_columnas: str) -> list[tuple[str, int]]:
         # goes on: "Producción de Textos para la"), or a row with no name at
         # all: unclear.
         conectan = all(re.search(r"(?i)\b(de|del|la|las|los|el|y|e|en|para|a|al|con|por)$", a) for a in fila["antes"])
-        if (fila["nombre"] and fila["antes"] and not conectan) or not partes or len(fila["antes"]) > 2:
+        # (Or a line above and one below: a name centred over three lines,
+        # "Prácticas en Nutrición" / "Clínica y Administración de" / "Servicios Alimentarios".)
+        centrada = len(fila["antes"]) == 1 and len(fila["despues"]) == 1
+        if (fila["nombre"] and fila["antes"] and not (conectan or centrada)) or not partes or len(fila["antes"]) > 2:
             return []
         _agregar(materias, " ".join(partes), fila["anio"])
     return desde_el_primero(materias)

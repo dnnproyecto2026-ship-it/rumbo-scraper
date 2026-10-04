@@ -213,6 +213,47 @@ _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_
                          planes_sitios.plan_unnoba))
 
 
+# Universities that link every resolution of a career's plan (the
+# Ministry's, the council's changes, the intermediate title's, the plan's
+# own text) with nothing to tell which is the plan: each is read, and the
+# plan is the one document whose reading is the whole plan.
+_ENTRE_SUS_DOCUMENTOS = (("unrn.edu.ar", re.compile(r"/archivos/planes/")),)
+
+
+def _plan_entre_los_documentos(visitante: Any, html: str, url: str, host: str, carrera: dict[str, Any]
+                               ) -> tuple[list, str] | None:
+    patron = next((p for dominio, p in _ENTRE_SUS_DOCUMENTOS if host.endswith(dominio)), None)
+    if not patron:
+        return None
+    soup = BeautifulSoup(html or "", "html.parser")
+    # (UNRN's pages say <base href="/carrera.php">: its links are under the site's root.)
+    base = soup.find("base", href=True)
+    base = urljoin(url, base["href"]) if base else url
+    enteros = []
+    for documento in dict.fromkeys(urljoin(base, a["href"]) for a in soup.find_all("a", href=True) if patron.search(a["href"])):
+        archivo = CACHE / (hashlib.md5(documento.encode()).hexdigest() + ".pdf")
+        if not archivo.exists():
+            try:
+                respuesta = visitante.client.get(documento)
+                archivo.write_bytes(respuesta.content if respuesta.status_code == 200 else b"")
+            except Exception:
+                archivo.write_bytes(b"")
+            time.sleep(PAUSA)
+        if archivo.stat().st_size < 1000:
+            continue
+        materias = _leer_documento(archivo, documento)
+        # Read without its years, a plan cut short does not show it (UNRN's
+        # Geología stops at the second year's electives): seven subjects a
+        # year of the career's length at least.
+        sin_anios = materias and all(anio is None for _, anio in materias)
+        if sin_anios and len(materias) < 7 * (carrera.get("duracion_anios") or 99):
+            continue
+        if materias and _parece_el_plan_entero(carrera["nombre_carrera"], materias, carrera.get("duracion_anios")):
+            enteros.append((materias, documento))
+    # Two whole plans (an engineering's and its tecnicatura's): which is this career's is not known.
+    return enteros[0] if len(enteros) == 1 else None
+
+
 def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
     """The plan a page of the site's menu lists ("Programas", "Programas
     Analíticos"), from the career's page or from the career's own site it
@@ -508,6 +549,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                 if del_marco:
                     de_la_pagina[carrera["id"]], pagina_del_plan[carrera["id"]] = del_marco, pagina
                     continue
+            entre_sus_documentos = _plan_entre_los_documentos(visitante, html, url, host, carrera)
+            if entre_sus_documentos:
+                de_la_pagina[carrera["id"]], pagina_del_plan[carrera["id"]] = entre_sus_documentos
+                continue
             # A site that lists the plan on a page of its own menu (the
             # FACET's "Programas"), maybe from the career's own site.
             del_menu = _plan_del_menu(visitante, html, url, host)

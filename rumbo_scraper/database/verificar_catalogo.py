@@ -234,7 +234,11 @@ def _planes_enlazados(html: str, pagina: str) -> list[str]:
     from rumbo_scraper.spiders.generico import _NO_ES_EL_PLAN, _PLAN
 
     halladas = []
-    for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
+    soup = BeautifulSoup(html or "", "html.parser")
+    # A page that sets its own base (UNRN's <base href="/carrera.php">) links from there.
+    base = soup.find("base", href=True)
+    pagina = urljoin(pagina, base["href"]) if base else pagina
+    for enlace in soup.find_all("a", href=True):
         url = urljoin(pagina, enlace["href"].strip())
         # A file on Drive (the YMCA's plans), read from its own address.
         en_drive = re.search(r"drive\.google\.com/file/d/([\w-]+)", url)
