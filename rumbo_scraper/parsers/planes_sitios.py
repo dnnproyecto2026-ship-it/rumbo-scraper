@@ -1000,6 +1000,32 @@ def plan_filo_unt(cajas: str) -> list[tuple[str, int]]:
 plan_filo_unt.cajas = True
 
 
+def plan_uflo(html: str) -> list[tuple[str, int]]:
+    """UFLO's career pages: "Plan de estudios" in tabs (a Gutena tabs
+    block), a tab per year ("Primer Año") holding its subjects as lists.
+    Tabs that are not a year ("Espacios Optativos", "Otros Requisitos")
+    are left out, and so are the lists under an orientation
+    ("·Orientación en Tecnología Educativa"): a student takes one."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    materias: list[tuple[str, int]] = []
+    for bloque in soup.select(".gutena-tabs-block"):
+        anios = {t.get("data-tab"): anio_de(_texto(t)) for t in bloque.select(".gutena-tab-title")}
+        for panel in bloque.select(".gutena-tab-block"):
+            anio = anios.get(panel.get("data-tab"))
+            if not anio:
+                continue
+            alternativa = False
+            for parte in panel.find_all(["p", "ul"], recursive=False):
+                if parte.name == "p":
+                    alternativa = bool(re.match(r"(?i)^[·•\s]*orientaci[oó]n", _texto(parte))) or (
+                        alternativa and not _texto(parte))
+                    continue
+                if not alternativa:
+                    for item in parte.find_all("li"):
+                        _agregar(materias, _texto(item).rstrip("*"), anio)
+    return desde_el_primero(materias)
+
+
 def plan_um(html: str) -> list[tuple[str, int]]:
     """Morón's career pages since its new site: "PLAN DE ESTUDIO", a
     ``<details>`` per year ("Primer Año") holding a table, a subject a row
