@@ -64,8 +64,23 @@ _UN_CICLO = re.compile(
     r"complementacion curricular|\((?:ciclo|complementacion)\b|licenciatura \(ciclo\)")
 
 
-def es_un_ciclo(nombre: str) -> bool:
-    return bool(_UN_CICLO.search(comparison_key(nombre)))
+# Named for whom it is: "... para egresados", "Licenciatura en Administración
+# para Contadores Públicos", "Plan Especial para Profesores".
+_PARA_TITULADOS = re.compile(
+    r"\bpara (?:egresad|graduad|tecnic|profesor|docent|contador|licenciad|titulad)|\bplan especial para\b")
+# Or its own description says it is one: "Este Ciclo de Complementación
+# Curricular le permite..." (UNLaM), "La carrera se denomina 'Licenciatura en
+# Gestión Ambiental - Ciclo de Licenciatura'" (UTN), "Página sobre el Ciclo de
+# Complementación Curricular de..." (UCC). A career that only mentions one
+# ("ofrece además un ciclo...") is not.
+_SE_DICE_CICLO = re.compile(
+    r"\b(?:este|sobre el|denomina [^.]{0,120}?)\s*ciclo de (?:complementacion|licenciatura)\b")
+
+
+def es_un_ciclo(nombre: str, descripcion: str | None = None) -> bool:
+    nombre = comparison_key(nombre)
+    return bool(_UN_CICLO.search(nombre) or _PARA_TITULADOS.search(nombre)
+                or _SE_DICE_CICLO.search(comparison_key(descripcion or "")))
 
 
 # --- the name a career is shown under ---------------------------------------
@@ -496,11 +511,11 @@ def exportar(client: Any) -> dict[str, Any]:
         ofertas_por_carrera[o["carrera_id"]].append(o)
 
     # A completion cycle ("CCC Licenciatura en ...", "Ciclo de Complementación
-    # Curricular ...") takes a student who already holds a tecnicatura or a
+    # Curricular ...", or one its description says is one) takes a student who already holds a tecnicatura or a
     # teaching degree; nobody leaving secondary school can start one. They
     # stay in this database and out of the application's catalogue, with
     # their subjects.
-    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"])}
+    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"], c.get("descripcion_breve"))}
     carreras = [c for c in carreras if c["id"] not in ciclos]
     carrera_nombre = {c["id"]: c["nombre_carrera"] for c in carreras}
 
