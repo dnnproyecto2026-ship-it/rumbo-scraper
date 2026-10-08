@@ -3436,3 +3436,43 @@ def plan_undelta(texto: str) -> list[tuple[str, None]]:
             if (nombre, None) not in materias:
                 materias.append((nombre, None))
     return materias
+
+
+def plan_unl(html: str) -> list[tuple[str, int]]:
+    """The UNL's distance careers: under "plan de estudios" each year's
+    heading ("PRIMER AÑO") and its subjects, each marked "•" and wrapped
+    over lines of its own ("•Introducción a la Bibliotecología y Ciencia" /
+    "de la Información"). The plan ends where its lines stop being a year
+    or a subject ("+ Información en UNLVirtual")."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    titulo = next((p for p in soup.select("p.meta-carreras") if clean_text(p.get_text()).lower() == "plan de estudios"), None)
+    if titulo is None:
+        return []
+    lineas = []
+    for hermano in titulo.find_next_siblings():
+        lineas += [clean_text(t) for t in hermano.get_text("\n").split("\n")]
+    materias: list[list] = []
+    anio, ultima = None, None
+    for linea in lineas:
+        if not linea:
+            continue
+        encontrado = anio_de(linea)
+        if encontrado and re.fullmatch(r"(?i)\S+\s+a[ñn]o:?|\d\s*[°º]?\s*a[ñn]o:?", linea):
+            anio, ultima = encontrado, None
+        elif linea.startswith(("•", "·")) and anio:
+            ultima = [clean_text(linea.lstrip("•· ")), anio]
+            materias.append(ultima)
+        # A line of its own that is neither is the last name's next piece
+        # ("Servicios de Información y Referencia" / "Especializada").
+        # A note on the career ("*Carrera compartida entre FCA, FCV y FCE.") ends the plan.
+        elif (ultima and len(linea) < 60 and not linea.endswith(".")
+              and not re.match(r"(?i)[+©*]|pod[ée]s|m[áa]s informaci", linea)):
+            ultima[0] = clean_text(f"{ultima[0]} {linea}")
+        elif materias:
+            break
+    vistas: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        # An elective ("Optativa I") is a choice, not a subject.
+        if (nombre, anio) not in vistas and not re.match(r"(?i)optativa|electiva", nombre):
+            vistas.append((nombre, anio))
+    return vistas
