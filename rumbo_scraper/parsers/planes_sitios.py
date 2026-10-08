@@ -3620,17 +3620,21 @@ def plan_uader_gestion(texto: str, carrera: str = "") -> list[tuple[str, int]]:
 plan_uader_gestion.carrera = True  # type: ignore[attr-defined]
 
 
-_FIN_DEL_PLAN_USI = re.compile(r"(?i)^(?:otros requisitos|contenidos m[ií]nimos|materias electivas|director|directora|"
-                               r"texto del bot|habilidades|publicado|respaldo|t[íi]tulo|requisitos|perfil|alcances|"
-                               r"inscrip|consult|modalidad|duraci[óo]n|cuerpo docente)")
+_FIN_DEL_PLAN_USI = re.compile(r"(?i)^(?:otros requisitos|contenidos m[ií]nimos|materias (?:electivas|adicionales)|"
+                               r"director|directora|texto del bot|habilidades|publicado|respaldo|t[íi]tulo|requisitos|"
+                               r"perfil|alcances|inscrip|consult|modalidad|duraci[óo]n|cuerpo docente|proceso de admisi|"
+                               r"ordenanza|resoluci[óo]n|extras$)")
 
 
-def plan_usi(html: str) -> list[tuple[str, int]]:
-    """USI's career pages: under the plan each year's heading
-    ("Primer Año"), maybe its terms ("PRIMER CUATRIMESTRE"), and a subject
-    per line. The plan ends at the page's next section ("Otros Requisitos",
-    "Contenidos Mínimos", "Director de la Carrera"), or at a line that is
-    not a subject's (a sentence). The electives ("Electiva I") are a choice."""
+def plan_anios_y_renglones(html: str) -> list[tuple[str, int]]:
+    """A career's page that lays its plan out under each year's heading
+    ("Primer Año"), maybe its terms ("PRIMER CUATRIMESTRE"), a subject per
+    line (USI, UDEMM, UNLC). The plan ends at the page's next section ("Otros
+    Requisitos", "Contenidos Mínimos", "Director de la Carrera", "Proceso
+    de admisión"), at a line that is not a subject's (a sentence), or at a
+    year that does not follow. The electives ("Electiva I", "Optativa II")
+    are a choice; a subject's term after its name ("(2º cuatrimestre)") and
+    the list's marks ("·") are not part of it."""
     soup = BeautifulSoup(html or "", "html.parser")
     for quitar in soup(["script", "style", "nav", "header", "footer", "noscript"]):
         quitar.decompose()
@@ -3646,11 +3650,14 @@ def plan_usi(html: str) -> list[tuple[str, int]]:
             continue
         if anio is None:
             continue
-        if re.fullmatch(r"(?i)(primer|segundo)\s+cuatrimestre|anual(es)?", linea):
+        linea = clean_text(re.sub(r"^[·•.\-–]\s*", "", linea))
+        if re.fullmatch(r"(?i)(primer|segundo)\s+(cuatrimestre|semestre)|anual(es)?|\d+|asignatura anual|modular|materias", linea):
             continue
         if _FIN_DEL_PLAN_USI.match(linea) or len(linea) > 90 or linea.endswith((".", ":")) or "@" in linea:
             break
-        if re.match(r"(?i)electiva|optativa", linea):
+        if re.match(r"(?i)(?:\d+\s*[.-]\s*)?(?:electiva|optativa)", linea):
             continue
-        materias.append((linea, anio))
+        linea = re.sub(r"(?i)\s*\((?:\d\s*[º°]\s*cuatrimestre|anual|semestral)\)$", "", linea)
+        _agregar(materias, linea, anio)
     return materias
+

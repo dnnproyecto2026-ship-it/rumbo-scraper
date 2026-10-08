@@ -67,7 +67,7 @@ Plan de Estudio Licenciatura en Marketing
 
 class PlanUsi(unittest.TestCase):
     def test_hasta_la_siguiente_seccion(self):
-        from rumbo_scraper.parsers.planes_sitios import plan_usi
+        from rumbo_scraper.parsers.planes_sitios import plan_anios_y_renglones as plan_usi
 
         html = """<div><p>Plan de Estudios</p><p>Duración: 4 años</p><h4>Primer Año</h4><p>Teoría del Derecho</p>
 <p>Derecho Romano</p><h4>Segundo Año</h4><p>Contratos</p><p>Electiva I</p><h4>Otros Requisitos</h4>

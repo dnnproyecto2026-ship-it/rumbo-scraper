@@ -74,7 +74,7 @@ _RESPALDO_POR_ANIOS = ("unl.edu.ar", "uncuyo.edu.ar", "uncoma.edu.ar", "servicio
                        "csnat.unt.edu.ar", "artes.unt.edu.ar", "humanas.unvm.edu.ar",
                        "sociales.unvm.edu.ar", "unp.edu.ar", "upc.edu.ar", "ucalp.edu.ar",
                        "artes.unne.edu.ar", "unicen.edu.ar")
-_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar", planes_sitios.plan_unl), ("usi.edu.ar", planes_sitios.plan_usi), ("ubp.edu.ar", planes_sitios.plan_ubp), ("uflouniversidad.edu.ar", planes_sitios.plan_uflo), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("info.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("econo.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("fi.unju.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("odn.unne.edu.ar", planes_sitios.plan_odn_unne), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
+_PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar", planes_sitios.plan_unl), ("ubp.edu.ar", planes_sitios.plan_ubp), ("uflouniversidad.edu.ar", planes_sitios.plan_uflo), ("eco.unc.edu.ar", planes_sitios.plan_por_semestres), ("famaf.unc.edu.ar", planes_sitios.plan_famaf), ("info.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("econo.unlp.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("fi.unju.edu.ar", planes_sitios.plan_tabla_por_encabezados), ("odn.unne.edu.ar", planes_sitios.plan_odn_unne), ("upc.edu.ar", planes_sitios.plan_upc), ("uns.edu.ar", planes_sitios.plan_uns),
                         ("unicen.edu.ar", planes_sitios.plan_unicen),
                         # (UNICEN's central pages that list the plan without years.)
                         ("unicen.edu.ar", planes_sitios.plan_unicen_sin_anios), ("unp.edu.ar", planes_sitios.plan_unpsjb),
@@ -130,6 +130,10 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                         ("fveter.unr.edu.ar", planes_sitios.plan_por_codigo),
                         ("umaza.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("21.edu.ar", planes_sitios.plan_ucalp), ("udemm.edu.ar", planes_sitios.plan_ucalp),
+                        # (After the general ones: theirs ran on into USI's "Contenidos
+                        # Mínimos" and UdeMM's electives.)
+                        ("usi.edu.ar", planes_sitios.plan_anios_y_renglones),
+                        ("udemm.edu.ar", planes_sitios.plan_anios_y_renglones),
                         ("atlantida.edu.ar", planes_sitios.plan_upso),
                         ("maimonides.edu", planes_sitios.plan_texto_por_anio),
                         ("ugr.edu.ar", planes_sitios.plan_texto_por_anio),
