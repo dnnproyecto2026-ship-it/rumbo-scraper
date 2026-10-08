@@ -3623,7 +3623,9 @@ plan_uader_gestion.carrera = True  # type: ignore[attr-defined]
 _FIN_DEL_PLAN_USI = re.compile(r"(?i)^(?:otros requisitos|contenidos m[ií]nimos|materias (?:electivas|adicionales)|"
                                r"director|directora|texto del bot|habilidades|publicado|respaldo|t[íi]tulo|requisitos|"
                                r"perfil|alcances|inscrip|consult|modalidad|duraci[óo]n|cuerpo docente|proceso de admisi|"
-                               r"ordenanza|resoluci[óo]n|extras$)")
+                               r"ordenanza|resoluci[óo]n|extras$|instagram|facebook|twitter|linkedin|youtube|folleto|"
+                               r"horario|©|copyright|comunidad$|si quer[ée]s|quiero recibir|correo|tel[ée]fono|"
+                               r"facultad de|una formaci|direcci[óo]n de alumnos)")
 
 
 def plan_anios_y_renglones(html: str) -> list[tuple[str, int]]:
@@ -3659,5 +3661,9 @@ def plan_anios_y_renglones(html: str) -> list[tuple[str, int]]:
             continue
         linea = re.sub(r"(?i)\s*\((?:\d\s*[º°]\s*cuatrimestre|anual|semestral)\)$", "", linea)
         _agregar(materias, linea, anio)
+    # A page whose rows run into each other ("... Anual Portugués II
+    # Semestral (1º)", UNSJ's Turismo) is not read.
+    if any(re.search(r"\b(?:Semestral|Anual)\b(?:\s*\(\d\s*[º°]\))?(?:\s+\S|$)", n) for n, _ in materias):
+        return []
     return materias
 

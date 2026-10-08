@@ -134,6 +134,8 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                         # Mínimos" and UdeMM's electives.)
                         ("usi.edu.ar", planes_sitios.plan_anios_y_renglones),
                         ("udemm.edu.ar", planes_sitios.plan_anios_y_renglones),
+                        *((sitio, planes_sitios.plan_anios_y_renglones) for sitio in (
+                            "ucema.edu.ar", "kennedy.edu.ar", "umsa.edu.ar", "ffha.unsj.edu.ar", "unisud.edu.ar")),
                         ("atlantida.edu.ar", planes_sitios.plan_upso),
                         ("maimonides.edu", planes_sitios.plan_texto_por_anio),
                         ("ugr.edu.ar", planes_sitios.plan_texto_por_anio),
