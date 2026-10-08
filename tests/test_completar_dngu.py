@@ -32,6 +32,15 @@ class CompletarDngu(unittest.TestCase):
         self.assertEqual(hallar({"nombre_carrera": "Medicina"}, dos), {"titulo": "Médico", "duracion": None})
         uba = [{"titulo": "Médico", "duracion": "6.5 Años"}, {"titulo": "Médico/a", "duracion": "6.5 Años"}]
         self.assertEqual(hallar({"nombre_carrera": "Medicina"}, uba), {"titulo": "Médico/a", "duracion": 6.5})
+        utn = [{"titulo": "Ingeniero Electricista", "duracion": "5 Años"},
+               {"titulo": "Ingeniero Electrónico", "duracion": "5.5 Años"},
+               {"titulo": "Ingeniero Electromecánico", "duracion": "5 Años"}]
+        self.assertEqual(hallar({"nombre_carrera": "Ingeniería Electrónica"}, utn),
+                         {"titulo": "Ingeniero Electrónico", "duracion": 5.5})
+        self.assertEqual(hallar({"nombre_carrera": "Ingeniería Eléctrica"}, utn)["titulo"], "Ingeniero Electricista")
+        unlp = [{"titulo": "Diseñador Industrial", "duracion": "5 Años"},
+                {"titulo": "Profesor en Diseño Industrial", "duracion": "5 Años"}]
+        self.assertEqual(hallar({"nombre_carrera": "Diseño Industrial"}, unlp)["titulo"], "Diseñador Industrial")
         self.assertIsNone(hallar({"nombre_carrera": "Medicina", "titulo_otorgado": "Médico/a",
                                   "duracion_anios": 6}, filas))
 

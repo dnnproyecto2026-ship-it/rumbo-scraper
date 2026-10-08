@@ -41,13 +41,13 @@ _CLASE = (("licenciatura", "licenciad"), ("profesorado", "profesor"), ("tecnicat
           ("ingenieria", "ingenier"), ("traductorado", "traductor"), ("analista", "analista"))
 
 
-def campo(texto: str) -> set[str]:
+def campo(texto: str, largo: int = 5) -> set[str]:
     """The stems of what tells a degree or career apart from others of its kind."""
     t = re.sub(r"/\w+", "", comparison_key(re.sub(r"\s*\(.*?\)", "", texto)))
     anterior = None
     while anterior != t:
         anterior, t = t, _TIPO.sub("", t)
-    return {w[:5] for w in re.findall(r"[a-z]{3,}", t) if w not in ("con", "del", "las", "los", "para", "orientacion")}
+    return {w[:largo] for w in re.findall(r"[a-z]{3,}", t) if w not in ("con", "del", "las", "los", "para", "orientacion")}
 
 
 def misma_clase(titulo: str, carrera: str) -> bool:
@@ -76,11 +76,25 @@ def titulo_limpio(titulo: str) -> str:
 
 def hallar(carrera: dict[str, Any], filas: list[dict[str, Any]]) -> dict[str, Any] | None:
     propio = campo(carrera["nombre_carrera"])
-    if not propio:
+    # A completion cycle is not the degree's whole course (UNTREF's "Historia
+    # (Ciclo de Complementación)" is not the four-year Licenciado en Historia).
+    if not propio or re.search(r"(?i)\bciclo\b", carrera["nombre_carrera"]):
         return None
-    candidatas = [f for f in filas if campo(f["titulo"]) == propio and misma_clase(f["titulo"], carrera["nombre_carrera"])]
+    # (A career that does not say its kind is not the teaching degree of its
+    # field: UNC's "Ciencias Biológicas" is not "Profesor en Ciencias Biológicas".)
+    docente = comparison_key(carrera["nombre_carrera"]).startswith("profesor")
+    candidatas = [f for f in filas if campo(f["titulo"]) == propio and misma_clase(f["titulo"], carrera["nombre_carrera"])
+                  and (docente or not comparison_key(f["titulo"]).startswith("profesor"))]
     # "Médico" and "Médico/a" are the same degree written two ways.
-    if len({re.sub(r"/\w+", "", comparison_key(f["titulo"])) for f in candidatas}) != 1:
+    distintos = {re.sub(r"/\w+", "", comparison_key(f["titulo"])) for f in candidatas}
+    # Five letters tell Medicina's "Médico" apart, not the UTN's electronic,
+    # electrical and electromechanical engineers ("elect"): of those, the one
+    # whose longer stems are the career's ("electron").
+    if len(distintos) > 1:
+        largo = campo(carrera["nombre_carrera"], 8)
+        candidatas = [f for f in candidatas if campo(f["titulo"], 8) == largo]
+        distintos = {re.sub(r"/\w+", "", comparison_key(f["titulo"])) for f in candidatas}
+    if len(distintos) != 1:
         return None
     duraciones = {anios(f["duracion"]) for f in candidatas} - {None}
     preferido = next((f for f in candidatas if "/" in f["titulo"]), candidatas[0])
