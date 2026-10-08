@@ -37,3 +37,29 @@ class PlanUb(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlanUaderGestion(unittest.TestCase):
+    TEXTO = """Tecnicatura y Licenciatura en Marketing
+Plan de Estudio Tecnicatura en Marketing
+1º Año
+          Principios de
+202101                               ANUAL         2              64
+          Administración
+202104 Trabajo Intelectual           C1            3              48
+          Asignatura Optativa del
+202329                              C1 ó C2      3               48
+          área social
+2º Año
+202215 Estadística                   A             2              64
+Plan de Estudio Licenciatura en Marketing
+4º Año
+202439 Seminario de Tesis          ANUAL      5               160
+"""
+
+    def test_cada_carrera_su_parte(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_uader_gestion
+
+        self.assertEqual(plan_uader_gestion(self.TEXTO, "Tecnicatura en Marketing"), [
+            ("Principios de Administración", 1), ("Trabajo Intelectual", 1), ("Estadística", 2)])
+        self.assertEqual(plan_uader_gestion(self.TEXTO, "Licenciatura en Marketing")[-1], ("Seminario de Tesis", 4))

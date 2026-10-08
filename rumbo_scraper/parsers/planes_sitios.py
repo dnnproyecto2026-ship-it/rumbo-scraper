@@ -3573,3 +3573,48 @@ def plan_ub_todos(cajas: str) -> list[tuple[str, int]]:
 
 
 plan_ub_todos.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_uader_gestion(texto: str, carrera: str = "") -> list[tuple[str, int]]:
+    """UADER's Ciencias de la Gestión documents (``-layout`` text): each
+    year's table ("1º Año", "2do Año") with a row per subject, its six-digit
+    code first (its fourth digit the year, 202101, where the table has no
+    heading) and its dedication ("ANUAL", "A", "C1"). A name the cell
+    wrapped sits above and below its code's line ("Principios de" /
+    "202101  ANUAL ..." / "Administración"), or beside it. One document
+    often holds the tecnicatura and the licenciatura it leads to ("Plan de
+    Estudio Licenciatura en Marketing", or a "Tecnicatura y Licenciatura"
+    document's fourth year on): a tecnicatura's career takes its part only.
+    The electives ("Asignatura Optativa", "Idioma optativo", "Electiva") and
+    the internship are a choice or a requirement, not a subject."""
+    lineas = texto.splitlines()
+    materias: list[tuple[str, int]] = []
+    tecnicatura = comparison_key(carrera).startswith("tecnic")
+    ambas = bool(re.match(r"(?i)\s*tecnicatura y licenciatura", next((l for l in lineas if l.strip()), "")))
+    titulo = None
+    for numero, linea in enumerate(lineas):
+        if tecnicatura and re.match(r"(?i)\s*plan de estudios? licenciatura", linea):
+            break
+        encabezado = re.match(r"(?i)^\s*(\d)\s*(?:º|°|do|er|ro|to)\s*año\s*$", linea)
+        if encabezado:
+            titulo = int(encabezado.group(1))
+            if tecnicatura and ambas and titulo > 3:
+                break
+            continue
+        fila = re.match(r"^\s*(20\d)(\d)(\d{2})\s+(.*?)\s*(ANUAL|C1 ó C2|C[12]|A)(?=\s|$)", linea)
+        if not fila:
+            continue
+        nombre = clean_text(fila.group(4))
+        if not nombre:
+            arriba = lineas[numero - 1] if numero else ""
+            abajo = lineas[numero + 1] if numero + 1 < len(lineas) else ""
+            piezas = [clean_text(re.split(r"\s{3,}", l.strip())[0]) for l in (arriba, abajo)
+                      if l.strip() and not re.match(r"^\s*\d{6}\b", l) and not re.search(r"(?i)\baño\s*$", l)]
+            nombre = clean_text(" ".join(piezas))
+        if not nombre or re.search(r"(?i)optativ|electiva|pasant[ií]a", nombre):
+            continue
+        materias.append((nombre, titulo or int(fila.group(2))))
+    return materias
+
+
+plan_uader_gestion.carrera = True  # type: ignore[attr-defined]

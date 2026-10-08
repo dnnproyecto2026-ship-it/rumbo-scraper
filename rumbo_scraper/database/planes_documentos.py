@@ -347,7 +347,7 @@ def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     return None
 
 
-def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None]]:
+def _leer_documento(archivo: Path, documento: str, carrera: str = "") -> list[tuple[str, int | None]]:
     host = urlparse(documento).netloc.removeprefix("www.")
     for dominio, lector in _DOCUMENTOS_PROPIOS:
         if host.endswith(dominio):
@@ -371,10 +371,17 @@ def _leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None
             # the ones its reader does not know go to the general reader.
             if leidas or not getattr(lector, "respaldo", False):
                 return leidas
-    return _leer(archivo)
+    return _leer(archivo, carrera)
 
 
-def _leer(archivo: Path) -> list[tuple[str, int | None]]:
+def _de_cada_carrera(archivo: Path) -> bool:
+    """A document that holds a tecnicatura and the licenciatura it leads to,
+    each its own part (UADER's Ciencias de la Gestión)."""
+    texto = _texto(archivo)
+    return bool(re.match(r"(?i)\s*tecnicatura y licenciatura", texto)) and len(re.findall(r"\b20\d{4}\b", texto)) >= 8
+
+
+def _leer(archivo: Path, carrera: str = "") -> list[tuple[str, int | None]]:
     # A Ministry resolution's annex (DNGU's table) has a reader of its own;
     # the general ones split its centred names ("Introducción a la" / "Computación").
     import subprocess
@@ -386,6 +393,13 @@ def _leer(archivo: Path) -> list[tuple[str, int | None]]:
         texto = ""
     if "DNGU" in texto and "ASIGNATURA" in texto:
         return [m for m in planes_sitios.plan_dngu(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+    # UADER's Ciencias de la Gestión documents (on Drive): a row per subject
+    # under its six-digit code ("202101"), the tecnicatura and its
+    # licenciatura in one document, each career its own part.
+    if len(re.findall(r"(?m)^\s*20\d{4}\s.*\b(?:ANUAL|C[12]|A)\b", texto)) >= 8 and re.search(r"(?i)plan de estudio", texto):
+        leidas = [m for m in planes_sitios.plan_uader_gestion(texto, carrera) if not _FUERA_DEL_PLAN.search(m[0])]
+        if leidas:
+            return leidas
     # UNDelta's documents (on Drive): each field of the training and its
     # subjects, without years.
     if re.search(r"(?i)comprende las siguientes asignaturas", texto) and "Delta" in texto:
@@ -687,12 +701,17 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             }
             continue
         documento = documento_de.get(carrera["id"])
-        if not documento or usos[documento] > 1:
+        if not documento:
             continue
         archivo = CACHE / (hashlib.md5(documento.encode()).hexdigest() + ".pdf")
+        # A document linked by several careers is no one career's plan, but
+        # for one that says each career's part (UADER's "Tecnicatura y
+        # Licenciatura en Marketing"): each takes its own.
+        if usos[documento] > 1 and not (archivo.exists() and _de_cada_carrera(archivo)):
+            continue
         if archivo.stat().st_size < 1000 or not _nombra(_texto(archivo), carrera["nombre_carrera"]):
             continue
-        materias = _leer_documento(archivo, documento)
+        materias = _leer_documento(archivo, documento, carrera["nombre_carrera"])
         if _parece_el_plan_entero(carrera["nombre_carrera"], materias,
                                   carrera.get("duracion_anios")):
             planes[carrera["id"]] = {
