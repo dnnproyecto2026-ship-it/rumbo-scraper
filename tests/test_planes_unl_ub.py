@@ -63,3 +63,13 @@ Plan de Estudio Licenciatura en Marketing
         self.assertEqual(plan_uader_gestion(self.TEXTO, "Tecnicatura en Marketing"), [
             ("Principios de Administración", 1), ("Trabajo Intelectual", 1), ("Estadística", 2)])
         self.assertEqual(plan_uader_gestion(self.TEXTO, "Licenciatura en Marketing")[-1], ("Seminario de Tesis", 4))
+
+
+class PlanUsi(unittest.TestCase):
+    def test_hasta_la_siguiente_seccion(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_usi
+
+        html = """<div><p>Plan de Estudios</p><p>Duración: 4 años</p><h4>Primer Año</h4><p>Teoría del Derecho</p>
+<p>Derecho Romano</p><h4>Segundo Año</h4><p>Contratos</p><p>Electiva I</p><h4>Otros Requisitos</h4>
+<p>Examen de inglés o certificación equivalente.</p><p>Director de la Carrera</p></div>"""
+        self.assertEqual(plan_usi(html), [("Teoría del Derecho", 1), ("Derecho Romano", 1), ("Contratos", 2)])

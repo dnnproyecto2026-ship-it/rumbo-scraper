@@ -3618,3 +3618,39 @@ def plan_uader_gestion(texto: str, carrera: str = "") -> list[tuple[str, int]]:
 
 
 plan_uader_gestion.carrera = True  # type: ignore[attr-defined]
+
+
+_FIN_DEL_PLAN_USI = re.compile(r"(?i)^(?:otros requisitos|contenidos m[ií]nimos|materias electivas|director|directora|"
+                               r"texto del bot|habilidades|publicado|respaldo|t[íi]tulo|requisitos|perfil|alcances|"
+                               r"inscrip|consult|modalidad|duraci[óo]n|cuerpo docente)")
+
+
+def plan_usi(html: str) -> list[tuple[str, int]]:
+    """USI's career pages: under the plan each year's heading
+    ("Primer Año"), maybe its terms ("PRIMER CUATRIMESTRE"), and a subject
+    per line. The plan ends at the page's next section ("Otros Requisitos",
+    "Contenidos Mínimos", "Director de la Carrera"), or at a line that is
+    not a subject's (a sentence). The electives ("Electiva I") are a choice."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for quitar in soup(["script", "style", "nav", "header", "footer", "noscript"]):
+        quitar.decompose()
+    lineas = [clean_text(t) for t in soup.get_text("\n").split("\n") if clean_text(t)]
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas:
+        encontrado = anio_de(linea)
+        if encontrado:
+            if anio and encontrado <= anio:
+                break
+            anio = encontrado
+            continue
+        if anio is None:
+            continue
+        if re.fullmatch(r"(?i)(primer|segundo)\s+cuatrimestre|anual(es)?", linea):
+            continue
+        if _FIN_DEL_PLAN_USI.match(linea) or len(linea) > 90 or linea.endswith((".", ":")) or "@" in linea:
+            break
+        if re.match(r"(?i)electiva|optativa", linea):
+            continue
+        materias.append((linea, anio))
+    return materias
