@@ -288,7 +288,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
 _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.edu.ar", planes_sitios.plan_bloques_numerados), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_todos), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
-                       ("ucasal.edu.ar", planes_sitios.plan_ucasal),
+                       ("ucasal.edu.ar", planes_sitios.plan_ucasal), ("uch.edu.ar", planes_sitios.plan_uch), ("unab.edu.ar", planes_sitios.plan_unab),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
                        ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani),
@@ -314,6 +314,9 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
+                            # (UNDelta: each career's section, its plan on Drive.)
+                            ("undelta.edu.ar", (re.compile(r"(?i)descargar el plan de estudios"),
+                                                re.compile(r"drive\.google\.com/file/d/[\w-]+|\.pdf$"))),
                             # (Its "DESCARGAR" also links a Drive folder: the PDF by its address.)
                             ("eco.unrc.edu.ar", re.compile(r"eco\.unrc\.edu\.ar/wp-content/uploads/\d{4}/\d{2}/[^/]+-MODALIDAD-PRESENCIAL\.pdf$")),
                             ("carreras.hospitalitaliano.edu.ar", "descargá el plan de estudios"),
@@ -383,6 +386,10 @@ def _leer(archivo: Path) -> list[tuple[str, int | None]]:
         texto = ""
     if "DNGU" in texto and "ASIGNATURA" in texto:
         return [m for m in planes_sitios.plan_dngu(texto) if not _FUERA_DEL_PLAN.search(m[0])]
+    # UNDelta's documents (on Drive): each field of the training and its
+    # subjects, without years.
+    if re.search(r"(?i)comprende las siguientes asignaturas", texto) and "Delta" in texto:
+        return [m for m in planes_sitios.plan_undelta(texto) if not _FUERA_DEL_PLAN.search(m[0])]
     # The same table with its years as "1º Año" (UADER's Economics plans):
     # read as the annex, or by the general readers if it is not one.
     if re.search(r"(?m)^\s*[1-6]\s*[º°]\s*Año\s*$", texto) and "asignatura" in texto.lower():
@@ -542,6 +549,13 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                 continue
             html = visitante.get(url)
             time.sleep(PAUSA)
+            # A page of every career, each in a section its address points to
+            # (UNDelta's "carreras/#licenciatura-en-agua"): that section is the
+            # career's page, with its own "Descargar el plan de estudios".
+            seccion = urlparse(url).fragment and BeautifulSoup(html or "", "html.parser").find(
+                id=urlparse(url).fragment)
+            if seccion:
+                html = str(seccion)
             # A guide that links a career to another's page (UNC's links its
             # Licenciatura en Lengua y Literatura Italianas to the Inglesas'):
             # the page's own title names the other one, and its plan is not

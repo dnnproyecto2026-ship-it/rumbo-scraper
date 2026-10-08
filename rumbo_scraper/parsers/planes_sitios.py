@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import math
 import re
+import unicodedata
 from collections import Counter
 
 from bs4 import BeautifulSoup, Tag
@@ -3274,3 +3275,164 @@ def plan_unicen_sin_anios(html: str) -> list[tuple[str, int | None]]:
     for item in cuerpo.find_all("li"):
         _agregar(materias, _texto(item), 1)
     return [(nombre, None) for nombre, _ in materias]
+
+
+def plan_uch(texto: str) -> list[tuple[str, int]]:
+    """The Universidad del Chubut's plan sheets (``-layout`` text): a row per
+    subject, its number first ("1    Derecho Privado Parte General   -
+    Cuatrimestral   Promocional"), under the term it is in ("Primer
+    Semestre" / "Segundo Cuatrimestre"). The year's label ("1° AÑO") sits in
+    the margin halfway down its rows, so the year is counted by the terms
+    instead: each "Primer" term opens the next. A name the cell wrapped goes
+    on in the next line ("Derecho Internacional Público y de la" /
+    "Integración"); an elective ("Optativa I:") is a choice, and it and the
+    options listed under it are left out, as are the "Otros requisitos".
+
+    A sheet whose numbers start over (Corredor y Martillero's third year, one
+    per title) is two plans, and a sheet whose font the text does not
+    decode ("so\ufffdtware", Sistemas' "SŰŁĨŰō...") cannot be read: neither is taken."""
+    materias: list[list] = []
+    anio, ultima, numeros, columna = 0, None, set(), 0
+    for linea in texto.splitlines():
+        cuerpo = re.sub(r"^\s*\d\s*[°º]\s*AÑO\b", "", linea).strip()
+        sangria = len(linea) - len(linea.lstrip())
+        if re.fullmatch(r"(?i)primer\s+(?:semestre|cuatrimestre)", cuerpo):
+            anio, ultima = anio + 1, None
+            continue
+        if re.fullmatch(r"(?i)segundo\s+(?:semestre|cuatrimestre)|otros requisitos", cuerpo):
+            ultima = None
+            continue
+        fila = re.match(r"(\d{1,2})\s+(.+?)(?:\s{2,}|$)", cuerpo)
+        if fila and anio and re.search(r"(?i)cuatrimestral|anual|semestral", cuerpo):
+            # (The "ﬁ" ligature of Diseño's sheets is two letters.)
+            nombre = clean_text(unicodedata.normalize("NFKC", fila.group(2)))
+            if fila.group(1) in numeros:
+                return []
+            numeros.add(fila.group(1))
+            if re.match(r"(?i)optativa|electiva", nombre):
+                ultima = None
+                continue
+            ultima = [nombre, anio]
+            materias.append(ultima)
+            columna = linea.index(fila.group(2), linea.index(fila.group(1)) + len(fila.group(1)))
+        # (A name's next piece starts under it, not under the correlatives: "Todos los espacios" / "curriculares".)
+        elif ultima and cuerpo and abs(sangria - columna) <= 3 and not re.search(r"\s{3,}", cuerpo) and (re.search(
+                r"(?i)\b(?:de|del|la|las|los|y|e|en|a|con|para)$", ultima[0]) or cuerpo[0].islower()):
+            ultima[0] = clean_text(f"{ultima[0]} {cuerpo}")
+            ultima = None
+    if any(re.search(r"[^\w\s.,;:()/'\"-]|[^\x00-\xff]", nombre) for nombre, _ in materias):
+        return []
+    return [(nombre, anio) for nombre, anio in materias]
+
+
+def plan_unab(cajas: str) -> list[tuple[str, int]]:
+    """UNAB's plan sheets (``-bbox-layout``): two years to a column, a row
+    per subject (its code, its name, its correlatives and hours), each term
+    closed by "TOTAL CUATRIMESTRE" and each year by "TOTAL ANUAL". The
+    year's label ("PRIMER AÑO") sits in the margin halfway down its rows and
+    the codes do not always share the name's line, so a name is any line
+    that starts at the column's names (around the left edge of "TOTAL
+    ANUAL") and its year is the count of "TOTAL ANUAL" above it, column
+    after column, page after page. A name the cell wrapped is two lines
+    closer together than two rows are ("Herramientas computacionales y
+    programación" / "04. para la ingeniería y la ciencia", its number on
+    the second); the number ("04.") and the term an annual subject is
+    listed under ("(1° cuatr. asignatura anual)") are not part of it, and a
+    subject listed under both terms is one."""
+    renglones = _renglones(cajas)
+    cierres = [(p, x, y) for p, x, y, t in renglones if t == "TOTAL ANUAL"]
+    if not cierres:
+        return []
+    columnas = sorted({(p, round(x)) for p, x, _ in cierres})
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for pagina, borde in columnas:
+        propios = sorted(y for p, x, y in cierres if p == pagina and abs(x - borde) <= 4)
+        lineas = sorted((y, t) for p, x, y, t in renglones if p == pagina and -4 <= x - borde <= 20
+                        and not re.match(r"TOTAL|CARGA HORARIA", t) and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]", t))
+        grupos: list[list] = []
+        for y, texto in lineas:
+            if grupos and y - grupos[-1][-1][0] < 10:
+                grupos[-1].append((y, texto))
+            else:
+                grupos.append([(y, texto)])
+        for grupo in grupos:
+            nombre = clean_text(" ".join(re.sub(r"^\d{1,2}\.\s*", "", t) for _, t in grupo))
+            # ("micro-" / "procesadores")
+            nombre = re.sub(r"(\w)- (?=[a-záéíóú])", r"\1", nombre)
+            nombre = clean_text(re.sub(r"\s*\([^)]*\b(?:anual|cuatr)[^)]*\)", "", nombre, flags=re.I))
+            nuevo = (nombre, anio + 1 + sum(1 for cierre in propios if cierre < grupo[0][0]))
+            if nombre and nuevo not in materias:
+                materias.append(nuevo)
+        # A column that ends in a year's middle (a fifth year's single term) goes on in the next.
+        anio += len(propios)
+    return materias
+plan_unab.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_undelta(texto: str) -> list[tuple[str, None]]:
+    """UNDelta's plan documents (``-layout`` text): no subject's year, only
+    each field of the training and its subjects ("El CFD comprende las
+    siguientes asignaturas:" and a name per line). A field's list ends at
+    the next field ("Campo de Formación ..."), at the "Estructura
+    curricular" or at prose (a long line, or one closing a sentence). The
+    electives ("Electiva I") are a choice, not a subject; the lists' bullets,
+    their page's section numbers ("2.1") and the cycle's heading ("1° Ciclo")
+    are not part of a name.
+
+    The lists split a long name over two of their lines just as they
+    separate two names ("Tendencias Globales en el Uso del Agua, Innovación
+    y Nuevos" / "Negocios del Agua"), so each name is checked against the
+    rest of the document, where the minimum contents head each subject:
+    two of the list's lines whose join is found there are one name, and a
+    document with a name not found there (a word the text broke, "Polític
+    a") is not read."""
+    lineas = texto.splitlines()
+    listas: list[list[str]] = []
+    en_lista: set[int] = set()
+    lista = None
+    for numero, linea in enumerate(lineas):
+        cuerpo = clean_text(linea)
+        if re.search(r"(?i)comprende las siguientes asignaturas:?$", cuerpo):
+            lista = []
+            listas.append(lista)
+            continue
+        if lista is None or not cuerpo:
+            continue
+        if (re.match(r"(?i)campo de formaci|estructura curricular|contenidos m[ií]nimos|>>", cuerpo)
+                or len(cuerpo) > 75 or cuerpo.endswith((".", ":")) or re.match(r"[a-z]", cuerpo)):
+            lista = None
+            continue
+        en_lista.add(numero)
+        cuerpo = clean_text(re.sub(r"^(?:[•·]|\d\.\d)\s*", "", cuerpo))
+        if not cuerpo or re.fullmatch(r"[\d.\s]+|\d\s*[°º]\s*ciclo|[^a-záéíóúñ]+", cuerpo, re.I) or cuerpo.isupper():
+            continue
+        # ("Inglés Il", "Práctica Profesional Il": the numeral typed with an "l".)
+        lista.append(re.sub(r"\b(?:Il|ll)$", "II", cuerpo))
+    resto = " " + re.sub(r"\s+", " ", " ".join(l for n, l in enumerate(lineas) if n not in en_lista)).lower() + " "
+
+    def esta(nombre: str) -> bool:
+        return re.search(r"(?<!\w)" + re.escape(nombre.lower()) + r"(?!\w)", resto) is not None
+
+    materias: list[tuple[str, None]] = []
+    for nombres in listas:
+        indice = 0
+        while indice < len(nombres):
+            nombre = nombres[indice]
+            if indice + 1 < len(nombres) and esta(f"{nombre} {nombres[indice + 1]}"):
+                nombre = f"{nombre} {nombres[indice + 1]}"
+                indice += 1
+            indice += 1
+            if re.match(r"(?i)electiva|optativa", nombre):
+                continue
+            # A short name the contents call otherwise ("Cultura General de la
+            # Universidad", "... en la Universidad" there) is the list's; a long
+            # one may be the first line of a name, and then the document is not read.
+            if not esta(nombre) and len(nombre) > 50:
+                return []
+            # A word the text broke ("Polític a", "Derech o"): the document is not read.
+            if re.search(r"\w\s[a-záéíóú]$", nombre):
+                return []
+            if (nombre, None) not in materias:
+                materias.append((nombre, None))
+    return materias
