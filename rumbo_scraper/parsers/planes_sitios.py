@@ -3476,3 +3476,100 @@ def plan_unl(html: str) -> list[tuple[str, int]]:
         if (nombre, anio) not in vistas and not re.match(r"(?i)optativa|electiva", nombre):
             vistas.append((nombre, anio))
     return vistas
+
+
+def plan_ub(cajas: str) -> list[tuple[str, int]]:
+    """The UB's career brochures (``-bbox-layout``): a column per two years,
+    each year's heading ("PRIMER AÑO") over its terms and their subjects,
+    each marked "•"; a name the column wrapped goes on indented under its
+    text ("• Derechos de la Propiedad Industrial e" / "Intelectuales"). A
+    subject is a mark under a year's heading in its column: the brochure's
+    other lists (agreements abroad, the electives offered) have none. The
+    elective slots ("Materia Optativa de Formación General (MOFG) 1",
+    "MOFE 2") are a choice, not a subject."""
+    renglones = sorted(_renglones(cajas), key=lambda r: (r[0], r[2]))
+    # A year by orientation ("CUARTO AÑO ORIENTACIÓN PERIODISMO"): two plans, neither read.
+    if any(re.match(r"(?:PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s+ORIENTACI", t) for _, _, _, t in renglones):
+        return []
+    titulos = [(p, x, y, anio_de(t)) for p, x, y, t in renglones
+               if re.fullmatch(r"(?:PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO", t)]
+    materias: list[list] = []
+    ultima: dict[float, list] = {}
+    for pagina, x, y, texto in renglones:
+        arriba = [(ty, anio) for p, tx, ty, anio in titulos if p == pagina and ty < y and -12 <= x - tx <= 12]
+        if not arriba:
+            continue
+        anio = max(arriba)[1]
+        columna = round(x / 40)
+        if texto.startswith("•"):
+            ultima[columna] = [clean_text(texto.lstrip("• ")), anio, x, y]
+            materias.append(ultima[columna])
+        elif (columna in ultima and 2 <= x - ultima[columna][2] <= 10 and y - ultima[columna][3] < 12
+              and not re.search(r"(?i)semestre|cuatrimestre", texto)):
+            ultima[columna][0] = clean_text(f"{ultima[columna][0]} {texto}")
+            ultima[columna][3] = y
+        else:
+            ultima.pop(columna, None)
+    return sorted(((nombre, anio) for nombre, anio, _, _ in materias
+                   if not re.search(r"(?i)optativa|\bMOF[EG]\b", nombre)), key=lambda m: m[1])
+
+
+plan_ub.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_ub_distancia(cajas: str) -> list[tuple[str, int]]:
+    """The UB's distance careers (``-bbox-layout``): under "Síntesis de los
+    Contenidos" a table of year, term and subject, the subjects numbered
+    ("1. Principios de Administración") and each label ("1º") somewhere
+    along its cell's rows. A cell's rows are closer together than two
+    cells are; a cell's term is the label in the term's column that sits
+    beside it, and the year is counted by the cells, a first term opening
+    the next. The list ends at the "Obligaciones Académicas"."""
+    renglones = sorted(_renglones(cajas), key=lambda r: (r[0], r[2]))
+    inicio = next(((p, y) for p, x, y, t in renglones if re.fullmatch(r"(?i)s[íi]ntesis de los contenidos", t)), None)
+    cabeza = {t.upper(): x for p, x, y, t in renglones if t.upper() in ("AÑO", "CUATRIMESTRE")}
+    if inicio is None or len(cabeza) < 2:
+        return []
+    fin = next(((p, y) for p, x, y, t in renglones if (p, y) > inicio
+                and re.fullmatch(r"(?i)obligaciones acad[ée]micas", t)), None)
+    medio = (cabeza["AÑO"] + cabeza["CUATRIMESTRE"]) / 2
+    filas, etiquetas = [], []
+    for p, x, y, t in renglones:
+        if (p, y) <= inicio or (fin and (p, y) >= fin):
+            continue
+        fila = re.fullmatch(r"(\d{1,2})\.\s+(\S.*)", t)
+        if fila:
+            filas.append((p, y, int(fila.group(1)), clean_text(fila.group(2))))
+        elif re.fullmatch(r"[12]\s*[º°]", t) and x > medio and x < cabeza["CUATRIMESTRE"] + 80:
+            etiquetas.append((p, y, int(t[0])))
+    if not filas or [n for _, _, n, _ in filas] != list(range(1, len(filas) + 1)):
+        return []
+    pasos = sorted(b[1] - a[1] for a, b in zip(filas, filas[1:]) if a[0] == b[0] and b[1] > a[1])
+    paso = pasos[len(pasos) // 4] if pasos else 12
+    bloques: list[list] = []
+    for fila in filas:
+        if bloques and fila[0] == bloques[-1][-1][0] and fila[1] - bloques[-1][-1][1] < 1.6 * paso:
+            bloques[-1].append(fila)
+        else:
+            bloques.append([fila])
+    materias, anio = [], 0
+    for bloque in bloques:
+        pagina, arriba, abajo = bloque[0][0], bloque[0][1], bloque[-1][1]
+        suyas = [e for p, y, e in etiquetas if p == pagina and arriba - paso <= y <= abajo + paso]
+        if len(suyas) != 1:
+            return []
+        if suyas[0] == 1 or not anio:
+            anio += 1
+        materias += [(nombre, anio) for _, _, _, nombre in bloque]
+    return materias
+
+
+plan_ub_distancia.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_ub_todos(cajas: str) -> list[tuple[str, int]]:
+    """The UB's documents: a career brochure, or a distance career's table."""
+    return plan_ub(cajas) or plan_ub_distancia(cajas)
+
+
+plan_ub_todos.cajas = True  # type: ignore[attr-defined]
