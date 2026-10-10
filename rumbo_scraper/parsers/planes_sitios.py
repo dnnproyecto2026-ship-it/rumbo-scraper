@@ -3671,3 +3671,23 @@ def plan_anios_y_renglones(html: str) -> list[tuple[str, int]]:
         return []
     return materias
 
+
+
+def plan_umendoza(texto: str) -> list[tuple[str, int]]:
+    """Universidad de Mendoza's engineering plan sheets (``-layout`` text):
+    each year's heading ("PRIMER AÑO") over a row per subject, maybe its
+    term first ("1", "2", "Anual"), then its code ("0005", "1020") and its
+    name. The leveling course ("CPREC  PRECALCULO") is the admission's, not
+    the plan's. Names in capitals are written as names."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto.splitlines():
+        encabezado = re.match(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\b", linea)
+        if encabezado:
+            anio = _ORDINALES[encabezado.group(1).lower()]
+            continue
+        fila = re.match(r"^\s*(?:[1-2]|Anual)?\s+(\d{3,4})\s+(\S.*?)(?:\s{2,}|$)", linea)
+        if fila and anio:
+            _agregar(materias, fila.group(2), anio)
+    return materias
+plan_umendoza.respaldo = True  # type: ignore[attr-defined]  # its other layouts go to the general reader
