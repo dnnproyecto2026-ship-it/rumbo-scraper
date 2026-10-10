@@ -32,14 +32,16 @@ from bs4 import BeautifulSoup
 from rumbo_scraper.parsers import generico as g
 
 
-def leer_pagina(html: str, url: str, nombre: str | None = None) -> dict[str, Any]:
-    """The career row the page gives, or ValueError if it is not a career."""
+def leer_pagina(html: str, url: str, nombre: str | None = None, nivel: str | None = None) -> dict[str, Any]:
+    """The career row the page gives, or ValueError if it is not a career.
+    ``nivel`` names the level of a degree the classifier does not know by its
+    name ("Locutor Nacional", "Guía Universitario de Turismo": pregrado)."""
     programa = g.leer_programa(html, url)
     nombre = nombre or (programa.nombre if programa else None)
     if not nombre:
         h1 = BeautifulSoup(html or "", "html.parser").find("h1")
         nombre = re.sub(r"(?i)^carrera de\s+", "", " ".join(h1.get_text(" ").split())) if h1 else ""
-    clase = g.clasificar(nombre) if nombre else None
+    clase = (nivel,) if nivel and nombre else (g.clasificar(nombre) if nombre else None)
     if not clase or clase[0] not in ("Grado", "Pregrado"):
         raise ValueError(f"no es una carrera de grado ni pregrado: {nombre!r}")
     datos = g.leer_datos(html)
@@ -80,6 +82,7 @@ def main() -> None:
     parser.add_argument("url")
     parser.add_argument("--nombre", default=None)
     # A page that does not say it ("a distancia" for a university's distance site).
+    parser.add_argument("--nivel", default=None, choices=("Grado", "Pregrado"))
     parser.add_argument("--modalidad", default=None, choices=("presencial", "a distancia", "semipresencial"))
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
@@ -88,7 +91,7 @@ def main() -> None:
 
     with Visitante(timeout=30) as visitante:
         html = visitante.get(args.url) or ""
-    fila = leer_pagina(html, args.url, args.nombre)
+    fila = leer_pagina(html, args.url, args.nombre, args.nivel)
     print(json.dumps(fila, ensure_ascii=False, indent=1))
     if not args.apply:
         return
