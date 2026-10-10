@@ -82,8 +82,30 @@ def _encabezado(fila: list[str]) -> tuple[int, int | None, int | None] | None:
     return (materia, anio, termino) if materia is not None else None
 
 
-def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int | None]]:
-    """(subject, year) for the plan's subjects, or nothing."""
+_REGIMEN = re.compile(r"^(anual|cuatrimestral|semestral|bimestral|trimestral)$")
+
+
+def _columna_de_nombres(tabla: list[list[str]]) -> int | None:
+    """The column that has a name in most of the table's rows, if one does."""
+    filas = [f for f in tabla if len([c for c in f if c]) > 1]
+    if not filas:
+        return None
+    cuentas = [sum(1 for f in filas if i < len(f) and re.search(r"[a-z]{3}", _plano(f[i]))
+                   and not _REGIMEN.match(_plano(f[i])))
+               for i in range(max(len(f) for f in filas))]
+    mejor = max(range(len(cuentas)), key=cuentas.__getitem__)
+    return mejor if cuentas[mejor] >= 0.8 * len(filas) else None
+
+
+def leer_tablas(tablas: Iterable[list[list[str | None]]], partida: bool = False) -> list[tuple[str, int | None]]:
+    """(subject, year) for the plan's subjects, or nothing.
+
+    ``partida`` is for a site whose table the page break leaves in another
+    shape (UPLaB): the year alone in a row under any column, the next page's
+    table with fewer columns, and the rest of a wrapped name on a row of its
+    own. Over every other document these readings change more plans for the
+    worse than for the better, so they are a site's choice, not the rule.
+    """
     filas: list[tuple[str, int | None, int | None]] = []  # name, year, term
     columnas: tuple[int, int | None, int | None] | None = None
     ancho = 0
@@ -99,16 +121,38 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
                 continue
             inicio, columnas = encabezado[0] + 1, encabezado[1]
             ancho = len(tabla[encabezado[0]])
-        elif encabezado or len(tabla[0]) != ancho:
-            # A second header, or a table of another shape: the plan's table
-            # is over (what follows is electives, equivalences, another plan).
+        elif encabezado:
+            # A second header: the plan's table is over (what follows is
+            # electives, equivalences, another plan).
             break
+        elif len(tabla[0]) != ancho and not partida:
+            # A table of another shape: the plan's table is over.
+            break
+        elif len(tabla[0]) != ancho:
+            # A table of another shape is the plan's own continuation only
+            # when the years come as heading rows: the header's merged cells
+            # made more columns than the next page has (UPLaB: 17 and 11),
+            # and the subject is the column with a name in nearly every row.
+            if columnas[1] is not None or columnas[2] is not None:
+                break
+            if not any(len([c for c in f if c]) > 1 for f in tabla):
+                continue  # a scrap of the header's text read as a table
+            nombres = _columna_de_nombres(tabla)
+            if nombres is None:
+                break
+            columnas, ancho, inicio = (nombres, None, None), len(tabla[0]), 0
         else:
             inicio = 0
 
         materia, anio, termino = columnas
         for fila in tabla[inicio:]:
             llenas = [c for c in fila if c]
+            if (partida and len(llenas) == 1 and filas and len(fila) > columnas[0] and fila[columnas[0]] == llenas[0]
+                    and re.search(r"\b(de|del|y|e|en|la|las|los|con|para)$", filas[-1][0])):
+                # The rest of a name the cell wrapped onto a row of its own
+                # ("Formulación y Evaluación de" / "Proyectos Productivos").
+                filas[-1] = (f"{filas[-1][0]} {llenas[0]}",) + filas[-1][1:]
+                continue
             if len(llenas) == 1:
                 # Each orientation's own subjects follow (UNMdP's Contador
                 # Público, one per orientation): a student takes one, so
@@ -118,6 +162,13 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
                 en_termino = _TERMINO_EN_FILA.match(_plano(llenas[0]))
                 if en_termino:
                     termino_de_fila = _ORDINAL_TERMINO[en_termino.group(1)]
+                    continue
+                # "1° Año" alone in the row, under another column than the
+                # subject's (UPLaB puts it under the code).
+                en_fila = partida and _ANIO_EN_FILA.match(_plano(llenas[0]))
+                if en_fila:
+                    numero = en_fila.group(1) or en_fila.group(2)
+                    anio_de_fila = int(numero) if numero.isdigit() else _ORDINAL[numero]
                     continue
             if len(fila) <= materia:
                 continue
@@ -161,12 +212,20 @@ def leer_tablas(tablas: Iterable[list[list[str | None]]]) -> list[tuple[str, int
     return materias
 
 
-def leer_pdf(ruta: str) -> list[tuple[str, int | None]]:
+def leer_pdf(ruta: str, partida: bool = False) -> list[tuple[str, int | None]]:
     import pdfplumber
 
     with pdfplumber.open(ruta) as pdf:
         tablas = [tabla for pagina in pdf.pages for tabla in pagina.extract_tables()]
-    return leer_tablas(tablas)
+    return leer_tablas(tablas, partida)
+
+
+def leer_pdf_partido(ruta: str) -> list[tuple[str, int | None]]:
+    """A site's plans whose table the page break leaves in another shape (UPLaB)."""
+    return leer_pdf(ruta, partida=True)
+
+
+leer_pdf_partido.ruta = True  # type: ignore[attr-defined]
 
 
 def tablas_html(html: str) -> list[list[list[str]]]:

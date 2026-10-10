@@ -62,6 +62,20 @@ class LeerPorColumnas(unittest.TestCase):
         plan = leer_tablas([filas])
         self.assertEqual((plan[0][1], plan[4][1], plan[-1][1]), (1, 3, 4))
 
+    def test_la_tabla_sigue_en_otra_pagina_con_otras_columnas(self):
+        # UPLaB: "1° Año" under the code, and the next page's table has
+        # fewer columns, the subject in another one.
+        primera = [["", "Código", "", "Asignatura", "Régimen de cursada"], ["", "1° Año", None, None, None]]
+        primera += [["", f"0{i}", None, f"Materia Primera {i}", "Anual"] for i in range(6)]
+        primera += [["", "", None, "Formulación y Evaluación de", ""], ["", "", None, "Proyectos Productivos", ""]]
+        segunda = [["2° Año", None, None]] + [[f"1{i}", f"Materia Segunda {i}", "Cuatrimestral"] for i in range(6)]
+        plan = leer_tablas([primera, [["Régimen de"], ["cursada"]], segunda], partida=True)
+        self.assertEqual(len(plan), 13)
+        self.assertIn(("Formulación y Evaluación de Proyectos Productivos", 1), plan)
+        self.assertEqual(plan[-1], ("Materia Segunda 5", 2))
+        # Without the site's choice the first page alone is not a plan.
+        self.assertEqual(leer_tablas([primera, segunda]), [])
+
 
 if __name__ == "__main__":
     unittest.main()

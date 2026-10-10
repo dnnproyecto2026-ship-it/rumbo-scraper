@@ -345,6 +345,8 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             # UADER's entrants' pages: "Plan de Estudios", on Drive too.
                             ("ingresantes.uader.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))))
 
+# UPLaB's plans: the table goes on in another shape after each page break.
+_DOCUMENTOS_PROPIOS += (("uplab.edu.ar", plan_por_columnas.leer_pdf_partido),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
