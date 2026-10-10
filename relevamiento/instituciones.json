@@ -54,8 +54,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE CHILECITO - UNdeC",
    "tipo": "nacional",
    "en_rumbo": "Universidad Nacional de Chilecito",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE CÓRDOBA - UNC",
@@ -85,8 +85,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SAN MARTÍN - UNSAM",
    "tipo": "nacional",
    "en_rumbo": "Universidad Nacional de San Martín",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE GENERAL SARMIENTO - UNGS",
@@ -146,8 +146,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LA RIOJA - UNLaR",
    "tipo": "nacional",
    "en_rumbo": "Universidad Nacional de La Rioja",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD NACIONAL DE LANÚS - UNLa",
@@ -393,8 +393,8 @@
    "nombre_oficial_ministerio": "ESCUELA UNIVERSITARIA DE TEOLOGÍA",
    "tipo": "privada",
    "en_rumbo": "Escuela Universitaria de Teología",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "INSTITUTO TECNOLÓGICO DE BUENOS AIRES",
@@ -532,8 +532,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD DE LA FRATERNIDAD DE AGRUPACIONES DE SANTO TOMÁS DE AQUINO",
    "tipo": "privada",
    "en_rumbo": "Universidad de la Fraternidad de Agrupaciones Santo Tomás de Aquino",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DE BELGRANO",
@@ -617,8 +617,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CENTRO EDUCATIVO LATINOAMERICANO",
    "tipo": "privada",
    "en_rumbo": "Universidad del Centro Educativo Latinoamericano",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD DEL CINE",
@@ -881,8 +881,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DE LAGUNA BLANCA - UPLaB",
    "tipo": "provincial",
    "en_rumbo": "Universidad Provincial de Laguna Blanca",
-   "estado": "cargada",
-   "motivo": "Sitio bloquea lectores automáticos; carreras desde la Guía de Carreras oficial (DNGU, guiadecarreras.siu.edu.ar), fuente no oficial de la universidad"
+   "estado": "bloqueada",
+   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DEL SUDOESTE",
