@@ -1349,6 +1349,11 @@ def _pagina_nueva_unsa(nombre: str, paginas: dict[str, str]) -> str | None:
     that name ("Licenciatura en Matemática" is its "Licenciatura en Matemáticas")."""
     from difflib import SequenceMatcher
 
+    # The page named exactly as the career goes first: "... en Física" is
+    # near enough "... en Filosofía" to make two.
+    exactas = {url for dicho, url in paginas.items() if clave_sin_tildes(dicho) == clave_sin_tildes(nombre)}
+    if len(exactas) == 1:
+        return exactas.pop()
     parecidas = {url for dicho, url in paginas.items()
                  if SequenceMatcher(None, clave_sin_tildes(nombre), clave_sin_tildes(dicho)).ratio() >= 0.93}
     return parecidas.pop() if len(parecidas) == 1 else None
@@ -2271,6 +2276,11 @@ def pagina_de_la_carrera(nombre: str, paginas: dict[str, str]) -> str | None:
     "Licenciatura en Matemáticas"); none if no page, or two, are."""
     from difflib import SequenceMatcher
 
+    # The page named exactly as the career goes first: "... en Física" is
+    # near enough "... en Filosofía" to make two.
+    exactas = {url for dicho, url in paginas.items() if clave_sin_tildes(dicho) == clave_sin_tildes(nombre)}
+    if len(exactas) == 1:
+        return exactas.pop()
     parecidas = {url for dicho, url in paginas.items()
                  if SequenceMatcher(None, clave_sin_tildes(nombre), clave_sin_tildes(dicho)).ratio() >= 0.93}
     return parecidas.pop() if len(parecidas) == 1 else None
