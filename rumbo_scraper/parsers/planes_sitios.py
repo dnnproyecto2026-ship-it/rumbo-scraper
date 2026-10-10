@@ -3693,3 +3693,22 @@ def plan_umendoza(texto: str) -> list[tuple[str, int]]:
             _agregar(materias, fila.group(2), anio)
     return materias
 plan_umendoza.respaldo = True  # type: ignore[attr-defined]  # its other layouts go to the general reader
+
+
+def plan_fce_unse(html: str) -> list[tuple[str, int]]:
+    """UNSE Ciencias Exactas' plan pages ("ic-planinnov2026"): a block per
+    year (``.fceyt-pe-year``, its label "Primer año") holding its modules'
+    tables, a row per subject (its number, its name, its correlatives).
+    The electives, outside the years' blocks, are left out, as are the rows
+    that do not start with a number."""
+    materias: list[tuple[str, int]] = []
+    for bloque in BeautifulSoup(html or "", "html.parser").select(".fceyt-pe-year"):
+        rotulo = bloque.select_one(".fceyt-pe-year-toggle")
+        anio = anio_de(_texto(rotulo)) if rotulo else None
+        if not anio:
+            continue
+        for fila in bloque.select("tr"):
+            celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
+            if len(celdas) >= 2 and re.fullmatch(r"\d{1,2}", celdas[0]) and celdas[1]:
+                _agregar(materias, celdas[1], anio)
+    return desde_el_primero(materias)

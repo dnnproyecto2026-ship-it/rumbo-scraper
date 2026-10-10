@@ -73,3 +73,15 @@ class PlanUsi(unittest.TestCase):
 <p>Derecho Romano</p><h4>Segundo Año</h4><p>Contratos</p><p>Electiva I</p><h4>Otros Requisitos</h4>
 <p>Examen de inglés o certificación equivalente.</p><p>Director de la Carrera</p></div>"""
         self.assertEqual(plan_usi(html), [("Teoría del Derecho", 1), ("Derecho Romano", 1), ("Contratos", 2)])
+
+
+class PlanFceUnse(unittest.TestCase):
+    def test_bloques_por_anio(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_fce_unse
+
+        html = """<div class="fceyt-pe-year"><label class="fceyt-pe-year-toggle">Primer año</label>
+<table><tr><th>N.º</th><th>Asignatura</th></tr><tr><td>1</td><td>Análisis Matemático I</td><td>—</td></tr></table></div>
+<div class="fceyt-pe-year"><label class="fceyt-pe-year-toggle">Segundo año</label>
+<table><tr><td>10</td><td>Física II</td><td>8</td></tr></table></div>
+<div class="fceyt-pe-electivas"><table><tr><td>1</td><td>Electiva de Ríos</td></tr></table></div>"""
+        self.assertEqual(plan_fce_unse(html), [("Análisis Matemático I", 1), ("Física II", 2)])
