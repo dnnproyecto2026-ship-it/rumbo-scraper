@@ -3712,3 +3712,42 @@ def plan_fce_unse(html: str) -> list[tuple[str, int]]:
             if len(celdas) >= 2 and re.fullmatch(r"\d{1,2}", celdas[0]) and celdas[1]:
                 _agregar(materias, celdas[1], anio)
     return desde_el_primero(materias)
+
+
+_CUATRIMESTRES = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6, "septimo": 7,
+                  "séptimo": 7, "octavo": 8, "noveno": 9, "decimo": 10, "décimo": 10}
+
+
+def plan_fca_unju(texto: str) -> list[tuple[str, int]]:
+    """UNJu Ciencias Agrarias' tecnicaturas (``-layout`` text): each term's
+    heading ("PRIMER CUATRIMESTRE", ...) over a row per subject, its
+    two-digit code first; a name the cell wrapped sits above and below its
+    code's line ("ELEMENTOS DE MATEMÁTICA Y" / "01   4   60" / "ESTADÍSTICA"),
+    or beside it. A term's year is half its number, rounded up; the
+    "TOTAL DE HORAS" lines are not subjects."""
+    lineas = texto.splitlines()
+    materias: list[tuple[str, int]] = []
+    cuatrimestre = None
+    for numero, linea in enumerate(lineas):
+        titulo = re.match(r"^\s*(\w+)\s+CUATRIMESTRE\s*$", linea)
+        if titulo and titulo.group(1).lower() in _CUATRIMESTRES:
+            cuatrimestre = _CUATRIMESTRES[titulo.group(1).lower()]
+            continue
+        fila = re.match(r"^\s*(\d{2})(\s+)(.*?)(?:\s{2,}\d|\s*$)", linea)
+        if not fila or not cuatrimestre:
+            continue
+        nombre = clean_text(fila.group(3))
+        if not nombre or re.fullmatch(r"[\d\s,.-]+", nombre):
+            piezas = []
+            for vecina in (lineas[numero - 1] if numero else "", lineas[numero + 1] if numero + 1 < len(lineas) else ""):
+                pieza = clean_text(re.split(r"\s{3,}", vecina.strip())[0]) if vecina.strip() else ""
+                if pieza and not re.match(r"^\d", pieza) and not re.search(r"(?i)total de horas|cuatrimestre", pieza):
+                    piezas.append(pieza)
+            nombre = clean_text(" ".join(piezas))
+        if nombre and not re.search(r"(?i)total de horas|^aprobad[oa]s?$", nombre):
+            _agregar(materias, nombre, (cuatrimestre + 1) // 2)
+    # A name cut short ("COMERCIALIZACIÓN: de la carne y el"): the table is not read.
+    if any(re.search(r"(?i)\b(?:de|del|el|la|los|las|y|e|en|a|con|para)$", n) for n, _ in materias):
+        return []
+    return materias
+plan_fca_unju.respaldo = True  # type: ignore[attr-defined]  # its licenciaturas go to the general reader
