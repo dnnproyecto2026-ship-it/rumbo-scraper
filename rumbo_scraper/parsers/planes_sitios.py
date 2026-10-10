@@ -1747,6 +1747,10 @@ def plan_ucongreso(html: str) -> list[tuple[str, int]]:
     tabs = BeautifulSoup(html or "", "html.parser").select_one(".careers-tabs")
     if not tabs:
         return []
+    # A year by orientation ("4º AÑO - Instituciones", Ciencias de la
+    # Educación): several plans, none read.
+    if any(re.match(r"(?i)\s*\d\s*[º°]\s*año\s*-", _texto(e)) for e in tabs.select(".tab-labels .tab-label")):
+        return []
     etiquetas = {e.get("data-tabs-number"): anio_de(_texto(e)) for e in tabs.select(".tab-labels .tab-label")}
     materias: list[tuple[str, int]] = []
     for contenido in tabs.select(".tab-contents > .tab-content"):
