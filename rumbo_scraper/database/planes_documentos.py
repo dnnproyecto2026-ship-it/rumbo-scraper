@@ -541,9 +541,17 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
     artefactos = _urls_de_los_artefactos()
     url_de = {c["id"]: artefactos.get((universidades[c["universidad_id"]]["nombre_oficial"],
                                        c["nombre_carrera"])) for c in carreras}
+    # Of a career's offers, the one at the page the spider read the career
+    # from: the career's own page, not one campus's (UMaza's
+    # "recursoshumanos/inicio" has the four years; "recursoshumanosSE/inicio"
+    # only its tecnicatura). Else the last one's, as before.
+    de_las_ofertas: dict[str, list[str]] = defaultdict(list)
     for oferta in select_all(client.table("ofertas_academicas").select("carrera_id,url_oficial")):
         if oferta["url_oficial"] and oferta["carrera_id"] in url_de:
-            url_de[oferta["carrera_id"]] = oferta["url_oficial"]
+            de_las_ofertas[oferta["carrera_id"]].append(oferta["url_oficial"])
+    for carrera_id, urls_suyas in de_las_ofertas.items():
+        if url_de[carrera_id] not in urls_suyas:
+            url_de[carrera_id] = urls_suyas[-1]
 
     documento_de: dict[str, str] = {}
     de_la_pagina: dict[str, list[tuple[str, int | None]]] = {}
