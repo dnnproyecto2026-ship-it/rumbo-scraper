@@ -881,8 +881,8 @@
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DE LAGUNA BLANCA - UPLaB",
    "tipo": "provincial",
    "en_rumbo": "Universidad Provincial de Laguna Blanca",
-   "estado": "bloqueada",
-   "motivo": "Su sitio no deja leer sus carreras y la Guía de Carreras del Ministerio no es su fuente oficial: sin publicar desde 2026-10-10 (sólo fuentes oficiales)."
+   "estado": "cargada",
+   "motivo": "Sus cinco carreras desde el plan de estudios que publica cada una en su sitio (uplab.edu.ar/index.php/carreras); títulos y duraciones de la Guía del Ministerio."
   },
   {
    "nombre_oficial_ministerio": "UNIVERSIDAD PROVINCIAL DEL SUDOESTE",
