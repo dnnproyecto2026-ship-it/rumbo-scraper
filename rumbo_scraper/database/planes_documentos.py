@@ -183,7 +183,11 @@ _FUERA_DEL_PLAN = re.compile(r"(?i)^cbc$|\s(?-i:CN)$|\(optativa\)|^t[íi]tulo\s*
                              # ("Avda. Benjamín Aráoz 800 | CP 4000", "Paseo del Bosque s/n",
                              # "Computación se podrá acreditar en cualquier momento ...").
                              r"|\bavda\.|\bcp\s*\d{4}\b|\bs/n\b|se podr[áa]n?\s+acreditar|^extracurricular\b"
-                             r"|^electivas:\s")
+                             r"|^electivas:\s"
+                             # A term's heading taken for a subject ("Cuatrimestre 1-1", "1er. Cuatrimestre"),
+                             # an elective's slot ("Electiva 3 (a elección de la institución)"), the form.
+                             r"|^cuatrimestre\s+\d|^\d+\s*(?:er|do|ro|to|vo|mo)?\.?\s*cuatrimestre\b"
+                             r"|^(?:electiva|optativa)\s+\d|^ficha de inscripci|^director(?:a)? de (?:la )?carrera$|^testimonios$")
 
 
 def _nombra(texto: str, carrera: str) -> bool:
