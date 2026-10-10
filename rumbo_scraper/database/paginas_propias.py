@@ -50,10 +50,28 @@ LISTADOS: dict[str, tuple[str, ...]] = {
     "UNR": ("https://fhumyar.unr.edu.ar/carreras-de-grado/", "https://fhumyar.unr.edu.ar/pregrado/"),
     # The UNSJ's guide points its careers at their faculty's page.
     "UNSJ": ("https://www.ffha.unsj.edu.ar/?page_id=171",),
+    # Its list of careers is built by the browser; its sitemap of careers says them.
+    "UK": ("https://www.kennedy.edu.ar/career-sitemap.xml",),
     # Its careers had no page (the site was down when they were read); its
     # list of careers links each one's, with the plan and its itinerary.
     "UNGS": ("https://www.ungs.edu.ar/carreras",),
 }
+
+
+def _paginas_del_listado(contenido: str, listado: str) -> dict[str, str]:
+    """A list's pages by the careers' names. A site whose list of careers
+    its browser builds (Kennedy's) says them in its sitemap of careers
+    ("career-sitemap.xml"): each page named by its address's last part
+    ("licenciatura-en-publicidad"), and taken only if its title names the
+    career, as any other."""
+    if urlparse(listado).path.endswith(".xml"):
+        paginas = {}
+        for url in re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", contenido or ""):
+            parte = [p for p in urlparse(url).path.split("/") if p]
+            if parte:
+                paginas.setdefault(parte[-1].replace("-", " "), url)
+        return paginas
+    return paginas_por_nombre(contenido, listado)
 
 
 def leer(client: Any, sigla: str) -> list[dict[str, Any]]:
@@ -74,7 +92,10 @@ def leer(client: Any, sigla: str) -> list[dict[str, Any]]:
     with Visitante(timeout=25) as visitante:
         paginas: dict[str, str] = {}
         for listado in LISTADOS.get(sigla, ()):
-            for nombre, url in paginas_por_nombre(visitante.get(listado), listado).items():
+            # (A sitemap is not a page: the visitor keeps only pages.)
+            contenido = (visitante.client.get(listado).text if urlparse(listado).path.endswith(".xml")
+                         else visitante.get(listado))
+            for nombre, url in _paginas_del_listado(contenido, listado).items():
                 paginas.setdefault(nombre, url)
             time.sleep(PAUSA)
         hosts = {urlparse(listado).netloc for listado in LISTADOS.get(sigla, ())}
