@@ -23,6 +23,7 @@ import json
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
+from urllib.parse import urlparse
 from typing import Any
 
 from rumbo_scraper.normalizers.text import comparison_key
@@ -75,6 +76,28 @@ _PARA_TITULADOS = re.compile(
 # ("ofrece además un ciclo...") is not.
 _SE_DICE_CICLO = re.compile(
     r"\b(?:este|sobre el|denomina [^.]{0,120}?)\s*ciclo de (?:complementacion|licenciatura)\b")
+
+
+# Or its page says so where it gives the length: "Duración: 2 años (Ciclo de
+# licenciatura)" (the UBP's distance licenciaturas, which take a previous
+# title). Read from the page the verifier keeps (`verificar_catalogo`'s
+# cache); a page of several careers, each a section of it ("#..."), is not
+# any one's.
+_SU_PAGINA_DICE_CICLO = re.compile(
+    r"\bduracion:? (?:\d[\d ,]*|un|dos|tres) (?:ano|anos|cuatrimestres)(?: y medio)? ciclo de (?:licenciatura|complementacion)\b")
+
+
+def la_pagina_dice_ciclo(url: str | None) -> bool:
+    import hashlib
+
+    if not url or urlparse(url).fragment:
+        return False
+    archivo = Path("data/verificacion") / (hashlib.md5(url.encode()).hexdigest() + ".json")
+    try:
+        texto = json.loads(archivo.read_text()).get("texto") or ""
+    except (OSError, ValueError):
+        return False
+    return bool(_SU_PAGINA_DICE_CICLO.search(texto))
 
 
 def es_un_ciclo(nombre: str, descripcion: str | None = None) -> bool:
@@ -515,7 +538,9 @@ def exportar(client: Any) -> dict[str, Any]:
     # teaching degree; nobody leaving secondary school can start one. They
     # stay in this database and out of the application's catalogue, with
     # their subjects.
-    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"], c.get("descripcion_breve"))}
+    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"], c.get("descripcion_breve"))
+              or any(la_pagina_dice_ciclo(u) for u in [o.get("url_oficial") for o in ofertas_por_carrera.get(c["id"], [])]
+                     + [urls.get((nombre_uni.get(c["universidad_id"]), c["nombre_carrera"]))])}
     carreras = [c for c in carreras if c["id"] not in ciclos]
     carrera_nombre = {c["id"]: c["nombre_carrera"] for c in carreras}
 
