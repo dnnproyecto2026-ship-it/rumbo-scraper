@@ -124,6 +124,8 @@ _COLA_PUBLICITARIA = re.compile(
 _SIN_MAYUSCULA = frozenset("de del la las los el y e en a al con para por o u".split())
 _STOP = frozenset("de del la las los el y e en con".split())
 # A block of subjects published as if it were a degree: "Arquitectura I a V y PFC".
+# The Ministry's national guide of degrees: a checklist, not the university's own page.
+_ES_LA_GUIA = re.compile(r"^https?://(?:www\.)?guiadecarreras\.siu\.edu\.ar/")
 _UN_BLOQUE_DE_MATERIAS = re.compile(r"\b[ivx]+ a [ivx]+\b")
 # A university's department read as a career from its menu (UNLaM's
 # "Ingeniería e Investigaciones Tecnológicas" gives several engineerings).
@@ -579,6 +581,13 @@ def exportar(client: Any) -> dict[str, Any]:
         if not base:
             continue
         base = forma.get(clave_nacional(base), base)
+        # Only official sources: a career whose every page is the Ministry's
+        # national guide (guiadecarreras), not the university's own, is not
+        # published (user's decision, 2026-10-10).
+        propias = ofertas_por_carrera.get(c["id"]) or [None]
+        paginas = [(o and o["url_oficial"]) or urls.get((nombre_uni[uid], c["nombre_carrera"])) for o in propias]
+        if all(_ES_LA_GUIA.search(u or "") for u in paginas):
+            continue
         clave = (uid, clave_de_carrera(base))
         nuevo = clave not in representante
         nombre = representante.setdefault(clave, base)
@@ -599,8 +608,9 @@ def exportar(client: Any) -> dict[str, Any]:
                 "descripcion_breve": c["descripcion_breve"],
                 "facultad_nombre": facultad_nombre,
             })
-        propias = ofertas_por_carrera.get(c["id"]) or [None]
-        for o in propias:
+        for o, pagina in zip(propias, paginas):
+            if _ES_LA_GUIA.search(pagina or ""):
+                continue
             sede = (sede_nombre.get(o["sede_id"]) if o else None) or sede_del_nombre
             por_uni[uid]["ofertas"].append({
                 "carrera_nombre": nombre,
@@ -609,8 +619,7 @@ def exportar(client: Any) -> dict[str, Any]:
                 or unidad_llamada.get((uid, comparison_key(sede or ""))),
                 "modalidad": modalidad_del_nombre or (o["modalidad"] if o else None),
                 "regimen_ingreso": o["regimen_ingreso"] if o else None,
-                "url_oficial": (o and o["url_oficial"])
-                or urls.get((nombre_uni[uid], c["nombre_carrera"])),
+                "url_oficial": pagina,
             })
 
     vistos_posgrado: dict[tuple[str, str], str] = {}
