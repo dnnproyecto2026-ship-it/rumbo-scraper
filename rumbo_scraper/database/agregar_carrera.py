@@ -83,6 +83,8 @@ def main() -> None:
     parser.add_argument("--nombre", default=None)
     # A page that does not say it ("a distancia" for a university's distance site).
     parser.add_argument("--nivel", default=None, choices=("Grado", "Pregrado"))
+    # A page that lists several careers (UNR's tecnicaturas): each its own length, not the page's first.
+    parser.add_argument("--duracion", type=float, default=None)
     parser.add_argument("--modalidad", default=None, choices=("presencial", "a distancia", "semipresencial"))
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
@@ -92,6 +94,10 @@ def main() -> None:
     with Visitante(timeout=30) as visitante:
         html = visitante.get(args.url) or ""
     fila = leer_pagina(html, args.url, args.nombre, args.nivel)
+    if args.duracion is not None:
+        # A shared page's degree and length are another career's: only what was said.
+        fila["duracion_anios"] = args.duracion
+        fila["titulo_otorgado"] = None
     print(json.dumps(fila, ensure_ascii=False, indent=1))
     if not args.apply:
         return
