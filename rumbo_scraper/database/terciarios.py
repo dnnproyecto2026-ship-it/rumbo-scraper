@@ -404,8 +404,12 @@ def institutos_caba_ifts() -> list[dict[str, Any]]:
     return [i for i in institutos.values() if i["carreras"]]
 
 
-# Provinces whose own registry already gives their technical degrees.
-_INET_YA_LEIDAS = {"06", "14", "66"}
+# Provinces whose own registry already gives their technical degrees: INET
+# only adds the institutes that registry does not have (PBA's art schools,
+# the Navy's school), never degrees to one it has. Córdoba's map lists only
+# the careers that open this year, so an institute missing there opens none.
+_INET_YA_LEIDAS = {"14"}
+_INET_SOLO_NUEVOS = {"06", "66"}
 _PROVINCIA_DE_CODIGO = {codigo: nombre for codigo, nombre in _PROVINCIAS_INFD.values()}
 
 
@@ -433,6 +437,8 @@ def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
     from rumbo_scraper.parsers.terciarios_inet import INET, SALIDA as INET_SALIDA
 
     estado = json.loads(INET_SALIDA.read_text())
+    registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
+    cargados = {cue7(v.get("cue")) for v in registro.values()}
     institutos: dict[str, dict[str, Any]] = {}
     for clave, filas in estado["filas"].items():
         provincia, titulo = clave.split("_")
@@ -445,11 +451,17 @@ def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
             # "... en Turismo y/o con Orientaciones"): the career is the first.
             propio = nombre_de_la_carrera(re.sub(r"(?i)\s*(?:/\s*analista|y/o con orientaciones)\s*$", "",
                                                  clean_text(fila.get("Título") or "")))
-            if not cue or not propio:
+            if not cue or not propio or (provincia in _INET_SOLO_NUEVOS and cue in cargados):
                 continue
             web = (fila.get("Página Web") or "").strip()
             # "Instituto Instituto Nuestro Señor del Milagro": the kind said twice.
             nombre = re.sub(r"(?i)^(\w+)\s+\1\b", r"\1", prolijo(fila.get("Nombre") or ""))
+            # "Escuela de Teatro Escuela de TEATRO de la PLATA": the whole
+            # name after its kind said again, part of it in capitals.
+            repetido = re.match(r"(?i)^(.{6,}?)\s+(\1\b.*)$", nombre)
+            if repetido:
+                nombre = re.sub(r"\b([A-ZÁÉÍÓÚÑ])([A-ZÁÉÍÓÚÑ]{2,})\b",
+                                lambda m: m.group(1) + m.group(2).lower(), repetido.group(2))
             instituto = institutos.setdefault(cue, {
                 "nombre_oficial": nombre, "nombre_corto": siglas(nombre),
                 "gestion": "Privada" if (fila.get("Gestión") or "").startswith("Priv") else "Estatal",
@@ -466,8 +478,6 @@ def institutos_inet(provincias: set[str] | None = None) -> list[dict[str, Any]]:
     # A name is an institution's key: two institutes INET names alike ("Centro
     # Educativo de Nivel Terciario (C.E.N.T.)") take their town, and their
     # street when they share the town. (One already loaded keeps its name.)
-    registro = json.loads(REGISTRO.read_text()) if REGISTRO.exists() else {}
-    cargados = {cue7(v.get("cue")) for v in registro.values()}
     por_nombre: dict[str, list[dict[str, Any]]] = {}
     for instituto in institutos.values():
         if instituto["cue"] not in cargados:
