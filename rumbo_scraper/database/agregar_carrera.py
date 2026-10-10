@@ -49,17 +49,23 @@ def leer_pagina(html: str, url: str, nombre: str | None = None) -> dict[str, Any
             "cantidad_materias_total": None}
 
 
-def agregar_al_artefacto(artefacto: dict[str, Any], fila: dict[str, Any], url: str) -> bool:
-    """Append the career; False if the artefact already offers one by that name."""
+def agregar_al_artefacto(artefacto: dict[str, Any], fila: dict[str, Any], url: str,
+                         modalidad: str | None = None) -> bool:
+    """Append the career; False if the artefact already offers one by that name
+    (whose offer at this page gets the modality, if it had none)."""
     datos = artefacto["datos"]
     nombre = fila["nombre_carrera"]
     if nombre in {o.get("carrera_nombre") for o in datos["ofertas"]}:
+        for oferta in datos["ofertas"]:
+            if oferta.get("carrera_nombre") == nombre and oferta.get("url_oficial") == url \
+                    and modalidad and not oferta.get("modalidad"):
+                oferta["modalidad"] = modalidad
         return False
     if "carreras" in datos:
         oficial = datos["universidades"][0]["nombre_oficial"]
         datos["carreras"].append({"universidad_nombre": oficial, "facultad_nombre": None, **fila})
         datos["ofertas"].append({"universidad_nombre": oficial, "facultad_nombre": None, "carrera_nombre": nombre,
-                                 "sede": None, "modalidad": None, "regimen_ingreso": None, "coneau_resolucion": None,
+                                 "sede": None, "modalidad": modalidad, "regimen_ingreso": None, "coneau_resolucion": None,
                                  "coneau_vigencia_hasta": None, "tiene_pasantias": None, "tiene_bolsa_trabajo": None,
                                  "url_oficial": url})
     else:
@@ -73,6 +79,8 @@ def main() -> None:
     parser.add_argument("artefacto", type=Path, help="data/<sigla>_completo.json o _guia_completo.json")
     parser.add_argument("url")
     parser.add_argument("--nombre", default=None)
+    # A page that does not say it ("a distancia" for a university's distance site).
+    parser.add_argument("--modalidad", default=None, choices=("presencial", "a distancia", "semipresencial"))
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
 
@@ -85,7 +93,8 @@ def main() -> None:
     if not args.apply:
         return
     artefacto = json.loads(args.artefacto.read_text())
-    if not agregar_al_artefacto(artefacto, fila, args.url):
+    if not agregar_al_artefacto(artefacto, fila, args.url, args.modalidad):
+        args.artefacto.write_text(json.dumps(artefacto, ensure_ascii=False, indent=2) + "\n")
         raise SystemExit("ya está en el artefacto")
     args.artefacto.write_text(json.dumps(artefacto, ensure_ascii=False, indent=2) + "\n")
 
