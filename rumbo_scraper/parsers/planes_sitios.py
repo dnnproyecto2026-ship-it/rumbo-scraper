@@ -3659,7 +3659,9 @@ def plan_anios_y_renglones(html: str) -> list[tuple[str, int]]:
         linea = clean_text(re.sub(r"^[·•.\-–]\s*", "", linea))
         if re.fullmatch(r"(?i)(primer|segundo)\s+(cuatrimestre|semestre)|anual(es)?|\d+|asignatura anual|modular|materias", linea):
             continue
-        if _FIN_DEL_PLAN_USI.match(linea) or len(linea) > 90 or linea.endswith((".", ":")) or "@" in linea:
+        # (UMaza closes each degree's years with it: "Licenciado en Recursos Humanos (4 años)".)
+        if (_FIN_DEL_PLAN_USI.match(linea) or len(linea) > 90 or linea.endswith((".", ":")) or "@" in linea
+                or re.search(r"(?i)\(\d+(?:[.,]5)?\s*a[ñn]os\)$", linea)):
             break
         if re.match(r"(?i)(?:\d+\s*[.-]\s*)?(?:electiva|optativa)", linea):
             continue
