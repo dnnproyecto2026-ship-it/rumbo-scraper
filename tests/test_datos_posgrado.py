@@ -119,6 +119,12 @@ class DatosDePosgrado(unittest.TestCase):
         self.assertTrue(nombra_el_programa(ENCABEZADO_Y_TABLA, "Doctorado en Ingeniería Civil"))
         self.assertFalse(nombra_el_programa(LISTA_DE_DATOS, "Maestría en Finanzas"))
 
+    def test_la_duracion_de_las_carreras_que_se_piden_no_es_la_suya(self):
+        lineas = ["Profesores de nivel secundario o superior de carreras de 4 años de duración."]
+        self.assertIsNone(duracion_mencionada(lineas, "Especialización en Enseñanza en Ciencias Exactas"))
+        self.assertEqual(duracion_mencionada(["El cursado se realiza en 18 (dieciocho) meses."],
+                                             "Especialización en Enseñanza en Ciencias Exactas"), 18)
+
 
 if __name__ == "__main__":
     unittest.main()

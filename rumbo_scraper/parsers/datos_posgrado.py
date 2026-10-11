@@ -189,13 +189,13 @@ _UNIDAD = r"(a[ñn]os?|cuatrimestres?|semestres?|meses)"
 _DURACION_EN_FRASE = (
     re.compile(r"(?i)\bduraci[óo]n\b[^.;\n]{0,40}?\b" + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\b"),
     re.compile(r"(?i)\b" + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\s+de\s+duraci[óo]n\b"),
-    re.compile(r"(?i)\b(?:se\s+cursa|se\s+desarrolla|se\s+dicta|se\s+extiende)\s+(?:en|a\s+lo\s+largo\s+de|durante)\s+"
+    re.compile(r"(?i)\b(?:se\s+cursa|se\s+desarrolla|se\s+dicta|se\s+extiende|se\s+realiza)\s+(?:en|a\s+lo\s+largo\s+de|durante)\s+"
                + _CANTIDAD + r"\s*(?:\([^)]{1,15}\)\s*)?" + _UNIDAD + r"\b"),
 )
 # What the degree the applicant already holds lasts is not the programme's:
 # "título de grado universitario de 4 años de duración".
 _OTRA_DURACION = re.compile(r"(?i)t[íi]tulo|grado|requisit|admisi|ingres|aspirante|postula|egresad|"
-                            r"carrera de|licenciatura|plazo|tesis|beca|prórroga|prorroga|vigencia|"
+                            r"carreras? de|licenciatura|plazo|tesis|beca|prórroga|prorroga|vigencia|"
                             r"como\s+m[íi]nimo|al\s+menos|no\s+menor|m[íi]nimo\s+de|mayores\s+de|o\s+m[áa]s\b|\bhoras\b")
 
 
