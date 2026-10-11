@@ -177,6 +177,14 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "Dise%C3%B1o-Curricular-Jurisdiccional-%E2%80%93-Profesorado-de-primaria.pdf",
             planes_sitios.plan_estructura_con_regimen),
     },
+    # Mendoza's Primaria (its 2023 update), as the Instituto del Bicentenario
+    # publishes it on its INFoD site (mendoza.edu.ar).
+    "Mendoza": {
+        "Profesorado de Educación Primaria": (
+            "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2024/09/"
+            "Diseno-Curicular-Profesorado-de-Educacion-Primaria-2023.pdf",
+            planes_sitios.plan_formato_ubicacion),
+    },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },

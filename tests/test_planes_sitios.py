@@ -337,6 +337,33 @@ class PlanEstructuraConRegimen(unittest.TestCase):
             ("Práctica Docente II: Programación de la Enseñanza/ Curriculum y Organizaciones Escolares", 2)])
 
 
+class PlanFormatoUbicacionMendoza(unittest.TestCase):
+    def test_ubicacion_sobre_el_formato_y_nombre_numerado(self):
+        texto = """
+Denominación: 01 - Pensamiento Filosófico
+
+Ubicación en el mapa curricular: 1° Año
+Régimen de cursado: cuatrimestral, primer cuatrimestre
+Formato curricular: módulo
+Carga horaria semanal: 5 HC
+
+Denominación: 08 – Práctica Profesional Docente I. Práctica docente vinculada con
+escenarios y contextos
+
+Ubicación en el mapa curricular: 1° Año
+Formato curricular: práctica
+
+Denominación: 14- Ciencias Sociales y su didáctica I
+
+Ubicación en el diseño curricular: 2° año
+Formato: módulo - taller
+"""
+        self.assertEqual(p.plan_formato_ubicacion(texto), [
+            ("Pensamiento Filosófico", 1),
+            ("Práctica Profesional Docente I. Práctica docente vinculada con escenarios y contextos", 1),
+            ("Ciencias Sociales y su didáctica I", 2)])
+
+
 class PlanUnahur(unittest.TestCase):
     def test_a_wrapped_name_is_the_lines_around_its_row(self):
         texto = "\n".join([

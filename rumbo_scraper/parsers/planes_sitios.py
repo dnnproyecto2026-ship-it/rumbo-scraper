@@ -2688,10 +2688,12 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
         if not re.match(r"(?i)^(?:formato(?: curricular)?|tipo de unidad curricular)\s*:", linea):
             continue
         siguientes = [l for l in lineas[i + 1:i + 30] if l and not _PIE_DISENO.match(l)][:5]
-        ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (?:sugerida )?en (?:el )?(?:dise[ñn]o|plan de estudios?)", l)), "")
-        # Mendoza: "Ubicación en el mapa curricular: 1° Año" above its "Formato".
-        ubicacion = ubicacion or next((l for l in lineas[max(0, i - 4):i]
-                                       if re.match(r"(?i)^ubicaci[óo]n en el (?:mapa|dise[ñn]o) curricular\s*:", l)), "")
+        # Mendoza: "Ubicación en el mapa curricular: 1° Año" above its "Formato"
+        # (and then the one below is the next unit's).
+        ubicacion = next((l for l in lineas[max(0, i - 4):i]
+                          if re.match(r"(?i)^ubicaci[óo]n en el (?:mapa|dise[ñn]o) curricular\s*:", l)), "")
+        ubicacion = ubicacion or next((l for l in siguientes if re.match(
+            r"(?i)^ubicaci[óo]n (?:sugerida )?en (?:el )?(?:dise[ñn]o|plan de estudios?)", l)), "")
         # Neuquén: "Año: Primero".
         ordinal = next((re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l) for l in siguientes
                         if re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l)), None)
@@ -4134,3 +4136,84 @@ def plan_agrarias_unca(html: str, carrera: str) -> list[tuple[str, int]]:
             _agregar(materias, materia.group(1), anio)
     return desde_el_primero(materias)
 plan_agrarias_unca.carrera = True  # type: ignore[attr-defined]
+
+
+def plan_filo_unt(html: str, carrera: str) -> list[tuple[str, int]]:
+    """UNT Filosofía y Letras' career pages: the Profesorado's and the
+    Licenciatura's plans, each a <details> headed by its name ("Profesorado
+    en Historia (Plan 2018)", maybe "32 materias"), a column per year ("1°"
+    "AÑO") of its subjects; the first years both share may come before, out
+    of either ("1° y 2° año · iguales en los dos títulos"). The career's is
+    the one of its kind (Profesorado, Licenciatura) whose other words are the
+    career's ("Profesorado de Historia"); one that does not hold as many
+    subjects as its heading says is not read."""
+    def palabras(nombre: str) -> tuple[str, frozenset[str]]:
+        sin_plan = re.sub(r"\s*\(plan.*", "", nombre, flags=re.I)
+        todas = re.findall(r"[a-z]+", comparison_key(sin_plan))
+        return (todas[0] if todas else ""), frozenset(todas[1:]) - {"de", "en", "la", "el", "y", "con", "orientacion"}
+
+    def columnas(raiz: Tag, fuera_de_details: bool) -> list[tuple[str, int]]:
+        leidas = []
+        # (Boxes as <div>, or as <span> on some pages: Francés.)
+        for columna in raiz.find_all(["div", "span"]):
+            hijos = columna.find_all(["div", "span"], recursive=False)
+            encabezado = clean_text(hijos[0].get_text(" ")) if hijos else ""
+            if not re.fullmatch(r"(?i)\d\s*°\s*año", encabezado) or (fuera_de_details and columna.find_parent("details")):
+                continue
+            for hijo in hijos[1:]:
+                # (The subject's own box, or the name inside it.)
+                nombre = clean_text((hijo.find(["div", "span"]) or hijo).get_text(" "))
+                if nombre:
+                    leidas.append((nombre, int(encabezado[0])))
+        return leidas
+
+    buscada = palabras(carrera)
+    soup = BeautifulSoup(html or "", "html.parser")
+    for detalle in soup.find_all("details"):
+        resumen = detalle.find("summary")
+        textos = [clean_text(d.get_text(" ")) for d in resumen.find_all("div")] if resumen else []
+        # (The name's own box, not the one around it and its hours.)
+        titulo = min((t for t in textos if re.match(r"(?i)(profesorado|licenciatura|tecnicatura)\b", t)),
+                     key=len, default=None)
+        cuantas = next((int(m.group(1)) for t in textos for m in [re.match(r"(\d+)\s+materias", t)] if m), None)
+        if not titulo or palabras(titulo) != buscada:
+            continue
+        propias = columnas(detalle, False)
+        if not propias or (cuantas and len(propias) != cuantas):
+            return []
+        materias: list[tuple[str, int]] = []
+        for nombre, anio in columnas(soup, True) + propias:
+            _agregar(materias, nombre, anio)
+        return desde_el_primero(materias)
+    return []
+plan_filo_unt.carrera = True  # type: ignore[attr-defined]
+
+
+def plan_udc(html: str, carrera: str) -> list[tuple[str, int]]:
+    """The UDC's career pages: a toggle per year ("3er Año") listing its
+    subjects. A page of a Licenciatura and the Tecnicatura it passes through
+    marks the years only the first has ("*Las siguientes materias son
+    exclusivas de la Licenciatura*") and the subjects only the second has
+    ("Trabajo final (sólo para la Tecnicatura)"): each career takes its own.
+    When a workshop is taken goes ("Taller de Inglés I – 1er. cuatrimestre")."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    tecnicatura = bool(re.match(r"(?i)tecnicatura", carrera))
+    materias: list[tuple[str, int]] = []
+    for item in soup.select(".elementor-toggle-item"):
+        titulo = item.select_one(".elementor-tab-title")
+        contenido = item.select_one(".elementor-tab-content")
+        anio = anio_de(clean_text(titulo.get_text(" "))) if titulo else None
+        if not anio or not contenido:
+            continue
+        if tecnicatura and re.search(r"(?i)exclusivas de la licenciatura", contenido.get_text(" ")):
+            continue
+        for li in contenido.find_all("li"):
+            nombre = clean_text(li.get_text(" "))
+            solo = re.search(r"(?i)\(\s*s[óo]lo para la (tecnicatura|licenciatura)\s*\)", nombre)
+            if solo and (solo.group(1).lower() == "tecnicatura") != tecnicatura:
+                continue
+            nombre = re.sub(r"(?i)\s*\(\s*s[óo]lo para la \w+\s*\)", "", nombre)
+            nombre = re.sub(r"\s+[–-]\s+\d\w*\.?\s+cuatrimestre$", "", nombre, flags=re.I)
+            _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+plan_udc.carrera = True  # type: ignore[attr-defined]
