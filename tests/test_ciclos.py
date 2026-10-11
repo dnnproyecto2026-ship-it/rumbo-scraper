@@ -23,6 +23,22 @@ class Ciclos(unittest.TestCase):
         self.assertTrue(_SU_PAGINA_DICE_CICLO.search(
             "ficha tecnica de la carrera carrera licenciatura en lengua inglesa ciclo de complementacion curricular titulo final"))
         self.assertFalse(la_pagina_dice_ciclo("https://undelta.edu.ar/carreras/#licenciatura-en-agua"))
+
+    def test_por_el_titulo_de_su_pagina(self):
+        import hashlib, json, tempfile
+        from pathlib import Path
+        from unittest import mock
+        from rumbo_scraper.database import exportar_catalogo as ex
+        from rumbo_scraper.database.exportar_catalogo import la_pagina_dice_ciclo
+
+        with tempfile.TemporaryDirectory() as d:
+            def pagina(url, texto):
+                Path(d, hashlib.md5(url.encode()).hexdigest() + ".json").write_text(json.dumps({"texto": texto}))
+            pagina("https://a.edu.ar/fil", "licenciatura en filosofia ciclo de complementacion curricular ungs carreras")
+            pagina("https://a.edu.ar/nav", "iusm carreras presentacion pregrado grado ciclo de complementacion posgrado")
+            with mock.patch.object(ex, "Path", lambda *a: Path(d) if a == ("data/verificacion",) else Path(*a)):
+                self.assertTrue(ex.la_pagina_dice_ciclo("https://a.edu.ar/fil"))
+                self.assertFalse(ex.la_pagina_dice_ciclo("https://a.edu.ar/nav"))
         self.assertTrue(la_pagina_dice_ciclo(
             "https://www.utn.edu.ar/es/estudiar-utn?tipo_busqueda=carreras&id_tipos_carreras=2&idSeleccion=32"))
         self.assertFalse(la_pagina_dice_ciclo(

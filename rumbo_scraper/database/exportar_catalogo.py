@@ -111,6 +111,13 @@ def la_pagina_dice_ciclo(url: str | None) -> bool:
         texto = json.loads(archivo.read_text()).get("texto") or ""
     except (OSError, ValueError):
         return False
+    # Or its title, where the page begins, names it one: "Licenciatura en
+    # Filosofía – Ciclo de Complementación Curricular" (UNGS), "Licenciatura en
+    # Educación CCC | Universidad Siglo 21". (Not a menu that lists the
+    # university's cycles: the title begins with the career.)
+    titulo = texto[:120]
+    if re.match(r"(?:licenciatura|profesorado|tecnicatura|ingenieria|ciclo)\b", titulo) and _UN_CICLO.search(titulo):
+        return True
     return bool(_SU_PAGINA_DICE_CICLO.search(texto))
 
 
