@@ -20,6 +20,8 @@ class Ciclos(unittest.TestCase):
         self.assertFalse(_SU_PAGINA_DICE_CICLO.search("duracion 4 anos ofrece ademas un ciclo de licenciatura"))
         self.assertTrue(_SU_PAGINA_DICE_CICLO.search(
             "licenciatura en logistica integral ciclo de complementacion curricular resolucion ministerial 1388 2017"))
+        self.assertTrue(_SU_PAGINA_DICE_CICLO.search(
+            "ficha tecnica de la carrera carrera licenciatura en lengua inglesa ciclo de complementacion curricular titulo final"))
         self.assertFalse(la_pagina_dice_ciclo("https://undelta.edu.ar/carreras/#licenciatura-en-agua"))
 
     def test_por_su_descripcion(self):

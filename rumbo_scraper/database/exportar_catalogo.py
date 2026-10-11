@@ -88,7 +88,10 @@ _SE_DICE_CICLO = re.compile(
 # 1388/2017" (the UB's distance licenciaturas).
 _SU_PAGINA_DICE_CICLO = re.compile(
     r"\bduracion:? (?:\d[\d ,]*|un|dos|tres) (?:ano|anos|cuatrimestres)(?: y medio)? ciclo de (?:licenciatura|complementacion)\b"
-    r"|\bciclo de complementacion curricular resol(?:ucion)?\.? ministerial\b")
+    r"|\bciclo de complementacion curricular resol(?:ucion)?\.? ministerial\b"
+    # Its technical sheet: "Carrera: Licenciatura en Lengua Inglesa - Ciclo de
+    # Complementación Curricular. Título final: ..." (the UB's).
+    r"|\bcarrera:? [a-z ,]{3,90}? ciclo de complementacion curricular titulo final\b")
 
 
 def la_pagina_dice_ciclo(url: str | None) -> bool:
