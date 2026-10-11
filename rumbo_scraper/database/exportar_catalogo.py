@@ -61,7 +61,7 @@ def _urls_de_los_artefactos() -> dict[tuple[str, str], str]:
 
 
 _UN_CICLO = re.compile(
-    r"\bccc\b|\bciclos? de (?:complementacion|licenciatura|profesorado)\b|"
+    r"\bccc\b|\bciclos? de (?:complementacion|licenciatura|profesorado|traductorado)\b|"
     r"complementacion curricular|\((?:ciclo|complementacion)\b|licenciatura \(ciclo\)")
 
 
@@ -83,8 +83,12 @@ _SE_DICE_CICLO = re.compile(
 # title). Read from the page the verifier keeps (`verificar_catalogo`'s
 # cache); a page of several careers, each a section of it ("#..."), is not
 # any one's.
+# Or under its name, with the resolution that approved it: "Licenciatura en
+# Logística Integral Ciclo de Complementación Curricular Resolución Ministerial
+# 1388/2017" (the UB's distance licenciaturas).
 _SU_PAGINA_DICE_CICLO = re.compile(
-    r"\bduracion:? (?:\d[\d ,]*|un|dos|tres) (?:ano|anos|cuatrimestres)(?: y medio)? ciclo de (?:licenciatura|complementacion)\b")
+    r"\bduracion:? (?:\d[\d ,]*|un|dos|tres) (?:ano|anos|cuatrimestres)(?: y medio)? ciclo de (?:licenciatura|complementacion)\b"
+    r"|\bciclo de complementacion curricular resol(?:ucion)?\.? ministerial\b")
 
 
 def la_pagina_dice_ciclo(url: str | None) -> bool:

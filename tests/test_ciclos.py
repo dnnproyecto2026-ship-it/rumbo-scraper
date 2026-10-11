@@ -9,6 +9,7 @@ class Ciclos(unittest.TestCase):
         self.assertTrue(es_un_ciclo("Licenciatura en Administración para Contadores Públicos"))
         self.assertTrue(es_un_ciclo("Licenciatura en Redes y Comunicación de Datos para egresados"))
         self.assertTrue(es_un_ciclo("Licenciatura en Actividad Física y Deportes Plan Especial para Profesores"))
+        self.assertTrue(es_un_ciclo("Ciclo de Traductorado Público de Inglés"))
         self.assertFalse(es_un_ciclo("Licenciatura en Enfermería"))
 
     def test_por_su_pagina(self):
@@ -17,6 +18,8 @@ class Ciclos(unittest.TestCase):
         self.assertTrue(_SU_PAGINA_DICE_CICLO.search("titulo licenciada o en psicopedagogia duracion 2 anos ciclo de licenciatura requisitos"))
         self.assertTrue(_SU_PAGINA_DICE_CICLO.search("duracion 1 ano y medio ciclo de licenciatura"))
         self.assertFalse(_SU_PAGINA_DICE_CICLO.search("duracion 4 anos ofrece ademas un ciclo de licenciatura"))
+        self.assertTrue(_SU_PAGINA_DICE_CICLO.search(
+            "licenciatura en logistica integral ciclo de complementacion curricular resolucion ministerial 1388 2017"))
         self.assertFalse(la_pagina_dice_ciclo("https://undelta.edu.ar/carreras/#licenciatura-en-agua"))
 
     def test_por_su_descripcion(self):
