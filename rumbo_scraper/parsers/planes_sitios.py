@@ -2954,6 +2954,21 @@ def plan_ungs(html: str) -> list[tuple[str, int]]:
             break
         if materias:
             return desde_el_primero(materias)
+    # A page without an itinerary (Sociología): its plan's table, the first
+    # headed "Asignaturas" (not the pool of electives, which says each one's
+    # "Modalidad"), every subject without its year.
+    for tabla in tablas:
+        filas = tabla.find_all("tr")
+        encabezado = [_texto(c) for c in filas[0].find_all(["td", "th"])] if filas else []
+        if not encabezado or encabezado[0] != "Asignaturas" or "Modalidad" in encabezado:
+            continue
+        leidas: list[tuple[str, int]] = []
+        for fila in filas[1:]:
+            celdas = fila.find_all(["td", "th"])
+            if celdas and _texto(celdas[0]):
+                # (_agregar keeps only a subject with its year: one for all, then none.)
+                _agregar(leidas, _texto(celdas[0]), 1)
+        return [(nombre, None) for nombre, _ in leidas]  # type: ignore[misc]
     return []
 
 
