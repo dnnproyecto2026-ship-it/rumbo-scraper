@@ -354,6 +354,8 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
 _DOCUMENTOS_PROPIOS += (("iupa.edu.ar", planes_sitios.plan_iupa),)
 # UPLaB's plans: the table goes on in another shape after each page break.
 _DOCUMENTOS_PROPIOS += (("uplab.edu.ar", plan_por_columnas.leer_pdf_partido),)
+# UPE's plan sheets: the terms' cells closed by the table's rules.
+_DOCUMENTOS_PROPIOS += (("upe.edu.ar", planes_sitios.plan_upe),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
@@ -399,6 +401,11 @@ def _de_cada_carrera(archivo: Path) -> bool:
     each its own part (UADER's Ciencias de la Gestión)."""
     texto = _texto(archivo)
     return bool(re.match(r"(?i)\s*tecnicatura y licenciatura", texto)) and len(re.findall(r"\b20\d{4}\b", texto)) >= 8
+
+
+def _lo_titula(archivo: Path, carrera: str) -> bool:
+    """A document headed "Plan de estudios" and the career's whole name."""
+    return f" plan de estudios {comparison_key(carrera)} " in f" {comparison_key(_texto(archivo))} "
 
 
 def _leer(archivo: Path, carrera: str = "") -> list[tuple[str, int | None]]:
@@ -735,7 +742,11 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         # A document linked by several careers is no one career's plan, but
         # for one that says each career's part (UADER's "Tecnicatura y
         # Licenciatura en Marketing"): each takes its own.
-        if usos[documento] > 1 and not (archivo.exists() and _de_cada_carrera(archivo)):
+        # Nor does one titled with one career's name ("Plan de estudios
+        # Licenciatura en Logística", which UPE's Tecnicatura en Logística
+        # links too): that one takes it.
+        if usos[documento] > 1 and not (archivo.exists() and (
+                _de_cada_carrera(archivo) or _lo_titula(archivo, carrera["nombre_carrera"]))):
             continue
         if archivo.stat().st_size < 1000 or not _nombra(_texto(archivo), carrera["nombre_carrera"]):
             continue

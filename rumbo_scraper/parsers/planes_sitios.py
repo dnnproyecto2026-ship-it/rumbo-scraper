@@ -3935,7 +3935,8 @@ def plan_upe_de(cajas: str, reglas: dict[int, list[tuple[float, float, float]]])
         vecinas = [v for v in palabras[max(i - 1, 0):i + 2] if v[5].lower() == "cuatrimestre" and v[0] == p
                    and (abs(v[2] - y) < 3 and 0 < v[1] - x < 30 or abs(v[1] - x) < 3 and abs(v[2] - y) < 80)]
         if numero and vecinas and x < izquierda - 25:
-            v = vecinas[0]
+            # Of two labels' words beside it, its own touches it.
+            v = min(vecinas, key=lambda v: max(v[2] - alto, y - v[4], v[1] - x2, x - v[3], 0))
             terminos.append((p, min(x, v[1]) + 3, (min(y, v[2]) + max(alto, v[4])) / 2,
                              int(numero.group(1))))
     if sorted(c for *_, c in terminos) != list(range(1, len(terminos) + 1)) or not terminos:
