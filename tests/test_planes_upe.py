@@ -72,5 +72,45 @@ class PlanFhuUnse(unittest.TestCase):
         self.assertEqual(plan_fhu_unse(html), [])
 
 
+class PlanAgroUba(unittest.TestCase):
+    TEXTO = """                    PLAN DE ESTUDIOS DE LA LICENCIATURA
+                                   Primer Año (CBC)
+            Primer cuatrimestre                                    Segundo cuatrimestre
+Matemática (9)                                          Biología (6)
+   Cod 5. Química (6) CBC
+                            Ciclo Profesional – Segundo Año
+Química Aplicada (6)                                    Bioquímica Aplicada (4)
+*CBC                                                    *Biomoléculas (regular para cursar)
+Requisitos exigidos a los estudiantes para obtener el título:
+Cumplir con Asignaturas Optativas (10)
+"""
+
+    def test_dos_columnas_por_anio(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_agro_uba
+
+        self.assertEqual(plan_agro_uba(self.TEXTO), [
+            ("Matemática", 1), ("Biología", 1), ("Química", 1), ("Química Aplicada", 2), ("Bioquímica Aplicada", 2)])
+
+    def test_nombre_partido_no_se_lee(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_agro_uba
+
+        texto = self.TEXTO.replace("Química Aplicada (6)", "Taller de Práctica II: Interacción con la realidad\n(2)")
+        self.assertEqual(plan_agro_uba(texto), [])
+
+
+class PlanAgrariasUnca(unittest.TestCase):
+    def test_la_ventana_de_la_carrera(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_agrarias_unca
+
+        html = """<div><h3>Ingeniería de Paisajes</h3><p>Mas Información</p><h4>Ingeniería de Paisajes</h4><p>×</p>
+<p>Grilla de Materias</p><p>Primer Año</p><ul><li>Biología (1c)</li><li>Física (2c)</li></ul>
+<p>Segundo Año</p><ul><li>Suelo (anual)</li></ul><a>Plan de Estudio 2025</a>
+<h4>Ingeniería Agronómica​</h4><p>×</p><p>Primer Año</p><ul><li>Botánica Morfológica (1c)</li></ul></div>"""
+        self.assertEqual(plan_agrarias_unca(html, "Ingeniería de Paisajes"),
+                         [("Biología", 1), ("Física", 1), ("Suelo", 2)])
+        self.assertEqual(plan_agrarias_unca(html, "Ingeniería Agronómica"), [("Botánica Morfológica", 1)])
+        self.assertEqual(plan_agrarias_unca(html, "Ingeniería en Alimentos"), [])
+
+
 if __name__ == "__main__":
     unittest.main()

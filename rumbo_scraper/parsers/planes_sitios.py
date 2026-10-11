@@ -2621,6 +2621,12 @@ def _titulo_de_unidad(lineas: list[str], i: int) -> str:
     rotulo = next((k for k, l in enumerate(bloque) if re.match(r"(?i)^(?:denominaci[óo]n|unidad curricular)\s*:", l)), None)
     if rotulo is not None:  # a labelled name runs to its "Formato:"
         bloque = bloque[rotulo:]
+        # ... or to the unit's next label (Mendoza: "Denominación:" over its
+        # "Ubicación en el mapa curricular:" and "Régimen de cursado:").
+        otro = next((k for k, l in enumerate(bloque) if k and re.match(
+            r"(?i)^(?:ubicaci[óo]n|r[ée]gimen|carga horaria|formato)\b", l)), None)
+        if otro:
+            bloque = bloque[:otro]
     # A heading set in capitals over two lines ("TALLER DE JUEGOS Y MATERIALES"
     # / "LÚDICOS") is one.
     mayusculas = len(bloque) > 1 and all(l.isupper() for l in bloque[-2:])
@@ -2683,6 +2689,9 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
             continue
         siguientes = [l for l in lineas[i + 1:i + 30] if l and not _PIE_DISENO.match(l)][:5]
         ubicacion = next((l for l in siguientes if re.match(r"(?i)^ubicaci[óo]n (?:sugerida )?en (?:el )?(?:dise[ñn]o|plan de estudios?)", l)), "")
+        # Mendoza: "Ubicación en el mapa curricular: 1° Año" above its "Formato".
+        ubicacion = ubicacion or next((l for l in lineas[max(0, i - 4):i]
+                                       if re.match(r"(?i)^ubicaci[óo]n en el (?:mapa|dise[ñn]o) curricular\s*:", l)), "")
         # Neuquén: "Año: Primero".
         ordinal = next((re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l) for l in siguientes
                         if re.match(r"(?i)^a[ñn]o\s*:\s*(primer|segund|tercer|cuart)o?\b", l)), None)
@@ -2690,7 +2699,19 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
             ubicacion = {"primer": "1", "segund": "2", "tercer": "3", "cuart": "4"}[ordinal.group(1).lower()] + " año"
         ano = re.search(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|[1-5])(?:er|do|ro|to)?\.?\s*[°º]?\s*a[ñn]o\b",
                         ubicacion)
-        titulo = re.sub(r"(?i)^(?:denominaci[óo]n|unidad curricular)\s*:\s*", "", _titulo_de_unidad(lineas, i))
+        titulo = _titulo_de_unidad(lineas, i)
+        if re.match(r"(?i)^(?:r[ée]gimen|ubicaci[óo]n)\b", titulo):
+            # A blank line between the unit's "Denominación:" and its other
+            # labels (Mendoza): the name is the labelled line further up.
+            k = next((k for k in range(i - 1, max(-1, i - 9), -1)
+                      if re.match(r"(?i)^denominaci[óo]n\s*:", lineas[k])), None)
+            partes = []
+            # Its name may run on to the next line, up to a blank or a label.
+            while k is not None and k < i and lineas[k] and (not partes or not re.match(r"(?i)^[\w ]+:\s", lineas[k])):
+                partes.append(lineas[k])
+                k += 1
+            titulo = " ".join(partes)
+        titulo = re.sub(r"(?i)^(?:denominaci[óo]n|unidad curricular)\s*:\s*", "", titulo)
         # Tucumán numbers a unit by its field and place ("F G 1. 1 - PEDAGOGÍA",
         # "FE 3.1ALFABETIZACIÓN", "FPP 4.1. PRÁCTICA ..."); its institutional
         # spaces ("EDI (ver recomendaciones temáticas)") are not units.
@@ -2703,6 +2724,8 @@ def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
         # or by its year ("1° AÑO PEDAGOGÍA"): the year must be the one its
         # "Ubicación" gives, or the unit is not taken.
         titulo = re.sub(r"^\d+(?:\.\d+)+\s+", "", titulo.strip())
+        # Numbered in the map's order: "01 - Pensamiento Filosófico" (Mendoza).
+        titulo = re.sub(r"^\d{1,2}\s*[-–.]\s*(?=\D)", "", titulo)
         prefijo = re.match(r"(?i)^([1-5])\s*[°º]\s*a[ñn]o\s+", titulo)
         if prefijo:
             titulo = titulo[prefijo.end():]
@@ -4044,3 +4067,70 @@ def plan_fhu_unse(html: str) -> list[tuple[str, int]]:
             return []
         _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
+
+
+_ANIO_AGRO_UBA = re.compile(r"(?i)\b(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\b")
+
+
+def plan_agro_uba(texto: str) -> list[tuple[str, int]]:
+    """UBA Agronomía's plan sheets (``-layout``): a heading per year ("Primer
+    Año (CBC)", "Ciclo Profesional – Segundo Año"), its two terms side by
+    side, each subject "Name (credits)" with its prerequisites under it
+    ("*Edafología"). A name the sheet wrapped (its credits alone on the next
+    line, or a line that starts in lowercase) is not known whole, so the
+    plan is not read; nor is a list of electives taken for a subject."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto.splitlines():
+        if re.match(r"(?i)\s*requisitos exigidos", linea):
+            break
+        for trozo in re.finditer(r"\S(?:.*?\S)?(?=\s{3,}|\s*$)", linea):
+            pieza = trozo.group(0).strip()
+            de_anio = _ANIO_AGRO_UBA.search(pieza)
+            if de_anio and len(pieza) < 45:
+                anio = ["primer", "segundo", "tercer", "cuarto", "quinto", "sexto"].index(de_anio.group(1).lower()) + 1
+                continue
+            if anio is None or pieza.startswith("*") or re.match(r"(?i)(primer|segundo)\s+cuatrimestre", pieza):
+                continue
+            if re.fullmatch(r"\(\d+(?:[.,]\d+)?\)", pieza):
+                return []
+            # (A tecnicatura's CBC subjects: "Cod 5. Química (6) CBC".)
+            materia = re.fullmatch(r"(.+?)\s*\(\d+(?:[.,]\d+)?\)(?:\s+CBC)?", pieza)
+            if materia:
+                nombre = re.sub(r"(?i)^cod\.?\s*\d+\s*[-.]?\s*", "", materia.group(1))
+                if nombre[0].islower() or re.match(r"(?i)asignaturas\b", nombre):
+                    return []
+                _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
+def plan_agrarias_unca(html: str, carrera: str) -> list[tuple[str, int]]:
+    """UNCA Agrarias' one page of every career, each in a window headed by
+    its name (then "×"): "Primer Año" ... over its subjects, each with its
+    term ("Matemática I (1c)", "Computación (anual)"); "Instancias Finales"
+    goes on in the last year. The window ends at its plans' links ("Plan de
+    Estudio 2025") or at the next career's."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for basura in soup(["script", "style"]):
+        basura.decompose()
+    lineas = [clean_text(l).strip("​ ") for l in soup.get_text("\n").split("\n")]
+    lineas = [l for l in lineas if l]
+    clave = comparison_key(carrera)
+    inicio = next((i for i in range(len(lineas) - 1)
+                   if lineas[i + 1] == "×" and comparison_key(lineas[i]) == clave), None)
+    if inicio is None:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[inicio + 2:]:
+        if linea == "×" or linea == "Mas Información" or linea.startswith("Plan de Estudio"):
+            break
+        de_anio = anio_de(linea) if len(linea) < 30 else None
+        if de_anio:
+            anio = de_anio
+            continue
+        materia = re.fullmatch(r"(.+?)\s*\((?:\d\s*c|anual)\)", linea, re.I)
+        if materia and anio:
+            _agregar(materias, materia.group(1), anio)
+    return desde_el_primero(materias)
+plan_agrarias_unca.carrera = True  # type: ignore[attr-defined]

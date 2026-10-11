@@ -137,6 +137,8 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                         *((sitio, planes_sitios.plan_anios_y_renglones) for sitio in (
                             "ucema.edu.ar", "kennedy.edu.ar", "umsa.edu.ar", "ffha.unsj.edu.ar", "unisud.edu.ar",
                             "umaza.edu.ar")),
+                        # UNCA Agrarias: one page, a window per career.
+                        ("agrarias.unca.edu.ar", planes_sitios.plan_agrarias_unca),
                         # The UMendoza's "Plan de estudio" tab.
                         ("um.edu.ar", planes_sitios.plan_umendoza_pagina),
                         ("atlantida.edu.ar", planes_sitios.plan_upso),
@@ -360,6 +362,8 @@ _DOCUMENTOS_PROPIOS += (("iupa.edu.ar", planes_sitios.plan_iupa),)
 _DOCUMENTOS_PROPIOS += (("uplab.edu.ar", plan_por_columnas.leer_pdf_partido),)
 # UPE's plan sheets: the terms' cells closed by the table's rules.
 _DOCUMENTOS_PROPIOS += (("upe.edu.ar", planes_sitios.plan_upe),)
+# UBA Agronomía's plan sheets: two terms side by side, credits after each name.
+_DOCUMENTOS_PROPIOS += (("agro.uba.ar", planes_sitios.plan_agro_uba),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
@@ -652,7 +656,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             lecturas = []
             for dominio, lector in _PLANES_EN_LA_PAGINA:
                 if host.endswith(dominio):
-                    lecturas += [leido for leido in [lector(html)] if leido]
+                    # (A page of several careers: its reader takes the one it is for.)
+                    leido = (lector(html, carrera["nombre_carrera"]) if getattr(lector, "carrera", False)
+                             else lector(html))
+                    lecturas += [leido] if leido else []
             enteras = [leido for leido in lecturas if _parece_el_plan_entero(
                 carrera["nombre_carrera"], leido, carrera.get("duracion_anios"))]
             en_la_pagina = (enteras or lecturas or [en_la_pagina])[-1]
@@ -690,7 +697,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
                 otro_host = urlparse(nuevo).netloc.removeprefix("www.")
                 for dominio, lector in _PLANES_EN_LA_PAGINA:
                     if not del_plan and otro_host.endswith(dominio):
-                        del_plan = lector(html_del_plan)
+                        del_plan = (lector(html_del_plan, carrera["nombre_carrera"])
+                                    if getattr(lector, "carrera", False) else lector(html_del_plan))
                 if del_plan:
                     de_la_pagina[carrera["id"]] = del_plan
                     pagina_del_plan[carrera["id"]] = nuevo
@@ -777,7 +785,17 @@ def main() -> None:
     from rumbo_scraper.database.supabase import get_supabase_client
     client = get_supabase_client()
     if args.apply:
-        planes = json.loads(HALLADOS.read_text())
+        # The preview's plans, of the universities asked for, and never one
+        # for a career that has its subjects by now (a second --apply, or a
+        # preview of other universities run since, wrote the file).
+        from rumbo_scraper.database.supabase import select_all
+        planes = {cid: plan for cid, plan in json.loads(HALLADOS.read_text()).items()
+                  if not args.universidades or plan["universidad"] in args.universidades}
+        if planes:
+            ya = {m["carrera_id"] for m in select_all(client.table("materias").select("carrera_id").in_(
+                "carrera_id", [plan["carrera"]["id"] for plan in planes.values()]))}
+            for cid in [cid for cid, plan in planes.items() if plan["carrera"]["id"] in ya]:
+                print(f"(ya tiene materias: {planes.pop(cid)['carrera']['nombre_carrera']})", flush=True)
     else:
         planes = leer(client, set(args.universidades))
         HALLADOS.write_text(json.dumps(planes, ensure_ascii=False, indent=1) + "\n")
