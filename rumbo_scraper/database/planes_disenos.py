@@ -159,6 +159,17 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://ifdc3-juj.infd.edu.ar/sitio/wp-content/uploads/sitio/Disenio_curricular_E_primaria.pdf",
             planes_sitios.plan_estructura_jujuy),
     },
+    # Santiago del Estero's (2015), as its institutes publish them: the
+    # ISJEM its Primaria's structure, the ENS Belgrano its Inicial's design.
+    "Santiago del Estero": {
+        "Profesorado de Educación Primaria": (
+            "https://isjem-sgo.infd.edu.ar/sitio/wp-content/uploads/2020/04/"
+            "ESTRUCTURA-CURRICULAR-PARA-EL-PROFESORADO-DE-EDUCACI%C3%93N-PRIMARIA.pdf",
+            planes_sitios.plan_tablas_por_anio),
+        "Profesorado de Educación Inicial": (
+            "https://ensbelgrano-sgo.infd.edu.ar/sitio/wp-content/uploads/sitio/2015-DISEN_O_Educacion_Inicial_v1.pdf",
+            planes_sitios.plan_tablas_por_anio),
+    },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },
@@ -183,11 +194,15 @@ def leer_diseno(visitante: Any, url: str, lector: Any, carrera: str) -> list[tup
         respuesta = visitante.client.get(url)
         archivo.write_bytes(respuesta.content if respuesta.status_code == 200 else b"")
         time.sleep(PAUSA)
-    modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
-    texto = subprocess.run(["pdftotext", modo, str(archivo), "-"], capture_output=True, text=True,
-                           timeout=300).stdout
+    if getattr(lector, "ruta", False):
+        # A reader of the PDF's own tables takes the file.
+        leidas = lector(str(archivo))
+    else:
+        modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
+        leidas = lector(subprocess.run(["pdftotext", modo, str(archivo), "-"], capture_output=True, text=True,
+                                       timeout=300).stdout)
     materias, vistas = [], set()
-    for nombre, anio in lector(texto):
+    for nombre, anio in leidas:
         if not _FUERA_DEL_PLAN.search(nombre) and nombre.lower() not in vistas:
             vistas.add(nombre.lower())
             materias.append((nombre, anio))

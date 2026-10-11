@@ -1666,6 +1666,39 @@ def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+_ANIO_DE_TABLA = re.compile(r"(?i)^\s*(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\b")
+_COLUMNA_DE_UNIDADES = re.compile(r"(?i)^(unidades?|espacios?)\s+curricular(es)?$|^asignaturas?$")
+
+
+def plan_tablas_por_anio(ruta: str) -> list[tuple[str, int]]:
+    """A design laid out as a table per year (``pdfplumber``), the year in
+    its first row ("PRIMER AÑO (1056 horas cátedras – 704 horas reloj)") and
+    a column of its units ("UNIDADES CURRICULARES"; Santiago del Estero's
+    Primaria). The institution's own slots ("1 espacio cuatrimestral") are
+    not a unit of the plan."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.extract_tables():
+                filas = [[" ".join((c or "").split()) for c in fila] for fila in tabla]
+                anio = next((_ORDINALES[m.group(1).lower()] for fila in filas[:1] for c in fila
+                             if (m := _ANIO_DE_TABLA.match(c))), None)
+                columna = next(((i, j) for i, fila in enumerate(filas[:4]) for j, c in enumerate(fila)
+                                if _COLUMNA_DE_UNIDADES.match(c)), None)
+                if not anio or not columna:
+                    continue
+                for fila in filas[columna[0] + 1:]:
+                    nombre = fila[columna[1]] if columna[1] < len(fila) else ""
+                    if nombre and not re.match(r"(?i)^\d+\s+espacios?\b", nombre):
+                        _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
+plan_tablas_por_anio.ruta = True  # type: ignore[attr-defined]
+
+
 _ANIO_UHIBA = re.compile(r"(?i)^\s+(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\s*$")
 
 
@@ -3841,3 +3874,87 @@ def plan_fca_unju(texto: str) -> list[tuple[str, int]]:
         return []
     return materias
 plan_fca_unju.respaldo = True  # type: ignore[attr-defined]  # its licenciaturas go to the general reader
+
+
+def plan_upe(ruta: str) -> list[tuple[str, int]]:
+    """UPE's plan sheets: a row per subject, its number left of the names
+    under "Asignatura" and its hours under "Horaria"; a name the cell wrapped
+    sits above, beside and below its number ("Fundamentos de" / "7 la Cadena
+    de" / "Suministros"), so each line of the names goes to the row whose
+    number is nearest. The terms ("3° Cuatrimestre", level or turned on its
+    side) sit in the margin, in a cell its rows' height that the table's
+    rules close (``-bbox-layout`` gives the words, pdfplumber the rules): a
+    row's term is the one whose label falls between the same two rules. A
+    term's year is half its number, rounded up; "Gestión Logística l" is
+    its roman "I"."""
+    import subprocess
+
+    import pdfplumber
+
+    cajas = subprocess.run(["pdftotext", "-bbox-layout", ruta, "-"], capture_output=True,
+                           text=True, timeout=60).stdout
+    with pdfplumber.open(ruta) as pdf:
+        reglas = {n: [(e["top"], e["x0"], e["x1"]) for e in pagina.horizontal_edges]
+                  for n, pagina in enumerate(pdf.pages)}
+    return plan_upe_de(cajas, reglas)
+plan_upe.ruta = True  # type: ignore[attr-defined]
+
+
+def plan_upe_de(cajas: str, reglas: dict[int, list[tuple[float, float, float]]]) -> list[tuple[str, int]]:
+    """``plan_upe`` on the text's boxes and each page's horizontal rules (top, left, right)."""
+    palabras = []
+    for pagina, contenido in enumerate(re.findall(r"<page\b.*?</page>", cajas or "", re.S)):
+        for x, y, x2, alto, texto in re.findall(
+                r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)</word>', contenido):
+            palabras.append((pagina, float(x), float(y), float(x2), float(alto), unicodedata.normalize("NFKC", texto)))
+    asignatura = next((x for _, x, _, _, _, t in palabras if t == "Asignatura"), None)
+    horaria = next((x for _, x, _, _, _, t in palabras if t == "Horaria"), None)
+    if not asignatura or not horaria:
+        return []
+    # The rows' numbers, left of "Asignatura"; the names start right of the first.
+    filas = sorted((p, y, int(t)) for p, x, y, _, _, t in palabras
+                   if re.fullmatch(r"\d{1,2}", t) and asignatura - 45 <= x < asignatura - 10)
+    if not filas or [n for _, _, n in filas] != list(range(1, len(filas) + 1)):
+        return []
+    izquierda = min(x for p, x, y, _, _, t in palabras if (p, y, t) == (filas[0][0], filas[0][1], "1")) + 10
+    # The names' lines: words under "Asignatura", by their line.
+    renglones: dict[tuple[int, int], list[tuple[float, str]]] = {}
+    for p, x, y, _, _, t in palabras:
+        if izquierda <= x < horaria - 3 and not re.fullmatch(r"\d+", t):
+            renglones.setdefault((p, round(y)), []).append((x, t))
+    nombres: dict[int, list[tuple[float, str]]] = {}
+    for (p, y), piezas in renglones.items():
+        cerca = min(((abs(fy - y), n) for fp, fy, n in filas if fp == p), default=None)
+        if not cerca or cerca[0] > 22:
+            continue
+        nombres.setdefault(cerca[1], []).append((y, " ".join(t for _, t in sorted(piezas))))
+    # The terms' labels ("Cuatrimestre" beside or above its "1°"): their left edge, halfway down.
+    terminos = []
+    for i, (p, x, y, x2, alto, t) in enumerate(palabras):
+        numero = re.fullmatch(r"(\d)\s*[°º]", t)
+        vecinas = [v for v in palabras[max(i - 1, 0):i + 2] if v[5].lower() == "cuatrimestre" and v[0] == p
+                   and (abs(v[2] - y) < 3 and 0 < v[1] - x < 30 or abs(v[1] - x) < 3 and abs(v[2] - y) < 80)]
+        if numero and vecinas and x < izquierda - 25:
+            v = vecinas[0]
+            terminos.append((p, min(x, v[1]) + 3, (min(y, v[2]) + max(alto, v[4])) / 2,
+                             int(numero.group(1))))
+    if sorted(c for *_, c in terminos) != list(range(1, len(terminos) + 1)) or not terminos:
+        return []
+    # Each label's cell: between the nearest rules above and below it that cross its column.
+    tramos = []
+    for p, x, y, c in terminos:
+        cortes = [top for top, x0, x1 in reglas.get(p, []) if x0 <= x <= x1]
+        arriba = max((top for top in cortes if top < y), default=None)
+        abajo = min((top for top in cortes if top > y), default=None)
+        if arriba is None or abajo is None:
+            return []
+        tramos.append((p, arriba, abajo, c))
+    materias: list[tuple[str, int]] = []
+    for p, y, numero in filas:
+        suyo = [c for tp, arriba, abajo, c in tramos if tp == p and arriba < y < abajo]
+        nombre = clean_text(" ".join(t for _, t in sorted(nombres.get(numero, []))))
+        nombre = re.sub(r"\s(l{1,3}|lV|Vl{0,3})$", lambda m: " " + m.group(1).replace("l", "I"), nombre)
+        if len(suyo) != 1 or not nombre:
+            return []
+        _agregar(materias, nombre, (suyo[0] + 1) // 2)
+    return desde_el_primero(materias)
