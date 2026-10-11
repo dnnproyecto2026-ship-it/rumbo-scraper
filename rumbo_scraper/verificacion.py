@@ -57,8 +57,9 @@ def es_oficial(url: str | None, sitio_web: str | None) -> bool:
     return dominio(url) == propio or dominio(url) in OTROS_DOMINIOS.get(propio, ())
 
 
-# A word the PDF broke at the end of a line: "Alimen- tos".
-_PARTIDA = re.compile(r"(\w)-\s+(?=\w)")
+# A word the PDF broke at the end of a line: "Alimen- tos" (not a number's
+# dash: "37- Didáctica de las Ciencias Sociales III", Mendoza's units).
+_PARTIDA = re.compile(r"([^\W\d_])-\s+(?=[^\W\d_])")
 _JSON_ESCAPE = re.compile(r"\\u([0-9a-fA-F]{4})")
 
 

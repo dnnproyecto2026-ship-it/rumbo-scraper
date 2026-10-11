@@ -89,11 +89,15 @@ class Fuentes:
             self.leidas[url] = self.registro(base, clave, valor)
             return self.leidas[url]
         archivo = CACHE / (hashlib.md5(url.encode()).hexdigest() + ".json")
+        leida = None
         if archivo.exists():
-            leida = json.loads(archivo.read_text())
-        elif not avalada and not v.es_oficial(url, self.sitio_web):
+            try:
+                leida = json.loads(archivo.read_text())
+            except ValueError:
+                pass  # half written by another run at the same time: read again
+        if leida is None and not avalada and not v.es_oficial(url, self.sitio_web):
             leida = {"ok": False, "html": "", "texto": ""}
-        else:
+        elif leida is None:
             leida = self._traer(url)
             archivo.write_text(json.dumps(leida, ensure_ascii=False))
             time.sleep(PAUSA)
