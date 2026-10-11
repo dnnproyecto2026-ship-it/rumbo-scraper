@@ -38,5 +38,19 @@ class PlanUpe(unittest.TestCase):
         self.assertEqual(plan_upe_de(cajas, {0: []}), [])
 
 
+
+class PlanUmendozaPagina(unittest.TestCase):
+    def test_pestania_del_plan(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_umendoza_pagina
+
+        html = """<div class="fl-tabs-panel-content"><p>Presentación de la carrera</p></div>
+<div class="fl-tabs-panel-content"><h2>Plan de estudios</h2><p><em>(s) = semestral.</em></p>
+<h3>1er Año</h3><p>Derecho Romano (s)<br/>Introducción al Derecho (s) (p)</p>
+<h3><strong>2do Año</strong></h3><p><strong>Ciclo de Instrumentación</strong><br/>Derecho Civil – Parte General (a)</p>
+<h3>CONDICIÓN FINAL DE EGRESO</h3><p>Trabajo Final de Investigación (a)</p></div>"""
+        self.assertEqual(plan_umendoza_pagina(html), [
+            ("Derecho Romano", 1), ("Introducción al Derecho", 1), ("Derecho Civil – Parte General", 2)])
+
+
 if __name__ == "__main__":
     unittest.main()

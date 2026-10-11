@@ -1592,22 +1592,58 @@ _RESTO_IUPA = re.compile(r"^\s{4,}([A-Za-zÁÉÍÓÚÑáéíóúñ(][^\d●]*?)\
 def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
     """IUPA's plans (``pdftotext -layout``): "PRIMER AÑO" alone over rows
     "01   Educación Musical I   2   64   X   06": the code, the name, its
-    hours, its term and its prerequisites. A name too long for its cell
-    wraps: it goes on in the line below when it is not done (it ends on
-    "de", "y", an open bracket, or the row's hours went to a line of their
-    own), or it starts in the line above when the row's own part is none or
-    starts in lower case ("Taller integrado de procedimientos y" over
-    "05   técnicas del lenguaje visual I"). An orientation's own subjects
+    hours, its term and its prerequisites. An orientation's own subjects
     ("01-1 Canto I (sólo orientación en Canto)") are not the plan every
     student takes, and the free hours are not a subject."""
+    def anio_de(linea: str) -> int | None:
+        encabezado = _ANIO_IUPA.match(linea)
+        return _ORDINALES[encabezado.group(1).lower()] if encabezado else None
+
+    # The name runs up to the hours (a justified name has wide gaps:
+    # "Taller     Educación    mediada       por").
+    return _filas_con_codigo(texto_con_columnas, anio_de, re.compile(r"\s+(?=\d+(?:,\d)?\s+\d+\b)|\s{2,}(?=[●Xx\d])"),
+                             _HORAS_IUPA, _RESTO_IUPA)
+
+
+_ANIO_CON_NUMERO = re.compile(r"^\s*(\d)\s*[º°]\s*A[ñn]o\s*$")
+_REGIMEN_DE_FILA = r"(?:Anual|Cuatrimestral|Semestral)\b"
+_PIEZA_CON_REGIMEN_DE_FILA = re.compile(r"^\s{4,}([A-Za-zÁÉÍÓÚÑáéíóúñ(][^\d●]*?)\s*(?:\s{2,}(?:" + _REGIMEN_DE_FILA + r"|\d).*)?$")
+
+
+def plan_estructura_con_regimen(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """A design's structure as rows "9   Práctica Docente I ...   Anual
+    Taller   5 horas" under "1º Año" (Corrientes' Primaria): the unit's
+    number, its name up to its régimen, its format and hours. The
+    institution's own slot ("Propuesta variable o complementaria 1") is not
+    a unit of the plan."""
+    def anio_de(linea: str) -> int | None:
+        encabezado = _ANIO_CON_NUMERO.match(linea)
+        return int(encabezado.group(1)) if encabezado else None
+
+    materias = _filas_con_codigo(texto_con_columnas, anio_de, re.compile(r"\s{2,}(?=" + _REGIMEN_DE_FILA + ")"),
+                                 re.compile(_REGIMEN_DE_FILA), _PIEZA_CON_REGIMEN_DE_FILA, sangria=30)
+    return desde_el_primero([(n, a) for n, a in materias if not re.match(r"(?i)propuesta variable", n)])
+
+
+def _filas_con_codigo(texto_con_columnas: str, anio_de: Any, corte: re.Pattern, datos: re.Pattern,
+                      pieza_re: re.Pattern, sangria: int = 1000) -> list[tuple[str, int]]:
+    """Rows of a plan numbered under each year's heading, the name before
+    the row's other columns (``corte`` ends it; ``datos`` is what a row
+    without a name starts with). A name too long for its cell wraps: it
+    goes on in the line below when it is not done (it ends on "de", "y", an
+    open bracket, or the row's other columns went to a line of their own),
+    or it starts in the line above when the row's own part is none or
+    starts in lower case ("Taller integrado de procedimientos y" over
+    "05   técnicas del lenguaje visual I"). A loose piece further right than
+    ``sangria`` is another column's, not a name's."""
     filas: list[dict] = []
     anio = None
     ultima = -2  # the line the last row's name was last seen on
     pendiente: tuple[int, str] | None = None  # a loose piece of name, and its line
     for i, linea in enumerate(texto_con_columnas.splitlines()):
-        encabezado = _ANIO_IUPA.match(linea)
-        if encabezado:
-            anio, pendiente = _ORDINALES[encabezado.group(1).lower()], None
+        nuevo = anio_de(linea)
+        if nuevo:
+            anio, pendiente = nuevo, None
             continue
         if not anio:
             continue
@@ -1617,17 +1653,18 @@ def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
             continue
         if fila and not _ORIENTACION_IUPA.match(linea):
             resto = fila.group(2).strip()
-            # The name runs up to the hours (a justified name has wide gaps:
-            # "Taller     Educación    mediada       por").
-            propio = " ".join(re.split(r"\s+(?=\d+(?:,\d)?\s+\d+\b)|\s{2,}(?=[●Xx\d])", resto)[0].split())
-            if not re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", propio):
-                if not _HORAS_IUPA.match(resto):
+            propio = " ".join(corte.split(resto)[0].split())
+            if not re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", propio) or datos.match(propio):
+                if not datos.match(resto):
                     continue  # a page's number
                 propio = ""
             partes = [propio]
-            if pendiente and pendiente[0] == i - 1 and (not propio or propio[0].islower() or _SIN_TERMINAR_IUPA.search(pendiente[1])):
+            arriba = bool(pendiente and pendiente[0] == i - 1 and (
+                not propio or propio[0].islower() or _SIN_TERMINAR_IUPA.search(pendiente[1])))
+            if arriba:
                 partes.insert(0, pendiente[1])
-            filas.append({"partes": partes, "anio": anio, "abierta": not propio or not _HORAS_IUPA.search(resto)})
+            # A name begun above the row is likely to end below it, too.
+            filas.append({"partes": partes, "anio": anio, "abierta": not propio or arriba or not datos.search(resto)})
             ultima, pendiente = i, None
             continue
         if re.fullmatch(r"[\s\d,●Xx]*", linea):
@@ -1635,8 +1672,9 @@ def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
             if filas and ultima == i - 1 and linea.strip():
                 ultima = i
             continue
-        pieza = _RESTO_IUPA.match(linea)
-        if not pieza or _ORIENTACION_IUPA.match(linea) or re.match(r"(?i)\s*total\b", linea):
+        pieza = pieza_re.match(linea)
+        if (not pieza or pieza.start(1) > sangria or _ORIENTACION_IUPA.match(linea)
+                or re.match(r"(?i)\s*total\b", linea)):
             pendiente = None
             continue
         texto = " ".join(pieza.group(1).split())
@@ -3959,3 +3997,33 @@ def plan_upe_de(cajas: str, reglas: dict[int, list[tuple[float, float, float]]])
             return []
         _agregar(materias, nombre, (suyo[0] + 1) // 2)
     return desde_el_primero(materias)
+
+
+def plan_umendoza_pagina(html: str) -> list[tuple[str, int]]:
+    """The UMendoza's career pages: the "Plan de estudio" tab, a heading per
+    year ("1er Año", "2do Año") over a paragraph of its subjects, one a line,
+    each marked how it is taught ("(s)", "(a)", "(p)"). A heading that is not
+    a year ("CONDICIÓN FINAL DE EGRESO", "ÁREAS DE ORIENTACIÓN") ends the plan."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for panel in soup.select(".fl-tabs-panel-content"):
+        materias: list[tuple[str, int]] = []
+        anio = None
+        for elemento in panel.find_all(["h2", "h3", "h4", "p"]):
+            texto = clean_text(elemento.get_text(" "))
+            if elemento.name != "p":
+                if re.match(r"(?i)plan de estudios?\b", texto) and anio is None:
+                    continue
+                anio = anio_de(texto)
+                if anio is None:
+                    break
+                continue
+            if anio is None:
+                continue
+            for linea in elemento.get_text("\n").split("\n"):
+                linea = re.sub(r"(?:\s*\([sapSAP]\))+\s*$", "", clean_text(linea))
+                # (Diseño's years head their subjects with their cycle: "Ciclo de Información".)
+                if linea and not re.fullmatch(r"(?i)ciclo de \w+", linea):
+                    _agregar(materias, linea, anio)
+        if materias:
+            return desde_el_primero(materias)
+    return []
