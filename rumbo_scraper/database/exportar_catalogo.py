@@ -94,9 +94,16 @@ _SU_PAGINA_DICE_CICLO = re.compile(
     r"|\bcarrera:? [a-z ,]{3,90}? ciclo de complementacion curricular titulo final\b")
 
 
+# The UTN's catalogue files each career under its kind, in the address:
+# "id_tipos_carreras=2" is its "Ciclos de Complementación Curricular".
+_CICLO_DE_LA_UTN = re.compile(r"^https?://(?:www\.)?utn\.edu\.ar/.*[?&]id_tipos_carreras=2(?:&|$)")
+
+
 def la_pagina_dice_ciclo(url: str | None) -> bool:
     import hashlib
 
+    if url and _CICLO_DE_LA_UTN.match(url):
+        return True
     if not url or urlparse(url).fragment:
         return False
     archivo = Path("data/verificacion") / (hashlib.md5(url.encode()).hexdigest() + ".json")

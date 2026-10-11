@@ -23,6 +23,10 @@ class Ciclos(unittest.TestCase):
         self.assertTrue(_SU_PAGINA_DICE_CICLO.search(
             "ficha tecnica de la carrera carrera licenciatura en lengua inglesa ciclo de complementacion curricular titulo final"))
         self.assertFalse(la_pagina_dice_ciclo("https://undelta.edu.ar/carreras/#licenciatura-en-agua"))
+        self.assertTrue(la_pagina_dice_ciclo(
+            "https://www.utn.edu.ar/es/estudiar-utn?tipo_busqueda=carreras&id_tipos_carreras=2&idSeleccion=32"))
+        self.assertFalse(la_pagina_dice_ciclo(
+            "https://www.utn.edu.ar/es/estudiar-utn?tipo_busqueda=carreras&id_tipos_carreras=3&idSeleccion=32"))
 
     def test_por_su_descripcion(self):
         self.assertTrue(es_un_ciclo("Licenciatura en Historia",
