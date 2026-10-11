@@ -12,7 +12,7 @@ are read from that page afterwards (`completar_posgrados`, `planes_posgrados`).
 The preview keeps what it found in ``data/paginas_posgrados.json``;
 ``--apply`` writes from that file.
 
-    python -m rumbo_scraper.database.paginas_posgrados [UBA UNPA ...]
+    python -m rumbo_scraper.database.paginas_posgrados [--sitemaps] [UBA UNPA ...]
     python -m rumbo_scraper.database.paginas_posgrados --apply
 """
 
@@ -69,7 +69,65 @@ def enlaces_propios(html: str, url: str, programas: list[str], sitio_web: str) -
     return {p: d for p, d in hallados.items() if usos[d] == 1}
 
 
-def leer(client: Any, solo: set[str]) -> list[dict[str, Any]]:
+_VACIAS = frozenset("de del la las los el y e en a con para por o u al".split())
+
+
+def _palabras(texto: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z0-9]+", comparison_key(texto)) if w not in _VACIAS}
+
+
+def direcciones_del_sitio(visitante: Any, url: str) -> list[str]:
+    """Every page the site's sitemaps list (WordPress's, Yoast's, robots')."""
+    from urllib.parse import urlparse
+
+    base = f"{urlparse(url).scheme}://{urlparse(url).netloc}"
+    cola = [base + "/sitemap.xml", base + "/sitemap_index.xml", base + "/wp-sitemap.xml"]
+    try:
+        cola += re.findall(r"(?im)^sitemap:\s*(\S+)", visitante.client.get(base + "/robots.txt").text)
+    except Exception:
+        pass
+    vistas: set[str] = set()
+    paginas: list[str] = []
+    while cola and len(vistas) < 60:
+        mapa = cola.pop(0)
+        if mapa in vistas:
+            continue
+        vistas.add(mapa)
+        try:
+            respuesta = visitante.client.get(mapa)
+            texto = respuesta.text if respuesta.status_code == 200 else ""
+        except Exception:
+            texto = ""
+        time.sleep(PAUSA)
+        for direccion in re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", texto):
+            direccion = direccion.replace("&amp;", "&")
+            (cola if re.search(r"\.xml(?:\.gz)?$|sitemap", direccion) else paginas).append(direccion)
+    return paginas
+
+
+def por_su_direccion(paginas: list[str], programas: list[str]) -> dict[str, str]:
+    """Programme -> the one page of the sitemap whose address spells every
+    word of its name, and few more ("…/maestria-en-salud-publica/")."""
+    from urllib.parse import unquote, urlparse
+
+    # A news item or an event about the programme is not its page.
+    noticia = re.compile(r"(?i)/(?:noticias?|novedades|agenda|eventos?|calendarios?|prensa|blog)/|"
+                         r"abren|inscripci|se-dictar|acredit|convocatoria|presentaci")
+    rutas = [(p, _palabras(unquote(urlparse(p).path).replace("-", " ").replace("_", " ").replace("/", " ")))
+             for p in paginas if not _NO_ES_SU_PAGINA.search(p) and not noticia.search(urlparse(p).path)]
+    hallados = {}
+    for programa in programas:
+        palabras = _palabras(programa)
+        if len(palabras) < 3:
+            continue
+        candidatas = {p for p, r in rutas if palabras <= r and len(r) <= len(palabras) + 3}
+        if len(candidatas) == 1:
+            hallados[programa] = candidatas.pop()
+    usos = Counter(hallados.values())
+    return {p: d for p, d in hallados.items() if usos[d] == 1}
+
+
+def leer(client: Any, solo: set[str], sitemaps: bool = False) -> list[dict[str, Any]]:
     from rumbo_scraper.database.supabase import select_all
     from rumbo_scraper.spiders.visitante import Visitante
 
@@ -89,8 +147,19 @@ def leer(client: Any, solo: set[str]) -> list[dict[str, Any]]:
             universidad = universidades[universidad_id]
             html = visitante.get(url) or ""
             time.sleep(PAUSA)
-            propios = enlaces_propios(html, url, [p["nombre_programa"] for p in programas],
-                                      universidad["sitio_web"] or "")
+            nombres = [p["nombre_programa"] for p in programas]
+            propios = enlaces_propios(html, url, nombres, universidad["sitio_web"] or "")
+            faltan = [n for n in nombres if n not in propios]
+            if sitemaps and faltan:
+                # The page lists them without links: the site's sitemaps may
+                # still have each one's page, which must then name it.
+                from rumbo_scraper.parsers.datos_posgrado import nombra_el_programa
+
+                for nombre, destino in por_su_direccion(direcciones_del_sitio(visitante, url), faltan).items():
+                    if es_oficial(destino, universidad["sitio_web"] or "") and \
+                            nombra_el_programa(visitante.get(destino) or "", nombre):
+                        propios[nombre] = destino
+                    time.sleep(PAUSA)
             for p in programas:
                 if p["nombre_programa"] in propios:
                     cambios.append({"id": p["id"], "universidad": universidad["nombre_corto"],
@@ -104,6 +173,8 @@ def leer(client: Any, solo: set[str]) -> list[dict[str, Any]]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Página propia de los posgrados que comparten una lista")
     parser.add_argument("--apply", action="store_true", help=f"Escribir en Supabase lo que dejó la vista previa en {HALLADOS}")
+    parser.add_argument("--sitemaps", action="store_true",
+                        help="Buscar también en los sitemaps del sitio la página que la lista no enlaza")
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
     args = parser.parse_args()
 
@@ -116,7 +187,7 @@ def main() -> None:
             client.table("posgrados").update({"url_oficial": cambio["url_oficial"]}).eq(
                 "id", cambio["id"]).eq("url_oficial", cambio["antes"]).execute()
     else:
-        cambios = leer(client, set(args.universidades))
+        cambios = leer(client, set(args.universidades), args.sitemaps)
         HALLADOS.write_text(json.dumps(cambios, ensure_ascii=False, indent=1) + "\n")
     print(f"Posgrados con página propia: {len(cambios)} "
           f"{dict(Counter(c['universidad'] for c in cambios))}{' (escritos)' if args.apply else ''}")
