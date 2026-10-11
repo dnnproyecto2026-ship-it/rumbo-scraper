@@ -4027,3 +4027,20 @@ def plan_umendoza_pagina(html: str) -> list[tuple[str, int]]:
         if materias:
             return desde_el_primero(materias)
     return []
+
+
+def plan_fhu_unse(html: str) -> list[tuple[str, int]]:
+    """The UNSE Humanidades' "Asignaturas" page of each career: the subjects
+    under their years ("1º AÑO", "PRIMER AÑO"), maybe numbered in order
+    ("12 - Obstetricia 1") and grouped in terms ("3º MODULO", not subjects).
+    A page whose names run into each other ("Finanzas PúblicasIngl", its
+    Contador's) is not read."""
+    materias = []
+    for nombre, anio in plan_por_anios(html):
+        if re.fullmatch(r"(?i)\d+\s*[º°]\s*m[oó]dulo", nombre):
+            continue
+        nombre = re.sub(r"^\d{1,2}\s*[-–.]\s*", "", nombre)
+        if re.search(r"[a-záéíóúñ][A-ZÁÉÍÓÚÑ]", nombre):
+            return []
+        _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)

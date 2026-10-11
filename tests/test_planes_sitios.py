@@ -315,6 +315,28 @@ class PlanIupa(unittest.TestCase):
             ("Instrumento Aplicado B II", 2)])
 
 
+class PlanEstructuraConRegimen(unittest.TestCase):
+    def test_nombres_partidos_y_espacios_de_la_institucion(self):
+        texto = """
+   1º Año
+   1    Pedagogía                                       Cuatrimestral   Materia      6 horas
+        Práctica Docente I: Métodos y Técnicas de
+   2                                                    Anual           Taller       5 horas
+        Recolección / Instituciones Educativas
+   2º Año
+        Práctica Docente II: Programación de la
+   3    Enseñanza/ Curriculum y Organizaciones          Anual           Taller       6 horas
+        Escolares
+                                                                        Seminario/
+   4    Propuesta variable o complementaria 1           Cuatrimestral                3 horas
+                                                                        Taller
+"""
+        self.assertEqual(p.plan_estructura_con_regimen(texto), [
+            ("Pedagogía", 1),
+            ("Práctica Docente I: Métodos y Técnicas de Recolección / Instituciones Educativas", 1),
+            ("Práctica Docente II: Programación de la Enseñanza/ Curriculum y Organizaciones Escolares", 2)])
+
+
 class PlanUnahur(unittest.TestCase):
     def test_a_wrapped_name_is_the_lines_around_its_row(self):
         texto = "\n".join([

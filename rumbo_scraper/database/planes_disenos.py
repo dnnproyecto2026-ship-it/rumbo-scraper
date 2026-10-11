@@ -170,6 +170,13 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://ensbelgrano-sgo.infd.edu.ar/sitio/wp-content/uploads/sitio/2015-DISEN_O_Educacion_Inicial_v1.pdf",
             planes_sitios.plan_tablas_por_anio),
     },
+    # Corrientes' Primaria, its structure as the ISFD "Ernesto Sábato" publishes it.
+    "Corrientes": {
+        "Profesorado de Educación Primaria": (
+            "https://isfdsabato-crr.infd.edu.ar/sitio/wp-content/uploads/2020/03/"
+            "Dise%C3%B1o-Curricular-Jurisdiccional-%E2%80%93-Profesorado-de-primaria.pdf",
+            planes_sitios.plan_estructura_con_regimen),
+    },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },
