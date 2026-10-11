@@ -187,7 +187,10 @@ _FUERA_DEL_PLAN = re.compile(r"(?i)^cbc$|\s(?-i:CN)$|\(optativa\)|^t[íi]tulo\s*
                              # A term's heading taken for a subject ("Cuatrimestre 1-1", "1er. Cuatrimestre"),
                              # an elective's slot ("Electiva 3 (a elección de la institución)"), the form.
                              r"|^cuatrimestre\s+\d|^\d+\s*(?:er|do|ro|to|vo|mo)?\.?\s*cuatrimestre\b"
-                             r"|^(?:electiva|optativa)\s+\d|^ficha de inscripci|^director(?:a)? de (?:la )?carrera$|^testimonios$")
+                             r"|^(?:electiva|optativa)\s+\d|^ficha de inscripci|^director(?:a)? de (?:la )?carrera$|^testimonios$"
+                             # The heading of the plan's last years ("Ciclo Superior: Orientación en
+                             # Canto Lírico", UNR's music), and a brochure's selling points (UCU).
+                             r"|^ciclo superior\b|^respaldo institucional$|^educaci[óo]n a distancia con experiencia")
 
 
 def _nombra(texto: str, carrera: str) -> bool:
