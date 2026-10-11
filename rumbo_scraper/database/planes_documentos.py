@@ -137,6 +137,8 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                         *((sitio, planes_sitios.plan_anios_y_renglones) for sitio in (
                             "ucema.edu.ar", "kennedy.edu.ar", "umsa.edu.ar", "ffha.unsj.edu.ar", "unisud.edu.ar",
                             "umaza.edu.ar")),
+                        # UNT Filosofía y Letras: the Profesorado's and the Licenciatura's plans on one page.
+                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
                         # UNCA Agrarias: one page, a window per career.
                         ("agrarias.unca.edu.ar", planes_sitios.plan_agrarias_unca),
                         # The UMendoza's "Plan de estudio" tab.
@@ -220,6 +222,10 @@ _TERMINA_CORTADA = re.compile(r"(?i)\s(de|del|la|las|los|el|y|e|o|u|en|con|para|
 
 
 _PLAN_EN_UN_MARCO = (("fhycs.unju.edu.ar", planes_sitios.plan_list_group),)
+# The UDC's pages of a Licenciatura and its Tecnicatura: each career's part
+# (after the general reader, which gave both the same plan).
+_PLANES_EN_LA_PAGINA += (("udc.edu.ar", planes_sitios.plan_udc),)
+
 _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_lista),
                         ("ucalp.edu.ar", "plan de estudio", planes_sitios.plan_ucalp),
                         # UNSa's Económicas: the career's first plan listed, its newest.

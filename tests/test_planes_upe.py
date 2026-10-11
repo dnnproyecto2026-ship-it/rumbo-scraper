@@ -112,5 +112,41 @@ class PlanAgrariasUnca(unittest.TestCase):
         self.assertEqual(plan_agrarias_unca(html, "Ingeniería en Alimentos"), [])
 
 
+class PlanFiloUnt(unittest.TestCase):
+    HTML = """<div><div>1° y 2° año · iguales en los dos títulos</div>
+<div><div><div><div>1°</div><div>AÑO</div></div><div>Lógica</div><div>Ética</div></div></div>
+<details><summary><div><div>Profesorado en Filosofía</div><div>Carga horaria total: 3000 h</div></div><div>+</div></summary>
+<p><span><span><span><span>2°</span><span>Año</span></span><span>Didáctica</span></span></span></p></details>
+<details><summary><div><div>Licenciatura en Filosofía (Plan 2018)</div><div>3 materias</div></div></summary>
+<div><div><div><div>2°</div><div>AÑO</div></div><div><div>Metafísica</div></div></div></div></details>
+<details><summary><div><div>Licenciatura en Francés · Orientación Literatura</div></div></summary></details></div>"""
+
+    def test_el_plan_de_cada_titulo(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_filo_unt
+
+        self.assertEqual(plan_filo_unt(self.HTML, "Profesorado de Filosofía"),
+                         [("Lógica", 1), ("Ética", 1), ("Didáctica", 2)])
+        # Its heading says 3 subjects, its column has 1.
+        self.assertEqual(plan_filo_unt(self.HTML, "Licenciatura en Filosofía"), [])
+        self.assertEqual(plan_filo_unt(self.HTML, "Licenciatura en Francés"), [])
+
+
+class PlanUdc(unittest.TestCase):
+    def test_la_parte_de_cada_carrera(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_udc
+
+        def anio(titulo, contenido):
+            return (f'<div class="elementor-toggle-item"><div class="elementor-tab-title"><a>{titulo}</a></div>'
+                    f'<div class="elementor-tab-content">{contenido}</div></div>')
+        html = (anio("PNU", "<ul><li>Matemáticas</li></ul>")
+                + anio("1er Año", "<ul><li>Programación 1</li><li>Trabajo final (<strong>sólo para la Tecnicatura</strong>)</li>"
+                       "<li>Taller de Inglés I – 1er. cuatrimestre</li></ul>")
+                + anio("2do Año", "<p>*Las siguientes materias son exclusivas de la Licenciatura*</p><ul><li>Tesis</li></ul>"))
+        self.assertEqual(plan_udc(html, "Tecnicatura Universitaria en Redes"),
+                         [("Programación 1", 1), ("Trabajo final", 1), ("Taller de Inglés I", 1)])
+        self.assertEqual(plan_udc(html, "Licenciatura en Redes"),
+                         [("Programación 1", 1), ("Taller de Inglés I", 1), ("Tesis", 2)])
+
+
 if __name__ == "__main__":
     unittest.main()
