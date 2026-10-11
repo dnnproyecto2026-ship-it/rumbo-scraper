@@ -122,7 +122,7 @@ class PlanFiloUnt(unittest.TestCase):
 <details><summary><div><div>Licenciatura en Francés · Orientación Literatura</div></div></summary></details></div>"""
 
     def test_el_plan_de_cada_titulo(self):
-        from rumbo_scraper.parsers.planes_sitios import plan_filo_unt
+        from rumbo_scraper.parsers.planes_sitios import plan_filo_unt_pagina as plan_filo_unt
 
         self.assertEqual(plan_filo_unt(self.HTML, "Profesorado de Filosofía"),
                          [("Lógica", 1), ("Ética", 1), ("Didáctica", 2)])
@@ -146,6 +146,20 @@ class PlanUdc(unittest.TestCase):
                          [("Programación 1", 1), ("Trabajo final", 1), ("Taller de Inglés I", 1)])
         self.assertEqual(plan_udc(html, "Licenciatura en Redes"),
                          [("Programación 1", 1), ("Taller de Inglés I", 1), ("Tesis", 2)])
+
+    def test_otras_marcas(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_udc
+
+        html = ('<div class="elementor-toggle-item"><div class="elementor-tab-title"><a>1er Año</a></div>'
+                '<div class="elementor-tab-content"><p>Primer cuatrimestre</p><ul><li>Ecología</li>'
+                '<li>Taller de Mecánica (solo Tecnicatura)</li></ul><p>Segundo cuatrimestre Tecnicatura Universitaria</p>'
+                '<ul><li>Trabajo Final</li></ul><p>Segundo cuatrimestre Licenciatura</p><ul><li>Microeconomía</li></ul></div></div>'
+                '<div class="elementor-toggle-item"><div class="elementor-tab-title"><a>2do Año</a></div>'
+                '<div class="elementor-tab-content"><p>*solo Licenciatura*</p><p>Tesina – anual.</p></div></div>')
+        self.assertEqual(plan_udc(html, "Tecnicatura Universitaria en Guardaparque"),
+                         [("Ecología", 1), ("Taller de Mecánica", 1), ("Trabajo Final", 1)])
+        self.assertEqual(plan_udc(html, "Licenciatura en Áreas Naturales"),
+                         [("Ecología", 1), ("Microeconomía", 1), ("Tesina", 2)])
 
 
 if __name__ == "__main__":

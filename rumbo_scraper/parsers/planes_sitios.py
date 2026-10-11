@@ -4138,7 +4138,7 @@ def plan_agrarias_unca(html: str, carrera: str) -> list[tuple[str, int]]:
 plan_agrarias_unca.carrera = True  # type: ignore[attr-defined]
 
 
-def plan_filo_unt(html: str, carrera: str) -> list[tuple[str, int]]:
+def plan_filo_unt_pagina(html: str, carrera: str) -> list[tuple[str, int]]:
     """UNT Filosofía y Letras' career pages: the Profesorado's and the
     Licenciatura's plans, each a <details> headed by its name ("Profesorado
     en Historia (Plan 2018)", maybe "32 materias"), a column per year ("1°"
@@ -4186,18 +4186,24 @@ def plan_filo_unt(html: str, carrera: str) -> list[tuple[str, int]]:
             _agregar(materias, nombre, anio)
         return desde_el_primero(materias)
     return []
-plan_filo_unt.carrera = True  # type: ignore[attr-defined]
+plan_filo_unt_pagina.carrera = True  # type: ignore[attr-defined]
 
 
 def plan_udc(html: str, carrera: str) -> list[tuple[str, int]]:
     """The UDC's career pages: a toggle per year ("3er Año") listing its
     subjects. A page of a Licenciatura and the Tecnicatura it passes through
-    marks the years only the first has ("*Las siguientes materias son
-    exclusivas de la Licenciatura*") and the subjects only the second has
-    ("Trabajo final (sólo para la Tecnicatura)"): each career takes its own.
-    When a workshop is taken goes ("Taller de Inglés I – 1er. cuatrimestre")."""
+    marks what only one of them has: a whole year ("*Las siguientes materias
+    son exclusivas de la Licenciatura*", "*solo Licenciatura*"), a term's list
+    ("Segundo cuatrimestre Tecnicatura Universitaria") or a subject ("Trabajo
+    final (sólo para la Tecnicatura)", "Taller de Mecánica (solo
+    Tecnicatura)"): each career takes its own. When a workshop is taken goes
+    ("Taller de Inglés I – 1er. cuatrimestre")."""
+    def de_quien(texto: str) -> str | None:
+        marca = re.search(r"(?i)\b(?:s[óo]lo(?: para la)?|exclusivas de la)\s+(tecnicatura|licenciatura)", texto)
+        return marca.group(1).lower() if marca else None
+
     soup = BeautifulSoup(html or "", "html.parser")
-    tecnicatura = bool(re.match(r"(?i)tecnicatura", carrera))
+    propia = "tecnicatura" if re.match(r"(?i)tecnicatura", carrera) else "licenciatura"
     materias: list[tuple[str, int]] = []
     for item in soup.select(".elementor-toggle-item"):
         titulo = item.select_one(".elementor-tab-title")
@@ -4205,15 +4211,24 @@ def plan_udc(html: str, carrera: str) -> list[tuple[str, int]]:
         anio = anio_de(clean_text(titulo.get_text(" "))) if titulo else None
         if not anio or not contenido:
             continue
-        if tecnicatura and re.search(r"(?i)exclusivas de la licenciatura", contenido.get_text(" ")):
-            continue
-        for li in contenido.find_all("li"):
-            nombre = clean_text(li.get_text(" "))
-            solo = re.search(r"(?i)\(\s*s[óo]lo para la (tecnicatura|licenciatura)\s*\)", nombre)
-            if solo and (solo.group(1).lower() == "tecnicatura") != tecnicatura:
+        del_anio = None
+        seccion = None
+        # (A year of one subject gives it as a paragraph: "Trabajo Final – anual.")
+        sin_lista = not contenido.find("li")
+        for elemento in contenido.find_all(["p", "li"]):
+            texto = clean_text(elemento.get_text(" "))
+            if elemento.name == "p" and not (sin_lista and not texto.startswith("*")):
+                # A heading of the year ("*solo Licenciatura*") or of a term's list.
+                if re.match(r"(?i)\*", texto) and de_quien(texto):
+                    del_anio = de_quien(texto)
+                elif re.match(r"(?i)(primer|segundo)\s+cuatrimestre|anual", texto):
+                    seccion = next((k for k in ("tecnicatura", "licenciatura") if k in texto.lower()), None)
                 continue
-            nombre = re.sub(r"(?i)\s*\(\s*s[óo]lo para la \w+\s*\)", "", nombre)
-            nombre = re.sub(r"\s+[–-]\s+\d\w*\.?\s+cuatrimestre$", "", nombre, flags=re.I)
+            duenia = de_quien(texto) or seccion or del_anio
+            if duenia and duenia != propia:
+                continue
+            nombre = re.sub(r"(?i)\s*\(\s*s[óo]lo(?: para la)? \w+\s*\)", "", texto)
+            nombre = re.sub(r"\s+[–-]\s+(?:\d\w*\.?\s+cuatrimestre|anual)\.?$", "", nombre, flags=re.I)
             _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
 plan_udc.carrera = True  # type: ignore[attr-defined]

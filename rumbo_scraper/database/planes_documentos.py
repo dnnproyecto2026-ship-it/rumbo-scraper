@@ -138,7 +138,7 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                             "ucema.edu.ar", "kennedy.edu.ar", "umsa.edu.ar", "ffha.unsj.edu.ar", "unisud.edu.ar",
                             "umaza.edu.ar")),
                         # UNT Filosofía y Letras: the Profesorado's and the Licenciatura's plans on one page.
-                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
+                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt_pagina),
                         # UNCA Agrarias: one page, a window per career.
                         ("agrarias.unca.edu.ar", planes_sitios.plan_agrarias_unca),
                         # The UMendoza's "Plan de estudio" tab.
