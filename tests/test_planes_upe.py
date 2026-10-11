@@ -52,5 +52,25 @@ class PlanUmendozaPagina(unittest.TestCase):
             ("Derecho Romano", 1), ("Introducción al Derecho", 1), ("Derecho Civil – Parte General", 2)])
 
 
+class PlanFhuUnse(unittest.TestCase):
+    def test_modulos_y_numeros_fuera(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_fhu_unse
+
+        html = """<div><p>1º AÑO</p><p>1º MODULO</p><p>12 - Anatomía General</p><p>Contabilidad I</p>
+<p>Salud Colectiva</p><p>Fisiología Humana</p>
+<p>2º AÑO</p><p>3º MODULO</p><p>13 -Neonatología 1</p><p>Farmacología General</p><p>Psicología Social</p>
+<p>Inglés Técnico</p><p>Epidemiología</p><p>Bioética</p><p>Estadística</p></div>"""
+        self.assertEqual(plan_fhu_unse(html), [
+            ("Anatomía General", 1), ("Contabilidad I", 1), ("Salud Colectiva", 1), ("Fisiología Humana", 1),
+            ("Neonatología 1", 2), ("Farmacología General", 2), ("Psicología Social", 2), ("Inglés Técnico", 2),
+            ("Epidemiología", 2), ("Bioética", 2), ("Estadística", 2)])
+
+    def test_nombres_pegados_no_se_leen(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_fhu_unse
+
+        html = "<div><p>Primer Año</p><p>Macroeconomía</p><p>Finanzas PúblicasIngl</p><p>Segundo Año</p><p>Impuestos I</p></div>"
+        self.assertEqual(plan_fhu_unse(html), [])
+
+
 if __name__ == "__main__":
     unittest.main()

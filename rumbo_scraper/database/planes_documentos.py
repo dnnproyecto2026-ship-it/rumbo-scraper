@@ -228,7 +228,9 @@ _PLAN_EN_OTRA_PAGINA = (("facet.unt.edu.ar", "programas", planes_sitios.plan_en_
                         ("isalud.edu.ar", "plan de estudios", planes_sitios.plan_isalud),
                         # UNNOBA: its plans system, the Junín campus' whole plan.
                         ("elegi.unnoba.edu.ar", re.compile(r"planesdeestudio\.unnoba\.edu\.ar/\?planversion="),
-                         planes_sitios.plan_unnoba))
+                         planes_sitios.plan_unnoba),
+                        # UNSE Humanidades: the career's menu links its "Asignaturas".
+                        ("fhu.unse.edu.ar", "asignaturas", planes_sitios.plan_fhu_unse))
 
 
 # Universities that link every resolution of a career's plan (the
