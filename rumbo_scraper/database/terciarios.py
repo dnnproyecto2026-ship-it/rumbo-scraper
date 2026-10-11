@@ -410,7 +410,9 @@ def institutos_caba_ifts() -> list[dict[str, Any]]:
 # the careers that open this year, so an institute missing there opens none.
 _INET_YA_LEIDAS = {"14"}
 _INET_SOLO_NUEVOS = {"06", "66"}
-_PROVINCIA_DE_CODIGO = {codigo: nombre for codigo, nombre in _PROVINCIAS_INFD.values()}
+_PROVINCIA_DE_CODIGO = {codigo: nombre for codigo, nombre in _PROVINCIAS_INFD.values()} | {
+    # The provinces read from their own registries, which INFoD's list leaves out.
+    "06": "Buenos Aires", "14": "Córdoba", "66": "Salta"}
 
 
 def _slug(texto: str) -> str:

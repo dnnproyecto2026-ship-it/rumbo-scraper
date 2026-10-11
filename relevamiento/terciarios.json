@@ -362,7 +362,7 @@
  "Escuela Cadetes Alcaide José Luis Herrera": {
   "cue": "6601290",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Escuela Diocesana de Servicio Social": {
   "cue": "060189400",
@@ -1097,37 +1097,37 @@
  "Escuela de Arte Alcides Biagetti": {
   "cue": "0614921",
   "distrito": "Patagones",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Astor Piazzolla": {
   "cue": "0606212",
   "distrito": "Balcarce",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Atahualpa Yupanqui": {
   "cue": "0614560",
   "distrito": "General Juan Madariaga",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Berisso": {
   "cue": "0614577",
   "distrito": "Berisso",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Carlos Torrallardona": {
   "cue": "0611115",
   "distrito": "Pehuajó",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Gustavo Chertudi": {
   "cue": "0611334",
   "distrito": "San Antonio de Areco",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Arte Xul Solar": {
   "cue": "0609483",
   "distrito": "Junín",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Artes Visuales": {
   "cue": "062084900",
@@ -1137,17 +1137,17 @@
  "Escuela de Artes Visuales Antonio Berni": {
   "cue": "0607349",
   "distrito": "General San Martín",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Artes Visuales Martín A. Malharro": {
   "cue": "0603170",
   "distrito": "General Pueyrredón",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Bellas Artes Luciano Fortabat": {
   "cue": "0606345",
   "distrito": "Azul",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Bellas Artes y de Artes Decorativas e Industriales Mº Atilio Terragni": {
   "cue": "9090006",
@@ -1162,12 +1162,12 @@
  "Escuela de Cerámica Antonio Rizzo": {
   "cue": "0614573",
   "distrito": "Tandil",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Cerámica Rogelio Yrurtia": {
   "cue": "0605974",
   "distrito": "General Pueyrredón",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Diseño y Comunicación Audiovisual La Metro": {
   "cue": null,
@@ -1282,7 +1282,7 @@
  "Escuela de Suboficiales de la Armada": {
   "cue": "0690031",
   "distrito": "Coronel Rosales",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Suboficiales y Agentes General Manuel Belgrano": {
   "cue": null,
@@ -1302,12 +1302,12 @@
  "Escuela de Teatro": {
   "cue": "0614558",
   "distrito": "Bahía Blanca",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de Teatro de la Plata": {
   "cue": "0612884",
   "distrito": "La Plata",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Escuela de la Familia Agrícola (E.F.A.) EFA San Vicente de Paúl": {
   "cue": "5400617",
@@ -3402,7 +3402,7 @@
  "Instituto Superior Instituto de Estudios Superiores Río Quequen": {
   "cue": "0609865",
   "distrito": "Necochea",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior Instituto de Superior de Formación Técnica San Isidro": {
   "cue": "7000404",
@@ -6167,12 +6167,12 @@
  "Instituto Superior de Formación Técnica (I.S.F.T.) Dr. Pierre Fauchard": {
   "cue": "0620757",
   "distrito": "Morón",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Técnica (I.S.F.T.) Superior de la Bahia": {
   "cue": "0617039",
   "distrito": "Bahía Blanca",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto Superior de Formación Técnica Amemt": {
   "cue": "062224300",
@@ -7472,7 +7472,7 @@
  "Instituto de Educación Superior (I.E.S.) (San Carlos)": {
   "cue": "6601509",
   "distrito": "San Carlos",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Alfredo Coviello": {
   "cue": "9000545",
@@ -7552,7 +7552,7 @@
  "Instituto de Educación Superior (I.E.S.) Instituto Superior Cruz Roja Argentina Filial Salta N° 8034": {
   "cue": "6600633",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Instituto Superior Monseñor Jorge Gottau": {
   "cue": "8601876",
@@ -7572,7 +7572,7 @@
  "Instituto de Educación Superior (I.E.S.) Instituto Superior de Educación Profesional Nª 8232": {
   "cue": "6601673",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Instituto Superior de Servicio Social Remedios Escalada de San Martín": {
   "cue": "1800411",
@@ -7582,7 +7582,7 @@
  "Instituto de Educación Superior (I.E.S.) Instituto Superior del Milagro": {
   "cue": "6601428",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Instituto Superior en Seguridad": {
   "cue": "5801062",
@@ -7597,17 +7597,17 @@
  "Instituto de Educación Superior (I.E.S.) Instituto para el Desarrollo Humano Nª 8212padre Ernesto Martearena": {
   "cue": "6601485",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Juan Carlos Dávalos": {
   "cue": "6601363",
   "distrito": "Metán",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Juana Gabriela Moro de López": {
   "cue": "6600316",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Manuel Belgrano": {
   "cue": "5001317",
@@ -7617,7 +7617,7 @@
  "Instituto de Educación Superior (I.E.S.) Martín Jauretche": {
   "cue": "6601462",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Prof. Estela Susana Quiroga": {
   "cue": "5002359",
@@ -7632,7 +7632,7 @@
  "Instituto de Educación Superior (I.E.S.) San José": {
   "cue": "6600524",
   "distrito": "Capital",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Santa Rita": {
   "cue": "3400811",
@@ -7642,7 +7642,7 @@
  "Instituto de Educación Superior (I.E.S.) Sede Dinámica - Guachipas": {
   "cue": "6601347",
   "distrito": "Guachipas",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Tecnológico Junín": {
   "cue": "5002213",
@@ -7652,7 +7652,7 @@
  "Instituto de Educación Superior (I.E.S.) Técnica - Localidad Urundel": {
   "cue": "6601477",
   "distrito": "Orán",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) Técnico Industrial -Dr. Néstor Kirchner-": {
   "cue": "1000899",
@@ -7667,7 +7667,7 @@
  "Instituto de Educación Superior (I.E.S.) de Formación y Capacitación Doctor Ramón Carrillo Anexo el Carril": {
   "cue": "6601174",
   "distrito": "Chicoana",
-  "jurisdiccion": "66"
+  "jurisdiccion": "Salta"
  },
  "Instituto de Educación Superior (I.E.S.) de Sanidad Prof. Dr. Ramon Carrillo": {
   "cue": "3401152",
@@ -8232,12 +8232,12 @@
  "Instituto de Educación Superior de Formación Docente y Técnica (I.S.F.D.Yt.)": {
   "cue": "0606868",
   "distrito": "Lomas de Zamora",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto de Educación Superior de Formación Docente y Técnica (I.S.F.D.Yt.) Nueve de Julio": {
   "cue": "0614918",
   "distrito": "Nueve de Julio",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto de Educación Superior de Machagai": {
   "cue": "2201237",
@@ -9027,7 +9027,7 @@
  "Instituto del Profesorado de Arte Escultor Carlos Alfonso Allende": {
   "cue": "0610224",
   "distrito": "Tandil",
-  "jurisdiccion": "06"
+  "jurisdiccion": "Buenos Aires"
  },
  "Instituto del Profesorado del Consudec Septimio Walsh": {
   "cue": "0201096",
