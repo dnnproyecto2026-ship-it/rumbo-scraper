@@ -364,6 +364,62 @@ Formato: módulo - taller
             ("Ciencias Sociales y su didáctica I", 2)])
 
 
+class PlanCordoba(unittest.TestCase):
+    TEXTO = """
+                    PROFESORADO DE EDUCACIÓN INICIAL: 1º AÑO
+
+                                     CAMPO DE LA FORMACIÓN GENERAL
+
+Pedagogía                                     4         128            1                  5              Asignatura
+                                                                                                           anual
+
+                                                                                                          Seminario
+Práctica Docente I:
+                                              4         128            2                  6
+Contextos y Prácticas Educativas
+
+Total: 2 Unidades Curriculares
+
+                    PROFESORADO DE EDUCACIÓN INICIAL: 2º AÑO
+
+Desarrollo del Pensamiento Matemático         4         128            0                  4                Taller
+                                                                                                           anual
+                                                                                                       Asignatura 1º
+                Lengua y su Didáctica         4         128            0                  4            cuatrimestre
+Lengua
+                                                                                                       Seminario 2º
+                Alfabetización Inicial                                                                  cuatrimestre
+Estudios Socioculturales y Literarios                                                                Seminario
+                                            4         128             0                4
+de Pueblos de Habla Inglesa I                                                                          Anual
+Taller de Ciencias en la Escuela *            1         32             0                  0              Taller
+
+Total: 5 Unidades Curriculares
+
+                    PROFESORADO DE EDUCACIÓN PRIMARIA: 1º AÑO
+
+Pedagogía                                     4         128            1                  5              Asignatura
+Total: 1 Unidades Curriculares
+
+Pedagogía. Práctica Docente I: Contextos y Prácticas Educativas. Lengua y su Didáctica. Alfabetización Inicial.
+Desarrollo del Pensamiento Matemático. Estudios Socioculturales y Literarios de Pueblos de Habla Inglesa I.
+Taller de Ciencias en la Escuela.
+"""
+
+    def test_cada_anio_contra_su_total(self):
+        self.assertEqual(p.plan_cordoba("INICIAL", self.TEXTO), [
+            ("Pedagogía", 1), ("Práctica Docente I: Contextos y Prácticas Educativas", 1),
+            ("Desarrollo del Pensamiento Matemático", 2), ("Lengua y su Didáctica", 2),
+            ("Alfabetización Inicial", 2), ("Estudios Socioculturales y Literarios de Pueblos de Habla Inglesa I", 2),
+            ("Taller de Ciencias en la Escuela", 2)])
+
+    def test_un_total_que_no_cierra_no_da_plan(self):
+        self.assertEqual(p.plan_cordoba("INICIAL", self.TEXTO.replace("Total: 5", "Total: 4")), [])
+
+    def test_un_nombre_que_el_diseno_no_escribe_no_da_plan(self):
+        self.assertEqual(p.plan_cordoba("INICIAL", self.TEXTO.replace("Estudios Socioculturales y Literarios de Pueblos de Habla Inglesa I.", "")), [])
+
+
 class PlanUnahur(unittest.TestCase):
     def test_a_wrapped_name_is_the_lines_around_its_row(self):
         texto = "\n".join([

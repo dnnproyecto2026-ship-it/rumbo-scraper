@@ -50,6 +50,8 @@ _TECNICA = "Profesorado de Educación Secundaria Técnico Profesional en "
 _TECNICA_MIN = "Profesorado de Educación Secundaria técnico profesional en "
 _DC_TECNICA = "2023-02/Dise%C3%B1o%20Curricular%20"
 _SALTA = "https://dges-sal.infd.edu.ar/sitio/wp-content/uploads/2018/07/"
+_CBA = "https://dges-cba.infd.edu.ar/sitio/curriculares/upload/"
+_CBA_WP = "https://dges-cba.infd.edu.ar/sitio/wp-content/uploads/"
 # Especial: the first two years are common, then each orientation's own.
 _ESPECIAL_COMUN = r"^CONTENIDOS DEL DISEÑO CURRICULAR DEL PROFESORADO DE EDUCACIÓN$"
 
@@ -184,6 +186,33 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2024/09/"
             "Diseno-Curicular-Profesorado-de-Educacion-Primaria-2023.pdf",
             planes_sitios.plan_formato_ubicacion),
+    },
+    # Córdoba's (the ones in force), as its Dirección General de Educación
+    # Superior publishes them on its INFoD site, linked from its own.
+    "Córdoba": {
+        "Profesorado de Educación Inicial": (_CBA + "Disenio_Curr_Primaria_Inicial_2015.pdf",
+                                             functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN INICIAL")),
+        "Profesorado de Educación Primaria": (_CBA + "Disenio_Curr_Primaria_Inicial_2015.pdf",
+                                              functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN PRIMARIA")),
+        _SECUNDARIA + "Matemática": (_CBA + "DCurricular_Matem-_2015.pdf",
+                                     functools.partial(planes_sitios.plan_cordoba, "MATEMÁTICA")),
+        _SECUNDARIA + "Lengua y Literatura": (
+            _CBA_WP + "2019/05/24_de_Abril_2019_LENGUA_Y_LITERATURA.pdf",
+            functools.partial(planes_sitios.plan_cordoba, "LENGUA Y LITERATURA")),
+        _SECUNDARIA + "Biología": (_CBA + "DCurricular_Biol_Fis_Quim_2015.pdf",
+                                   functools.partial(planes_sitios.plan_cordoba, "BIOLOGÍA")),
+        _SECUNDARIA + "Química": (_CBA + "DCurricular_Biol_Fis_Quim_2015.pdf",
+                                  functools.partial(planes_sitios.plan_cordoba, "QUÍMICA")),
+        _SECUNDARIA + "Historia": (_CBA + "2018-PROFESORADO_DE_EDUCACION_SECUNDARIA_EN__HISTORIA.pdf",
+                                   functools.partial(planes_sitios.plan_cordoba, "HISTORIA")),
+        _SECUNDARIA + "Geografía": (_CBA + "2018-PROFESORADO_DE_EDUCACION_SECUNDARIA_EN_GEOGRAFIA.pdf",
+                                    functools.partial(planes_sitios.plan_cordoba, "GEOGRAF")),
+        "Profesorado de Inglés": (_CBA + "DISE%D1O_CURRICULAR_PROF_INGLES_2013.pdf",
+                                  functools.partial(planes_sitios.plan_cordoba, "INGLÉS")),
+        "Profesorado de Educación Tecnológica": (_CBA_WP + "2019/05/24_de_ABRIL_2019_ED_TECNOLOGICA.pdf",
+                                                 functools.partial(planes_sitios.plan_cordoba, "TECNOLÓGICA")),
+        "Profesorado de Educación Física": (_CBA + "D_CURRICULAR_FINAL_DE_ED_FISICA_2013.pdf",
+                                            functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN FÍSICA")),
     },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),

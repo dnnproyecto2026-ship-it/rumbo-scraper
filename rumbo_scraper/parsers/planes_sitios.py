@@ -4232,3 +4232,127 @@ def plan_udc(html: str, carrera: str) -> list[tuple[str, int]]:
             _agregar(materias, nombre, anio)
     return desde_el_primero(materias)
 plan_udc.carrera = True  # type: ignore[attr-defined]
+
+
+_ANIO_CBA = re.compile(r"(?i)^\s*(.*?):?\s*(\d)\s*[º°o]\s*:?\s*AÑO\s*$")
+_TOTAL_CBA = re.compile(r"(?i)^\s*total\s*:?\s*(\d+)\s+(?:unidades\s+curriculares|UC)\b:?\s*(\d+)?")
+# A row's hours: weekly, yearly and the Taller Integrador's ("4 128 0 4",
+# "34h 1088h 3h 37h", "2*" with a footnote); what comes before them is the
+# unit's name, if any.
+_HORAS_CBA = re.compile(r"(?<!\S)\d+\s?[h*]?\s{2,}\d+\s?[h*]?\s{2,}\d+\s?[h*]?(?!\S)")
+
+
+def plan_cordoba(encabezado: str, texto: str) -> list[tuple[str, int]]:
+    """A design of Córdoba's Dirección General de Educación Superior: a page
+    per year headed "PROFESORADO DE EDUCACIÓN SECUNDARIA EN MATEMÁTICA: 1º
+    AÑO", a row per unit with its hours (a name too long for its column
+    wraps above and below the row: "Práctica Docente III: / El Aula: Espacio
+    del Aprender y del  5 160 1 6 / Enseñar"), and "Total: 7 Unidades
+    Curriculares" closing it. Only the years whose heading ``encabezado``
+    matches (one document holds Inicial and Primaria), and only when every
+    year has as many units as its total says: else nothing."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    bloque: list[str] = []
+    del_anio: list[str] = []
+    horas_del_anio: list[int] = []
+
+    def cerrar_bloque(lineas: list[str] | None = None) -> None:
+        # Rows not parted by a blank line share a block. A name's wrapped lines
+        # go with the row above them, unless the next row has no name of its
+        # own (its hours sit midway down the name: "Estudios Socioculturales y
+        # Literarios / 4 128 0 4 / de Pueblos de Habla Inglesa I").
+        lineas = bloque if lineas is None else lineas
+        horas = [_HORAS_CBA.search(l) for l in lineas]
+        if not any(horas):
+            return
+        horas_del_anio.extend(int(re.match(r"\d+", h.group()).group()) for h in horas if h)
+        corte = min(h.start() for h in horas if h)
+        # A unit made of parts: its name at the left edge, each part indented
+        # beside or under it, with its own format ("Ciencias   Educación para
+        # la Salud / Naturales / Educación Ambiental"). Each part is a unit of
+        # the year's total; the name over them is not. The rows before and
+        # after the parts are read as any.
+        nombres = [linea[:corte].rstrip() for linea in lineas]
+        partes = [i for i, n in enumerate(nombres) if re.search(r"(?:^|\s{2})\s{6,}\S", n) and re.search(r"\S", n[:8])
+                  or re.match(r"\s{8,}\S", n)]
+        if partes and any(re.match(r"\S", n) for n in nombres[partes[0]:partes[-1] + 1]):
+            cerrar_bloque(lineas[:partes[0]])
+            for nombre in nombres[partes[0]:partes[-1] + 1]:
+                del_anio.extend(m.group() for m in re.finditer(r"\S+(?: \S+)*", nombre) if m.start() >= 8)
+            cerrar_bloque(lineas[partes[-1] + 1:])
+            return
+        filas: list[list[str]] = []
+        sueltas: list[str] = []
+        for linea, h in zip(lineas, horas):
+            parte = linea[:corte].strip()
+            if h:
+                propio = linea[:h.start()].strip()
+                if propio:
+                    if filas:
+                        filas[-1] += sueltas
+                    else:
+                        propio = " ".join(sueltas + [propio])
+                    filas.append([propio])
+                else:
+                    # What begins in lower case or in brackets still ends the
+                    # name above ("de Pueblos de Habla Inglesa II",
+                    # "(guitarra/piano)").
+                    while filas and sueltas and (sueltas[0][:1].islower() or sueltas[0][:1] == "("):
+                        filas[-1].append(sueltas.pop(0))
+                    filas.append(sueltas[:])
+                sueltas = []
+            elif parte:
+                sueltas.append(parte)
+        if filas:
+            filas[-1] += sueltas
+        for partes_del_nombre in filas:
+            # Without a footnote's mark ("Taller de Ciencias en la Escuela *").
+            nombre = re.sub(r"\s+", " ", " ".join(partes_del_nombre)).strip(" *")
+            if nombre and not re.match(r"(?i)campo de la|total\b", nombre):
+                del_anio.append(nombre)
+
+    for linea in texto.splitlines():
+        linea = linea.replace("\f", "")
+        cabeza = _ANIO_CBA.match(linea)
+        if cabeza and "…" not in linea and "..." not in linea:
+            bloque, del_anio, horas_del_anio[:] = [], [], []
+            anio = int(cabeza.group(2)) if re.search(encabezado, cabeza.group(1), re.I) else 0
+            continue
+        if not anio:
+            continue
+        total = _TOTAL_CBA.match(linea)
+        if total:
+            cerrar_bloque()
+            # A total that miscounts its units still adds up its weekly hours
+            # (Física's 4th year: "Total: 6", seven units of 32 hours).
+            if len(del_anio) != int(total.group(1)) and not (
+                    total.group(2) and sum(horas_del_anio) == int(total.group(2))):
+                return []
+            materias += [(n, anio) for n in del_anio]
+            anio, bloque, del_anio = 0, [], []
+            horas_del_anio.clear()
+            continue
+        if not linea.strip():
+            cerrar_bloque()
+            bloque = []
+        elif re.match(r"(?i)^\s*campo(s)? de la|^\s*hs\.|^\s*diseño curricular de la provincia", linea):
+            cerrar_bloque()
+            bloque = []
+        else:
+            bloque.append(linea)
+    # Every year from the first, or the plan is not whole; and every name as
+    # the design writes it (where it presents each unit), or a row was joined
+    # to the next one ("TIC y su enseñanza en DI Comunicación y Trastornos del").
+    anios = {a for _, a in materias}
+    if not anios or anios != set(range(1, max(anios) + 1)):
+        return []
+    # A name whose table cell shares its line with the format ("Práctica
+    # Docente IV y Residencia: / Recrear las Prácticas Docentes") is found by
+    # its two halves.
+    plano = " " + " ".join(re.findall(r"[a-z0-9]+", comparison_key(texto))) + " "
+    for nombre, _ in materias:
+        for mitad in nombre.split(": "):
+            if " " + " ".join(re.findall(r"[a-z0-9]+", comparison_key(mitad))) + " " not in plano:
+                return []
+    return materias

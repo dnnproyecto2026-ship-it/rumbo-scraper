@@ -48,13 +48,18 @@ def dominio(url: str | None) -> str:
 # A university's other domains, linked from its own site's home: they are
 # its own (UNTREF's distance careers live on untrefvirtual.edu.ar).
 OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}}
+# Another site of the same body, by its host (its domain is everyone's): the
+# home of Córdoba's Dirección General de Educación Superior (dges-cba.edu.ar,
+# its institutes' map) links its curricular designs on its INFoD site.
+OTROS_SITIOS = {"dges-cba.edu.ar": {"dges-cba.infd.edu.ar"}}
 
 
 def es_oficial(url: str | None, sitio_web: str | None) -> bool:
     if not (url and sitio_web):
         return False
     propio = dominio(sitio_web)
-    return dominio(url) == propio or dominio(url) in OTROS_DOMINIOS.get(propio, ())
+    return (dominio(url) == propio or dominio(url) in OTROS_DOMINIOS.get(propio, ())
+            or urlparse(url).netloc.lower().removeprefix("www.") in OTROS_SITIOS.get(propio, ()))
 
 
 # A word the PDF broke at the end of a line: "Alimen- tos" (not a number's
