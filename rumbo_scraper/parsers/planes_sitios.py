@@ -1576,6 +1576,96 @@ def plan_iucbc(texto_con_columnas: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+_ANIO_IUPA = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\s*$")
+# "01   Educación Musical I   2   64   X", " 7   Trabajo corporal complementario I 2   64":
+# the code, the name up to the hours.
+_FILA_IUPA = re.compile(r"^\s*(\d{1,2})\s+(.*)$")
+_HORAS_IUPA = re.compile(r"\d+(?:,\d)?\s+\d+\b")
+# An orientation's own subject ("01-1", "02-2") and the "o" between two of them.
+_ORIENTACION_IUPA = re.compile(r"^\s*(\d{2}-\d|[oO])\s")
+# A piece of name that is not done: it ends on a joining word or an open mark.
+_SIN_TERMINAR_IUPA = re.compile(r"(?i)(\b(de|del|y|e|en|la|las|los|el|por|con|para|a|al|o)|[:(-])$")
+# (Past the name, the columns: hours, terms, prerequisites, "o 08-2" among them.)
+_RESTO_IUPA = re.compile(r"^\s{4,}([A-Za-zÁÉÍÓÚÑáéíóúñ(][^\d●]*?)\s*(?:\s{2,}(?:[●Xx\d]|o\s+\d).*)?$")
+
+
+def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """IUPA's plans (``pdftotext -layout``): "PRIMER AÑO" alone over rows
+    "01   Educación Musical I   2   64   X   06": the code, the name, its
+    hours, its term and its prerequisites. A name too long for its cell
+    wraps: it goes on in the line below when it is not done (it ends on
+    "de", "y", an open bracket, or the row's hours went to a line of their
+    own), or it starts in the line above when the row's own part is none or
+    starts in lower case ("Taller integrado de procedimientos y" over
+    "05   técnicas del lenguaje visual I"). An orientation's own subjects
+    ("01-1 Canto I (sólo orientación en Canto)") are not the plan every
+    student takes, and the free hours are not a subject."""
+    filas: list[dict] = []
+    anio = None
+    ultima = -2  # the line the last row's name was last seen on
+    pendiente: tuple[int, str] | None = None  # a loose piece of name, and its line
+    for i, linea in enumerate(texto_con_columnas.splitlines()):
+        encabezado = _ANIO_IUPA.match(linea)
+        if encabezado:
+            anio, pendiente = _ORDINALES[encabezado.group(1).lower()], None
+            continue
+        if not anio:
+            continue
+        fila = _FILA_IUPA.match(linea)
+        if re.fullmatch(r"\s*\d+(?:,\d)?\s+\d+[\s\d,●Xx]*", linea) and filas and ultima == i - 1:
+            ultima = i  # the row's hours on a line of their own: its name may go on below
+            continue
+        if fila and not _ORIENTACION_IUPA.match(linea):
+            resto = fila.group(2).strip()
+            # The name runs up to the hours (a justified name has wide gaps:
+            # "Taller     Educación    mediada       por").
+            propio = " ".join(re.split(r"\s+(?=\d+(?:,\d)?\s+\d+\b)|\s{2,}(?=[●Xx\d])", resto)[0].split())
+            if not re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", propio):
+                if not _HORAS_IUPA.match(resto):
+                    continue  # a page's number
+                propio = ""
+            partes = [propio]
+            if pendiente and pendiente[0] == i - 1 and (not propio or propio[0].islower() or _SIN_TERMINAR_IUPA.search(pendiente[1])):
+                partes.insert(0, pendiente[1])
+            filas.append({"partes": partes, "anio": anio, "abierta": not propio or not _HORAS_IUPA.search(resto)})
+            ultima, pendiente = i, None
+            continue
+        if re.fullmatch(r"[\s\d,●Xx]*", linea):
+            # The row's hours on a line of their own: its name may go on below.
+            if filas and ultima == i - 1 and linea.strip():
+                ultima = i
+            continue
+        pieza = _RESTO_IUPA.match(linea)
+        if not pieza or _ORIENTACION_IUPA.match(linea) or re.match(r"(?i)\s*total\b", linea):
+            pendiente = None
+            continue
+        texto = " ".join(pieza.group(1).split())
+        if filas and ultima == i - 1:
+            previo = " ".join(p for p in filas[-1]["partes"] if p)
+            if (filas[-1]["abierta"] or texto[0].islower() or texto[0] == "("
+                    or previo.count("(") > previo.count(")")
+                    or _SIN_TERMINAR_IUPA.search(previo)):
+                if re.fullmatch(r"[a-zá-ú]{1,2}", texto):
+                    # A word's last letter on the next line ("Tecnología" / "s").
+                    filas[-1]["partes"][-1] += texto
+                else:
+                    filas[-1]["partes"].append(texto)
+                filas[-1]["abierta"] = False
+                ultima = i
+                continue
+        pendiente = (i, texto)
+    materias: list[tuple[str, int]] = []
+    for fila in filas:
+        nombre = " ".join(p for p in fila["partes"] if p)
+        # "Tecnología s": a word's last letter set apart in the source.
+        nombre = re.sub(r"(\w{4,}) ([a-zá-ú])$", r"\1\2", nombre)
+        # A footnote's mark: "Instrumento Aplicado B II   (a)", "Folklore *".
+        nombre = re.sub(r"\s*(?:\([a-z]\)|\*+)$", "", nombre)
+        if nombre and not re.match(r"(?i)horas de asignaci[óo]n libre", nombre):
+            _agregar(materias, nombre, fila["anio"])
+    return desde_el_primero(materias)
+
+
 _ANIO_UHIBA = re.compile(r"(?i)^\s+(primer|segundo|tercer|cuarto|quinto|sexto)\s+año\s*$")
 
 

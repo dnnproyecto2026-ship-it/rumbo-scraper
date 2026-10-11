@@ -281,6 +281,40 @@ class PlanUcongreso(unittest.TestCase):
         self.assertEqual(p.plan_ucongreso(html), [("Derecho Político", 1), ("Obligaciones", 2)])
 
 
+class PlanIupa(unittest.TestCase):
+    TEXTO = """
+      PRIMER AÑO
+ 01   Educación Musical I                        2     64              X
+ 02   Posicionamiento y Comercialización de      3     48         X
+      Productos Audiovisuales
+      Taller integrado de procedimientos y
+ 03   técnicas del lenguaje visual I             9    288              X
+ 04   Seminario Culturas Infantiles y Juveniles  2     32    X
+41    Taller     Educación    mediada       por
+      Tecnologías                                2     32         X
+      Taller de Práctica de Conjunto I: Opción
+  5                                              3     96              X
+      Jazz o Rock o Tango o Folklore *
+01-1  Materia de Orientación I: Canto I (sólo    2     64              X
+ o    orientación en Canto)
+      Total de horas primer año                 25,3   816
+
+      SEGUNDO AÑO
+ 06   Instrumento Aplicado B II          (a)     2     64              X     01
+ 07   Horas de Asignación Libre                       230
+"""
+
+    def test_nombres_partidos_y_orientaciones(self):
+        self.assertEqual(p.plan_iupa(self.TEXTO), [
+            ("Educación Musical I", 1),
+            ("Posicionamiento y Comercialización de Productos Audiovisuales", 1),
+            ("Taller integrado de procedimientos y técnicas del lenguaje visual I", 1),
+            ("Seminario Culturas Infantiles y Juveniles", 1),
+            ("Taller Educación mediada por Tecnologías", 1),
+            ("Taller de Práctica de Conjunto I: Opción Jazz o Rock o Tango o Folklore", 1),
+            ("Instrumento Aplicado B II", 2)])
+
+
 class PlanUnahur(unittest.TestCase):
     def test_a_wrapped_name_is_the_lines_around_its_row(self):
         texto = "\n".join([

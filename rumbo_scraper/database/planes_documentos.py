@@ -328,6 +328,9 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
 # Sites that link the plan's document by a word of their own (UNaM's
 # Ingeniería: "Plan de Estudios: Resumido | Completo").
 _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
+                            # IUPA: each career's own plan is "DESCARGAR PLAN"; the other
+                            # "Plan" links are its department's other careers.
+                            ("iupa.edu.ar", "descargar plan"),
                             # (UNDelta: each career's section, its plan on Drive.)
                             ("undelta.edu.ar", (re.compile(r"(?i)descargar el plan de estudios"),
                                                 re.compile(r"drive\.google\.com/file/d/[\w-]+|\.pdf$"))),
@@ -348,6 +351,7 @@ _DOCUMENTO_POR_SU_ENLACE = (("fio.unam.edu.ar", "resumido"),
                             # UADER's entrants' pages: "Plan de Estudios", on Drive too.
                             ("ingresantes.uader.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"drive\.google\.com/file/d/[\w-]+"))))
 
+_DOCUMENTOS_PROPIOS += (("iupa.edu.ar", planes_sitios.plan_iupa),)
 # UPLaB's plans: the table goes on in another shape after each page break.
 _DOCUMENTOS_PROPIOS += (("uplab.edu.ar", plan_por_columnas.leer_pdf_partido),)
 
