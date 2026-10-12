@@ -3930,7 +3930,8 @@ def plan_fca_unju(texto: str) -> list[tuple[str, int]]:
     materias: list[tuple[str, int]] = []
     cuatrimestre = None
     for numero, linea in enumerate(lineas):
-        titulo = re.match(r"^\s*(\w+)\s+CUATRIMESTRE\s*$", linea)
+        # ("A PARTIR DEL QUINTO CUATRIMESTRE": the practices of a tecnicatura's last term.)
+        titulo = re.match(r"^\s*(?:A PARTIR DEL\s+)?(\w+)\s+CUATRIMESTRE\s*$", linea)
         if titulo and titulo.group(1).lower() in _CUATRIMESTRES:
             cuatrimestre = _CUATRIMESTRES[titulo.group(1).lower()]
             continue
