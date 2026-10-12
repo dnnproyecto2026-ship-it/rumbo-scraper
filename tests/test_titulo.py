@@ -9,6 +9,17 @@ class Titulo(unittest.TestCase):
         self.assertEqual(titulos_en("Se expide el título de Profesor/a de Lengua Inglesa, con validez nacional."),
                          ["Profesor/a de Lengua Inglesa"])
 
+    def test_lo_que_el_titulo_permite_y_sus_alcances(self):
+        self.assertEqual(titulos_en("El título de Escribano/a permite acceder al ámbito de la función notarial"),
+                         ["Escribano/a"])
+        self.assertEqual(titulo_de_la_pagina(
+            "<main><p>Alcances del título</p><p>Licenciado/a en Artes Visuales con orientación en Pintura</p></main>",
+            "Licenciatura en Artes Visuales con orientación en Pintura"),
+            "Licenciado/a en Artes Visuales con orientación en Pintura")
+
+    def test_el_primero_de_una_lista_no_es_el_titulo(self):
+        self.assertEqual(titulos_en("Título: Profesor/a de Artes Musicales con orientación en: piano"), [])
+
     def test_lo_que_no_es_un_titulo_no_cuenta(self):
         self.assertEqual(titulos_en("Título: 2 años de cursada"), [])
 

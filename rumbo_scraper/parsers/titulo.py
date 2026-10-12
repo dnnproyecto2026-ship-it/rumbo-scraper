@@ -40,7 +40,9 @@ _ROTULO = re.compile(
 # profesionales del título de Licenciado/a en Física son" (UNC).
 _FRASE = re.compile(r"(?i)(?:\b(?:expide|otorga|otorgar[áa]|obtiene|recibe|obtendr[áa]s?|obten[ée]s)\s+(?:el\s+)?t[íi]tulo\s+de\s+"
                     r"|qu[ée] t[íi]tulo obtengo\?\s*|\breservadas al t[íi]tulo de\s+"
-                    r"|\balcances (?:profesionales )?del t[íi]tulo de\s+)(.+)")
+                    r"|\balcances (?:profesionales )?del t[íi]tulo (?:de\s+)?)(.+)")
+# "El título de Escribano/a permite acceder al ámbito de la función notarial" (Palermo).
+_PERMITE = re.compile(r"(?i)\bel t[íi]tulo de\s+(.+?)\s+(?:permite|habilita)\b")
 _CORTE = re.compile(r"\s*(?:[.;]\s|\.$|\(|\s[-–]\s|\s\|\s|,\s*(?:con|que|el|la|y)\b|\s+con\s+validez|\s+duraci[óo]n\b|"
                     r"\s+reconocimiento\b|\s+res(?:oluci[óo]n)?\.?\s|\s+son\b|\s+a\s+quienes\b|,?\s+previa\b)")
 
@@ -52,6 +54,9 @@ def _limpio(texto: str) -> str | None:
     # The next section's number run into it ("... Viajes y Turismo 1.3").
     texto = re.sub(r"\s+\d+(?:\.\d+)+$", "", texto)
     if not _ES_UN_GRADO.match(texto) or len(texto) > 90 or len(texto.split()) > 12:
+        return None
+    # "... con orientación en: piano", the first of a list (UNA's profesorado).
+    if re.search(r":\s", texto):
         return None
     # "Licenciado", "Profesor/a", "Técnico" alone say the kind of degree, not
     # which: cut short.
@@ -70,7 +75,7 @@ def titulos_en(texto: str) -> list[str]:
     halladas: list[str] = []
     for linea in texto.split("\n"):
         linea = clean_text(linea)
-        for patron in (_ROTULO, _FRASE):
+        for patron in (_ROTULO, _FRASE, _PERMITE):
             for match in patron.finditer(linea):
                 titulo = _limpio(match.group(1))
                 if titulo and comparison_key(titulo) not in {comparison_key(h) for h in halladas}:
@@ -105,6 +110,8 @@ def titulo_de_la_pagina(html: str, carrera: str) -> str | None:
     # Universidad Provincial del Sudoeste" (UPSO).
     texto = re.sub(r"(?im)^\s*(?:[A-Z]\s?\.\s+)?(?:nombre del )?t[íi]tulo(?:/s|s)?(?: (?:a otorgar|que (?:se )?otorga|a obtener|"
                    r"obtenido|otorgado(?: por la universidad[^\n:]{0,60})?|de grado|de pregrado))?\s*\n+\s*", "Título: ", texto)
+    # "Alcances del título" over its value (UNA's "Licenciado/a en Artes Visuales ...").
+    texto = re.sub(r"(?im)^\s*(alcances (?:profesionales )?del t[íi]tulo)\s*\n+\s*", r"\1 ", texto)
     # A value broken after its kind (UNRC's "Título:" / "Licenciado" / " en Geografía").
     texto = re.sub(r"(?im)^(t[íi]tulo[^\n:]{0,30}:\s*(?:licenciad|profesor|t[ée]cnic|ingenier)\S*)\s*\n\s*((?:en|de)\s)",
                    r"\1 \2", texto)
