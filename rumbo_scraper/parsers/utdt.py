@@ -373,6 +373,25 @@ def parse_study_plan(html: str, career_name: str) -> dict[str, object]:
                 else {"primer": 1, "segundo": 2}[semester_match.group(1)]
             )
             continue
+        # "(*) Para completar el plan de estudios, deben aprobarse dos materias
+        # adicionales: <strong>Comprensión de Textos y Escritura</strong>
+        # (segundo semestre del primer año) y ...": subjects of the plan the
+        # table leaves out, each with its year after it.
+        if node.name == "p" and current_year is not None and "para completar el plan de estudios" in key:
+            for strong in node.find_all("strong"):
+                after = comparison_key(str(strong.next_sibling or ""))
+                year_match = re.search(r"semestre del (\w+) ano", after)
+                year = year_names.get(f"{year_match.group(1)} ano") if year_match else None
+                name = clean_text(strong.get_text(" ", strip=True))
+                if year and 2 <= len(name) <= 120:
+                    subjects.append(blank_record(
+                        "materias", universidad_nombre=UNIVERSITY,
+                        carrera_o_programa=career_name, nombre_materia=name,
+                        anio_cursada=year, turno=None,
+                        area_tematica=classify_area(name), descripcion_breve=None,
+                        regimen="Cuatrimestral", carga_horaria_semanal=None,
+                    ))
+            continue
         parent_classes = node.parent.get("class", []) if node.parent else []
         is_colored_plan_cell = (
             node.name == "p"

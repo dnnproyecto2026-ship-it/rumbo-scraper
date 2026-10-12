@@ -203,6 +203,21 @@ class UTDTParserTests(unittest.TestCase):
         """, "Diseño")
         self.assertEqual(len(plan["materias"]), 1)
 
+    def test_study_plan_keeps_the_footnotes_subjects(self) -> None:
+        plan = parse_study_plan("""
+            <h2>Primer año</h2><li>Administración I</li>
+            <h2>Cuarto año</h2><li>Curso Electivo o de Campo Menor</li><li>Curso Electivo o de Campo Menor</li>
+            <p>(*) Para completar el plan de estudios, deben aprobarse dos materias adicionales:<strong>
+            Comprensi&oacute;n de Textos y Escritura</strong> (segundo semestre del primer a&ntilde;o) y
+            <strong>Expresi&oacute;n Oral y Escrita</strong> (segundo semestre del tercer a&ntilde;o).</p>
+        """, "Administración de Empresas")
+        self.assertEqual(
+            [(m["nombre_materia"], m["anio_cursada"]) for m in plan["materias"]],
+            [("Administración I", 1), ("Curso Electivo o de Campo Menor", 4),
+             ("Curso Electivo o de Campo Menor", 4), ("Comprensión de Textos y Escritura", 1),
+             ("Expresión Oral y Escrita", 3)],
+        )
+
     def test_extracts_public_person_profile(self) -> None:
         profile = parse_person_profile("""
             <article id="contenido"><h1>Ana Ejemplo</h1>
