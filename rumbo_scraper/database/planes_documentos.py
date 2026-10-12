@@ -370,6 +370,8 @@ _DOCUMENTOS_PROPIOS += (("uplab.edu.ar", plan_por_columnas.leer_pdf_partido),)
 _DOCUMENTOS_PROPIOS += (("upe.edu.ar", planes_sitios.plan_upe),)
 # UBA Agronomía's plan sheets: two terms side by side, credits after each name.
 _DOCUMENTOS_PROPIOS += (("agro.uba.ar", planes_sitios.plan_agro_uba),)
+# UNRN's career sheets: SIU code, order number and name, a name wrapped beside its row.
+_DOCUMENTOS_PROPIOS += (("unrn.edu.ar", planes_sitios.plan_unrn),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:

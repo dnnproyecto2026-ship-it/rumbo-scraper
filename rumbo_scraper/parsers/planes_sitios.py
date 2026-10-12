@@ -4377,8 +4377,9 @@ _CODIGO_IFTS = re.compile(r"(?<![\d.])([1-4])\.([1-8])\.(\d{1,2})\.?(?=\s|$)")
 _CUATRIMESTRE_IFTS = re.compile(r"\d\s*°\s*/\s*\d\s*°")
 # A row's data: its field, format and term, then its hours ("FTE  MO  C  9  6
 # 96", "M  C  4.5  -  112").
-_DATOS_IFTS = re.compile(r"\s{2,}(?:[A-Z][A-Za-z]{0,3}\s+){1,3}(?:\d+(?:[.,]\d+)?|-)(?:\s+(?:\d+(?:[.,]\d+)?|-)){1,4}\s*$")
-_ENCABEZADO_IFTS = re.compile(r"(?i)^(?:primer|segundo|tercer|cuarto)\s+a[ñn]o\b|cuatrimestre$|^(?:\d\s*°?\s*)?(?:sem|cuat)\.?$"
+_DATOS_IFTS = re.compile(r"\s{2,}(?:(?:[A-Z][A-Za-z]{0,3}|Materia|Taller|Seminario|Asignatura|M[óo]dulo|Laboratorio|Proyecto)\s+){1,3}"
+                         r"(?:\d+(?:[.,]\d+)?|-)(?:\s+(?:\d+(?:[.,]\d+)?|-)){1,4}\s*$")
+_ENCABEZADO_IFTS = re.compile(r"(?i)^(?:primer|segundo|tercer|cuarto)\s+a[ñn]o\b|cuatrimestre$|^(?:\d\s*°?\s*)?(?:sem|cuat|cuatrim)\.?$"
                               r"|^(?:c[óo]digo|denominaci[óo]n|totales|unidad curricular|rimestre|a[ñn]o)\b")
 _SIN_TERMINAR_IFTS = re.compile(r"(?i)\b(?:de|del|y|e|o|u|el|la|las|los|en|a|al|para|por|con|sobre)$")
 
@@ -4392,20 +4393,28 @@ def plan_codigos_ifts(texto_con_columnas: str) -> list[tuple[str, int]]:
     on the data's line or next to it. Nothing unless every term numbers its
     units from 1 without a gap, every year from the first is there, every
     line of name has one row to go with, and no name is left unfinished."""
-    lineas = [_CUATRIMESTRE_IFTS.sub(lambda m: " " * len(m.group()), l) for l in texto_con_columnas.splitlines()]
+    lineas = [_CUATRIMESTRE_IFTS.sub(lambda m: " " * len(m.group()), l.replace("\u200b", ""))
+              for l in texto_con_columnas.splitlines()]
     datos, nombres, codigos = set(), {}, {}
     for i, linea in enumerate(lineas):
         fila = _DATOS_IFTS.search(linea)
-        if fila:
-            datos.add(i)
         izquierda = linea[:fila.start()] if fila else linea
         codigo = _CODIGO_IFTS.search(izquierda)
-        if codigo and not izquierda[:codigo.start()].strip():
+        # (Beside the code, the year's and term's label of a merged cell:
+        # "2° año 1er", "Cuatrim".)
+        if codigo and re.fullmatch(r"(?i)[\s\d°º/]*(?:(?:a[ñn]o|cuatrim\w*|er|do|ro|to)\b[\s\d°º/.]*)*",
+                                   izquierda[:codigo.start()]):
             codigos[i] = (int(codigo.group(1)), int(codigo.group(2)), int(codigo.group(3)))
             izquierda = " " * codigo.end() + izquierda[codigo.end():]
-        texto = izquierda.strip()
-        if (texto and not _ENCABEZADO_IFTS.search(texto) and re.match(r"[A-ZÁÉÍÓÚÑa-záéíóúñ(]", texto)
-                and not re.search(r"\s{3,}", texto)):
+            # A coded row whose hours went to the next line ("MO  C   96").
+            if not fila:
+                fila = re.search(r"\s{2,}(?:[A-Z][A-Za-z]{0,3}\s+){1,3}", izquierda)
+                izquierda = izquierda[:fila.start()] if fila else izquierda
+        if fila:
+            datos.add(i)
+        # The name's part of a line, not the hours that went to it ("Objetos   4  -").
+        texto = re.split(r"\s{3,}", izquierda.strip())[0]
+        if texto and not _ENCABEZADO_IFTS.search(texto) and re.match(r"[A-ZÁÉÍÓÚÑa-záéíóúñ(]", texto):
             nombres[i] = texto
     unidades: list[dict[str, Any]] = []
     for d in sorted(datos):
@@ -4446,3 +4455,240 @@ def plan_codigos_ifts(texto_con_columnas: str) -> list[tuple[str, int]]:
         return []
     anios = {anio for anio, _ in numeros}
     return materias if anios == set(range(1, max(anios) + 1)) else []
+
+
+_FILA_NUMERADA_IFTS = re.compile(r"^\s*(\d{2})\s+([1-4])\s+([1-8])\s+(\S.*)$")
+
+
+def plan_numerado_ifts(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """An IFTS plan whose rows give a number, the year and the term before
+    the name ("05   1   1   Cuidado de enfermería   M  C  10  160 ..."), the
+    rest of a long name in the lines below, in its column ("en la familia y
+    / comunidad"). Nothing unless the rows are numbered from 01 without a
+    gap, every year from the first is there and no name is left unfinished."""
+    filas: list[dict[str, Any]] = []
+    columna = None
+    for linea in texto_con_columnas.splitlines():
+        fila = _FILA_NUMERADA_IFTS.match(linea)
+        if fila:
+            columna = fila.start(4)
+            filas.append({"numero": int(fila.group(1)), "anio": int(fila.group(2)),
+                          "partes": [re.split(r"\s{2,}", fila.group(4).strip())[0]]})
+            continue
+        if not linea.strip():
+            if filas:
+                filas[-1]["cerrada"] = True
+            continue
+        if filas and columna is not None and not filas[-1].get("cerrada"):
+            inicio = len(linea) - len(linea.lstrip())
+            if abs(inicio - columna) <= 2:
+                filas[-1]["partes"].append(re.split(r"\s{2,}", linea.strip())[0])
+    if not filas or [f["numero"] for f in filas] != list(range(1, len(filas) + 1)):
+        return []
+    materias = []
+    for fila in filas:
+        nombre = " ".join(" ".join(fila["partes"]).split())
+        if _SIN_TERMINAR_IFTS.search(nombre):
+            return []
+        # A unit and its practice under one name (Enfermería's two "Gestión y
+        # Administración en Enfermería") is one subject.
+        if comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+            materias.append((nombre, fila["anio"]))
+    anios = {anio for _, anio in materias}
+    return materias if anios == set(range(1, max(anios) + 1)) else []
+
+
+_FILA_UNRN = re.compile(r"^\s*([A-Z]{1,3}\d{3,4})\s+(\d{1,2})(?:\s*\(\*t\))?(?:\s+([^\d\s–-].*?))?(?:\s{2,}[\d–-].*)?\s*$")
+
+
+def plan_unrn(texto: str) -> list[tuple[str, int]]:
+    """UNRN's career sheets ("FICHA DE CARRERA", ``-layout``): under "PLAN DE
+    ESTUDIOS", a heading per year ("PRIMER AÑO", "1º AÑO") and a row per
+    subject: its SIU Guaraní code, its order number (an intermediate degree's
+    marked "(*t)"), its name and its hours. A name the cell wrapped is a line
+    of text alone beside its row: it belongs to the row after it when that
+    row has no name of its own ("Solución de controversias..." / "VR328 29"
+    / "aplicado"), else to the row before ("T0002 2 Introducción a la
+    Lectura y Escritura" / "Académica"). The order numbers run 1, 2, 3...: a
+    gap is a row not read, and then the plan is not."""
+    lineas = texto.splitlines()
+    inicio = next((i for i, l in enumerate(lineas) if re.match(r"\s*PLAN DE ESTUDIOS?\s*$", l)), None)
+    if inicio is None:
+        return []
+    filas: list[list] = []  # [line index, order, name pieces, year]
+    sueltas: list[tuple[int, str]] = []
+    anio = None
+    for i in range(inicio + 1, len(lineas)):
+        linea = lineas[i].strip()
+        if not linea:
+            continue
+        fila = _FILA_UNRN.match(lineas[i])
+        if fila:
+            if anio is None:
+                return []
+            filas.append([i, int(fila.group(2)), [fila.group(3)] if fila.group(3) else [], anio, bool(fila.group(3))])
+            continue
+        de_anio = anio_de(linea) if len(linea) < 25 else None
+        if de_anio:
+            anio = de_anio
+            continue
+        # (The sheet's notes after the table: "TITULO: AUXILIAR UNIVERSITARIO/A...".)
+        if re.match(r"(?i)t[íi]tulo\b|certificaci[óo]n|observaciones|referencias", linea):
+            break
+        if re.match(r"(?i)(primer|segundo)\s+cuatrimestre|anual$|subtotal|total|carga\s+horaria|n°\s*orden", linea) \
+                or re.fullmatch(r"[\d\s–\-/.,]+", linea):
+            continue
+        if anio is not None and not re.search(r"\s{3,}", linea):
+            sueltas.append((i, linea))
+    if not filas or [f[1] for f in filas] != list(range(1, len(filas) + 1)):
+        return []
+    for i, texto_suelto in sueltas:
+        siguiente = next((f for f in filas if f[0] > i), None)
+        anterior = next((f for f in reversed(filas) if f[0] < i), None)
+        if siguiente and not siguiente[4] and siguiente[0] - i <= 2:
+            siguiente[2].append(texto_suelto)
+        elif anterior and i - anterior[0] <= 3:
+            anterior[2].append(texto_suelto)
+    materias: list[tuple[str, int]] = []
+    for _, _, piezas, anio_fila, _ in filas:
+        if not piezas:
+            return []
+        _agregar(materias, " ".join(piezas), anio_fila)
+    return desde_el_primero(materias)
+
+
+_ANIO_CUATRIMESTRE_IFTS = re.compile(r"(?i)^\s*(primer|segundo|tercer|cuarto)\s+a[ñn]o\s*[-–]\s*\w+\s+cuatrimestre\s*$")
+# A row's data without its field: format and term, or only its hours ("M  C  4  64", "6   96").
+_DATOS_SIN_CAMPO_IFTS = re.compile(r"\s{2,}(?:(?:[A-Z]{1,2}|Cuatrimestral|Anual|Materia|Taller|Seminario|Asignatura|M[óo]dulo)\s+){0,3}"
+                                   r"\d+(?:[.,]\d+)?(?:\s+\d+(?:[.,]\d+)?){1,3}\s*$")
+
+
+def plan_anio_cuatrimestre_ifts(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """An IFTS plan by "PRIMER AÑO - PRIMER CUATRIMESTRE" headings over rows
+    of a name and its data ("Ergonomía   M  C  4  64", "Transporte  6  96").
+    A name too long for its cell goes around its row's data: the line above
+    and the line below ("Principios de Economía y Costos para la Higiene y /
+    M C 4 64 / Seguridad"). Nothing unless every year from the first is
+    there, every line of name goes with a row and no name is unfinished."""
+    filas: list[dict[str, Any]] = []
+    anio = 0
+    sueltas: list[str] = []  # the lines of name above a row that has none
+    for linea in texto_con_columnas.replace("\u200b", "").splitlines():
+        if not linea.strip():
+            continue
+        encabezado = _ANIO_CUATRIMESTRE_IFTS.match(linea)
+        if encabezado:
+            if sueltas:
+                return []
+            anio = _ORDINALES[encabezado.group(1).lower()]
+            continue
+        if not anio:
+            continue
+        datos = _DATOS_SIN_CAMPO_IFTS.search(linea)
+        nombre = " ".join((linea[:datos.start()] if datos else linea).split())
+        if datos:
+            if nombre and sueltas:
+                return []
+            filas.append({"anio": anio, "partes": sueltas + ([nombre] if nombre else []),
+                          "abierta": not nombre})
+            sueltas = []
+        elif re.match(r"[A-ZÁÉÍÓÚÑa-záéíóúñ(]", nombre):
+            previa = filas[-1] if filas else None
+            if previa and (previa.pop("abierta", False) or _SIN_TERMINAR_IFTS.search(" ".join(previa["partes"]))
+                           or nombre[0].islower()):
+                previa["partes"].append(nombre)
+            else:
+                sueltas.append(nombre)
+        else:
+            break  # the table is over
+    if sueltas or not filas:
+        return []
+    materias: list[tuple[str, int]] = []
+    for fila in filas:
+        nombre = " ".join(" ".join(fila["partes"]).split())
+        if not nombre or _SIN_TERMINAR_IFTS.search(nombre):
+            return []
+        if comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+            materias.append((nombre, fila["anio"]))
+    anios = {a for _, a in materias}
+    return materias if anios == set(range(1, max(anios) + 1)) else []
+plan_unrn.respaldo = True  # type: ignore[attr-defined]  # its other sheets go to the general reader
+
+
+# A row's data in an IFTS table without years: its format and régimen, if
+# given, and its hours ("Materia cuatrimestral   6   0   96", "C   6   96").
+_DATOS_INSTANCIA_IFTS = re.compile(
+    r"\s{2,}(?:(?:Materia|Taller|Seminario|Asignatura|M[óo]dulo|Laboratorio|Proyecto|Pr[áa]ctica|[A-Z]{1,2}|"
+    r"[Cc]uatrimestral|[Aa]nual|[Bb]imestral)\s+){0,3}(?:\d+(?:[.,]\d+)?|-)(?:\s+(?:\d+(?:[.,]\d+)?|-)){0,4}\s*$")
+_FIN_DE_TABLA_IFTS = re.compile(r"(?i)^\s*(?:total|correlativ|requisit|perfil|●|alcances|t[íi]tulo)")
+_ROTULO_IFTS = re.compile(r"(?i)^(?:campo|[áa]rea)\s+de\s+(?:la\s+)?formaci|^(?:primer|segundo|tercer)\s+(?:a[ñn]o|cuatrimestre)$")
+
+
+def plan_instancias_ifts(texto_con_columnas: str) -> list[tuple[str, None]]:
+    """An IFTS plan that lists its units without years: a row per unit, its
+    name, then its format, régimen and hours ("Ecología General   Materia
+    Cuatrimestral   5"), under its area's label at the left or a "Campo de
+    la Formación ..." heading. The label is not a unit; a name too long for
+    its cell goes on in the line below, or around a row of only data. The
+    year is not given, so none is."""
+    lineas = texto_con_columnas.replace("​", "").splitlines()
+    inicio = next((i for i, l in enumerate(lineas) if re.search(r"(?i)contenidos", l)), None)
+    if inicio is None:
+        return []
+    filas: list[dict[str, Any]] = []
+    columna = None
+    sueltas: list[str] = []
+    for linea in lineas[inicio + 1:]:
+        if not linea.strip():
+            continue
+        if filas and _FIN_DE_TABLA_IFTS.match(linea):
+            break
+        datos = _DATOS_INSTANCIA_IFTS.search(linea)
+        izquierda = linea[:datos.start()] if datos else linea
+        partes = [(m.start(), m.group()) for m in re.finditer(r"\S+(?: \S+)*", izquierda)]
+        # The name is the last cell before the data; the area's label left of it is not.
+        pieza = partes[-1] if partes else None
+        if pieza and (_ROTULO_IFTS.search(pieza[1]) or not re.match(r"[A-ZÁÉÍÓÚÑa-záéíóúñ(]", pieza[1])):
+            pieza = None
+        if datos:
+            if pieza and columna is None:
+                columna = pieza[0]
+            if pieza and abs(pieza[0] - columna) > 4:
+                pieza = None
+            filas.append({"partes": sueltas + ([pieza[1]] if pieza else []), "abierta": not pieza})
+            sueltas = []
+        elif pieza and columna is not None and abs(pieza[0] - columna) <= 4:
+            previa = filas[-1] if filas else None
+            if previa and (previa.pop("abierta", False) or pieza[1][0].islower()
+                           or _SIN_TERMINAR_IFTS.search(" ".join(previa["partes"]))):
+                previa["partes"].append(pieza[1])
+            else:
+                sueltas.append(pieza[1])
+    if sueltas or len(filas) < 10:
+        return []
+    materias: list[tuple[str, None]] = []
+    for fila in filas:
+        # Without a footnote's mark: "Derecho Penal Tributario (*)".
+        nombre = re.sub(r"(?:\s*\(\*\))+$", "", " ".join(" ".join(fila["partes"]).split()))
+        if not nombre or _SIN_TERMINAR_IFTS.search(nombre):
+            return []
+        if comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+            materias.append((nombre, None))
+    return materias
+
+
+def nombres_en_celdas(materias: list[tuple[str, Any]], texto_sin_columnas: str) -> bool:
+    """Whether each name is a whole cell of the document as ``pdftotext``
+    reads it without its columns (a cell's lines one after another): a
+    name made of two cells' pieces ("Iluminación, Domótica y Eficiencia
+    Energética Sistemas ...") or of a label and a cell ("CAMPO DE LA
+    PRÁCTICA PROFESIONALIZANTE PP 1: ...") is not, nor one that begins in
+    lower case (the end of another name)."""
+    def clave(texto: str) -> str:
+        return " ".join(re.findall(r"[a-z0-9]+", comparison_key(texto)))
+
+    lineas = [clave(l) for l in texto_sin_columnas.replace("​", "").splitlines()]
+    lineas = [l for l in lineas if l]
+    celdas = {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 5)}
+    return all(nombre[:1].isupper() and not re.search(r"\b[A-ZÁÉÍÓÚÑ]{4,}\s+[A-ZÁÉÍÓÚÑ]{2,}\s+[A-ZÁÉÍÓÚÑ]{2,}", nombre)
+               and clave(nombre) in celdas for nombre, _ in materias)

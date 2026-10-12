@@ -162,5 +162,30 @@ class PlanUdc(unittest.TestCase):
                          [("Ecología", 1), ("Microeconomía", 1), ("Tesina", 2)])
 
 
+class PlanUnrn(unittest.TestCase):
+    def test_ficha_con_nombres_partidos(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_unrn
+
+        texto = """                                           PLAN DE ESTUDIOS
+Código    Nº de   Asignatura                        Hs.
+                                     PRIMER AÑO
+                               PRIMER CUATRIMESTRE
+T0001     1       Razonamiento y Resolución de Problemas                  4         64          -
+T0002     2       Introducción a la Lectura y Escritura
+                                                                          4         64          -
+                  Académica
+                                    SEGUNDO AÑO
+                  Solución de controversias y Derecho internacional
+VR328     3                                                              4         64          12
+                  aplicado
+                                             Subtotal Segundo Año:       48          640
+TITULO: LICENCIADO EN COMERCIO EXTERIOR
+"""
+        self.assertEqual(plan_unrn(texto), [
+            ("Razonamiento y Resolución de Problemas", 1), ("Introducción a la Lectura y Escritura Académica", 1),
+            ("Solución de controversias y Derecho internacional aplicado", 2)])
+        self.assertEqual(plan_unrn(texto.replace("VR328     3", "VR328     4")), [])
+
+
 if __name__ == "__main__":
     unittest.main()
