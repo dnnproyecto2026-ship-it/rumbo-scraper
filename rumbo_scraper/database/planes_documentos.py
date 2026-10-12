@@ -282,6 +282,11 @@ def _plan_entre_los_documentos(visitante: Any, html: str, url: str, host: str, c
     return enteros[0] if len(enteros) == 1 else None
 
 
+# Barceló's careers keep their plan on a page of its own, linked "Plan de
+# estudios" from the career's page.
+_PLAN_EN_OTRA_PAGINA += (("barcelo.edu.ar", "plan de estudios", planes_sitios.plan_por_anios),)
+
+
 # Sites whose every career page links every career's plan page, the right
 # one named like the career's own: Favaloro's "licenciatura-en-nutricion-
 # admision/" and "licenciatura-en-nutricion-plan-de-estudio/". Taken only

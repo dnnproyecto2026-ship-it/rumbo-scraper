@@ -34,6 +34,8 @@ _ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*\.?\s*(?:er|ro|do|to|vo|mo|[°ºo])?\
 _NO_ES_MATERIA = re.compile(
     r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
     r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
+    # A row's kind alone (Barceló's "Práctica", "Seminario", "Taller" column).
+    r"|^(?:pr[áa]ctica|seminario|taller)$"
     # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
     r"|^t[íi]tulo (?:de |intermedio|final)|^carga horaria|^duraci[óo]n\s*:"
     # A plan table's column heading (Morón: "Cod", "Asignatura", "Opción",
