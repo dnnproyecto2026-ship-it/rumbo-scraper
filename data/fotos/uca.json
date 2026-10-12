@@ -1,0 +1,56 @@
+{
+  "universidad": "UCA",
+  "sitio_web": "https://uca.edu.ar",
+  "imagenes": [
+    {
+      "url_imagen": "https://wadmin.uca.edu.ar/public/ckeditor/Fundraising/uca-conecta/2026-UCA-Conecta-Foto-01.jpg",
+      "pagina": "https://uca.edu.ar/es/uca-conecta-sede-rosario-2026",
+      "tipo": "campus",
+      "sede": "",
+      "descripcion": "Sede Rosario",
+      "texto_alternativo": "Sede Rosario",
+      "ancho": 2000,
+      "alto": 1127,
+      "credito": "",
+      "tipo_segun": "imagen"
+    },
+    {
+      "url_imagen": "https://wadmin.uca.edu.ar/public/filters/medium/public/20260608/1780950763_UCA_Campus_Haslop Jennifer-2.JPG",
+      "pagina": "https://uca.edu.ar/es/comunicacion-institucional",
+      "tipo": "campus",
+      "sede": "",
+      "descripcion": "UCA Campus Haslop Jennifer",
+      "texto_alternativo": "",
+      "ancho": 1760,
+      "alto": 1097,
+      "credito": "",
+      "tipo_segun": "imagen"
+    },
+    {
+      "url_imagen": "https://wadmin.uca.edu.ar/public/filters/mediumSquare/public/20220526/1653591441_Estudio en Biblioteca.jpg",
+      "pagina": "https://uca.edu.ar/es/campus-del-rosario",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Estudio en Biblioteca",
+      "texto_alternativo": "",
+      "ancho": 2061,
+      "alto": 1889,
+      "credito": "",
+      "tipo_segun": "imagen"
+    }
+  ],
+  "para_revisar": [
+    {
+      "url_imagen": "https://wadmin.uca.edu.ar/public/filters/medium/public/20210312/1615549599_uca cielo claro sin gente.jpg",
+      "pagina": "https://uca.edu.ar/es/campus-del-rosario",
+      "tipo": "campus",
+      "sede": "",
+      "descripcion": "Campus del Rosario",
+      "texto_alternativo": "",
+      "ancho": 3199,
+      "alto": 1994,
+      "credito": "",
+      "tipo_segun": "pagina"
+    }
+  ]
+}

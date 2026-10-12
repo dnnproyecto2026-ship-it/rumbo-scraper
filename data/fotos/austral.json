@@ -1,0 +1,164 @@
+{
+  "universidad": "Austral",
+  "sitio_web": "https://www.austral.edu.ar",
+  "imagenes": [
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2023/01/edificio-ing.jpg",
+      "pagina": "https://www.austral.edu.ar/investigacion/laboratorios/",
+      "tipo": "campus",
+      "sede": "",
+      "descripcion": "Edificio ing",
+      "texto_alternativo": "",
+      "ancho": 1500,
+      "alto": 844,
+      "credito": "",
+      "tipo_segun": "imagen"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2023/01/edificio_Roble.jpg",
+      "pagina": "https://www.austral.edu.ar/investigacion/laboratorios/",
+      "tipo": "campus",
+      "sede": "",
+      "descripcion": "Edificio Roble",
+      "texto_alternativo": "",
+      "ancho": 1200,
+      "alto": 800,
+      "credito": "",
+      "tipo_segun": "imagen"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2024/06/programas_investigacion_biblioteca.jpg",
+      "pagina": "https://www.austral.edu.ar/biblioteca/apoyo-al-docente-e-investigador/",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Programas de investigación académica",
+      "texto_alternativo": "Programas de investigación académica",
+      "ancho": 1200,
+      "alto": 1100,
+      "credito": "",
+      "tipo_segun": "imagen"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2024/07/residencia_altamira_01.jpg",
+      "pagina": "https://www.austral.edu.ar/residencias-y-centro-de-formacion/",
+      "tipo": "otro",
+      "sede": "",
+      "descripcion": "Residencia altamira",
+      "texto_alternativo": "",
+      "ancho": 1200,
+      "alto": 800,
+      "credito": "",
+      "tipo_segun": "imagen"
+    }
+  ],
+  "para_revisar": [
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2024/11/GAZ9412.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/laboratorio-de-innovacion-y-emprendimientos-rosario/?sede=rosario",
+      "tipo": "laboratorio",
+      "sede": "",
+      "descripcion": "Laboratorio de Innovación y Emprendimientos",
+      "texto_alternativo": "",
+      "ancho": 6048,
+      "alto": 4024,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2026/09/IMG_3337.jpg",
+      "pagina": "https://www.austral.edu.ar/biblioteca/",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Sistema de Bibliotecas Austral",
+      "texto_alternativo": "",
+      "ancho": 6000,
+      "alto": 4000,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2024/11/IMG_1674.jpeg",
+      "pagina": "https://www.austral.edu.ar/rosario/laboratorio-de-innovacion-y-emprendimientos-rosario/?sede=rosario",
+      "tipo": "laboratorio",
+      "sede": "",
+      "descripcion": "Laboratorio de Innovación y Emprendimientos",
+      "texto_alternativo": "",
+      "ancho": 2364,
+      "alto": 1330,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2023/06/DSC9955.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/laboratorio-de-innovacion-y-emprendimientos-rosario/?sede=rosario",
+      "tipo": "laboratorio",
+      "sede": "",
+      "descripcion": "Laboratorio de Innovación y Emprendimientos",
+      "texto_alternativo": "",
+      "ancho": 1444,
+      "alto": 964,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2023/06/DSC0125.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/laboratorio-de-innovacion-y-emprendimientos-rosario/?sede=rosario",
+      "tipo": "laboratorio",
+      "sede": "",
+      "descripcion": "Laboratorio de Innovación y Emprendimientos",
+      "texto_alternativo": "",
+      "ancho": 1444,
+      "alto": 964,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2022/12/agtech3-2.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/laboratorio-de-innovacion-y-emprendimientos-rosario/?sede=rosario",
+      "tipo": "laboratorio",
+      "sede": "",
+      "descripcion": "Laboratorio de Innovación y Emprendimientos",
+      "texto_alternativo": "",
+      "ancho": 1000,
+      "alto": 480,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2025/03/posgrados_austral.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/biblioteca-rosario/?sede=rosario",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Sistema de Bibliotecas",
+      "texto_alternativo": "",
+      "ancho": 2571,
+      "alto": 1714,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2023/03/remotexs.jpg",
+      "pagina": "https://www.austral.edu.ar/rosario/biblioteca-rosario/?sede=rosario",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Sistema de Bibliotecas",
+      "texto_alternativo": "",
+      "ancho": 1600,
+      "alto": 1200,
+      "credito": "",
+      "tipo_segun": "pagina"
+    },
+    {
+      "url_imagen": "https://www.austral.edu.ar/wp-content/uploads/2025/12/dors.jpg",
+      "pagina": "https://www.austral.edu.ar/biblioteca/",
+      "tipo": "biblioteca",
+      "sede": "",
+      "descripcion": "Sistema de Bibliotecas Austral",
+      "texto_alternativo": "",
+      "ancho": 1081,
+      "alto": 709,
+      "credito": "",
+      "tipo_segun": "pagina"
+    }
+  ]
+}
