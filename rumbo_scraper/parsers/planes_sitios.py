@@ -4814,3 +4814,64 @@ def plan_uhiba_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     (``plan_uhiba``) or in a table closed by each year's totals (its 2027
     sheets: Psicología, Ingeniería Biomédica)."""
     return plan_uhiba(texto_con_columnas) or plan_totales_por_anio(texto_con_columnas)
+
+
+def plan_cemic(ruta: str) -> list[tuple[str, int]]:
+    """CEMIC's plan sheets ("Plan de estudios_<Carrera>.pdf"): under each
+    "1° AÑO" heading a table "Cod. | Asignatura | Cursada | Horas", two years
+    side by side on a page; a row per subject, its two-digit code at the
+    left and its name between the "Asignatura" and "Cursada" columns, wrapped
+    onto the lines below until the next code. Nothing unless the codes run
+    from 1 without a gap and their years never go back."""
+    import pdfplumber
+
+    filas: dict[int, tuple[str, int]] = {}
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            palabras = pagina.extract_words(keep_blank_chars=False)
+            cods = [p for p in palabras if p["text"] == "Cod."]
+            tablas = []
+            for i, p in enumerate(palabras[:-1]):
+                m = re.fullmatch(r"(\d)\s*[°º]", p["text"])
+                if not m or palabras[i + 1]["text"] != "AÑO":
+                    continue
+                cod = next((c for c in cods if 0 < c["top"] - p["top"] < 40 and abs(c["x0"] - p["x0"]) < 40), None)
+                if not cod:
+                    continue
+                cabecera = [q for q in palabras if abs(q["top"] - cod["top"]) < 3 and q["x0"] >= cod["x0"]]
+                # (Nutrición's last table: "Cod. | Actividades obligatorias | Cursada".)
+                asignatura = next((q for q in cabecera if q["text"] in ("Asignatura", "Actividades")), None)
+                cursada = next((q for q in cabecera if q["text"] == "Cursada"), None)
+                if asignatura and cursada:
+                    tablas.append((int(m.group(1)), cod, asignatura["x0"], cursada["x0"]))
+            for anio, cod, izquierda, derecha in tablas:
+                # The table ends at its totals, at the year's footer ("1° AÑO",
+                # "Carga horaria total") or at the page's ("Duración de la carrera").
+                fin = min([q["top"] for q in palabras if q["top"] > cod["top"] + 15
+                           and cod["x0"] - 10 <= q["x0"] < derecha + 150
+                           and re.match(r"(?i)carga|total|duraci[óo]n|\d\s*[°º]$|año$", q["text"])] + [pagina.height])
+                codigos = sorted((q for q in palabras if re.fullmatch(r"\d{1,2}", q["text"])
+                                  and abs(q["x1"] - cod["x1"]) < 25 and cod["top"] < q["top"] < fin),
+                                 key=lambda q: q["top"])
+                for k, codigo in enumerate(codigos):
+                    hasta = codigos[k + 1]["top"] - 2 if k + 1 < len(codigos) else fin
+                    nombre = [q for q in palabras if izquierda - 4 <= q["x0"] < derecha - 4
+                              and codigo["top"] - 3 <= q["top"] < hasta]
+                    nombre.sort(key=lambda q: (round(q["top"]), q["x0"]))
+                    filas.setdefault(int(codigo["text"]), (" ".join(q["text"] for q in nombre), anio))
+    if not filas or set(filas) != set(range(1, max(filas) + 1)):
+        return []
+    # A table not read at the end leaves no gap: the sheet's last code says.
+    import subprocess
+
+    texto = subprocess.run(["pdftotext", "-layout", ruta, "-"], capture_output=True, text=True, timeout=60).stdout
+    if max(filas) != max([int(c) for c in re.findall(r"(?m)^\s{2,}(\d{1,2})\s{2,}[^\W\d_]", texto)] + [0]):
+        return []
+    orden = [filas[c][1] for c in sorted(filas)]
+    if orden != sorted(orden):
+        return []
+    materias: list[tuple[str, int]] = []
+    for codigo in sorted(filas):
+        _agregar(materias, *filas[codigo])
+    return materias
+plan_cemic.ruta = True  # type: ignore[attr-defined]

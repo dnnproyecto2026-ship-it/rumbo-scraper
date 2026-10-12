@@ -392,6 +392,11 @@ _DOCUMENTOS_PROPIOS += (("agro.uba.ar", planes_sitios.plan_agro_uba),)
 _DOCUMENTOS_PROPIOS += (("unrn.edu.ar", planes_sitios.plan_unrn),)
 # UNMa's plan maps (doc/mapas/…PLAN…pdf, "Descargar Plan Completo"): coded boxes under each year.
 _DOCUMENTOS_PROPIOS += (("unma.edu.ar", planes_sitios.plan_unma),)
+# CEMIC's plan sheets ("Plan de estudios_<Carrera>.pdf"), all linked from one page: coded rows under each year.
+_DOCUMENTOS_PROPIOS += (("cemic.edu.ar", planes_sitios.plan_cemic),)
+# Sites whose one page lists every career's plan, each document named for
+# its career (CEMIC's "Plan de estudios_Enfermeria.pdf"): that one first.
+_DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
 _DOCUMENTO_POR_SU_ENLACE += (("unma.edu.ar", re.compile(r"/doc/mapas/[^/]*PLAN[^/]*\.pdf$", re.I)),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
@@ -570,9 +575,11 @@ def _documento_con_su_nombre(html: str, pagina: str, carrera: str) -> str | None
     for enlace in BeautifulSoup(html or "", "html.parser").find_all("a", href=True):
         url = urljoin(pagina, enlace["href"])
         archivo = unquote(urlparse(url).path.rsplit("/", 1)[-1])
-        if not archivo.lower().endswith(".pdf") or urlparse(url).netloc != urlparse(pagina).netloc:
+        if not archivo.lower().endswith(".pdf") or (urlparse(url).netloc.removeprefix("www.")
+                                                    != urlparse(pagina).netloc.removeprefix("www.")):
             continue
-        if _nombra(re.sub(r"[-_.]+", " ", archivo), carrera):
+        # ("Plan de estudios_TerapiaFisica.pdf": CEMIC runs the words together.)
+        if _nombra(re.sub(r"(?<=[a-zá-ú])(?=[A-ZÁ-Ú])", " ", re.sub(r"[-_.]+", " ", archivo)), carrera):
             candidatos.add(url)
     # Beside the plan, the resolution that approved it names the career too
     # (UNAHUR: "Licenciatura-en-Nutricion.pdf", "RES-1468-21-LIC-EN-NUTRICION.pdf"):
@@ -581,6 +588,11 @@ def _documento_con_su_nombre(html: str, pagina: str, carrera: str) -> str | None
         candidatos = {url for url in candidatos if not re.match(
             r"(?i)(res|resoluci[oó]n|di|rm|rcs|dispo?)[-_ ]|.*preguntas|.*correlativ",
             unquote(urlparse(url).path.rsplit("/", 1)[-1]))}
+    # Beside it, the programme of its subjects (CEMIC's "IUC_Carreras_Programa
+    # Enfermería.pdf"): the plan is the one its file calls a plan.
+    if len(candidatos) > 1:
+        candidatos = {url for url in candidatos
+                      if re.search(r"(?i)plan", unquote(urlparse(url).path.rsplit("/", 1)[-1]))} or candidatos
     return candidatos.pop() if len(candidatos) == 1 else None
 
 
@@ -735,7 +747,8 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # A site's own rule for its plan's link goes first: it is the
             # one that knows (UNLP Ingeniería's page also links a PDF named
             # after the career: its profile).
-            documento = (_documento_por_su_enlace(html, url, host)
+            documento = ((host.endswith(_DOCUMENTO_POR_SU_NOMBRE) and _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
+                         or _documento_por_su_enlace(html, url, host)
                          or _documento_del_plan(html, url, dominios)
                          or _documento_con_su_nombre(html, url, carrera["nombre_carrera"]))
             if not documento:
