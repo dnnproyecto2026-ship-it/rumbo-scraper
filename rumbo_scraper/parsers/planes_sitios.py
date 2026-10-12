@@ -4750,3 +4750,25 @@ def plan_unma(ruta: str) -> list[tuple[str, int]]:
         _agregar(materias, nombres[codigo], anios[codigo])
     return materias
 plan_unma.ruta = True  # type: ignore[attr-defined]
+
+
+_PANEL_FAVALORO = {"primero": 1, "segundo": 2, "tercero": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+
+
+def plan_favaloro(html: str) -> list[tuple[str, int]]:
+    """Favaloro's plan pages ("<career>-plan-de-estudio/"): a tab per year,
+    its panel's id the ordinal ("primero" … "sexto"), and in it an accordion
+    of the year's subjects, each an h2 over its hours and teacher. A panel
+    left empty (the template's six years over a four-year plan) gives
+    nothing."""
+    materias: list[tuple[str, int]] = []
+    for panel in BeautifulSoup(html or "", "html.parser").select("div.vc_tta-panel[id]"):
+        anio = _PANEL_FAVALORO.get(panel["id"])
+        if not anio:
+            continue
+        for titulo in panel.select("li > h2"):
+            # (Kinesiología's first year opens with its admission course.)
+            if re.fullmatch(r"(?i)curso de ingreso", titulo.get_text(" ", strip=True)):
+                continue
+            _agregar(materias, titulo.get_text(" ", strip=True), anio)
+    return materias

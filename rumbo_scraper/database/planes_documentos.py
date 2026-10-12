@@ -282,10 +282,28 @@ def _plan_entre_los_documentos(visitante: Any, html: str, url: str, host: str, c
     return enteros[0] if len(enteros) == 1 else None
 
 
+# Sites whose every career page links every career's plan page, the right
+# one named like the career's own: Favaloro's "licenciatura-en-nutricion-
+# admision/" and "licenciatura-en-nutricion-plan-de-estudio/". Taken only
+# if the career's page links it.
+_PLAN_POR_SU_DIRECCION = (("favaloro.edu.ar", (r"-admision/?$", "-plan-de-estudio/"), planes_sitios.plan_favaloro),)
+
+
 def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list, str] | None:
     """The plan a page of the site's menu lists ("Programas", "Programas
     Analíticos"), from the career's page or from the career's own site it
     links ("Sitio web de la carrera")."""
+    for dominio, (patron, reemplazo), lector in _PLAN_POR_SU_DIRECCION:
+        if not host.endswith(dominio) or not re.search(patron, url):
+            continue
+        pagina = re.sub(patron, reemplazo, url)
+        enlazadas = {urljoin(url, a["href"]).lower().replace("http://", "https://").rstrip("/")
+                     for a in BeautifulSoup(html or "", "html.parser").find_all("a", href=True)}
+        if pagina.lower().replace("http://", "https://").rstrip("/") not in enlazadas:
+            return None
+        materias = lector(visitante.get(pagina))
+        time.sleep(PAUSA)
+        return (materias, pagina) if materias else None
     for dominio, texto, lector in _PLAN_EN_OTRA_PAGINA:
         if not host.endswith(dominio):
             continue

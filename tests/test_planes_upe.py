@@ -201,3 +201,13 @@ class PlanUnmaTests(unittest.TestCase):
         self.assertEqual(hallados, {17: "Movimientos Sociales en América Latina",
                                     18: "Seminario Temático Obligatorio III",
                                     33: "Seminario de Actualización Teórica"})
+
+
+class PlanFavaloroTests(unittest.TestCase):
+    def test_un_panel_por_anio(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_favaloro
+        html = ('<div class="vc_tta-panel" id="primero"><ul><li><h2>Curso de Ingreso</h2></li>'
+                '<li><h2>Anatomía</h2><p>Carga Horaria</p></li><li><h2>Bioquímica</h2></li></ul></div>'
+                '<div class="vc_tta-panel" id="segundo"><ul><li><h2>Fisiología</h2></li></ul></div>'
+                '<div class="vc_tta-panel" id="quinto"></div>')
+        self.assertEqual(plan_favaloro(html), [("Anatomía", 1), ("Bioquímica", 1), ("Fisiología", 2)])

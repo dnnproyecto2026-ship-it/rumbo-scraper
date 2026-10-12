@@ -22,6 +22,7 @@ returned empty.
 
 from __future__ import annotations
 
+import re
 import ssl
 from typing import Any
 
@@ -73,7 +74,13 @@ class Visitante:
                     try:
                         return response.content.decode("utf-8")
                     except UnicodeDecodeError:
-                        return response.content.decode("cp1252", errors="replace")
+                        latino = response.content.decode("cp1252", errors="replace")
+                        # A UTF-8 page with one stray byte (Favaloro's plans)
+                        # reads right but for that byte; read as cp1252,
+                        # every accent of it breaks ("Anatom\u00c3\u00ada").
+                        if texto.count("\ufffd") < len(re.findall(r"\u00c3[\x80-\xbf\u00a1-\u00bf]", latino)):
+                            return texto
+                        return latino
                 return texto
             except (UnicodeDecodeError, LookupError):
                 # A server that declares an encoding its page is not in (the
