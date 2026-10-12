@@ -256,6 +256,31 @@ def _planes_enlazados(html: str, pagina: str) -> list[str]:
     return halladas
 
 
+def _planes_del_registro(leida: dict[str, Any], carrera: str) -> list[str]:
+    """The documents the records of an official JSON source link as the
+    career's plan: the records that name the career, their values that are
+    a PDF's or a Drive file's address (read from its own address)."""
+    try:
+        datos = json.loads(leida.get("crudo") or "[]")
+    except ValueError:
+        return []
+    clave = comparison_key(carrera)
+    documentos = []
+    for registro in datos if isinstance(datos, list) else []:
+        if not isinstance(registro, dict) or not any(
+                isinstance(valor, str) and comparison_key(valor) == clave for valor in registro.values()):
+            continue
+        for campo, valor in registro.items():
+            if not (isinstance(valor, str) and re.search(r"(?i)plan", campo)):
+                continue
+            en_drive = re.search(r"drive\.google\.com/file/d/([\w-]+)", valor)
+            documento = (f"https://drive.google.com/uc?export=download&id={en_drive.group(1)}" if en_drive
+                         else valor if re.match(r"https?://\S+\.pdf$", valor, re.I) else None)
+            if documento and documento not in documentos:
+                documentos.append(documento)
+    return documentos
+
+
 def _plan_uai(fuentes: "Fuentes", url: str, html: str, carrera: str) -> list[str]:
     """The UAI serves each plan from its plan service, by the code the
     career's page declares: the index of plans, then the newest."""
@@ -421,6 +446,11 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
                 leida = fuentes.leer(url)
                 if leida["ok"]:
                     textos[url] = leida["texto"]
+                # An official service's record of the career that links its
+                # plan (the Agencia de Aprendizaje's "planEstudio", on Drive).
+                for documento in _planes_del_registro(leida, carrera):
+                    if documento not in textos and fuentes.leer(documento, avalada=True)["ok"]:
+                        textos[documento] = fuentes.leer(documento, avalada=True)["texto"]
             if sum(1 for m in materias if any(v.dice(t, m) for t in textos.values())) \
                     < v.PLAN_HALLADO * len(materias):
                 # The page does not have the plan: the plan is the page or

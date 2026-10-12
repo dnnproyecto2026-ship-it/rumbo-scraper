@@ -420,6 +420,29 @@ Taller de Ciencias en la Escuela.
         self.assertEqual(p.plan_cordoba("INICIAL", self.TEXTO.replace("Estudios Socioculturales y Literarios de Pueblos de Habla Inglesa I.", "")), [])
 
 
+class PlanCodigosIfts(unittest.TestCase):
+    FILAS = [
+        "         1.1.1   Técnicas de Programación                 FTE       MO      C      9        6      96",
+        "",
+        "                 Administración y Gestión de Bases de",
+        "                                                          FTE       MO      C      9        6      96",
+        "1°/1°   1.1.2    Datos",
+        "        1.2.1    Lógica Computacional                     FF        MA      C      6        4      64",
+        "                Protocolo de Internet de las",
+        "        1.2.2                                   FE   Mo   C   6   4   64",
+        "                Cosas",
+        "        2.1.1   Inglés                                   FG        MA      C      6        4      64",
+    ]
+
+    def test_el_nombre_centrado_en_su_fila(self):
+        self.assertEqual(p.plan_codigos_ifts("\n".join(self.FILAS)), [
+            ("Técnicas de Programación", 1), ("Administración y Gestión de Bases de Datos", 1),
+            ("Lógica Computacional", 1), ("Protocolo de Internet de las Cosas", 1), ("Inglés", 2)])
+
+    def test_un_numero_que_falta_no_da_plan(self):
+        self.assertEqual(p.plan_codigos_ifts("\n".join(self.FILAS).replace("1.2.1", "1.2.3")), [])
+
+
 class PlanUnahur(unittest.TestCase):
     def test_a_wrapped_name_is_the_lines_around_its_row(self):
         texto = "\n".join([

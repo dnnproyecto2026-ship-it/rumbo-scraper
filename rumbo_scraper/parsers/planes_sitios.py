@@ -4371,3 +4371,78 @@ def plan_cordoba(encabezado: str, texto: str) -> list[tuple[str, int]]:
             if " " + " ".join(re.findall(r"[a-z0-9]+", comparison_key(mitad))) + " " not in plano:
                 return []
     return materias
+
+
+_CODIGO_IFTS = re.compile(r"(?<![\d.])([1-4])\.([1-8])\.(\d{1,2})\.?(?=\s|$)")
+_CUATRIMESTRE_IFTS = re.compile(r"\d\s*°\s*/\s*\d\s*°")
+# A row's data: its field, format and term, then its hours ("FTE  MO  C  9  6
+# 96", "M  C  4.5  -  112").
+_DATOS_IFTS = re.compile(r"\s{2,}(?:[A-Z][A-Za-z]{0,3}\s+){1,3}(?:\d+(?:[.,]\d+)?|-)(?:\s+(?:\d+(?:[.,]\d+)?|-)){1,4}\s*$")
+_ENCABEZADO_IFTS = re.compile(r"(?i)^(?:primer|segundo|tercer|cuarto)\s+a[ñn]o\b|cuatrimestre$|^(?:\d\s*°?\s*)?(?:sem|cuat)\.?$"
+                              r"|^(?:c[óo]digo|denominaci[óo]n|totales|unidad curricular|rimestre|a[ñn]o)\b")
+_SIN_TERMINAR_IFTS = re.compile(r"(?i)\b(?:de|del|y|e|o|u|el|la|las|los|en|a|al|para|por|con|sobre)$")
+
+
+def plan_codigos_ifts(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The plan of a CABA IFTS career (the PDF the Agencia de Aprendizaje's
+    record links): a row per unit with its code (year, term, number: "1.2.3"),
+    its name and its data ("FTE  MO  C  9  6  96"). A name too long for its
+    cell is centred on the row's data: as many lines above it as below
+    ("Protocolo de Internet de las / 1.2.2  FE Mo C 6 4 64 / Cosas"), the code
+    on the data's line or next to it. Nothing unless every term numbers its
+    units from 1 without a gap, every year from the first is there, every
+    line of name has one row to go with, and no name is left unfinished."""
+    lineas = [_CUATRIMESTRE_IFTS.sub(lambda m: " " * len(m.group()), l) for l in texto_con_columnas.splitlines()]
+    datos, nombres, codigos = set(), {}, {}
+    for i, linea in enumerate(lineas):
+        fila = _DATOS_IFTS.search(linea)
+        if fila:
+            datos.add(i)
+        izquierda = linea[:fila.start()] if fila else linea
+        codigo = _CODIGO_IFTS.search(izquierda)
+        if codigo and not izquierda[:codigo.start()].strip():
+            codigos[i] = (int(codigo.group(1)), int(codigo.group(2)), int(codigo.group(3)))
+            izquierda = " " * codigo.end() + izquierda[codigo.end():]
+        texto = izquierda.strip()
+        if (texto and not _ENCABEZADO_IFTS.search(texto) and re.match(r"[A-ZÁÉÍÓÚÑa-záéíóúñ(]", texto)
+                and not re.search(r"\s{3,}", texto)):
+            nombres[i] = texto
+    unidades: list[dict[str, Any]] = []
+    for d in sorted(datos):
+        codigo = codigos.get(d) or codigos.get(d + 1) or codigos.get(d - 1)
+        if not codigo:
+            if unidades:
+                break  # the table is over: a later table's rows
+            continue
+        unidades.append({"d": d, "codigo": codigo, "lineas": []})
+    if not unidades or len({u["codigo"] for u in unidades}) != len(unidades):
+        return []
+    libres = {i for i in nombres if unidades[0]["d"] - 2 <= i <= unidades[-1]["d"] + 3}
+    for unidad in unidades:
+        if unidad["d"] in libres:
+            unidad["lineas"].append(unidad["d"])
+            libres.discard(unidad["d"])
+    for distancia in (1, 2):
+        for unidad in unidades:
+            arriba, abajo = unidad["d"] - distancia, unidad["d"] + distancia
+            if arriba in libres and abajo in libres:
+                unidad["lineas"] += [arriba, abajo]
+                libres -= {arriba, abajo}
+    for i in sorted(libres):
+        cerca = sorted(unidades, key=lambda u: abs(u["d"] - i))
+        if abs(cerca[0]["d"] - i) > 2 or (len(cerca) > 1 and abs(cerca[1]["d"] - i) == abs(cerca[0]["d"] - i)):
+            return []  # a line of name no row clearly owns
+        cerca[0]["lineas"].append(i)
+    materias: list[tuple[str, int]] = []
+    numeros: dict[tuple[int, int], list[int]] = {}
+    for unidad in unidades:
+        nombre = " ".join(" ".join(nombres[i] for i in sorted(unidad["lineas"])).split())
+        if not nombre or _SIN_TERMINAR_IFTS.search(nombre):
+            return []
+        anio, cuatrimestre, numero = unidad["codigo"]
+        numeros.setdefault((anio, cuatrimestre), []).append(numero)
+        materias.append((nombre, anio))
+    if any(sorted(n) != list(range(1, len(n) + 1)) for n in numeros.values()):
+        return []
+    anios = {anio for anio, _ in numeros}
+    return materias if anios == set(range(1, max(anios) + 1)) else []
