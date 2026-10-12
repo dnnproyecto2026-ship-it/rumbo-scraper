@@ -78,7 +78,8 @@ _LIGADURAS = str.maketrans({"ﬀ": "ff", "ﬁ": "fi", "ﬂ": "fl", "ﬃ": "ffi",
 
 
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
-    nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    # (A soft hyphen, "Seguridad" written "\u00adSeguridad", is not seen.)
+    nombre = clean_text(nombre.replace("\u00ad", "")).replace("\xa0", " ").strip(" .;-–*")
     # A PDF's ligatures ("Planiﬁcación"): the letters they stand for.
     nombre = nombre.translate(_LIGADURAS)
     # A list's marks and codes: "› Nutrición" (UNAU), "COD: 101 - Guión" (UNMdP FAUD).
@@ -110,6 +111,9 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
         nombre = con_tildes(nombre)
     # "Anatomía Ii": the numeral of a subject's part is written in capitals.
     nombre = re.sub(r"(?i)\b(i{1,3}|iv|vi{0,3}|ix|x)\b(?=\s*$|\s*[:(-])", lambda m: m.group(1).upper(), nombre)
+    # And of a part of that part: "ANALISIS MATEMATICO II A" (UdeMM) is
+    # "Análisis Matemático II A", not "... Ii a".
+    nombre = re.sub(r"(?i)\b(i{1,3}|iv|vi{0,3}|ix|x)\s+([a-d])$", lambda m: f"{m.group(1).upper()} {m.group(2).upper()}", nombre)
     nombre = re.sub(r"\s+", " ", nombre.replace("\u200b", "")).strip()
     if len(re.findall(r"[^\W\d_]", nombre)) < 3:
         return
