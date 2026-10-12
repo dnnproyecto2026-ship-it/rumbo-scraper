@@ -1009,7 +1009,9 @@ def build_dataset(
     personas: dict[str, dict[str, Any]] = {}
     canales: dict[str, dict[str, Any]] = {}
     for programme in _sin_recortes(programas, excluded):
-        key = comparison_key(programme.nombre)
+        # A degree and a postgraduate programme may share a heading: UFLO's
+        # Licenciatura and Doctorado are both "Psicología".
+        key = f"{programme.nivel}:{comparison_key(programme.nombre)}"
         if key in seen:
             excluded.append({"programa": programme.nombre, "url": programme.url,
                              "motivo": f"ya figura en {seen[key]}"})
