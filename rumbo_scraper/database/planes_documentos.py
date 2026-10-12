@@ -397,6 +397,8 @@ _DOCUMENTOS_PROPIOS += (("cemic.edu.ar", planes_sitios.plan_cemic),)
 # Sites whose one page lists every career's plan, each document named for
 # its career (CEMIC's "Plan de estudios_Enfermeria.pdf"): that one first.
 _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
+# IUSE's plan sheets: numbered rows under each year's heading.
+_DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 _DOCUMENTO_POR_SU_ENLACE += (("unma.edu.ar", re.compile(r"/doc/mapas/[^/]*PLAN[^/]*\.pdf$", re.I)),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:

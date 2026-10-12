@@ -55,6 +55,9 @@ LISTADOS: dict[str, tuple[str, ...]] = {
     # Its careers had no page (the site was down when they were read); its
     # list of careers links each one's, with the plan and its itinerary.
     "UNGS": ("https://www.ungs.edu.ar/carreras",),
+    # Its careers came from the national guide, without a page; its home
+    # page links each one's ("Lic. en Criminalística").
+    "IUSE": ("https://iuse.edu.ar",),
 }
 
 

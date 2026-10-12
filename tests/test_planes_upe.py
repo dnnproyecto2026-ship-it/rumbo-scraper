@@ -234,3 +234,19 @@ class PlanTotalesPorAnioTests(unittest.TestCase):
     def test_sin_el_primer_anio_no_hay_plan(self) -> None:
         from rumbo_scraper.parsers.planes_sitios import plan_totales_por_anio
         self.assertEqual(plan_totales_por_anio("  Electrotecnia     96\n  Totales de segundo año   960\n"), [])
+
+
+class PlanIuseTests(unittest.TestCase):
+    def test_filas_numeradas_bajo_cada_anio(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_iuse
+        texto = """
+                           Primer año                                                             1° Cuatrimestre
+   1      Sociología y conocimiento científico                                 4             64          Cuatrimestral
+   2      Criminalística                                                       4             64          Cuatrimestral
+                                                                               21            336
+                         Segundo año                                                              1° Cuatrimestre
+   3      Inglés II                                                            3             48          Cuatrimestral
+"""
+        self.assertEqual(plan_iuse(texto), [("Sociología y conocimiento científico", 1), ("Criminalística", 1),
+                                            ("Inglés II", 2)])
+        self.assertEqual(plan_iuse(texto.replace("   2      Criminalística", "   9      Criminalística")), [])

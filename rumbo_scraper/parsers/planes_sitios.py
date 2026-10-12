@@ -4875,3 +4875,26 @@ def plan_cemic(ruta: str) -> list[tuple[str, int]]:
         _agregar(materias, *filas[codigo])
     return materias
 plan_cemic.ruta = True  # type: ignore[attr-defined]
+
+
+def plan_iuse(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """IUSE's plan sheets (``-layout``): under "Primer año" … headings
+    (beside the term), a numbered row per subject, "12  Inglés II  3  48
+    Cuatrimestral  Presencial". Nothing unless the numbers run from 1
+    without a gap."""
+    filas: dict[int, tuple[str, int]] = {}
+    anio = None
+    for linea in texto_con_columnas.splitlines():
+        cabeza = re.match(r"^\s*(primer|segundo|tercer|cuarto|quinto|sexto)o?\s+a[ñn]o\b", linea, re.I)
+        if cabeza:
+            anio = _ORDINAL_DEL_ANIO[cabeza.group(1).lower()]
+            continue
+        fila = re.match(r"^\s*(\d{1,2})\s{2,}(\S.*?)\s{2,}\d", linea)
+        if fila and anio:
+            filas.setdefault(int(fila.group(1)), (fila.group(2), anio))
+    if not filas or set(filas) != set(range(1, max(filas) + 1)):
+        return []
+    materias: list[tuple[str, int]] = []
+    for numero in sorted(filas):
+        _agregar(materias, *filas[numero])
+    return materias
