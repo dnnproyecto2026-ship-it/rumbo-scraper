@@ -192,6 +192,14 @@ class ElRuidoDeUnSitio(unittest.TestCase):
         self.assertFalse(generico.es_programa(
             "Docentes de la Licenciatura en Letras ganaron un premio"))
 
+    def test_un_posgrado_con_el_nombre_de_su_disciplina_lo_dice_su_direccion(self):
+        base = "https://www.uflouniversidad.edu.ar/carrera/"
+        html = "<html><body><h1>{}</h1>" + "<p>texto</p>" * 300 + "</body></html>"
+        maestria = generico.leer_programa(html.format("Psicología Social"), base + "maestria-psicologia-social")
+        self.assertEqual((maestria.nivel, maestria.tipo_posgrado), ("Posgrado", "Maestría"))
+        grado = generico.leer_programa(html.format("Arquitectura"), base + "arquitectura")
+        self.assertEqual(grado.nivel, "Grado")
+
     def test_dos_cohortes_son_un_solo_programa(self):
         self.assertEqual(generico.sin_cohorte("Doctorado en Educación: cohorte 2025"),
                          "Doctorado en Educación")

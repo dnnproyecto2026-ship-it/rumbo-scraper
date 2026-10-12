@@ -403,6 +403,17 @@ def leer_programa_por_etiqueta(html: str, url: str, etiqueta: str) -> Programa |
     return Programa(nombre=name, nivel=level, tipo_posgrado=kind, url=url)
 
 
+def _posgrado_por_la_direccion(url: str) -> tuple[str, str | None] | None:
+    """A postgraduate degree its address declares: UFLO heads its "Maestría
+    en Psicología Social" page "Psicología Social", at
+    ".../carrera/maestria-psicologia-social"."""
+    from urllib.parse import urlparse
+
+    parte = [p for p in urlparse(url).path.split("/") if p][-1:] or [""]
+    clasificado = clasificar(re.sub(r"[-_]+", " ", parte[0]))
+    return clasificado if clasificado and clasificado[0] == "Posgrado" else None
+
+
 def leer_programa(html: str, url: str) -> Programa | None:
     """The programme a page offers, when its heading names one."""
     name = sin_cohorte(encabezado(html))
@@ -412,6 +423,10 @@ def leer_programa(html: str, url: str) -> Programa | None:
     if not classified:
         return None
     level, kind = classified
+    # A heading that names the subject alone ("Psicología", taken for the
+    # degree in it) says no degree: the address may.
+    if not any(re.search(pattern, comparison_key(name)) for pattern, _, _ in DEGREES):
+        level, kind = _posgrado_por_la_direccion(url) or (level, kind)
     return Programa(nombre=name, nivel=level, tipo_posgrado=kind, url=url)
 
 
