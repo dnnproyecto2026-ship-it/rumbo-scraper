@@ -74,8 +74,13 @@ def anio_de(texto: str) -> int | None:
     return int(numero.group(1)) if numero else None
 
 
+_LIGADURAS = str.maketrans({"ﬀ": "ff", "ﬁ": "fi", "ﬂ": "fl", "ﬃ": "ffi", "ﬄ": "ffl", "ﬅ": "st", "ﬆ": "st"})
+
+
 def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> None:
     nombre = clean_text(nombre).replace("\xa0", " ").strip(" .;-–*")
+    # A PDF's ligatures ("Planiﬁcación"): the letters they stand for.
+    nombre = nombre.translate(_LIGADURAS)
     # A list's marks and codes: "› Nutrición" (UNAU), "COD: 101 - Guión" (UNMdP FAUD).
     nombre = re.sub(r"^(?:[›•·⏺◻▪■□◦\u2022\ufe0f\ufe0e]\s*)+", "", nombre)
     nombre = re.sub(r"(?i)^cod\.?:?\s*\d*\s*[-–]\s*", "", nombre)
