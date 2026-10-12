@@ -189,3 +189,15 @@ TITULO: LICENCIADO EN COMERCIO EXTERIOR
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlanUnmaTests(unittest.TestCase):
+    def test_codigo_y_nombre_en_su_caja(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import _CODIGO_UNMA
+        texto = ("(cód. 17) Movimientos\nSociales en América\nLatina (C)\nCorr.: 01 y 02\n"
+                 "(cód. 18) Seminario\nTemático Obligatorio III\n(B)\n(cód. 32) Seminario de\nActualización Teórica\n"
+                 "(cód. 33) Seminario de\nActualización Teórica (C)\n")
+        hallados = {int(c): " ".join(n.split()) for c, n in _CODIGO_UNMA.findall(texto)}
+        self.assertEqual(hallados, {17: "Movimientos Sociales en América Latina",
+                                    18: "Seminario Temático Obligatorio III",
+                                    33: "Seminario de Actualización Teórica"})

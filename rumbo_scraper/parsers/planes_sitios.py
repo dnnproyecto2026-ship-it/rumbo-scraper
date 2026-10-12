@@ -4703,3 +4703,50 @@ def nombres_en_celdas(materias: list[tuple[str, Any]], texto_sin_columnas: str) 
     celdas = {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 5)}
     return all(nombre[:1].isupper() and not re.search(r"\b[A-ZÁÉÍÓÚÑ]{4,}\s+[A-ZÁÉÍÓÚÑ]{2,}\s+[A-ZÁÉÍÓÚÑ]{2,}", nombre)
                and clave(nombre) in celdas for nombre, _ in materias)
+
+
+# Its length after the name: (C) a term, (A) a year, (B) two months.
+_CODIGO_UNMA = re.compile(r"\(c[óo]d\.\s*(\d{1,3})\)\s*((?:(?!\(c[óo]d\.).)+?)\s*\((?:C|A|B)\)", re.S)
+
+
+def plan_unma(ruta: str) -> list[tuple[str, int]]:
+    """UNMa's plan maps (doc/mapas/*_PLAN_ESTUDIOS.pdf): a column per year
+    under "1° AÑO" … "5° AÑO", and in it a box per subject, "(cód. 7) Historia
+    Argentina II (C)", its name wrapped over lines and "Corr.: 04" under it.
+    ``-raw`` gives each box's text whole; the year is the column its code
+    sits in, between the midpoints of the year headings. Nothing unless the
+    codes run from 1 without a gap and their years never go back (the
+    language levels, without a code, are not read)."""
+    import subprocess
+
+    import pdfplumber
+
+    texto = subprocess.run(["pdftotext", "-raw", ruta, "-"], capture_output=True, text=True,
+                           timeout=60).stdout
+    nombres: dict[int, str] = {}
+    for codigo, nombre in _CODIGO_UNMA.findall(texto):
+        nombre = re.sub(r"\s*Corr\.?:.*$", "", re.sub(r"\s+", " ", nombre)).strip()
+        nombres.setdefault(int(codigo), nombre)
+    anios: dict[int, int] = {}
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            palabras = pagina.extract_words()
+            cabezas = sorted(((p["x0"] + p["x1"]) / 2, int(m.group(1))) for i, p in enumerate(palabras[:-1])
+                             if (m := re.fullmatch(r"(\d)°", p["text"])) and palabras[i + 1]["text"] == "AÑO")
+            if not cabezas:
+                continue
+            cortes = [(a[0] + b[0]) / 2 for a, b in zip(cabezas, cabezas[1:])]
+            for i, p in enumerate(palabras[:-1]):
+                if re.fullmatch(r"\(c[óo]d\.", p["text"]) and (m := re.fullmatch(r"(\d{1,3})\)", palabras[i + 1]["text"])):
+                    x = p["x0"]
+                    anios.setdefault(int(m.group(1)), cabezas[sum(1 for c in cortes if x > c)][1])
+    if not nombres or set(nombres) != set(range(1, max(nombres) + 1)) or set(anios) != set(nombres):
+        return []
+    orden = [anios[c] for c in sorted(nombres)]
+    if orden != sorted(orden):
+        return []
+    materias: list[tuple[str, int]] = []
+    for codigo in sorted(nombres):
+        _agregar(materias, nombres[codigo], anios[codigo])
+    return materias
+plan_unma.ruta = True  # type: ignore[attr-defined]

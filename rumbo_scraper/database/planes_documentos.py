@@ -372,6 +372,9 @@ _DOCUMENTOS_PROPIOS += (("upe.edu.ar", planes_sitios.plan_upe),)
 _DOCUMENTOS_PROPIOS += (("agro.uba.ar", planes_sitios.plan_agro_uba),)
 # UNRN's career sheets: SIU code, order number and name, a name wrapped beside its row.
 _DOCUMENTOS_PROPIOS += (("unrn.edu.ar", planes_sitios.plan_unrn),)
+# UNMa's plan maps (doc/mapas/…PLAN…pdf, "Descargar Plan Completo"): coded boxes under each year.
+_DOCUMENTOS_PROPIOS += (("unma.edu.ar", planes_sitios.plan_unma),)
+_DOCUMENTO_POR_SU_ENLACE += (("unma.edu.ar", re.compile(r"/doc/mapas/[^/]*PLAN[^/]*\.pdf$", re.I)),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
     for dominio, texto in _DOCUMENTO_POR_SU_ENLACE:
