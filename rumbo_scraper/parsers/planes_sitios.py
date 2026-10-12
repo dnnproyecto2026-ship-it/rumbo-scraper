@@ -4553,7 +4553,8 @@ def plan_unrn(texto: str) -> list[tuple[str, int]]:
     for _, _, piezas, anio_fila, _ in filas:
         if not piezas:
             return []
-        _agregar(materias, " ".join(piezas), anio_fila)
+        # (A heading of the table run into a name: "Inglés - Comprensión Lectora I ANUALES".)
+        _agregar(materias, re.sub(r"\s+(?:ANUALES|ANUAL|CUATRIMESTRALES)$", "", " ".join(piezas)), anio_fila)
     return desde_el_primero(materias)
 
 
