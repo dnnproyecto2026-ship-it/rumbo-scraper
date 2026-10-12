@@ -211,3 +211,26 @@ class PlanFavaloroTests(unittest.TestCase):
                 '<div class="vc_tta-panel" id="segundo"><ul><li><h2>Fisiología</h2></li></ul></div>'
                 '<div class="vc_tta-panel" id="quinto"></div>')
         self.assertEqual(plan_favaloro(html), [("Anatomía", 1), ("Bioquímica", 1), ("Fisiología", 2)])
+
+
+class PlanTotalesPorAnioTests(unittest.TestCase):
+    def test_cada_fila_va_al_anio_cuyos_totales_siguen(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_totales_por_anio
+        texto = """
+    Año        Cuatrimestre                 Actividades curriculares               Carga horaria total
+                                Infancias                                                  500
+                     1°
+     1°                         Orígenes de la Psicología                                  250
+              Totales primer año                                                          1500
+              1º          Electrotecnia                                               48           48           96
+            Anual
+                           Introducción a la práctica en I+D                           64           128          192
+              Totales de segundo año                                                     1500
+"""
+        self.assertEqual(plan_totales_por_anio(texto), [
+            ("Infancias", 1), ("Orígenes de la Psicología", 1), ("Electrotecnia", 2),
+            ("Introducción a la práctica en I+D", 2)])
+
+    def test_sin_el_primer_anio_no_hay_plan(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_totales_por_anio
+        self.assertEqual(plan_totales_por_anio("  Electrotecnia     96\n  Totales de segundo año   960\n"), [])

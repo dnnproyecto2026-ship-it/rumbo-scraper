@@ -4772,3 +4772,45 @@ def plan_favaloro(html: str) -> list[tuple[str, int]]:
                 continue
             _agregar(materias, titulo.get_text(" ", strip=True), anio)
     return materias
+
+
+_ORDINAL_DEL_ANIO = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4,
+                     "quinto": 5, "sexto": 6}
+
+
+def plan_totales_por_anio(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """A table closed year by year by its totals (the Hospital Italiano's
+    Psicología and Ingeniería Biomédica, ``-layout``): a row per subject, its
+    name and then its hours ("Electrotecnia   48  48  96"), the year and
+    term in columns to its left on some rows only ("1°", "Anual"), and after
+    a year's rows "Totales (de) primer año  528 ...". A row belongs to the
+    year whose totals come next; rows after the last totals belong to no
+    year and are left out, and so is a plan with a year's totals missing."""
+    materias: list[tuple[str, int]] = []
+    pendientes: list[str] = []
+    vistos: list[int] = []
+    for linea in texto_con_columnas.splitlines():
+        cierre = re.search(r"(?i)\btotales?\s+(?:de(?:l)?\s+)?(\w+)\s+a[ñn]o\b", linea)
+        if cierre:
+            anio = _ORDINAL_DEL_ANIO.get(comparison_key(cierre.group(1)))
+            if not anio:
+                return []
+            vistos.append(anio)
+            for nombre in pendientes:
+                _agregar(materias, nombre, anio)
+            pendientes.clear()
+            continue
+        fila = re.match(r"^\s*(?:(?:\d\s*[°º]|anual)\s+)*(.*?[^\W\d_].*?)\s{2,}(\d{1,4})(?:\s+\d{1,4}){0,3}\s*$",
+                        linea, re.I)
+        if fila and not re.search(r"(?i)^(?:a[ñn]o|cuatrimestre|totales?|total general|carga)\b", fila.group(1)):
+            pendientes.append(fila.group(1))
+    if not vistos or vistos != list(range(1, len(vistos) + 1)):
+        return []
+    return materias
+
+
+def plan_uhiba_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """The Hospital Italiano's plans in either layout: by year headings
+    (``plan_uhiba``) or in a table closed by each year's totals (its 2027
+    sheets: Psicología, Ingeniería Biomédica)."""
+    return plan_uhiba(texto_con_columnas) or plan_totales_por_anio(texto_con_columnas)

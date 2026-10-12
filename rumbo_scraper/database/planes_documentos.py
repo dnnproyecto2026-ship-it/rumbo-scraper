@@ -337,7 +337,7 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
                        ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani),
                        # The Hospital Italiano's university: its plans are on the hospital's site.
-                       ("hiba.hospitalitaliano.org.ar", planes_sitios.plan_uhiba),
+                       ("hiba.hospitalitaliano.org.ar", planes_sitios.plan_uhiba_todos),
                        ("iucbc.edu.ar", planes_sitios.plan_iucbc),
                        ("universidad-policial.edu.ar", planes_sitios.plan_iupfa),
                        ("unpilar.edu.ar", planes_sitios.plan_unpilar),
