@@ -910,15 +910,23 @@ def plan_isalud(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
-_MATERIA_IUPFA = re.compile(r"^\s*\d{2}\s+(\S.*?)\s{2,}(?:ANUAL|CUATRIMESTRAL|SEMESTRAL|BIMESTRAL)\b")
+_MATERIA_IUPFA = re.compile(r"^\s*(\d{1,2})\s+(\S.*?)\s{2,}((?:ANUAL|CUATRIMESTRAL|SEMESTRAL|BIMESTRAL|A DISTANCIA|"
+                            r"PRESENCIAL|\d{1,3})\b.*)$")
+_TOTAL_ANIO_IUPFA = re.compile(r"(?i)(?:total\s+(?:de\s+)?horas|carga\s+horaria)\s+(?:del\s+)?"
+                               r"(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\s*:?\s*([\d.]+)")
 
 
 def plan_iupfa(texto_con_columnas: str) -> list[tuple[str, int]]:
     """The Federal Police university's plans (``pdftotext -layout``): a
     heading per year ("PRIMER AÑO"), a row per subject with its code, name
-    and term ("01  BALÍSTICA I  ANUAL  128")."""
+    and term or hours ("01  BALÍSTICA I  ANUAL  128", "7  INFORMÁTICA II
+    64  PRESENCIAL  1"). The codes run from 1 without a gap, and where the
+    plan states a year's hours ("Total horas primer año: 560 horas") the
+    year's rows (each its largest figure) add up to them."""
     materias: list[tuple[str, int]] = []
     anio = None
+    codigos: list[int] = []
+    horas: dict[int, float] = {}
     for linea in texto_con_columnas.splitlines():
         encabezado = _ANIO_IUCBC.match(linea)
         if encabezado:
@@ -926,7 +934,16 @@ def plan_iupfa(texto_con_columnas: str) -> list[tuple[str, int]]:
             continue
         materia = _MATERIA_IUPFA.match(linea)
         if anio and materia:
-            _agregar(materias, materia.group(1), anio)
+            codigos.append(int(materia.group(1)))
+            cifras = [int(c) for c in re.findall(r"\b\d{1,3}\b", materia.group(3))]
+            horas[anio] = horas.get(anio, 0) + (max(cifras) if cifras else 0)
+            _agregar(materias, materia.group(2), anio)
+    # (A row the columns moved may come out of order: "6 7 8 4 5".)
+    if sorted(codigos) != list(range(1, len(codigos) + 1)):
+        return []
+    for ordinal, declarado in _TOTAL_ANIO_IUPFA.findall(texto_con_columnas):
+        if horas.get(_ORDINALES_UHIBA[ordinal.lower()], 0) != int(declarado.replace(".", "")):
+            return []
     # Rows the reader missed show in a second part without its first
     # ("Enfermería Materno Infantil II", no "... I"): not the whole plan.
     # (The first part may be written a little differently: "Estudio de las Vías de
