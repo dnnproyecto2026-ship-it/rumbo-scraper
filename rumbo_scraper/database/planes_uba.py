@@ -95,6 +95,12 @@ FFYB = {
     "Tecnicatura Universitaria en Medicina Nuclear":
         "https://www.ffyb.uba.ar/wp-content/uploads/2022/12/Nuevo-Plan-de-Estudios-2022-TUMN-.pdf",
 }
+# Plans read before without their source kept: the page that lists them,
+# for the verifier.
+SOLO_LA_FUENTE = {
+    "Sociología": "https://sociologia.sociales.uba.ar/plan-de-estudios/",
+    "Licenciatura en Ciencias de la Comunicación": "https://comunicacion.sociales.uba.ar/plan-de-estudios/",
+}
 DATOS = ("Licenciatura en Ciencias de Datos", "https://lcd.exactas.uba.ar/materias/")
 POR_ANIOS = {
     "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
@@ -488,7 +494,12 @@ def main() -> None:
             filas.append({"universidad_id": uba["id"], "carrera_id": carrera["id"],
                           "nombre_materia": materia, "anio_cursada": anio})
 
-    if args.apply and filas:
+    for nombre, url in SOLO_LA_FUENTE.items():
+        carrera = _emparejar(nombre, carreras)
+        if carrera:
+            con_fuente.append({"universidad": "UBA", "documento": url,
+                               "carrera": {"nombre_carrera": carrera["nombre_carrera"]}})
+    if args.apply:
         for inicio in range(0, len(filas), 500):
             client.table("materias").insert(filas[inicio:inicio + 500]).execute()
         guardar_las_fuentes(con_fuente)
