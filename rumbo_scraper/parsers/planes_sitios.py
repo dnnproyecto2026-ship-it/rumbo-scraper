@@ -2532,6 +2532,8 @@ _NO_ES_MATERIA_DEL_ANIO = re.compile(
     r"\w/a\b|^[a-záéíóúñ]{4,}(?:ar|er|ir)(?:,|\s+y\s+[a-záéíóúñ]+(?:ar|er|ir)\b)")
 _FIN_DE_LA_PAGINA = re.compile(r"(?i)copyright|©|^realizado\s+por|^documentaci[óo]n\s+de\s+ingreso|^¿|"
                                r"^normativa\s+de\s+la\s+carrera|^unidad\s+acad[ée]mica$|"
+                               # Barceló: the free activities that follow the plan.
+                               r"^espacios\s+acad[ée]micos\s+libres$|"
                                # UNER's faculty pages: the call to enrol, the page's foot.
                                r"^ingreso\s+20\d\d$|^m[áa]s\s+info|^scroll\s+al\s+inicio|^destinatarios$|"
                                r"^\W*descargar\s+plan|^caracter[íi]sticas del plan")
@@ -4704,14 +4706,237 @@ def nombres_en_celdas(materias: list[tuple[str, Any]], texto_sin_columnas: str) 
     Energética Sistemas ...") or of a label and a cell ("CAMPO DE LA
     PRÁCTICA PROFESIONALIZANTE PP 1: ...") is not, nor one that begins in
     lower case (the end of another name)."""
-    def clave(texto: str) -> str:
-        return " ".join(re.findall(r"[a-z0-9]+", comparison_key(texto)))
-
-    lineas = [clave(l) for l in texto_sin_columnas.replace("​", "").splitlines()]
-    lineas = [l for l in lineas if l]
-    celdas = {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 5)}
+    celdas = _celdas(texto_sin_columnas)
     return all(nombre[:1].isupper() and not re.search(r"\b[A-ZÁÉÍÓÚÑ]{4,}\s+[A-ZÁÉÍÓÚÑ]{2,}\s+[A-ZÁÉÍÓÚÑ]{2,}", nombre)
-               and clave(nombre) in celdas for nombre, _ in materias)
+               and _clave_de_celda(nombre) in celdas for nombre, _ in materias)
+
+
+def _clave_de_celda(texto: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", comparison_key(texto)))
+
+
+def _celdas(texto_sin_columnas: str) -> set[str]:
+    """Every run of one to four lines of the document read without its
+    columns, where a table's cell comes out whole."""
+    lineas = [_clave_de_celda(l) for l in texto_sin_columnas.replace("​", "").splitlines()]
+    # Without a row's code before its name: "FE10 Base de Datos".
+    lineas = [re.sub(r"^[a-z]{1,2}\d{1,2} (?=[a-z])", "", l) for l in lineas if l]
+    return {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 5)}
+
+
+# What a row of an IFTS table says besides its unit's name: its format,
+# régimen, field of training and hours.
+_PALABRA_DE_DATOS_IFTS = re.compile(
+    r"(?i)^(?:materia|taller|seminario|asignatura|m[óo]dulo|laboratorio|proyecto|pr[áa]cticas?|profesional(?:izante)?|"
+    r"cuatrimestral|anual|bimestral|acreditable|op\.?|optativ[oa]|general|fundamentos?|fundamental|espec[íi]fic[oa]|"
+    r"m|l|t|s|c|a|pp|tp|hc|-|–|\d+(?:[.,]\d+)?)$")
+_CODIGO_DE_FILA_IFTS = re.compile(r"^(?:\d{1,2}|\d[.,]\d[.,]\d{1,2}\.?|[A-Z]{1,2}\d{1,2}|\d°(?:/\d°)?|[IVX]+)$")
+_CABECERA_IFTS = re.compile(
+    r"(?i)curricular|cursada|r[ée]gimen|formativ|denominaci|\bhs\b|hs\.|c[áa]t\.|\bsem\b|\btotal|c[óo]d(?:igo|\.)|"
+    r"\bcuat\b|formato|duraci[óo]n|carga horaria|trab\b|aut[óo]n|^n°|estructura curricular")
+_SECCION_IFTS = re.compile(r"(?i)^(?:(?:primer|segundo|tercer|cuarto)\s+(?:a[ñn]o|cuatrimestre)|\d(?:er|do|ro|to)\s+cuatrimestre|"
+                           r"(?:campo|[áa]rea)\s+de\s+(?:la\s+)?formaci.*)$")
+_HORAS_DECLARADAS = re.compile(r"(?i)cantidad de horas:\s*([\d.]+)\s*(?:horas?|hs\.?)\s*c[áa]t")
+
+
+def _celdas_de(linea: str) -> list[tuple[int, str]]:
+    return [(m.start(), m.group()) for m in re.finditer(r"\S+(?: \S+)*", linea)]
+
+
+_RECORTABLE = "\x01"
+
+
+def _nombre_de_celda(partes: list[str], celdas: set[str]) -> str | None:
+    """The name a row's lines make that is a whole cell of the document,
+    leaving out at the start of a line that began left of the names (marked
+    ``_RECORTABLE``) the words of an area's label the columns ran into it
+    ("formación Derecho privado"): the fewest words left out; none when two
+    ways leave out as few."""
+    import itertools
+
+    opciones = [[" ".join(p.lstrip(_RECORTABLE).split()[k:]) for k in range(len(p.split()) + 1)]
+                if p.startswith(_RECORTABLE) else [p] for p in partes]
+    if math.prod(len(o) for o in opciones) > 5000:
+        return None
+    halladas: dict[int, set[str]] = {}
+    for eleccion in itertools.product(*[range(len(o)) for o in opciones]):
+        nombre = " ".join(o[k] for o, k in zip(opciones, eleccion) if o[k])
+        if nombre and _clave_de_celda(nombre) in celdas:
+            halladas.setdefault(sum(eleccion), set()).add(nombre)
+    if not halladas:
+        return None
+    mejores = halladas[min(halladas)]
+    return next(iter(mejores)) if len(mejores) == 1 else None
+
+
+def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> list[tuple[str, int | None]]:
+    """An IFTS plan whose table gives each unit's hours, read whatever its
+    columns: an area's label or a row's number and code at the left, the
+    name, then its format, régimen, field and hours. A name too long for its
+    cell wraps under it or around its row: within a group of lines between
+    blank lines with a single row, all its lines are that row's; otherwise
+    each goes to the nearest row. A line as near to the row above as to the
+    one below goes where both rows' names come out as whole cells of the
+    document read without its columns (``_celdas``); when neither way or both
+    do, the plan is left unread. The plan is taken only when the rows' hours (each row's largest
+    number) add up to the "Cantidad de horas: N horas cátedra" it declares,
+    so that no row is missing and none is read twice. The year is the code's
+    first figure ("2.1.3") when every row has one."""
+    texto = texto_con_columnas.replace("​", "")
+    declaradas = _HORAS_DECLARADAS.search(texto)
+    inicio = re.search(r"(?i)contenidos", texto)
+    if not declaradas or not inicio:
+        return []
+    total_declarado = int(declaradas.group(1).replace(".", ""))
+    filas: list[dict[str, Any]] = []
+    dudosas: list[tuple[int, str, list[dict[str, Any]]]] = []
+    for pagina in texto[inicio.end():].split("\f"):
+        lineas = pagina.splitlines()
+        analizadas = []
+        for i, linea in enumerate(lineas):
+            # A code joined to its name by one space: "FG01 Redacción de Informes".
+            celdas = []
+            for comienzo, celda in _celdas_de(linea):
+                pegado = re.match(r"([A-Z]{1,2}\d{1,2}|\d[.,]\d[.,]\d{1,2}\.?) (?=\S)", celda)
+                if pegado and not celdas:
+                    celdas += [(comienzo, pegado.group(1)), (comienzo + pegado.end(), celda[pegado.end():])]
+                else:
+                    celdas.append((comienzo, celda))
+            def es_dato(celda: str) -> bool:
+                return all(_PALABRA_DE_DATOS_IFTS.match(p) for p in celda.split())
+
+            # The row's number and code at the left, perhaps after an area's
+            # label ("Comunicación   10   Taller ..."): only when a name
+            # follows them, not hours alone.
+            codigos = []
+            for desde in (0, 1):
+                hasta = desde
+                while hasta < len(celdas) and _CODIGO_DE_FILA_IFTS.match(celdas[hasta][1]) and hasta - desde < 4:
+                    hasta += 1
+                # A code that is not a bare number ("E1", "1.2.3") is one even
+                # when its name sits on the lines around its row.
+                if hasta > desde and hasta < len(celdas) and (desde == 0 or not es_dato(celdas[0][1])) \
+                        and (not es_dato(celdas[hasta][1])
+                             or any(not c.isdigit() for _, c in celdas[desde:hasta])):
+                    codigos = celdas[desde:hasta]
+                    celdas = celdas[hasta:]
+                    break
+            datos_desde = len(celdas)
+            while datos_desde > 0 and es_dato(celdas[datos_desde - 1][1]):
+                datos_desde -= 1
+            datos = " ".join(c for _, c in celdas[datos_desde:])
+            numeros = [float(n.replace(",", ".")) for n in re.findall(r"\d+(?:[.,]\d+)?", datos)]
+            es_fila = bool(numeros) and (len(numeros) >= 2 or re.search(r"[A-Za-z]", datos)) \
+                and re.search(r"\d+(?:\s*HC)?\s*$", linea.rstrip(" -–"))
+            analizadas.append({"i": i, "codigos": codigos, "nombre": celdas[:datos_desde], "fila": bool(es_fila),
+                               "horas": max(numeros) if es_fila else 0, "datos_en": celdas[datos_desde][0]
+                               if es_fila and datos_desde < len(celdas) else None, "vacia": not linea.strip()})
+        primera = next((a["i"] for a in analizadas if a["fila"]), None)
+        if primera is None:
+            continue
+        # The table's heading, above its first row on each page, is not a name.
+        cabecera = max((a["i"] for a in analizadas if a["i"] < primera and not a["vacia"]
+                        and _CABECERA_IFTS.search(lineas[a["i"]])), default=-1)
+        sin_codigo = not any(a["codigos"] for a in analizadas if a["fila"])
+        comienzos = Counter(a["nombre"][-1][0] for a in analizadas if a["fila"] and a["nombre"])
+        columna = comienzos.most_common(1)[0][0] if comienzos else None
+        fin_de_nombres = min((a["datos_en"] for a in analizadas if a["fila"] and a["datos_en"]), default=10 ** 6)
+        for a in analizadas:
+            if a["i"] <= cabecera or a["vacia"]:
+                a["partes"] = []
+                continue
+            piezas = [c for c in a["nombre"] if c[0] < fin_de_nombres or a["fila"]]
+            if sin_codigo and columna is not None:
+                # The area's label sits left of the names; a label joined to
+                # a name by one space is cut where the names begin.
+                recortadas = []
+                for comienzo, celda in piezas:
+                    if comienzo >= columna - 2:
+                        recortadas.append(celda)
+                    elif comienzo + len(celda) > columna and lineas[a["i"]][columna - 1:columna] == " ":
+                        # Marked: the label's words may still begin it.
+                        recortadas.append(_RECORTABLE + celda)
+                piezas = [(0, c) for c in recortadas if c]
+            if len(piezas) > 1:
+                piezas = piezas[-1:]
+            texto_nombre = piezas[0][1] if piezas else ""
+            # A year's or term's label alone ("2°/1°") is not a name.
+            if _CODIGO_DE_FILA_IFTS.match(texto_nombre.lstrip(_RECORTABLE)):
+                texto_nombre = ""
+            if texto_nombre and (_SECCION_IFTS.match(texto_nombre.lstrip(_RECORTABLE))
+                                 or _CABECERA_IFTS.search(texto_nombre) and not a["fila"]):
+                texto_nombre = ""
+            a["partes"] = [texto_nombre] if texto_nombre else []
+        filas_de_pagina = [a for a in analizadas if a["fila"]]
+        for f in filas_de_pagina:
+            f["nombre_partes"] = []
+        bloques: list[list[dict[str, Any]]] = [[]]
+        for a in analizadas:
+            if a["i"] <= cabecera:
+                continue
+            if a["vacia"]:
+                bloques.append([])
+            else:
+                bloques[-1].append(a)
+        for bloque in bloques:
+            propias = [a for a in bloque if a["fila"]]
+            for a in bloque:
+                if not a["partes"]:
+                    continue
+                if a["fila"]:
+                    a["nombre_partes"].append((a["i"], a["partes"][0]))
+                    continue
+                if len(propias) == 1:
+                    destino = propias[0]
+                else:
+                    candidatas = propias or filas_de_pagina
+                    distancias = sorted((abs(f["i"] - a["i"]), f["i"]) for f in candidatas)
+                    if len(distancias) > 1 and distancias[0][0] == distancias[1][0]:
+                        dudosas.append((a["i"], a["partes"][0], [f for f in candidatas
+                                                                 if f["i"] in (distancias[0][1], distancias[1][1])]))
+                        continue
+                    destino = next(f for f in candidatas if f["i"] == distancias[0][1])
+                destino["nombre_partes"].append((a["i"], a["partes"][0]))
+        filas += filas_de_pagina
+    if len(filas) < 10 or sum(f["horas"] for f in filas) != total_declarado:
+        return []
+    if dudosas:
+        celdas = _celdas(texto_sin_columnas) if texto_sin_columnas else set()
+        if not celdas or len(dudosas) > 12:
+            return []
+
+        def nombre_de(fila: dict[str, Any], extra: list[tuple[int, str]]) -> str:
+            return _nombre_de_celda([p for _, p in sorted(fila["nombre_partes"] + extra)], celdas) or "-"
+
+        maneras = []
+        for eleccion in range(2 ** len(dudosas)):
+            extra: dict[int, list[tuple[int, str]]] = {}
+            for k, (i, parte, (arriba, abajo)) in enumerate(dudosas):
+                extra.setdefault(id(abajo if eleccion >> k & 1 else arriba), []).append((i, parte))
+            tocadas = {id(f): f for _, _, par in dudosas for f in par}
+            if all(nombre_de(f, extra.get(k, [])) != "-" for k, f in tocadas.items()):
+                maneras.append(extra)
+        if len(maneras) != 1:
+            return []
+        for f in filas:
+            f["nombre_partes"] += maneras[0].get(id(f), [])
+    anios = []
+    for f in filas:
+        codigo = next((c for _, c in f["codigos"] if re.match(r"\d[.,]\d[.,]\d", c)), None)
+        anios.append(int(codigo[0]) if codigo else None)
+    if None in anios:
+        anios = [None] * len(filas)
+    celdas = _celdas(texto_sin_columnas) if texto_sin_columnas else set()
+    materias: list[tuple[str, int | None]] = []
+    for f, anio in zip(filas, anios):
+        partes = [p for _, p in sorted(f["nombre_partes"])]
+        nombre = (_nombre_de_celda(partes, celdas) or "") if celdas else \
+            " ".join(" ".join(p.lstrip(_RECORTABLE) for p in partes).split())
+        nombre = re.sub(r"(?:\s*\(\*+\))+$", "", nombre)
+        if not nombre or not nombre[0].isupper() or _SIN_TERMINAR_IFTS.search(nombre):
+            return []
+        materias.append((nombre, anio))
+    return materias
 
 
 # Its length after the name: (C) a term, (A) a year, (B) two months.

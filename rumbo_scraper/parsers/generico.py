@@ -717,7 +717,9 @@ _ARRANCA_EN_MEDIO = frozenset(
 _FIN_DEL_PLAN = re.compile(
     r"(?i)^(contacto|cursada|autoridades?|sedes?|aranceles?|inscripci[óo]n|"
     r"becas|novedades|perfil del|alcances|requisitos|t[íi]tulos?|descarg|"
-    r"programas? para descargar|m[áa]s informaci[óo]n|pr[áa]cticas|"
+    # ("Prácticas supervisadas I", numbered, or "Prácticas supervisadas:
+    # cirugía menor", named, is a subject: Barceló's.)
+    r"programas? para descargar|m[áa]s informaci[óo]n|pr[áa]cticas(?!.*(?:\s(?:[IVX]+|\d)\s*$|:\s*\S))|"
     r"salida laboral|campo (?:laboral|profesional)|objetivos)"
 )
 
