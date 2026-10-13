@@ -5502,6 +5502,9 @@ def plan_fcv_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
 
 
 _FILA_UNAHUR_TABLA = re.compile(r"^\s*(\d)\s+[A-Z]{2,4}\s+(\d{1,2})\s+(?:(\S.*?)\s{2,})?[CAB]\s+\d")
+# (Nutrición's: no year column, the year a heading "1° Año" over the rows.)
+# (A row may end at its length, its hours on the next line: Nutrición's 28.)
+_FILA_UNAHUR_SIN_ANIO = re.compile(r"^\s*()(\d{1,2})\s+(?:(\S.*?)\s{2,})?[CAB](?:\s+\d|\s*$)")
 
 
 def plan_unahur_tabla(texto_con_columnas: str) -> list[tuple[str, int]]:
@@ -5516,21 +5519,35 @@ def plan_unahur_tabla(texto_con_columnas: str) -> list[tuple[str, int]]:
     filas: dict[int, list] = {}
     arriba: list[str] = []
     falta_abajo = None
+    anio = None
     for linea in texto_con_columnas.splitlines():
-        fila = _FILA_UNAHUR_TABLA.match(linea)
+        cabeza = re.match(r"^\s*(\d)\s*[°º]\s*A[ñn]o\s*$", linea)
+        if cabeza:
+            anio, arriba = int(cabeza.group(1)), []
+            continue
+        fila = _FILA_UNAHUR_TABLA.match(linea) or (anio and _FILA_UNAHUR_SIN_ANIO.match(linea))
         if fila:
             nombre = (fila.group(3) or "").strip()
             numero = int(fila.group(2))
             if numero not in filas:
                 # (Or its first line above a row that holds the rest: Ciberseguridad's.)
-                filas[numero] = [" ".join(arriba + ([nombre] if nombre else [])), int(fila.group(1))]
+                filas[numero] = [" ".join(arriba + ([nombre] if nombre else [])), int(fila.group(1) or anio)]
                 falta_abajo = filas[numero] if not nombre else None
             arriba = []
             continue
         texto = linea.strip()
-        if not texto or re.search(r"\d|TOTAL|ASIGNATURA|Camp|Sema|Total|nal$|HS\.|^Añ|^o\b", texto):
-            # (The table's head, a total or a page's number ends what was gathered above.)
-            arriba = [] if re.search(r"TOTAL|ASIGNATURA|Camp|Sema|Total|nal$|HS\.|^Añ|^o\b|^\d+$", texto) else arriba
+        if re.match(r"TOTAL DE LA CARRERA", texto):
+            break
+        # (The rest of a name beside the hours its row left for this line.)
+        if falta_abajo is not None and re.match(r"^[^\W\d_][^\d]*?\s{2,}\d", texto):
+            falta_abajo[0] += " " + re.split(r"\s{2,}", texto)[0]
+            falta_abajo = None
+            continue
+        # The table's head ("Camp", "Sema"/"nal", "HS."), a total, a term or a
+        # page's number ends what was gathered above. ("Regional" ends in "nal" too.)
+        cabecera = re.search(r"TOTAL|ASIGNATURA|HS\.|^Añ|CUATRIMESTRE|Unidad curricular|^(?:Camp|Sema|Total|nal|o)\b.{0,12}$|^\d+$", texto)
+        if not texto or cabecera or re.search(r"\d", texto):
+            arriba = [] if cabecera else arriba
             continue
         if falta_abajo is not None:
             falta_abajo[0] += " " + texto
