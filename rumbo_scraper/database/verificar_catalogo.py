@@ -35,6 +35,7 @@ from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 
 from rumbo_scraper import verificacion as v
+from rumbo_scraper.database.terciarios import CABA_IFTS
 from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.parsers import guias_nacionales as gn
 
@@ -256,10 +257,13 @@ def _planes_enlazados(html: str, pagina: str) -> list[str]:
     return halladas
 
 
-def _planes_del_registro(leida: dict[str, Any], carrera: str) -> list[str]:
+def _planes_del_registro(leida: dict[str, Any], carrera: str, lugar: str | None = None) -> list[str]:
     """The documents the records of an official JSON source link as the
-    career's plan: the records that name the career, their values that are
-    a PDF's or a Drive file's address (read from its own address)."""
+    career's plan: the records that name the career (and, given ``lugar``,
+    are of that place: the Agencia's "lugar": "10" or "90 - GRIERSON Sede
+    Caballito" is the IFTS N° 10 or 90, as ``terciarios`` reads it), their
+    values that are a PDF's or a Drive file's address (read from its own
+    address)."""
     try:
         datos = json.loads(leida.get("crudo") or "[]")
     except ValueError:
@@ -269,6 +273,9 @@ def _planes_del_registro(leida: dict[str, Any], carrera: str) -> list[str]:
     for registro in datos if isinstance(datos, list) else []:
         if not isinstance(registro, dict) or not any(
                 isinstance(valor, str) and comparison_key(valor) == clave for valor in registro.values()):
+            continue
+        numero = re.search(r"\d+", str(registro.get("lugar") or ""))
+        if lugar is not None and not (numero and numero.group() == lugar):
             continue
         for campo, valor in registro.items():
             if not (isinstance(valor, str) and re.search(r"(?i)plan", campo)):
@@ -430,8 +437,13 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
             nombre, carrera = materia.get("nombre_materia"), materia.get("carrera_o_programa")
             if nombre and carrera and nombre not in por_carrera[carrera]:
                 por_carrera[carrera].append(nombre)
+        # A CABA IFTS's careers are recorded at the Agencia de Aprendizaje,
+        # its own site, whatever page the career was found on (INET's).
+        ifts = re.fullmatch(r"ifts (\d+)", corto)
         for carrera, materias in por_carrera.items():
             candidatas = list(paginas_de.get(carrera, []))
+            if ifts and CABA_IFTS not in candidatas:
+                candidatas.append(CABA_IFTS)
             publicada = planes.get((corto, comparison_key(carrera)))
             if publicada and publicada not in candidatas:
                 candidatas.append(publicada)
@@ -448,7 +460,7 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
                     textos[url] = leida["texto"]
                 # An official service's record of the career that links its
                 # plan (the Agencia de Aprendizaje's "planEstudio", on Drive).
-                for documento in _planes_del_registro(leida, carrera):
+                for documento in _planes_del_registro(leida, carrera, ifts.group(1) if ifts else None):
                     if documento not in textos and fuentes.leer(documento, avalada=True)["ok"]:
                         textos[documento] = fuentes.leer(documento, avalada=True)["texto"]
             if sum(1 for m in materias if any(v.dice(t, m) for t in textos.values())) \
