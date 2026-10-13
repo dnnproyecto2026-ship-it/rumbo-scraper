@@ -117,6 +117,10 @@ def plan_de_profesorado(html: str) -> list[tuple[str, None]]:
                  for fila in tabla.find_all("tr")]
         if not filas or not any(re.match(r"(?i)asignatura", c) for c in filas[0]):
             continue
+        # A list of options numbered I, II... without a total (the optatives offered) is not the plan's.
+        if not any(fila and fila[0].isdigit() for fila in filas[1:]) and \
+                not any(c.upper() == "TOTAL" for fila in filas for c in fila):
+            continue
         suma, total = 0, None
         for fila in filas[1:]:
             if any(c.upper() == "TOTAL" for c in fila):
