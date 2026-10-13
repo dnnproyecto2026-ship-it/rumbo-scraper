@@ -377,6 +377,9 @@ _FUENTES_PROPIAS = {"UAI": _plan_uai, "UTN": _fuentes_utn, "UBA": _fuentes_uba,
                     "IUGNA": _fuentes_iugna, "ISALUD": _fuentes_isalud}
 
 
+REVISADOS_A_MANO = Path("data/planes_revisados_a_mano.json")
+
+
 def _planes_publicados() -> dict[tuple[str, str], str]:
     """The page each plan was read from, by (university, career), from the
     readers that kept it."""
@@ -440,6 +443,14 @@ def verificar_universidad(datos: dict[str, Any], planes: dict[tuple[str, str], s
         # A CABA IFTS's careers are recorded at the Agencia de Aprendizaje,
         # its own site, whatever page the career was found on (INET's).
         ifts = re.fullmatch(r"ifts (\d+)", corto)
+        # A plan published only as an image, copied by one person of the team
+        # and checked by another (``planes_manuales``): taken on their word,
+        # its source the image on the university's site.
+        revisados = (json.loads(REVISADOS_A_MANO.read_text()) if REVISADOS_A_MANO.exists() else {}).get(corto, {})
+        for carrera, revision in revisados.items():
+            if carrera in por_carrera and v.es_oficial(revision["url"], sitio_web):
+                resultado["materias"] += [{"carrera": carrera, "materia": materia, "estado": v.VERIFICADO,
+                                           "fuente": revision["url"]} for materia in por_carrera.pop(carrera)]
         for carrera, materias in por_carrera.items():
             candidatas = list(paginas_de.get(carrera, []))
             if ifts and CABA_IFTS not in candidatas:

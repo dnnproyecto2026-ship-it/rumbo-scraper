@@ -1,0 +1,164 @@
+"""The plans people copied by hand from each career's official plan.
+
+Where no reader can take a plan whole (a resolution of seventy pages, a plan
+published as an image), people of the team copy it into the sheet of pending
+careers (``entregables/planes_caba_pendientes.csv``): the link of the plan
+they copied from, one subject per line ("2 | Derecho Civil I", or the name
+alone when the plan gives no year), who copied it and who checked it.
+
+A row is taken only when:
+
+- its career exists and has no subjects yet;
+- the link is on the university's own site (``verificacion.es_oficial``);
+- two different people copied and checked it;
+- every subject is written in that document, read as the verifier reads it
+  (a misspelt name is sent back with its name); a plan published only as an
+  image cannot be read so, and is taken on the two people's word, kept in
+  ``data/planes_revisados_a_mano.json`` for the verifier;
+- the plan reads as a whole plan (``_parece_el_plan_entero``).
+
+Every row's verdict goes to ``data/planes_manuales_resultado.csv``, with the
+reason a row was sent back. Preview by default; ``--apply`` writes.
+
+    python -m rumbo_scraper.database.planes_manuales entregables/planes_caba_pendientes.csv [--apply]
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import re
+from pathlib import Path
+from typing import Any
+from urllib.parse import urlparse
+
+from rumbo_scraper import verificacion as v
+from rumbo_scraper.database.planes_documentos import _parece_el_plan_entero, guardar_las_fuentes
+
+RESULTADO = Path("data/planes_manuales_resultado.csv")
+REVISADOS = Path("data/planes_revisados_a_mano.json")
+COLUMNA_MATERIAS = "materias (una por renglón: año | nombre)"
+_IMAGEN = re.compile(r"(?i)\.(?:png|jpe?g|webp|gif)$")
+
+
+def materias_de(texto: str) -> list[tuple[str, int | None]] | str:
+    """The subjects a cell lists, one per line ("2 | Derecho Civil I" or the
+    name alone); the reason, when a line cannot be read."""
+    materias: list[tuple[str, int | None]] = []
+    for numero, linea in enumerate((texto or "").splitlines(), 1):
+        linea = " ".join(linea.split())
+        if not linea:
+            continue
+        partes = [p.strip() for p in linea.split("|")]
+        if len(partes) == 2 and partes[0].isdigit() and 1 <= int(partes[0]) <= 7 and partes[1]:
+            materias.append((partes[1], int(partes[0])))
+        elif len(partes) == 1:
+            materias.append((partes[0], None))
+        else:
+            return f"renglón {numero} no se entiende: '{linea}' (va 'año | nombre' o solo el nombre)"
+    anios = {a for _, a in materias}
+    if None in anios and len(anios) > 1:
+        return "algunas materias tienen año y otras no: o todas o ninguna"
+    return materias
+
+
+def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: dict[str, Any] | None,
+            con_materias: set[str], fuentes: Any) -> tuple[str, list[tuple[str, int | None]], bool]:
+    """The reason a row is sent back ("" when it is taken), its subjects, and
+    whether its plan is an image taken on the two people's word."""
+    if not carrera or not universidad:
+        return "la carrera no está en la base (no tocar carrera_id)", [], False
+    if carrera["id"] in con_materias:
+        return "la carrera ya tiene materias", [], False
+    link = (fila.get("link_del_plan_usado") or "").strip()
+    if not link:
+        return "falta el link del plan usado", [], False
+    if not v.es_oficial(link, universidad["sitio_web"]):
+        return f"el link no es del sitio oficial ({urlparse(link).netloc})", [], False
+    cargo, reviso = (fila.get("cargado_por") or "").strip(), (fila.get("revisado_por") or "").strip()
+    if not cargo or not reviso or cargo.lower() == reviso.lower():
+        return "faltan dos personas distintas en cargado_por y revisado_por", [], False
+    materias = materias_de(fila.get(COLUMNA_MATERIAS) or "")
+    if isinstance(materias, str):
+        return materias, [], False
+    imagen = bool(_IMAGEN.search(urlparse(link).path))
+    if not imagen:
+        leida = fuentes.leer(link)
+        if not leida["ok"]:
+            return "no se pudo leer el link (¿es el documento del plan?)", materias, False
+        faltan = [n for n, _ in materias if not v.dice(leida["texto"], n)]
+        if faltan:
+            return "no figuran en el documento: " + "; ".join(faltan[:5]) + (" …" if len(faltan) > 5 else ""), \
+                materias, False
+    if not _parece_el_plan_entero(carrera["nombre_carrera"], materias, carrera.get("duracion_anios")):
+        return "no parece el plan completo (pocas materias o faltan años)", materias, imagen
+    return "", materias, imagen
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Cargar los planes copiados a mano")
+    parser.add_argument("planilla", type=Path)
+    parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    args = parser.parse_args()
+
+    from rumbo_scraper.database.supabase import get_supabase_client, select_all
+    from rumbo_scraper.database.verificar_catalogo import Fuentes
+
+    filas = [f for f in csv.DictReader(args.planilla.open(encoding="utf-8-sig"), delimiter=";")
+             if (f.get(COLUMNA_MATERIAS) or "").strip()]
+    client = get_supabase_client()
+    universidades = {u["id"]: u for u in select_all(client.table("universidades").select("id,nombre_corto,sitio_web"))}
+    carreras = {c["id"]: c for c in select_all(client.table("carreras").select(
+        "id,universidad_id,nombre_carrera,duracion_anios"))}
+    con_materias = {m["carrera_id"] for m in select_all(client.table("materias").select("carrera_id")) if m["carrera_id"]}
+
+    resultado, insertar, planes = [], [], []
+    revisados = json.loads(REVISADOS.read_text()) if REVISADOS.exists() else {}
+    por_sitio: dict[str, Any] = {}
+    for fila in filas:
+        carrera = carreras.get((fila.get("carrera_id") or "").strip())
+        universidad = universidades.get(carrera["universidad_id"]) if carrera else None
+        sitio = universidad["sitio_web"] if universidad else ""
+        fuentes = por_sitio.setdefault(sitio, Fuentes(sitio))
+        motivo, materias, imagen = revisar(fila, carrera, universidad, con_materias, fuentes)
+        resultado.append({**fila, "estado": "rechazada" if motivo else ("aceptada (imagen, revisión a mano)"
+                                                                       if imagen else "aceptada"),
+                          "motivo": motivo})
+        print(f"{fila.get('universidad', ''):8} {fila.get('carrera', '')[:50]:50} "
+              f"{'OK' if not motivo else 'NO'} {len(materias):3} {motivo}", flush=True)
+        if motivo:
+            continue
+        con_materias.add(carrera["id"])
+        corto, link = universidad["nombre_corto"], fila["link_del_plan_usado"].strip()
+        vistas: set[str] = set()
+        for nombre, anio in materias:
+            if nombre.lower() not in vistas:
+                vistas.add(nombre.lower())
+                insertar.append({"universidad_id": universidad["id"], "carrera_id": carrera["id"],
+                                 "nombre_materia": nombre, "anio_cursada": anio})
+        planes.append({"universidad": corto, "documento": link, "carrera": {"nombre_carrera": carrera["nombre_carrera"]}})
+        if imagen:
+            revisados.setdefault(corto.lower(), {})[carrera["nombre_carrera"]] = {
+                "url": link, "cargado_por": fila["cargado_por"].strip(), "revisado_por": fila["revisado_por"].strip()}
+    for fuentes in por_sitio.values():
+        fuentes.close()
+
+    RESULTADO.parent.mkdir(parents=True, exist_ok=True)
+    if resultado:
+        with RESULTADO.open("w", newline="", encoding="utf-8-sig") as archivo:
+            escritor = csv.DictWriter(archivo, fieldnames=list(resultado[0]), delimiter=";")
+            escritor.writeheader()
+            escritor.writerows(resultado)
+    if args.apply and insertar:
+        for inicio in range(0, len(insertar), 500):
+            client.table("materias").insert(insertar[inicio:inicio + 500]).execute()
+        guardar_las_fuentes(planes)
+        REVISADOS.write_text(json.dumps(revisados, ensure_ascii=False, indent=1) + "\n")
+    aceptadas = sum(1 for r in resultado if not r["motivo"])
+    print(f"Filas completas: {len(resultado)}; aceptadas: {aceptadas}; rechazadas: {len(resultado) - aceptadas}; "
+          f"materias {'cargadas' if args.apply else 'a cargar'}: {len(insertar)} — detalle en {RESULTADO}")
+
+
+if __name__ == "__main__":
+    main()
