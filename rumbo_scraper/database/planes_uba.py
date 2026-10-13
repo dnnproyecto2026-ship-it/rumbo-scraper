@@ -31,6 +31,10 @@ what that page links, never off a search engine's memory of the site.
   pair; taken when the table names the same subjects the page lists one by
   one under "Segundo Ciclo de Grado" (``plan_de_datos``). The elective's
   slot and the CBC's electives (two of three) are a choice, not a subject.
+- Exactas, the teacher-training careers (ccpems.exactas.uba.ar): a table
+  per block, each subject numbered and its hours, a "TOTAL" row; taken when
+  the numbers run from 1 without a gap and each block's hours add up to its
+  total (``plan_de_profesorado``). The blocks do not say the year.
 - Exactas, Ciencias Geológicas: its department's page lists the plan year
   by year (``planes_sitios.plan_por_anios``); a section's title after it
   ("Tutores y TFL") is not a subject.
@@ -80,6 +84,7 @@ FADU = {
     "Diseño Textil": "https://www.fadu.uba.ar/diseno-textil/",
     "Diseño de Indumentaria": "https://www.fadu.uba.ar/diseno-de-indumentaria/",
 }
+PROFESORADOS_EXACTAS = "https://ccpems.exactas.uba.ar/"
 DATOS = ("Licenciatura en Ciencias de Datos", "https://lcd.exactas.uba.ar/materias/")
 POR_ANIOS = {
     "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
@@ -96,6 +101,43 @@ POR_CICLOS = {
     "Licenciatura en Ciencia Política": "https://cienciapolitica.sociales.uba.ar/home/estudiantes/"
                         "info-academica/plan-de-estudios-8558-17/",
 }
+
+
+def plan_de_profesorado(html: str) -> list[tuple[str, None]]:
+    """A profesorado's page: a table per block ("Ciclo Básico Común",
+    "Módulo de Formación General y Pedagógica"), rows "N° | Asignatura |
+    hours a week | total hours | prerequisites" and a "TOTAL" row; the
+    optatives' hours are a row without a number. The CBC's subjects carry
+    their code ("Álgebra (27)"). Nothing unless the numbers
+    run from 1 without a gap and every block's rows add up to its total."""
+    materias: list[tuple[str, None]] = []
+    numeros: list[int] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        filas = [[" ".join(c.get_text(" ").split()) for c in fila.find_all(["td", "th"])]
+                 for fila in tabla.find_all("tr")]
+        if not filas or not any(re.match(r"(?i)asignatura", c) for c in filas[0]):
+            continue
+        suma, total = 0, None
+        for fila in filas[1:]:
+            if any(c.upper() == "TOTAL" for c in fila):
+                total = next((int(c) for c in reversed(fila) if c.isdigit()), None)
+                continue
+            # The optatives' hours ("–  Asignaturas Optativas  –  256") count, but are not a subject.
+            if len(fila) >= 4 and not fila[0].isdigit() and fila[3].isdigit():
+                suma += int(fila[3])
+                continue
+            if len(fila) < 4 or not fila[0].isdigit():
+                continue
+            numeros.append(int(fila[0]))
+            suma += int(fila[3]) if fila[3].isdigit() else 0
+            nombre = re.sub(r"\s*\(\d{2,3}\)$", "", fila[1]).strip()
+            if nombre and comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+                materias.append((nombre, None))
+        if total is None or suma != total:
+            return []
+    if not numeros or numeros != list(range(1, len(numeros) + 1)):
+        return []
+    return materias
 
 
 def plan_de_datos(html: str) -> list[tuple[str, int]]:
@@ -345,6 +387,18 @@ def main() -> None:
             if materias:
                 planes[carrera] = materias
                 fuentes[carrera] = enlace
+        # Each profesorado's page, linked "Ver info" from the site's home, by its title.
+        for enlace in BeautifulSoup(visitante.get(PROFESORADOS_EXACTAS) or "", "html.parser").find_all("a", href=True):
+            if enlace.get_text(strip=True) != "Ver info" or "anteriores" in enlace["href"]:
+                continue
+            pagina = urljoin(PROFESORADOS_EXACTAS, enlace["href"])
+            html = visitante.get(pagina)
+            titulo = BeautifulSoup(html or "", "html.parser").find("h1")
+            materias = plan_de_profesorado(html)
+            if titulo and materias:
+                planes[titulo.get_text(" ", strip=True)] = materias
+                fuentes[titulo.get_text(" ", strip=True)] = pagina
+            time.sleep(PAUSA)
         materias = plan_de_datos(visitante.get(DATOS[1]))
         if materias:
             planes[DATOS[0]] = materias
