@@ -121,6 +121,16 @@ def la_pagina_dice_ciclo(url: str | None) -> bool:
     return bool(_SU_PAGINA_DICE_CICLO.search(texto))
 
 
+# A diploma is not a degree, and a programme its page calls ended is offered
+# by no one: UCALP's "Diplomatura en Auditoría Gubernamental (actividad
+# finalizada)" had reached the degrees.
+_NO_ES_UNA_CARRERA = re.compile(r"^diplomatura\b|\bactividad finalizada\b")
+
+
+def no_es_una_carrera(nombre: str) -> bool:
+    return bool(_NO_ES_UNA_CARRERA.search(comparison_key(nombre)))
+
+
 def es_un_ciclo(nombre: str, descripcion: str | None = None) -> bool:
     nombre = comparison_key(nombre)
     return bool(_UN_CICLO.search(nombre) or _PARA_TITULADOS.search(nombre)
@@ -561,7 +571,8 @@ def exportar(client: Any) -> dict[str, Any]:
     # teaching degree; nobody leaving secondary school can start one. They
     # stay in this database and out of the application's catalogue, with
     # their subjects.
-    ciclos = {c["id"] for c in carreras if es_un_ciclo(c["nombre_carrera"], c.get("descripcion_breve"))
+    ciclos = {c["id"] for c in carreras if no_es_una_carrera(c["nombre_carrera"])
+              or es_un_ciclo(c["nombre_carrera"], c.get("descripcion_breve"))
               or any(la_pagina_dice_ciclo(u) for u in [o.get("url_oficial") for o in ofertas_por_carrera.get(c["id"], [])]
                      + [urls.get((nombre_uni.get(c["universidad_id"]), c["nombre_carrera"]))])}
     carreras = [c for c in carreras if c["id"] not in ciclos]

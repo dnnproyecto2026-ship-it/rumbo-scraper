@@ -55,3 +55,11 @@ class Ciclos(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NoEsUnaCarrera(unittest.TestCase):
+    def test_una_diplomatura_o_lo_terminado(self):
+        from rumbo_scraper.database.exportar_catalogo import no_es_una_carrera
+        self.assertTrue(no_es_una_carrera("Diplomatura en Auditoría Gubernamental (actividad finalizada)"))
+        self.assertTrue(no_es_una_carrera("Diplomatura en Tutoría para la Educación Secundaria y Superior"))
+        self.assertFalse(no_es_una_carrera("Licenciatura en Economía"))
