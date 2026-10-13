@@ -121,7 +121,12 @@ def _agregar(materias: list[tuple[str, int]], nombre: str, anio: int | None) -> 
         return
     # A sentence ("El alumno debe aprobar 2 asignaturas electivas...") is a
     # rule of the plan, not a subject.
-    if len(nombre.split()) > 14 or re.search(r"(?i)\bdebe\b|\bpromovido\b", nombre):
+    # (A name runs to fifteen or sixteen words without a point or a comma:
+    # ISALUD's "Teoría y técnica de Terapia Ocupacional en niños y
+    # adolescentes con disfunciones motoras y sensoriales".)
+    palabras = len(nombre.split())
+    if palabras > 16 or (palabras > 14 and re.search(r"[.,;:]", nombre)) \
+            or re.search(r"(?i)\bdebe\b|\bpromovido\b", nombre):
         return
     if anio and nombre and len(nombre) <= 150 and not _NO_ES_MATERIA.search(nombre) \
             and (nombre, anio) not in materias:
@@ -880,7 +885,9 @@ def plan_isalud(html: str) -> list[tuple[str, int]]:
     NUTRICIÓN CLÍNICA") is a choice, and a plan without it would read one
     year short: none. The complementary subjects, of no year, end it."""
     soup = BeautifulSoup(html or "", "html.parser")
-    titulo = soup.find(lambda e: e.name in ("h2", "h3") and re.match(r"(?i)plan de estudios", _texto(e)))
+    # (Since 2026 the heading is a bold paragraph, "PLAN DE ESTUDIO".)
+    titulo = soup.find(lambda e: (e.name in ("h2", "h3") or (e.name == "p" and e.find(["strong", "b"])))
+                       and re.match(r"(?i)plan de estudios?$", _texto(e)))
     materias: list[tuple[str, int]] = []
     anio = None
     for elemento in titulo.find_all_next(["h2", "h3", "h4", "p"]) if titulo else []:
@@ -891,7 +898,7 @@ def plan_isalud(html: str) -> list[tuple[str, int]]:
             return []
         # The next heading (the degree, "Título: ...") or the page's form end it.
         if (elemento.name in ("h2", "h3") and materias) or re.match(
-                r"(?i)asignaturas complementarias|dejanos tu consulta|los alumnos que", texto):
+                r"(?i)asignaturas complementarias|dejanos tu consulta|los alumnos que|requisitos? de egreso", texto):
             break
         # A year: a heading ("Primer año") or a paragraph of it in bold.
         negrita = elemento.find(["strong", "b"])
