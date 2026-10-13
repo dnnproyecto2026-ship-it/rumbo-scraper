@@ -409,6 +409,8 @@ _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
 _DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 # UNTREF's career pages: the "Plan de estudios" block, by year or by term.
 _PLANES_EN_LA_PAGINA += (("untref.edu.ar", planes_sitios.plan_untref),)
+# UNLP Veterinarias' plan sheet: rows "Obligatoria Cuatrimestral 70 horas" under each year.
+_DOCUMENTOS_PROPIOS += (("fcv.unlp.edu.ar", planes_sitios.plan_fcv_unlp),)
 # Austral's career brochures ("Plan de Estudios", a download): the plan in columns of years.
 _DOCUMENTOS_PROPIOS += (("austral.edu.ar", planes_sitios.plan_folleto_columnas),)
 _DOCUMENTO_POR_SU_ENLACE += (("austral.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"jet_download="))),)

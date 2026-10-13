@@ -5353,3 +5353,46 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
         if materias:
             break
     return materias
+
+
+_FILA_FCV = re.compile(r"^(?P<antes>.*?)\s{2,}(?:Obligatoria|Optativa)\s+(?:Cuatrimestral|Anual|Bimestral)\s+\d+\s*horas")
+
+
+def plan_fcv_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNLP Veterinarias' plan sheet (``-layout``): under "PRIMER AÑO" …
+    headings, a row per subject, its name and then "Obligatoria
+    Cuatrimestral 70 horas", the term ("Primer" / "cuatrimestre") in the
+    left margin. A name the cell wrapped sits on lines of its own above and
+    below a row with none ("Infectología, zoonosis y enfermedades exóticas
+    y" / "emergentes"): they are that row's. A yearly subject printed in
+    both terms is one; "Microbiología l" is its roman "I"."""
+    margen = re.compile(r"(?i)^\s*(?:primer|segundo)?\s*(?:cuatrimestre)?\s*$")
+    materias: list[tuple[str, int]] = []
+    anio = None
+    filas: list[list] = []
+    suelta: list[str] = []
+    for linea in texto_con_columnas.splitlines():
+        cabeza = re.match(r"(?i)^\s*(primer|segundo|tercer|cuarto|quinto|sexto)o?\s+a[ñn]o\s*$", linea)
+        if cabeza:
+            anio, suelta = _ORDINAL_DEL_ANIO[cabeza.group(1).lower()], []
+            continue
+        if not anio:
+            continue
+        fila = _FILA_FCV.match(linea)
+        if fila:
+            nombre = re.sub(r"(?i)^\s*(?:primer|segundo)?\s*(?:cuatrimestre)?\s{2,}", "", fila.group("antes")).strip()
+            filas.append([" ".join(suelta + [nombre]).strip(), anio, not nombre])
+            suelta = []
+            continue
+        texto = re.sub(r"(?i)^\s*(?:primer|segundo|cuatrimestre)\s{2,}", "", linea).strip()
+        if not texto or margen.match(linea) or re.match(r"(?i)asignatura|carga horaria|plan de estudios|[….]{5,}|\d{4} \d{3}", texto):
+            continue
+        # A line below a row the name left empty ends that name; one above a row starts the next.
+        if filas and filas[-1][2] and filas[-1][1] == anio and not suelta:
+            filas[-1][0] += " " + texto
+            filas[-1][2] = False
+        else:
+            suelta.append(texto)
+    for nombre, anio, _ in filas:
+        _agregar(materias, re.sub(r"\bll\b", "II", re.sub(r"\s+l$", " I", nombre)), anio)
+    return materias
