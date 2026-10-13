@@ -5186,3 +5186,104 @@ def plan_iuse(texto_con_columnas: str) -> list[tuple[str, int]]:
     for numero in sorted(filas):
         _agregar(materias, *filas[numero])
     return materias
+
+
+_ANIO_EN_FOLLETO = re.compile(r"(?i)^(?:(\d)\s*[º°]?|(primer|segundo|tercer|cuarto|quinto|sexto)o?)$")
+_ETIQUETA_DE_FOLLETO = re.compile(
+    r"(?i)^(?:(?:primer|segundo|tercer|cuarto)o?\s+(?:quarter|cuatrimestre|semestre|trimestre)|"
+    r"\d\s*[º°]?\s*(?:quarter|cuatrimestre|semestre|trimestre)|anual(?:es)?|cuatrimestral(?:es)?|"
+    r"\(.*\)|[-–•·]\s.*)$")
+_FIN_DE_FOLLETO = re.compile(
+    r"(?i)^(?:referencias|m[óo]dulo optativo|formaci[óo]n\b|los estudiantes|carrera:|t[íi]tulo:|"
+    r"universidad austral|alcance|perfil|salida laboral|campo laboral|requisitos|contacto|[áa]reas$|"
+    r"otr[oa]s (?:actividades|requisitos)|diplomatura de orientaci|doble titulaci)")
+_CORTADO_EN = re.compile(r"(?i)\s(?:y|e|o|u|de|del|la|las|el|los|en|con|para|a|al|no)$")
+_CONTINUA = re.compile(r"^(?:[a-záéíóúñ]|(?:y|e|o|u|de|del|la|las|el|los|en|con|para|a)\s)")
+
+
+def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
+    """A brochure's plan laid out in columns of years (Austral's): a heading
+    per year ("1º AÑO", "PRIMER AÑO") over its subjects, two or three years
+    side by side and the next ones below them. A year's block runs from its
+    heading down to the next heading of its column; its lines are its
+    subjects, a line slightly indented past the block's margin, opening in
+    lower case ("del Adulto", "y Hierbas") or following one cut after a
+    connector ("Fundamentos de Enfermería y") going on the one before. Term
+    labels ("PRIMER QUARTER"), bullets and what they wrap, remarks in
+    brackets, tracks' subjects and words far to the right (a legend) are not
+    subjects; a heading in capitals, the brochure's references or optional
+    module end a block. Text set on its side is left out. Nothing unless the
+    years run from the first without a gap."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            # (Text set on its side down a margin is not the plan's.)
+            palabras = [p for p in pagina.extract_words(keep_blank_chars=False, use_text_flow=False)
+                        if p.get("upright", True)]
+            cabezas = []
+            for i, p in enumerate(palabras[:-1]):
+                siguiente = palabras[i + 1]
+                m = _ANIO_EN_FOLLETO.match(p["text"])
+                if m and siguiente["text"].upper() == "AÑO" and abs(siguiente["top"] - p["top"]) < 3:
+                    anio = int(m.group(1)) if m.group(1) else _ORDINAL_DEL_ANIO[m.group(2).lower()]
+                    cabezas.append({"anio": anio, "x0": p["x0"], "top": p["top"],
+                                    "bottom": max(p["bottom"], siguiente["bottom"])})
+            if not cabezas:
+                continue
+            columnas = sorted({round(c["x0"] / 40) for c in cabezas})
+            xs = sorted({min(c["x0"] for c in cabezas if round(c["x0"] / 40) == k) for k in columnas})
+            ancho = min((b - a for a, b in zip(xs, xs[1:])), default=pagina.width - xs[0])
+            for cabeza in cabezas:
+                izquierda = cabeza["x0"] - 12
+                derecha = min([x - 12 for x in xs if x > cabeza["x0"] + 40] + [cabeza["x0"] + ancho - 12])
+                abajo = min([c["top"] for c in cabezas if c["top"] > cabeza["top"] + 5 and abs(c["x0"] - cabeza["x0"]) < 40]
+                            + [pagina.height])
+                suyas = [p for p in palabras if izquierda <= p["x0"] < derecha and cabeza["bottom"] + 1 < p["top"] < abajo - 1]
+                lineas: list[list[dict]] = []
+                for p in sorted(suyas, key=lambda p: (p["top"], p["x0"])):
+                    if lineas and abs(lineas[-1][0]["top"] - p["top"]) < 3:
+                        lineas[-1].append(p)
+                    else:
+                        lineas.append([p])
+                items: list[list] = []
+                margen = None
+                tras_vineta = False
+                for linea in lineas:
+                    # A wide gap leaves the name: what follows is a legend beside it ("Cursada").
+                    linea = sorted(linea, key=lambda p: p["x0"])
+                    corte = next((k for k in range(1, len(linea)) if linea[k]["x0"] - linea[k - 1]["x1"] > 40), len(linea))
+                    linea = linea[:corte]
+                    texto = clean_text(" ".join(p["text"] for p in linea))
+                    if not texto or _ETIQUETA_DE_FOLLETO.match(texto):
+                        # (What a bullet wraps onto the next line is the bullet's.)
+                        tras_vineta = bool(texto) and texto[0] in "-–•·"
+                        continue
+                    letras = [c for c in texto if c.isalpha()]
+                    # A heading in capitals ("DOBLE TITULACIÓN ...") or the brochure's own matter ends the year.
+                    if _FIN_DE_FOLLETO.match(texto) or (len(letras) >= 8 and sum(c.isupper() for c in letras) > 0.6 * len(letras)):
+                        break
+                    # A track's own subject ("Track BT: Análisis Genómico") is one choice, not the plan's.
+                    if re.match(r"(?i)track\b", texto):
+                        continue
+                    x = min(p["x0"] for p in linea)
+                    # (A slight indent goes on; a word far to the right is beside the list, not in it.)
+                    if margen is not None and x > margen + 40:
+                        continue
+                    sigue = _CONTINUA.match(texto) or (margen is not None and x > margen + 4)
+                    if tras_vineta and sigue:
+                        continue
+                    tras_vineta = False
+                    if items and (sigue or _CORTADO_EN.search(items[-1][0])):
+                        items[-1][0] += " " + texto
+                        continue
+                    margen = x if margen is None else min(margen, x)
+                    items.append([texto, cabeza["anio"]])
+                for nombre, anio in items:
+                    _agregar(materias, nombre, anio)
+    anios = sorted({a for _, a in materias})
+    if not anios or anios != list(range(1, max(anios) + 1)):
+        return []
+    return materias
+plan_folleto_columnas.ruta = True  # type: ignore[attr-defined]

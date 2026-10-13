@@ -250,3 +250,15 @@ class PlanIuseTests(unittest.TestCase):
         self.assertEqual(plan_iuse(texto), [("Sociología y conocimiento científico", 1), ("Criminalística", 1),
                                             ("Inglés II", 2)])
         self.assertEqual(plan_iuse(texto.replace("   2      Criminalística", "   9      Criminalística")), [])
+
+
+class PlanFolletoColumnasTests(unittest.TestCase):
+    def test_cortes_y_continuaciones(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import _CONTINUA, _CORTADO_EN, _ETIQUETA_DE_FOLLETO, _FIN_DE_FOLLETO
+        self.assertTrue(_CONTINUA.match("del Adulto"))
+        self.assertFalse(_CONTINUA.match("Derecho Penal I"))
+        self.assertTrue(_CORTADO_EN.search("Fundamentos de Enfermería y"))
+        self.assertTrue(_ETIQUETA_DE_FOLLETO.match("PRIMER QUARTER"))
+        self.assertTrue(_ETIQUETA_DE_FOLLETO.match("- Nutrición Clínica"))
+        self.assertTrue(_FIN_DE_FOLLETO.match("Otras Actividades"))
+        self.assertFalse(_FIN_DE_FOLLETO.match("Teoría del Derecho"))
