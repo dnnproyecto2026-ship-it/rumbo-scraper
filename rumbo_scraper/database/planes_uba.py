@@ -35,6 +35,10 @@ what that page links, never off a search engine's memory of the site.
   per block, each subject numbered and its hours, a "TOTAL" row; taken when
   the numbers run from 1 without a gap and each block's hours add up to its
   total (``plan_de_profesorado``). The blocks do not say the year.
+- Farmacia y Bioquímica, the tecnicaturas' 2022 plans: PDFs read by the
+  reader ``planes_documentos`` keeps for ffyb.uba.ar, their subjects
+  numbered ("01- TRABAJO Y SOCIEDAD (70) (CBC)"); taken when the numbers run
+  from 1 without a gap, the number and the CBC's code left out.
 - Exactas, Ciencias Geológicas: its department's page lists the plan year
   by year (``planes_sitios.plan_por_anios``); a section's title after it
   ("Tutores y TFL") is not a subject.
@@ -85,6 +89,12 @@ FADU = {
     "Diseño de Indumentaria": "https://www.fadu.uba.ar/diseno-de-indumentaria/",
 }
 PROFESORADOS_EXACTAS = "https://ccpems.exactas.uba.ar/"
+FFYB = {
+    "Tecnicatura Universitaria en Óptica y Contactología":
+        "https://www.ffyb.uba.ar/wp-content/uploads/2022/12/Nuevo-Plan-de-Estudios-2022-TUOC.pdf",
+    "Tecnicatura Universitaria en Medicina Nuclear":
+        "https://www.ffyb.uba.ar/wp-content/uploads/2022/12/Nuevo-Plan-de-Estudios-2022-TUMN-.pdf",
+}
 DATOS = ("Licenciatura en Ciencias de Datos", "https://lcd.exactas.uba.ar/materias/")
 POR_ANIOS = {
     "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
@@ -142,6 +152,25 @@ def plan_de_profesorado(html: str) -> list[tuple[str, None]]:
     if not numeros or numeros != list(range(1, len(numeros) + 1)):
         return []
     return materias
+
+
+def _de_ffyb(visitante: Visitante, carrera: str, documento: str) -> list[tuple[str, int | None]]:
+    from rumbo_scraper.database.planes_documentos import _leer_documento
+
+    archivo = CACHE / documento.rsplit("/", 1)[1]
+    if not archivo.exists():
+        CACHE.mkdir(parents=True, exist_ok=True)
+        archivo.write_bytes(visitante.client.get(documento).content)
+        time.sleep(PAUSA)
+    numeros, materias = [], []
+    for nombre, anio in _leer_documento(archivo, documento, carrera):
+        numero = re.match(r"^(\d{1,2})\s*[-.]+\s*", nombre)
+        if not numero:
+            return []
+        numeros.append(int(numero.group(1)))
+        limpio = re.sub(r"(?:\s*\((?:\d{2,3}|CBC)\))+$", "", nombre[numero.end():]).strip(" .")
+        materias.append((limpio, anio))
+    return materias if numeros == list(range(1, len(numeros) + 1)) else []
 
 
 def plan_de_datos(html: str) -> list[tuple[str, int]]:
@@ -403,6 +432,11 @@ def main() -> None:
                 planes[titulo.get_text(" ", strip=True)] = materias
                 fuentes[titulo.get_text(" ", strip=True)] = pagina
             time.sleep(PAUSA)
+        for carrera, documento in FFYB.items():
+            materias = _de_ffyb(visitante, carrera, documento)
+            if materias:
+                planes[carrera] = materias
+                fuentes[carrera] = documento
         materias = plan_de_datos(visitante.get(DATOS[1]))
         if materias:
             planes[DATOS[0]] = materias
