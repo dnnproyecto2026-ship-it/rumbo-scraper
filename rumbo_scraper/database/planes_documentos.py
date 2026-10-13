@@ -411,6 +411,7 @@ _DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 _PLANES_EN_LA_PAGINA += (("untref.edu.ar", planes_sitios.plan_untref),)
 # UNLP Veterinarias' plan sheet: rows "Obligatoria Cuatrimestral 70 horas" under each year.
 _DOCUMENTOS_PROPIOS += (("fcv.unlp.edu.ar", planes_sitios.plan_fcv_unlp),)
+_PLANES_SIN_SU_NOMBRE = ("fcv.unlp.edu.ar",)
 # Austral's career brochures ("Plan de Estudios", a download): the plan in columns of years.
 _DOCUMENTOS_PROPIOS += (("austral.edu.ar", planes_sitios.plan_folleto_columnas),)
 _DOCUMENTO_POR_SU_ENLACE += (("austral.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"jet_download="))),)
@@ -819,7 +820,10 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         if usos[documento] > 1 and not (archivo.exists() and (
                 _de_cada_carrera(archivo) or _lo_titula(archivo, carrera["nombre_carrera"]))):
             continue
-        if archivo.stat().st_size < 1000 or not _nombra(_texto(archivo), carrera["nombre_carrera"]):
+        # (A site whose plan sheets name no career, each linked by its own
+        # career's page only, is believed: UNLP Veterinarias' "PLAN DE ESTUDIOS".)
+        sin_nombre = usos[documento] == 1 and urlparse(documento).netloc.removeprefix("www.").endswith(_PLANES_SIN_SU_NOMBRE)
+        if archivo.stat().st_size < 1000 or not (sin_nombre or _nombra(_texto(archivo), carrera["nombre_carrera"])):
             continue
         materias = _leer_documento(archivo, documento, carrera["nombre_carrera"])
         if _parece_el_plan_entero(carrera["nombre_carrera"], materias,
