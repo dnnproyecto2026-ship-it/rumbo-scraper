@@ -26,6 +26,9 @@ what that page links, never off a search engine's memory of the site.
   (``plan_de_agronomia``).
 - FADU: each design career's page, a table per year, read by
   ``planes_sitios.plan_fadu``.
+- Exactas, Ciencias Geológicas: its department's page lists the plan year
+  by year (``planes_sitios.plan_por_anios``); a section's title after it
+  ("Tutores y TFL") is not a subject.
 - Ciencias Sociales, careers whose page lists each cycle with its count
   ("Ciclo General: Veintidós (22) asignaturas"), read by
   `parsers.plan_por_ciclos`: Ciencia Política. Those pages do not say the
@@ -71,6 +74,9 @@ FADU = {
     "Diseño Industrial": "https://www.fadu.uba.ar/nuevo-plan-de-estudios-de-diseno-industrial/",
     "Diseño Textil": "https://www.fadu.uba.ar/diseno-textil/",
     "Diseño de Indumentaria": "https://www.fadu.uba.ar/diseno-de-indumentaria/",
+}
+POR_ANIOS = {
+    "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
 }
 AGRONOMIA = {
     "Agronomía": "https://www.agro.uba.ar/carreras/agronomia",
@@ -296,6 +302,17 @@ def main() -> None:
             if materias:
                 planes[carrera] = materias
                 fuentes[carrera] = enlace
+        for carrera, url in POR_ANIOS.items():
+            html = visitante.get(url)
+            # (Its sections' titles: headings, and an accordion's "Tutores y TFL".)
+            sopa = BeautifulSoup(html or "", "html.parser")
+            titulos = {comparison_key(t.get_text(" ", strip=True)) for t in
+                       sopa.find_all(["h1", "h2", "h3", "h4"]) + sopa.select("[class*=toggle-title]")}
+            materias = [(n, a) for n, a in planes_sitios.plan_por_anios(html) if comparison_key(n) not in titulos]
+            if materias:
+                planes[carrera] = materias
+                fuentes[carrera] = url
+            time.sleep(PAUSA)
         for carrera, url in FADU.items():
             materias = planes_sitios.plan_fadu(visitante.get(url))
             if materias:
