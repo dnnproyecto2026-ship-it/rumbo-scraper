@@ -273,3 +273,20 @@ class PlanUntrefTests(unittest.TestCase):
                 '<p>TERCER CUATRIMESTRE</p><ul><li>Gramática II</li><li>Trayectos Formativos Alternativos</li></ul>'
                 '<p><strong>Temáticas ofrecidas</strong></p><p>- Etnografía</p></div></div></div></div>')
         self.assertEqual(plan_untref(html), [("Gramática I", 1), ("Gramática II", 2)])
+
+
+class PlanUnahurTablaTests(unittest.TestCase):
+    def test_nombre_centrado_en_su_fila(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_unahur_tabla
+        texto = """
+Año      Nro                   ASIGNATURA                            IP HS. TAE
+ 1     CFB   1       Matemática para informática I         C     4        64      111      175          7
+                   Introducción a lógica y problemas
+ 1     CFB   2                                             C     4        64      111      175          7
+                           computacionales
+                    Introducción a los sistemas de comunicación
+   1 CFE          3 y seguridad                                                  C       6       96      154     250       10
+"""
+        self.assertEqual(plan_unahur_tabla(texto), [
+            ("Matemática para informática I", 1), ("Introducción a lógica y problemas computacionales", 1),
+            ("Introducción a los sistemas de comunicación y seguridad", 1)])

@@ -3334,8 +3334,9 @@ def plan_unahur_2025(texto: str) -> list[tuple[str, int]]:
 
 def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
-    then the older brochures'."""
-    return plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
+    then the older brochures', then the 2025-2026 plan documents' table."""
+    return (plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
+            or plan_unahur_tabla(texto_con_columnas))
 
 
 def plan_ffyb_uba(texto: str) -> list[tuple[str, int]]:
@@ -5497,4 +5498,48 @@ def plan_fcv_unlp(texto_con_columnas: str) -> list[tuple[str, int]]:
             suelta.append(texto)
     for nombre, anio, _ in filas:
         _agregar(materias, re.sub(r"\bll\b", "II", re.sub(r"\s+l$", " I", nombre)), anio)
+    return materias
+
+
+_FILA_UNAHUR_TABLA = re.compile(r"^\s*(\d)\s+[A-Z]{2,4}\s+(\d{1,2})\s+(?:(\S.*?)\s{2,})?[CAB]\s+\d")
+
+
+def plan_unahur_tabla(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's plan documents of 2025 and 2026 ("Plan de Estudios: ...",
+    ``-layout``): a table "Año | Campo | Nro | ASIGNATURA | C/A | hours",
+    a row per subject ("2 CFB 9 Redes de computadoras C 4 64 61 125 5").
+    A name the cell wrapped is centred on its row: its lines sit above and
+    below a row left without one ("Introducción a lógica y problemas" /
+    "1 CFB 2 C 4 ..." / "computacionales"), or above a row that holds the
+    rest. Nothing unless the numbers run
+    from 1 without a gap."""
+    filas: dict[int, list] = {}
+    arriba: list[str] = []
+    falta_abajo = None
+    for linea in texto_con_columnas.splitlines():
+        fila = _FILA_UNAHUR_TABLA.match(linea)
+        if fila:
+            nombre = (fila.group(3) or "").strip()
+            numero = int(fila.group(2))
+            if numero not in filas:
+                # (Or its first line above a row that holds the rest: Ciberseguridad's.)
+                filas[numero] = [" ".join(arriba + ([nombre] if nombre else [])), int(fila.group(1))]
+                falta_abajo = filas[numero] if not nombre else None
+            arriba = []
+            continue
+        texto = linea.strip()
+        if not texto or re.search(r"\d|TOTAL|ASIGNATURA|Camp|Sema|Total|nal$|HS\.|^Añ|^o\b", texto):
+            # (The table's head, a total or a page's number ends what was gathered above.)
+            arriba = [] if re.search(r"TOTAL|ASIGNATURA|Camp|Sema|Total|nal$|HS\.|^Añ|^o\b|^\d+$", texto) else arriba
+            continue
+        if falta_abajo is not None:
+            falta_abajo[0] += " " + texto
+            falta_abajo = None
+        else:
+            arriba.append(texto)
+    if not filas or set(filas) != set(range(1, max(filas) + 1)) or any(not n for n, _ in filas.values()):
+        return []
+    materias: list[tuple[str, int]] = []
+    for numero in sorted(filas):
+        _agregar(materias, *filas[numero])
     return materias
