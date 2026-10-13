@@ -63,3 +63,4 @@ class NoEsUnaCarrera(unittest.TestCase):
         self.assertTrue(no_es_una_carrera("Diplomatura en Auditoría Gubernamental (actividad finalizada)"))
         self.assertTrue(no_es_una_carrera("Diplomatura en Tutoría para la Educación Secundaria y Superior"))
         self.assertFalse(no_es_una_carrera("Licenciatura en Economía"))
+        self.assertFalse(no_es_una_carrera("Diplomatura de Pregrado en Gestión de Seguros"))

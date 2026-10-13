@@ -123,8 +123,9 @@ def la_pagina_dice_ciclo(url: str | None) -> bool:
 
 # A diploma is not a degree, and a programme its page calls ended is offered
 # by no one: UCALP's "Diplomatura en Auditoría Gubernamental (actividad
-# finalizada)" had reached the degrees.
-_NO_ES_UNA_CARRERA = re.compile(r"^diplomatura\b|\bactividad finalizada\b")
+# finalizada)" had reached the degrees. (A national university's
+# "Diplomatura de Pregrado" is an official pregrado title, as the UNR's.)
+_NO_ES_UNA_CARRERA = re.compile(r"^diplomatura\b(?! de pregrado)|\bactividad finalizada\b")
 
 
 def no_es_una_carrera(nombre: str) -> bool:
