@@ -4719,12 +4719,12 @@ def _clave_de_celda(texto: str) -> str:
 
 
 def _celdas(texto_sin_columnas: str) -> set[str]:
-    """Every run of one to four lines of the document read without its
+    """Every run of one to seven lines of the document read without its
     columns, where a table's cell comes out whole."""
     lineas = [_clave_de_celda(l) for l in texto_sin_columnas.replace("​", "").splitlines()]
     # Without a row's code before its name: "FE10 Base de Datos".
     lineas = [re.sub(r"^[a-z]{1,2}\d{1,2} (?=[a-z])", "", l) for l in lineas if l]
-    return {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 5)}
+    return {" ".join(lineas[i:i + n]) for i in range(len(lineas)) for n in range(1, 8)}
 
 
 # What a row of an IFTS table says besides its unit's name: its format,
@@ -4790,10 +4790,21 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
     inicio = re.search(r"(?i)contenidos", texto)
     if not declaradas or not inicio:
         return []
-    total_declarado = int(declaradas.group(1).replace(".", ""))
+    return _tabla_por_horas(texto[inicio.end():], int(declaradas.group(1).replace(".", "")), texto_sin_columnas)
+
+
+
+def _tabla_por_horas(texto: str, total_declarado: int, texto_sin_columnas: str,
+                     minimo: int = 10) -> list[tuple[str, int | None]]:
+    """The rows of a table that gives each unit's hours (``plan_horas_ifts``),
+    when their hours add up to ``total_declarado``."""
     filas: list[dict[str, Any]] = []
     dudosas: list[tuple[int, str, list[dict[str, Any]]]] = []
-    for pagina in texto[inicio.end():].split("\f"):
+    enteras = _celdas(texto_sin_columnas) if texto_sin_columnas else set()
+    comienzos_de_celdas = {" ".join(c.split()[:n]) for c in enteras for n in range(1, len(c.split()) + 1)}
+    for pagina in texto.split("\f"):
+        # A name the page break cut goes on at the top of the next page.
+        de_la_pagina_anterior = filas[-1] if filas else None
         lineas = pagina.splitlines()
         analizadas = []
         for i, linea in enumerate(lineas):
@@ -4864,7 +4875,8 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
                 piezas = piezas[-1:]
             texto_nombre = piezas[0][1] if piezas else ""
             # A year's or term's label alone ("2°/1°") is not a name.
-            if _CODIGO_DE_FILA_IFTS.match(texto_nombre.lstrip(_RECORTABLE)):
+            if _CODIGO_DE_FILA_IFTS.match(texto_nombre.lstrip(_RECORTABLE)) \
+                    and not re.fullmatch(r"[IVX]+", texto_nombre.lstrip(_RECORTABLE)):
                 texto_nombre = ""
             if texto_nombre and (_SECCION_IFTS.match(texto_nombre.lstrip(_RECORTABLE))
                                  or _CABECERA_IFTS.search(texto_nombre) and not a["fila"]):
@@ -4883,6 +4895,46 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
                 bloques[-1].append(a)
         for bloque in bloques:
             propias = [a for a in bloque if a["fila"]]
+            primera_de_la_pagina = propias and propias[0] is (filas_de_pagina[0] if filas_de_pagina else None)
+            if enteras and (len(propias) > 1 or primera_de_la_pagina and de_la_pagina_anterior):
+                # Between two rows, the lines split where the row above's
+                # name ends a whole cell and the one below's starts one.
+                sueltas: list[dict[str, Any]] = []
+                for a in bloque:
+                    if not a["fila"]:
+                        if a["partes"]:
+                            sueltas.append(a)
+                        continue
+                    anterior = next((f for f in reversed(propias) if f["i"] < a["i"]), None)
+                    if anterior is None and primera_de_la_pagina:
+                        anterior = de_la_pagina_anterior
+                    propia = [(a["i"], a["partes"][0])] if a["partes"] else []
+                    if anterior is None:
+                        a["nombre_partes"] += [(x["i"], x["partes"][0]) for x in sueltas] + propia
+                    else:
+                        cortes = []
+                        for k in range(len(sueltas) + 1):
+                            arriba = [p for _, p in sorted(anterior["nombre_partes"] + [
+                                (x["i"], x["partes"][0]) for x in sueltas[:k]])]
+                            abajo = [x["partes"][0] for x in sueltas[k:]] + [p for _, p in propia]
+                            if _nombre_de_celda(arriba, enteras) and (
+                                    not abajo or _clave_de_celda(" ".join(abajo).replace(_RECORTABLE, ""))
+                                    in comienzos_de_celdas):
+                                cortes.append(k)
+                        if len(cortes) > 1:
+                            # Both ways give cells: the lines go to the
+                            # nearer row, if that is one of them.
+                            cerca = sum(1 for x in sueltas if x["i"] - anterior["i"] < a["i"] - x["i"]) \
+                                if anterior in filas_de_pagina else 0
+                            parejas = any(x["i"] - anterior["i"] == a["i"] - x["i"] for x in sueltas)
+                            cortes = [cerca] if cerca in cortes and not parejas else []
+                        if len(cortes) != 1:
+                            return []
+                        anterior["nombre_partes"] += [(x["i"], x["partes"][0]) for x in sueltas[:cortes[0]]]
+                        a["nombre_partes"] += [(x["i"], x["partes"][0]) for x in sueltas[cortes[0]:]] + propia
+                    sueltas = []
+                propias[-1]["nombre_partes"] += [(x["i"], x["partes"][0]) for x in sueltas]
+                continue
             for a in bloque:
                 if not a["partes"]:
                     continue
@@ -4901,15 +4953,14 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
                     destino = next(f for f in candidatas if f["i"] == distancias[0][1])
                 destino["nombre_partes"].append((a["i"], a["partes"][0]))
         filas += filas_de_pagina
-    if len(filas) < 10 or sum(f["horas"] for f in filas) != total_declarado:
+    if len(filas) < minimo or sum(f["horas"] for f in filas) != total_declarado:
         return []
     if dudosas:
-        celdas = _celdas(texto_sin_columnas) if texto_sin_columnas else set()
-        if not celdas or len(dudosas) > 12:
+        if not enteras or len(dudosas) > 12:
             return []
 
         def nombre_de(fila: dict[str, Any], extra: list[tuple[int, str]]) -> str:
-            return _nombre_de_celda([p for _, p in sorted(fila["nombre_partes"] + extra)], celdas) or "-"
+            return _nombre_de_celda([p for _, p in sorted(fila["nombre_partes"] + extra)], enteras) or "-"
 
         maneras = []
         for eleccion in range(2 ** len(dudosas)):
@@ -4929,11 +4980,10 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
         anios.append(int(codigo[0]) if codigo else None)
     if None in anios:
         anios = [None] * len(filas)
-    celdas = _celdas(texto_sin_columnas) if texto_sin_columnas else set()
     materias: list[tuple[str, int | None]] = []
     for f, anio in zip(filas, anios):
         partes = [p for _, p in sorted(f["nombre_partes"])]
-        nombre = (_nombre_de_celda(partes, celdas) or "") if celdas else \
+        nombre = (_nombre_de_celda(partes, enteras) or "") if enteras else \
             " ".join(" ".join(p.lstrip(_RECORTABLE) for p in partes).split())
         nombre = re.sub(r"(?:\s*\(\*+\))+$", "", nombre)
         if len(nombre) < 4 or not nombre[0].isupper() or _SIN_TERMINAR_IFTS.search(nombre):
