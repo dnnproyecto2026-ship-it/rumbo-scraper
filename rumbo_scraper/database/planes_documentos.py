@@ -201,6 +201,9 @@ _FUERA_DEL_PLAN = re.compile(r"(?i)^cbc$|\s(?-i:CN)$|\(optativa\)|^t[íi]tulo\s*
 
 def _nombra(texto: str, carrera: str) -> bool:
     palabras = set(re.findall(r"[a-z0-9]+", comparison_key(texto)))
+    # A name set on its side down a margin comes out backwards (Austral's
+    # brochures: "rodatnoC :arerraC").
+    palabras |= {palabra[::-1] for palabra in palabras}
     propias = [p for p in re.findall(r"[a-z0-9]+", comparison_key(carrera)) if p not in _VACIAS]
     return all(p in palabras for p in propias)
 
