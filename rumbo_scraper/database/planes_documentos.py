@@ -415,6 +415,10 @@ _PLANES_EN_LA_PAGINA += (("untref.edu.ar", planes_sitios.plan_untref),)
 # UNLP Veterinarias' plan sheet: rows "Obligatoria Cuatrimestral 70 horas" under each year.
 _DOCUMENTOS_PROPIOS += (("fcv.unlp.edu.ar", planes_sitios.plan_fcv_unlp),)
 _PLANES_SIN_SU_NOMBRE = ("fcv.unlp.edu.ar",)
+# UDE's career pages link their plan sheet from a picture, a link without
+# text, the file named in lower case ("indumentaria.pdf"); the resolution and
+# the enrolment guide beside it are named otherwise.
+_DOCUMENTO_POR_SU_ENLACE += (("ude.edu.ar", (re.compile(r"^$"), re.compile(r"/wp-content/uploads/\d{4}/\d{2}/[a-z][a-z0-9-]*\.pdf$"))),)
 # Austral's career brochures ("Plan de Estudios", a download): the plan in columns of years.
 _DOCUMENTOS_PROPIOS += (("austral.edu.ar", planes_sitios.plan_folleto_columnas),)
 _DOCUMENTO_POR_SU_ENLACE += (("austral.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"jet_download="))),)
