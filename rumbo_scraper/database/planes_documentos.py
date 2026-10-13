@@ -406,7 +406,7 @@ _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
 _DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 # Austral's career brochures ("Plan de Estudios", a download): the plan in columns of years.
 _DOCUMENTOS_PROPIOS += (("austral.edu.ar", planes_sitios.plan_folleto_columnas),)
-_DOCUMENTO_POR_SU_ENLACE += (("austral.edu.ar", "plan de estudios"),)
+_DOCUMENTO_POR_SU_ENLACE += (("austral.edu.ar", (re.compile(r"(?i)plan de estudios?"), re.compile(r"jet_download="))),)
 _DOCUMENTO_POR_SU_ENLACE += (("unma.edu.ar", re.compile(r"/doc/mapas/[^/]*PLAN[^/]*\.pdf$", re.I)),)
 
 def _documento_por_su_enlace(html: str, url: str, host: str) -> str | None:
