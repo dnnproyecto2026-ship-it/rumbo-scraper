@@ -285,6 +285,9 @@ def _plan_entre_los_documentos(visitante: Any, html: str, url: str, host: str, c
     return enteros[0] if len(enteros) == 1 else None
 
 
+# UNMdP Exactas: each career's page now links its plan page beneath it
+# (".../licenciatura-en-fisica/lic-en-fisica-plan-de-estudios/").
+_PLAN_EN_OTRA_PAGINA += (("exactas.mdp.edu.ar", re.compile(r"plan-de-estudios/?$"), planes_sitios.plan_tabla_con_anios),)
 # Barceló's careers keep their plan on a page of its own, linked "Plan de
 # estudios" from the career's page.
 _PLAN_EN_OTRA_PAGINA += (("barcelo.edu.ar", "plan de estudios", planes_sitios.plan_por_anios),)
