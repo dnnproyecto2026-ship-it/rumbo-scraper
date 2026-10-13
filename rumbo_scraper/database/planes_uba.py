@@ -18,6 +18,12 @@ what that page links, never off a search engine's memory of the site.
   orientation or of electives and optatives, which a student picks from,
   are not the plan's (``plan_de_economicas``). The pages do not say the
   year, so none is given.
+- Agronomía: each career's page links its plan as a PDF laid out year by
+  year in two columns, one per term, a subject as "Name (credits)" with its
+  prerequisites under it ("* Botánica Morfológica"); read only when the
+  subjects' credits plus the electives' and optatives' the plan asks for add
+  up to the career's stated total ("carga horaria total de 234.5 créditos")
+  (``plan_de_agronomia``).
 - Ciencias Sociales, careers whose page lists each cycle with its count
   ("Ciclo General: Veintidós (22) asignaturas"), read by
   `parsers.plan_por_ciclos`: Ciencia Política. Those pages do not say the
@@ -33,6 +39,7 @@ from __future__ import annotations
 import argparse
 import difflib
 import re
+import subprocess
 import time
 from collections import Counter
 from pathlib import Path
@@ -56,6 +63,14 @@ ECONOMICAS = {
     "Contador Público": "https://www.economicas.uba.ar/carreras/contador",
     "Licenciatura en Administración": "https://www.economicas.uba.ar/carreras/administracion",
     "Licenciatura en Sistemas de Información de las Organizaciones": "https://www.economicas.uba.ar/carreras/sistemas",
+}
+AGRONOMIA = {
+    "Agronomía": "https://www.agro.uba.ar/carreras/agronomia",
+    "Licenciatura en Gestión de Agroalimentos": "https://www.agro.uba.ar/carreras/agroalimentos",
+    "Licenciatura en Economía y Administración Agrarias": "https://www.agro.uba.ar/carreras/leaa",
+    "Tecnicatura Universitaria en Turismo Rural": "https://www.agro.uba.ar/carreras/turismo",
+    "Tecnicatura Universitaria en Producción Vegetal Orgánica": "https://www.agro.uba.ar/carreras/organica",
+    "Tecnicatura Universitaria en Producción Florihortícola": "https://www.agro.uba.ar/carreras/florihorticola",
 }
 POR_CICLOS = {
     "Licenciatura en Ciencia Política": "https://cienciapolitica.sociales.uba.ar/home/estudiantes/"
@@ -94,6 +109,97 @@ def plan_de_economicas(html: str) -> list[str]:
     if len(set(codigos)) != len(codigos) or len(materias) < 10:
         return []
     return materias
+
+
+_ANIO_AGRO = re.compile(r"(?i)^\s*(Primer|Segundo|Tercer|Cuarto|Quinto|Sexto)\s+A[ñn]o\b")
+_ORDEN_AGRO = ("primer", "segundo", "tercer", "cuarto", "quinto", "sexto")
+_MATERIA_AGRO = re.compile(r"^#?\s*(?:cod\.?\s*\d+\s*[-.]?\s*)?(.+?)\s*\((\d+(?:[.,]\d+)?)\)$")
+_SOLO_CREDITOS = re.compile(r"^\((\d+(?:[.,]\d+)?)\)$")
+_NO_ES_NOMBRE_AGRO = re.compile(r"(?i)cuatrimestre|bimestre|^anual$|se acredita|pueden ser|cumplidas|asignaturas|"
+                                r"espacios curriculares|correlativ|deber[áa]n|^\(cbc\)$")
+_FIN_AGRO = re.compile(r"(?i)asignaturas/espacios curriculares electivos \(|requisitos exigidos|^\s*•")
+_TOTAL_AGRO = re.compile(r"(?i)la carrera de[^\n]*?carga horaria total de ([\d.,]+)\s*(cr[ée]ditos|horas)")
+
+
+def _cifra(texto: str) -> float:
+    """"234.5", "13,5" and "2.600" (thousands) as numbers."""
+    if re.fullmatch(r"\d{1,3}\.\d{3}", texto):
+        return float(texto.replace(".", ""))
+    return float(texto.replace(",", "."))
+
+
+def plan_de_agronomia(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """An Agronomía career's plan: year by year ("Segundo Año"), a column per
+    term, each subject "Name (credits)" or its name wrapped over lines and
+    "(credits)" alone under it, its prerequisites under it starting with
+    "*" and any line that goes on with them. The electives listed after the
+    plan are not its subjects. Taken only when the subjects' credits, plus
+    the electives' and optatives' amounts the plan states, add up to the
+    career's total ("La carrera de ... tiene una carga horaria total de
+    234.5 créditos")."""
+    total = _TOTAL_AGRO.findall(texto_con_columnas)
+    if not total:
+        return []
+    materias: list[tuple[str, float, int]] = []
+    anio = 0
+    pendiente: dict[int, str] = {}
+    for linea in texto_con_columnas.splitlines():
+        if _FIN_AGRO.search(linea):
+            break
+        if not linea.strip():
+            # A blank line ends a subject's prerequisites.
+            pendiente = {c: p for c, p in pendiente.items() if p != "*"}
+            continue
+        hallado = _ANIO_AGRO.match(linea.strip() and linea)
+        if hallado and len(linea.strip()) < 30:
+            nuevo = _ORDEN_AGRO.index(hallado.group(1).lower()) + 1
+            if nuevo != anio + 1:
+                return []
+            anio, pendiente = nuevo, {}
+            continue
+        for celda in re.finditer(r"\S+(?: \S+)*", linea):
+            columna, texto = int(celda.start() >= 50), celda.group()
+            if texto.startswith("*"):
+                # Its prerequisites, and the lines that go on with them.
+                pendiente[columna] = "*"
+                continue
+            materia = _MATERIA_AGRO.match(texto)
+            solo = _SOLO_CREDITOS.match(texto)
+            if materia and not texto.startswith("("):
+                nombre = materia.group(1)
+                previo = pendiente.pop(columna, "")
+                if nombre[:1].islower() and previo and previo != "*":
+                    nombre = f"{previo} {nombre}"
+                materias.append((nombre, _cifra(materia.group(2)), anio))
+            elif solo:
+                abiertos = [c for c, p in pendiente.items() if p != "*"]
+                previo = pendiente.pop(columna if columna in abiertos else (abiertos[0] if len(abiertos) == 1 else -1), "")
+                if not previo or previo == "*":
+                    return []
+                materias.append((previo, _cifra(solo.group(1)), anio))
+            elif _NO_ES_NOMBRE_AGRO.search(texto):
+                pendiente.pop(columna, None)
+            elif pendiente.get(columna) != "*":
+                pendiente[columna] = f"{pendiente.get(columna, '')} {texto}".strip()
+    if not anio or not materias:
+        return []
+    # What the student adds of electives and optatives, as the plan states it.
+    extras = {0.0}
+    lineas = texto_con_columnas.splitlines()
+    for numero, linea in enumerate(lineas):
+        # The line that names them, or the one under it.
+        if re.search(r"(?i)electiv|optativ", " ".join(lineas[max(0, numero - 1):numero + 1])):
+            extras |= {_cifra(c) for c in re.findall(r"(?i)(\d+(?:[.,]\d+)?)\s*(?:\)\s*)?(?:cr[ée]ditos|horas|hs)\b", linea)}
+            extras |= {_cifra(c) for c in re.findall(r"(?i)electivos?\s*\((\d+(?:[.,]\d+)?)\)", linea)}
+    suma = sum(c for _, c, _ in materias)
+    declarado = _cifra(total[-1][0])
+    if not any(abs(suma + e + o - declarado) < 0.01 for e in extras for o in extras if e != o or e == 0):
+        return []
+    vistas: list[tuple[str, int]] = []
+    for nombre, _, anio_de in materias:
+        if nombre not in {n for n, _ in vistas}:
+            vistas.append((nombre, anio_de))
+    return vistas
 
 
 def documentos_de_ingenieria(html: str) -> dict[str, str]:
@@ -165,6 +271,23 @@ def main() -> None:
             if materias:
                 planes[carrera] = [(materia, None) for materia in materias]
         fuentes = {}
+        for carrera, pagina in AGRONOMIA.items():
+            enlace = next((urljoin(pagina, a["href"]) for a in BeautifulSoup(
+                visitante.get(pagina) or "", "html.parser").find_all("a", href=True)
+                if "plan de estudios" in a.get_text(" ").lower() and a["href"].lower().endswith(".pdf")), None)
+            if not enlace:
+                continue
+            archivo = CACHE / enlace.rsplit("/", 1)[1]
+            if not archivo.exists():
+                CACHE.mkdir(parents=True, exist_ok=True)
+                archivo.write_bytes(visitante.client.get(enlace).content)
+                time.sleep(PAUSA)
+            texto = subprocess.run(["pdftotext", "-layout", str(archivo), "-"], capture_output=True, text=True,
+                                   timeout=120).stdout
+            materias = plan_de_agronomia(texto)
+            if materias:
+                planes[carrera] = materias
+                fuentes[carrera] = enlace
         for carrera, url in ECONOMICAS.items():
             materias = plan_de_economicas(visitante.get(url))
             if materias:
