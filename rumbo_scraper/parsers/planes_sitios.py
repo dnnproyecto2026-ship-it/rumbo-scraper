@@ -2520,7 +2520,10 @@ def _plan_fahce_catedras(html: str) -> list[tuple[str, int | None]]:
 # besides the subjects: the terms, the page's foot and its admission papers.
 _NO_ES_MATERIA_DEL_ANIO = re.compile(
     r"(?i)^\(?\s*(?:\d\s*[º°erdo.]*\s*)?(?:1er|2do|primer|segundo)?\s*cuatrimestr|^cuatrimestral|^\(?anual\)?$|"
-    r"^c[áa]tedra\s+[a-z]\b|^ver\s+plan|^obtiene\s+t[íi]tulo|^comienzan|^documentaci|^dni\b|"
+    r"^c[áa]tedra\s+[a-z]\b|^ver\s+plan|^obtiene\s+t[íi]tulo|^comienzan|^dni\b|"
+    # The admission papers ("Documentación requerida"), not "Documentación y
+    # Registros Médicos I" (Barceló).
+    r"^documentaci[óo]n(?:\s+(?:de\s+ingreso|requerida|a\s+presentar|necesaria|para)\b|\s*:|$)|"
     r"^inscrip|^requisitos|^realizado\s+por|copyright|©|^todos\s+los\s+derechos|"
     # A subject's state, a block's heading, the page's asides.
     r"^aprobad[ao]\b|^ciclo\s+(?:medio|superior|final|b[áa]sico|inicial|de\s+licenciatura|profesional|de\s+especializaci[óo]n)$|^optativas\b|"
