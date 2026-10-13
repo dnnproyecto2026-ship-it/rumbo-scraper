@@ -26,6 +26,11 @@ what that page links, never off a search engine's memory of the site.
   (``plan_de_agronomia``).
 - FADU: each design career's page, a table per year, read by
   ``planes_sitios.plan_fadu``.
+- Exactas, Ciencias de Datos: its career's site gives the CBC's subjects
+  and a table of the rest by term ("3  Álgebra I"), the year each term's
+  pair; taken when the table names the same subjects the page lists one by
+  one under "Segundo Ciclo de Grado" (``plan_de_datos``). The elective's
+  slot and the CBC's electives (two of three) are a choice, not a subject.
 - Exactas, Ciencias Geológicas: its department's page lists the plan year
   by year (``planes_sitios.plan_por_anios``); a section's title after it
   ("Tutores y TFL") is not a subject.
@@ -75,6 +80,7 @@ FADU = {
     "Diseño Textil": "https://www.fadu.uba.ar/diseno-textil/",
     "Diseño de Indumentaria": "https://www.fadu.uba.ar/diseno-de-indumentaria/",
 }
+DATOS = ("Licenciatura en Ciencias de Datos", "https://lcd.exactas.uba.ar/materias/")
 POR_ANIOS = {
     "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
 }
@@ -90,6 +96,43 @@ POR_CICLOS = {
     "Licenciatura en Ciencia Política": "https://cienciapolitica.sociales.uba.ar/home/estudiantes/"
                         "info-academica/plan-de-estudios-8558-17/",
 }
+
+
+def plan_de_datos(html: str) -> list[tuple[str, int]]:
+    """Ciencias de Datos' plan page: the CBC's subjects (its first year)
+    before "Seleccionar 2 materias electivas", then the table of the rest by
+    term. Nothing unless the table's subjects are the ones the page heads one
+    by one under "Segundo Ciclo de Grado"."""
+    sopa = BeautifulSoup(html or "", "html.parser")
+    titulos = sopa.find_all(["h3", "h4"])
+    cbc = next((t for t in titulos if t.name == "h3" and "CBC" in t.get_text()), None)
+    ciclo = next((t for t in titulos if t.name == "h3" and "Segundo Ciclo" in t.get_text()), None)
+    if cbc is None or ciclo is None:
+        return []
+    materias: list[tuple[str, int]] = []
+    for elemento in cbc.find_all_next(string=True):
+        texto = " ".join(elemento.split())
+        if elemento.find_parent(["h3", "h4"]) is ciclo or texto.lower().startswith("seleccionar"):
+            break
+        if texto and texto.lower() not in ("cbc", "ciclo básico común") and not elemento.find_parent(["h3", "script"]):
+            materias.append((texto, 1))
+    listadas = []
+    for titulo in titulos[titulos.index(ciclo) + 1:]:
+        if titulo.name == "h3":
+            break
+        listadas.append(comparison_key(re.sub(r"\s*\(\*\)\s*$", "", titulo.get_text(" ", strip=True)).rstrip(" .")))
+    en_la_tabla = []
+    for tabla in sopa.find_all("table"):
+        filas = [[c.get_text(" ", strip=True) for c in fila.find_all(["td", "th"])] for fila in tabla.find_all("tr")]
+        if not filas or filas[0][:2] != ["Cuatrimestre", "Asignatura"]:
+            continue
+        for fila in filas[1:]:
+            if len(fila) >= 2 and fila[0].isdigit():
+                en_la_tabla.append((fila[1].rstrip(" ."), (int(fila[0]) + 1) // 2))
+    if not en_la_tabla or sorted(comparison_key(n) for n, _ in en_la_tabla) != sorted(listadas):
+        return []
+    materias += [(n, a) for n, a in en_la_tabla if not n.lower().startswith("electiva")]
+    return materias
 
 
 _NO_ES_DEL_PLAN = re.compile(r"(?i)electiv|optativ|orientaci|competencias")
@@ -302,6 +345,10 @@ def main() -> None:
             if materias:
                 planes[carrera] = materias
                 fuentes[carrera] = enlace
+        materias = plan_de_datos(visitante.get(DATOS[1]))
+        if materias:
+            planes[DATOS[0]] = materias
+            fuentes[DATOS[0]] = DATOS[1]
         for carrera, url in POR_ANIOS.items():
             html = visitante.get(url)
             # (Its sections' titles: headings, and an accordion's "Tutores y TFL".)
