@@ -4729,7 +4729,7 @@ def _celdas(texto_sin_columnas: str) -> set[str]:
 _PALABRA_DE_DATOS_IFTS = re.compile(
     r"(?i)^(?:materia|taller|seminario|asignatura|m[óo]dulo|laboratorio|proyecto|pr[áa]cticas?|profesional(?:izante)?|"
     r"cuatrimestral|anual|bimestral|acreditable|op\.?|optativ[oa]|general|fundamentos?|fundamental|espec[íi]fic[oa]|"
-    r"m|l|t|s|c|a|pp|tp|hc|-|–|\d+(?:[.,]\d+)?)$")
+    r"m|l|t|s|c|a|p|pp|tp|hc|-|–|\d+(?:[.,]\d+)?)$")
 _CODIGO_DE_FILA_IFTS = re.compile(r"^(?:\d{1,2}|\d[.,]\d[.,]\d{1,2}\.?|[A-Z]{1,2}\d{1,2}|\d°(?:/\d°)?|[IVX]+)$")
 _CABECERA_IFTS = re.compile(
     r"(?i)curricular|cursada|r[ée]gimen|formativ|denominaci|\bhs\b|hs\.|c[áa]t\.|\bsem\b|\btotal|c[óo]d(?:igo|\.)|"
@@ -4933,9 +4933,10 @@ def plan_horas_ifts(texto_con_columnas: str, texto_sin_columnas: str = "") -> li
         nombre = (_nombre_de_celda(partes, celdas) or "") if celdas else \
             " ".join(" ".join(p.lstrip(_RECORTABLE) for p in partes).split())
         nombre = re.sub(r"(?:\s*\(\*+\))+$", "", nombre)
-        if not nombre or not nombre[0].isupper() or _SIN_TERMINAR_IFTS.search(nombre):
+        if len(nombre) < 4 or not nombre[0].isupper() or _SIN_TERMINAR_IFTS.search(nombre):
             return []
-        materias.append((nombre, anio))
+        if comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+            materias.append((nombre, anio))
     return materias
 
 

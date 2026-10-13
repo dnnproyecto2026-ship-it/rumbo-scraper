@@ -4,10 +4,11 @@ Aprendizaje's own record of each career.
 The Agencia's service (``terciarios.CABA_IFTS``, where the IFTS and their
 careers were loaded from) gives each career at each IFTS a ``planEstudio``:
 the plan, a PDF the Agencia keeps on Drive. It is read by
-one of the IFTS readers of ``planes_sitios`` (by code, by number, under
-year-and-term headings, or a table of units without years) and taken only
-when it reads as the whole plan; one read without its rows' numbers, only
-when each name is a whole cell of the document. The verifier reads the
+one of the IFTS readers of ``planes_sitios`` (by code, by number, a table
+whose hours add up to the plan's declared total, under year-and-term
+headings, or a table of units without years) and taken only when it reads
+as the whole plan; one read without its rows' numbers, only when each name
+is a whole cell of the document. The verifier reads the
 same PDF because the career's record in that service links it.
 
     python -m rumbo_scraper.database.planes_ifts_caba [--apply]
@@ -51,11 +52,15 @@ def leer_plan(visitante: Any, documento: str, carrera: str) -> list[tuple[str, i
     # document.
     leidas = planes_sitios.plan_codigos_ifts(texto) or planes_sitios.plan_numerado_ifts(texto)
     if not leidas:
-        leidas = planes_sitios.plan_anio_cuatrimestre_ifts(texto) or planes_sitios.plan_instancias_ifts(texto)
         sin_columnas = subprocess.run(["pdftotext", str(archivo), "-"], capture_output=True, text=True,
                                       timeout=300).stdout
-        if not planes_sitios.nombres_en_celdas(leidas, sin_columnas):
-            return []
+        # A table whose hours add up to the plan's declared total, its names
+        # whole cells; else one read without numbers, its names whole cells.
+        leidas = planes_sitios.plan_horas_ifts(texto, sin_columnas)
+        if not leidas:
+            leidas = planes_sitios.plan_anio_cuatrimestre_ifts(texto) or planes_sitios.plan_instancias_ifts(texto)
+            if not planes_sitios.nombres_en_celdas(leidas, sin_columnas):
+                return []
     materias = [(n, a) for n, a in leidas if not _FUERA_DEL_PLAN.search(n)]
     return materias if _parece_el_plan_entero(carrera, materias, None) else []
 

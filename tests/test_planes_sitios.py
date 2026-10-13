@@ -420,6 +420,28 @@ Taller de Ciencias en la Escuela.
         self.assertEqual(p.plan_cordoba("INICIAL", self.TEXTO.replace("Estudios Socioculturales y Literarios de Pueblos de Habla Inglesa I.", "")), [])
 
 
+class PlanHorasIfts(unittest.TestCase):
+    CON_COLUMNAS = (
+        "● Cantidad de horas: 832 horas cátedra\n● Contenidos:\n"
+        "Código   Espacio Curricular                 Duración   Total\n"
+        + "".join(f" G{i}      Materia número {i}                  C   4 HC     64 HC\n" for i in range(1, 11))
+        + "         Psicología social y coordinación de\n"
+        " E1                                          C   6 HC     96 HC\n"
+        "         grupos\n"
+        " E2      Inglés                              C   6 HC     96 HC\n")
+    SIN_COLUMNAS = "\n".join([f"G{i}\nMateria número {i}\nC" for i in range(1, 11)]
+                             + ["E1", "Psicología social y coordinación de", "grupos", "C", "E2", "Inglés"])
+
+    def test_wrapped_name_goes_where_it_is_a_cell(self):
+        materias = p.plan_horas_ifts(self.CON_COLUMNAS, self.SIN_COLUMNAS)
+        self.assertEqual(len(materias), 12)
+        self.assertIn(("Psicología social y coordinación de grupos", None), materias)
+
+    def test_hours_must_add_up_to_the_declared_total(self):
+        self.assertEqual(p.plan_horas_ifts(
+            self.CON_COLUMNAS.replace("832", "896"), self.SIN_COLUMNAS), [])
+
+
 class PlanCodigosIfts(unittest.TestCase):
     FILAS = [
         "         1.1.1   Técnicas de Programación                 FTE       MO      C      9        6      96",
