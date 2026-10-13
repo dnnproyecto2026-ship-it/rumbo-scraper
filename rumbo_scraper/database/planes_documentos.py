@@ -527,7 +527,8 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
     if re.search(r"(?i)\(ccc\)|complementaci[óo]n curricular", carrera):
         return False
     # ("Seminario A", "Optativa B": a capital alone is a label, not a cut "a".)
-    if len(materias) < 10 or any(nombre[:1].islower() or (_TERMINA_CORTADA.search(nombre)
+    # ("e-Business" opens in lower case and is whole.)
+    if len(materias) < 10 or any((nombre[:1].islower() and not re.match(r"e-[A-Z]", nombre)) or (_TERMINA_CORTADA.search(nombre)
                                                           and not re.search(r"\s[A-Z]$", nombre))
                                  for nombre, _ in materias):
         return False
