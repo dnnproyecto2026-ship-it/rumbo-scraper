@@ -2404,6 +2404,15 @@ def _plan_fadu(html: str) -> list[tuple[str, int]]:
         titulo = _texto(tabla.find_previous(["h2", "h3", "h4", "h5", "strong", "p"]))
         nivel = re.fullmatch(r"(?i)nivel\s+(\d)", titulo)
         anio = 1 if re.fullmatch(r"(?i)ciclo b[áa]sico com[úu]n", titulo) else (int(nivel.group(1)) + 1 if nivel else None)
+        # The design careers head each table with its year: "SEGUNDO AÑO –
+        # CICLO DE FORMACIÓN INICIAL", "PRIMER AÑO – CBC".
+        ordinal = re.match(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\b", titulo)
+        if ordinal and anio is None:
+            anio = ("primer", "segundo", "tercer", "cuarto", "quinto", "sexto").index(ordinal.group(1).lower()) + 1
+        # ...or "2º año", "Ciclo Básico Común – 1º año".
+        cifra = re.search(r"(?i)\b(\d)\s*[º°]\s*a[ñn]o\b", titulo)
+        if cifra and anio is None:
+            anio = int(cifra.group(1))
         for fila in tabla.find_all("tr") if anio else []:
             celdas = [_texto(c) for c in fila.find_all(["td", "th"])]
             if len(celdas) < 3 or celdas[0].lower() == "materia" or not celdas[1]:
@@ -2411,9 +2420,14 @@ def _plan_fadu(html: str) -> list[tuple[str, int]]:
             # The CBC's "Intr. al ..." is a shortened word, not a code.
             nombre = re.sub(r"^Intr\.\s+", "Introducción ", celdas[0])
             nombre = re.sub(r"^[A-Z][A-Za-z0-9]{0,4}\.\s+", "", nombre)
-            nombre = re.sub(r"\s*\(\*+\)$", "", nombre)
-            if not re.search(r"(?i)optativ|electiv", nombre):
-                _agregar(materias, nombre, anio)
+            # Without a footnote's mark, "(*)" or "(1)"; a subject a note
+            # lets be taken in either of two years (Diseño Gráfico's
+            # "Morfología II (1)") is kept in the first.
+            nombre = re.sub(r"\s*\((?:\*+|\d)\)$", "", nombre.replace("\xa0", " ")).strip()
+            if re.search(r"(?i)optativ|electiv", nombre) or comparison_key(nombre) in {
+                    comparison_key(n) for n, _ in materias}:
+                continue
+            _agregar(materias, nombre, anio)
     return materias
 
 

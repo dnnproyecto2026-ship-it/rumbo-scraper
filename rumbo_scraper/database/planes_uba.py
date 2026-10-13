@@ -24,6 +24,8 @@ what that page links, never off a search engine's memory of the site.
   subjects' credits plus the electives' and optatives' the plan asks for add
   up to the career's stated total ("carga horaria total de 234.5 créditos")
   (``plan_de_agronomia``).
+- FADU: each design career's page, a table per year, read by
+  ``planes_sitios.plan_fadu``.
 - Ciencias Sociales, careers whose page lists each cycle with its count
   ("Ciclo General: Veintidós (22) asignaturas"), read by
   `parsers.plan_por_ciclos`: Ciencia Política. Those pages do not say the
@@ -51,7 +53,7 @@ from bs4 import BeautifulSoup
 from rumbo_scraper.database.exportar_catalogo import clave_de_carrera
 from rumbo_scraper.database.planes_documentos import guardar_las_fuentes
 from rumbo_scraper.normalizers.text import comparison_key
-from rumbo_scraper.parsers import plan_por_ciclos, plan_por_cuatrimestre
+from rumbo_scraper.parsers import plan_por_ciclos, plan_por_cuatrimestre, planes_sitios
 from rumbo_scraper.spiders.visitante import Visitante
 
 CACHE = Path("data/planes_uba")
@@ -63,6 +65,12 @@ ECONOMICAS = {
     "Contador Público": "https://www.economicas.uba.ar/carreras/contador",
     "Licenciatura en Administración": "https://www.economicas.uba.ar/carreras/administracion",
     "Licenciatura en Sistemas de Información de las Organizaciones": "https://www.economicas.uba.ar/carreras/sistemas",
+}
+FADU = {
+    "Diseño Gráfico": "https://www.fadu.uba.ar/diseno-grafico/",
+    "Diseño Industrial": "https://www.fadu.uba.ar/nuevo-plan-de-estudios-de-diseno-industrial/",
+    "Diseño Textil": "https://www.fadu.uba.ar/diseno-textil/",
+    "Diseño de Indumentaria": "https://www.fadu.uba.ar/diseno-de-indumentaria/",
 }
 AGRONOMIA = {
     "Agronomía": "https://www.agro.uba.ar/carreras/agronomia",
@@ -288,6 +296,12 @@ def main() -> None:
             if materias:
                 planes[carrera] = materias
                 fuentes[carrera] = enlace
+        for carrera, url in FADU.items():
+            materias = planes_sitios.plan_fadu(visitante.get(url))
+            if materias:
+                planes[carrera] = materias
+                fuentes[carrera] = url
+            time.sleep(PAUSA)
         for carrera, url in ECONOMICAS.items():
             materias = plan_de_economicas(visitante.get(url))
             if materias:
