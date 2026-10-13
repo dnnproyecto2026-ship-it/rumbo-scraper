@@ -5301,3 +5301,55 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
         return []
     return materias
 plan_folleto_columnas.ruta = True  # type: ignore[attr-defined]
+
+
+_CUATRIMESTRE_UNTREF = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto|sexto|s[ée]ptimo|octavo|noveno|d[ée]cimo)o?\s+cuatrimestre$")
+_NUMERO_DEL_CUATRIMESTRE = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6,
+                            "septimo": 7, "séptimo": 7, "octavo": 8, "noveno": 9, "decimo": 10, "décimo": 10}
+
+
+def plan_untref(html: str) -> list[tuple[str, int]]:
+    """UNTREF's career pages (untref.edu.ar/carrera/...): under the block
+    titled "Plan de estudios", a heading per year ("Primer Año") or per term
+    ("PRIMER CUATRIMESTRE", whose year is half its number, rounded up) over
+    its subjects, a list or paragraphs opened by a dash. The notes that
+    follow ("(*) Asignaturas optativas") or another bold heading once the
+    subjects began ("Temáticas ofrecidas para el seminario optativo") end
+    it; an optional subject ("(optativa)") is a choice, and the alternative
+    formative paths (TFA) are activities, not subjects."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    bloque = next((g for g in soup.select("div.carreras-grid")
+                   if re.match(r"(?i)plan de estudios?$", _texto(g.select_one(".carreras-tit")) or "")), None)
+    contenido = bloque.select_one(".content-block") if bloque else None
+    materias: list[tuple[str, int]] = []
+    anio = None
+
+    def agregar(nombre: str) -> None:
+        nombre = re.sub(r"^[•\-–]\s*", "", nombre)
+        if not anio or re.match(r"(?i)trayectos? formativos? alternativos?", nombre) or re.search(r"(?i)\(optativa\)", nombre):
+            return
+        _agregar(materias, re.sub(r"\s*\(\*+\)\s*$", "", nombre), anio)
+
+    for elemento in contenido.find_all(["p", "div", "ul"], recursive=False) if contenido else []:
+        texto = _texto(elemento)
+        if elemento.name == "ul":
+            for item in elemento.find_all("li"):
+                agregar(_texto(item))
+            continue
+        if not texto:
+            continue
+        if texto.startswith("("):
+            break
+        cuatrimestre = _CUATRIMESTRE_UNTREF.match(texto)
+        if cuatrimestre:
+            anio = (_NUMERO_DEL_CUATRIMESTRE[cuatrimestre.group(1).lower()] + 1) // 2
+            continue
+        if anio_de(texto):
+            anio = anio_de(texto)
+            continue
+        if re.match(r"^[-–•]\s", texto):
+            agregar(texto)
+            continue
+        if materias:
+            break
+    return materias

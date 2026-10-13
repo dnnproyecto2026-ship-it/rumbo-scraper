@@ -262,3 +262,14 @@ class PlanFolletoColumnasTests(unittest.TestCase):
         self.assertTrue(_ETIQUETA_DE_FOLLETO.match("- Nutrición Clínica"))
         self.assertTrue(_FIN_DE_FOLLETO.match("Otras Actividades"))
         self.assertFalse(_FIN_DE_FOLLETO.match("Teoría del Derecho"))
+
+
+class PlanUntrefTests(unittest.TestCase):
+    def test_por_anio_o_por_cuatrimestre(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_untref
+        html = ('<div class="carreras-grid"><div class="carreras-tit"><p><strong>Plan de estudios</strong></p></div>'
+                '<div class="col"><div class="block"><div class="content-block">'
+                '<p>PRIMER CUATRIMESTRE</p><ul><li>Gramática I</li><li>Literatura medieval (optativa)</li></ul>'
+                '<p>TERCER CUATRIMESTRE</p><ul><li>Gramática II</li><li>Trayectos Formativos Alternativos</li></ul>'
+                '<p><strong>Temáticas ofrecidas</strong></p><p>- Etnografía</p></div></div></div></div>')
+        self.assertEqual(plan_untref(html), [("Gramática I", 1), ("Gramática II", 2)])
