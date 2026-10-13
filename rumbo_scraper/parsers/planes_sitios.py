@@ -3834,6 +3834,21 @@ def plan_ub_todos(cajas: str) -> list[tuple[str, int]]:
 plan_ub_todos.cajas = True  # type: ignore[attr-defined]
 
 
+def plan_ub_documento(ruta: str) -> list[tuple[str, int | None]]:
+    """The UB's documents, whichever their layout: a brochure or a distance
+    career's table (``plan_ub_todos``, on the text's boxes), else a distance
+    career's sheet with its subjects numbered (``plan_numerado_ub``)."""
+    import subprocess
+
+    def texto(modo: str) -> str:
+        return subprocess.run(["pdftotext", modo, ruta, "-"], capture_output=True, text=True, timeout=60).stdout
+
+    return plan_ub_todos(texto("-bbox-layout")) or plan_numerado_ub(texto("-layout"))
+
+
+plan_ub_documento.ruta = True  # type: ignore[attr-defined]
+
+
 def plan_uader_gestion(texto: str, carrera: str = "") -> list[tuple[str, int]]:
     """UADER's Ciencias de la Gestión documents (``-layout`` text): each
     year's table ("1º Año", "2do Año") with a row per subject, its six-digit
@@ -5021,6 +5036,76 @@ def _tabla_por_horas(texto: str, total_declarado: int, texto_sin_columnas: str,
             return []
         if comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
             materias.append((nombre, anio))
+    return materias
+
+
+_NUMERO_UB = re.compile(r"(?<!\S)(\d{1,2})\.\s*(?=[A-ZÁÉÍÓÚÑ¿])")
+_ETIQUETA_UB = re.compile(r"^(?:\d\s*(?:[º°]|er|do|ro|to)?(?:\s*a[ñn]o)?|cuatrimestre)$", re.I)
+_SIGUE_UB = re.compile(r"(?i)(?:\b(?:de|del|y|e|o|u|el|la|las|los|en|a|al|para|por|con|sobre)|,)$")
+
+
+def plan_numerado_ub(texto_con_columnas: str) -> list[tuple[str, int | None]]:
+    """Belgrano's distance careers' plans: the subjects numbered from 1
+    ("1. Organización del turismo"), in a table by year and term or in two
+    columns headed "PRIMER AÑO" and "SEGUNDO AÑO" (each column its year). A
+    name too long for its cell goes on in the very next line, under its
+    number ("11. Régimen Económico y Financiero del Comercio" / "Internacional").
+    A note in brackets ("(correlativa con 10)") is not part of a name. Taken
+    only when the numbers run from 1 without a gap; a list numbered again
+    after them (the subjects' contents) is not the plan."""
+    lineas = texto_con_columnas.replace("\u200b", "").splitlines()
+    # The plan's table starts at its heading: a list before it (the career's
+    # field of work) is not the plan.
+    inicio = next((i for i, l in enumerate(lineas)
+                   if re.search(r"(?i)\bASIGNATURAS?\s*$|PLAN DE ESTUDIOS\s*[–-]", l)), None)
+    if inicio is None:
+        return []
+    lineas = lineas[inicio:]
+    columnas: list[tuple[int, int]] = []
+    for linea in lineas:
+        anios = [(m.start(), ("primer", "segundo", "tercer", "cuarto").index(m.group(1).lower()) + 1)
+                 for m in re.finditer(r"(?i)\b(PRIMER|SEGUNDO|TERCER|CUARTO)\s+A[ÑN]O\b", linea)]
+        if len(anios) >= 2:
+            columnas = anios
+            break
+    items: dict[int, dict[str, Any]] = {}
+    # The column of each number whose name may still go on, and the line it was last on.
+    abiertos: dict[int, tuple[int, int]] = {}
+    for indice, linea in enumerate(lineas):
+        numeros = list(_NUMERO_UB.finditer(linea))
+        if numeros and items and (int(numeros[0].group(1)) == 1 or any(int(n.group(1)) in items for n in numeros)):
+            break
+        for i, numero in enumerate(numeros):
+            fin = numeros[i + 1].start() if i + 1 < len(numeros) else len(linea)
+            columna = numero.start()
+            clave = int(numero.group(1))
+            anio = min(columnas, key=lambda c: abs(c[0] - columna))[1] if columnas else None
+            items[clave] = {"texto": " ".join(linea[numero.end():fin].split()), "anio": anio}
+            abiertos[columna] = (clave, indice)
+        if numeros or not items:
+            continue
+        for celda in re.finditer(r"\S+(?: \S+)*", linea):
+            if _ETIQUETA_UB.match(celda.group()):
+                continue
+            columna = next((c for c in abiertos if abs(c - celda.start()) <= 1), None)
+            if columna is None or abiertos[columna][1] != indice - 1:
+                continue
+            clave = abiertos[columna][0]
+            items[clave]["texto"] += " " + celda.group()
+            abiertos[columna] = (clave, indice)
+    if len(items) < 8 or sorted(items) != list(range(1, len(items) + 1)):
+        return []
+    materias: list[tuple[str, int | None]] = []
+    for clave in sorted(items):
+        nombre = " ".join(re.sub(r"\s*\([^)]*\)", "", items[clave]["texto"]).split()).strip(" -–")
+        if not nombre or _SIGUE_UB.search(nombre):
+            return []
+        # (``_agregar`` cleans the name and keeps a subject with its year;
+        # a plan by term and year in a table gives none.)
+        limpia: list[tuple[str, int]] = []
+        _agregar(limpia, nombre, items[clave]["anio"] or 1)
+        materias += [(n, items[clave]["anio"]) for n, _ in limpia
+                     if n not in {m for m, _ in materias}]
     return materias
 
 
