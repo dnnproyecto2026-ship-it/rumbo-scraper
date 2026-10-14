@@ -290,3 +290,22 @@ Año      Nro                   ASIGNATURA                            IP HS. TAE
         self.assertEqual(plan_unahur_tabla(texto), [
             ("Matemática para informática I", 1), ("Introducción a lógica y problemas computacionales", 1),
             ("Introducción a los sistemas de comunicación y seguridad", 1)])
+
+
+class PlanUnsadaTests(unittest.TestCase):
+    def test_cuenta_las_obligatorias_que_declara(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_unsada
+        texto = """8. Cantidad de asignaturas obligatorias
+
+3
+    1       1°           CS          0279           Introducción a la Economía           Obligatoria       80        40      40
+                           Enfoques
+                          Pedagógicos
+    1       2°           CS          0458                                                Obligatoria       48        24      24
+                         Aplicados a la
+                        Fonoaudiología
+    2       1°           H           0254                 Electiva NFG (*)               Obligatoria       32      16       16
+"""
+        self.assertEqual(plan_unsada(texto), [("Introducción a la Economía", 1),
+                                              ("Enfoques Pedagógicos Aplicados a la Fonoaudiología", 1)])
+        self.assertEqual(plan_unsada(texto.replace("\n3\n", "\n4\n")), [])

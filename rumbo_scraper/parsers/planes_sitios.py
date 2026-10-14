@@ -5560,3 +5560,56 @@ def plan_unahur_tabla(texto_con_columnas: str) -> list[tuple[str, int]]:
     for numero in sorted(filas):
         _agregar(materias, *filas[numero])
     return materias
+
+
+# (The code a number, "0279", or a letter, "B" (Zootecnista's); "obligatorio" too.)
+_FILA_UNSADA = re.compile(r"^\s*(\d)\s+\d\s*[°º]\s+[A-Z]{1,4}\s+(?:\d{3,4}|[A-Z]{1,2})\s+(?:(\S.*?)\s+)?"
+                          r"((?i:obligatori[oa]|optativ[oa]|electiv[oa]))\b")
+
+
+def plan_unsada(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNSAdA's plan sheets ("Plan de estudios | <carrera>", ``-layout``):
+    a table "Año | Cuatrim. | Depto. | Código | Nombre de la asignatura |
+    Carácter | hours", a row per subject, a long name centred on its row (a
+    line above and one below a row left without it). The sheet states how
+    many compulsory subjects the plan has ("8. Cantidad de asignaturas
+    obligatorias: 19"): nothing unless the compulsory rows are as many. An
+    elective's slot ("Electiva NFG (*)") is not a subject."""
+    declarada = re.search(r"(?i)cantidad de asignaturas obligatorias\s*\n?\s*(\d+)", texto_con_columnas)
+    filas: list[list] = []
+    arriba: list[str] = []
+    falta_abajo = None
+    abajo = 0
+    for linea in texto_con_columnas.splitlines():
+        fila = _FILA_UNSADA.match(linea)
+        if fila:
+            nombre = (fila.group(2) or "").strip()
+            filas.append([" ".join(arriba + ([nombre] if nombre else [])), int(fila.group(1)), fila.group(3)])
+            # A name centred on a row without it takes as many lines below as
+            # above ("Enfoques" / "Pedagógicos" / row / "Aplicados a la" /
+            # "Fonoaudiología"); one cut after a connector goes on one line
+            # below ("Gestión de Servicios Sanitarios y").
+            abajo = len(arriba) if not nombre else (1 if _CORTADO_EN.search(nombre) else 0)
+            falta_abajo = filas[-1] if abajo else None
+            arriba = []
+            continue
+        texto = linea.strip()
+        if not texto or re.search(r"\d|Total|Carga horaria|Nombre de la|Carrera:|T[íi]tulo:|\(1° o 2°\)", texto):
+            arriba = []
+            continue
+        if falta_abajo is not None:
+            falta_abajo[0] += " " + texto
+            abajo -= 1
+            falta_abajo = falta_abajo if abajo > 0 else None
+        else:
+            arriba.append(texto)
+    obligatorias = [f for f in filas if f[2].lower().startswith("obligatori")]
+    if not declarada or len(obligatorias) != int(declarada.group(1)) or any(not n for n, _, _ in filas):
+        return []
+    materias: list[tuple[str, int]] = []
+    for nombre, anio, caracter in obligatorias:
+        if re.match(r"(?i)electiva\b", nombre):
+            continue
+        _agregar(materias, re.sub(r"\s*\(\*+\)\s*$", "", nombre), anio)
+    return materias
+plan_unsada.respaldo = True  # type: ignore[attr-defined]
