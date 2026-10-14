@@ -10,12 +10,14 @@ A row is taken only when:
 
 - its career exists and has no subjects yet;
 - the link is on the university's own site (``verificacion.es_oficial``);
-- two different people copied and checked it;
+- two different people copied and checked it, or the AI reader proposed it
+  (``cargado_por`` "IA ..."), which then needs every name in the document;
 - every subject is written in that document, read as the verifier reads it
-  (a misspelt name is sent back with its name); a plan published only as an
-  image cannot be read so, and is taken on the two people's word, kept in
+  (a picture by OCR; a misspelt name is sent back with its name); a picture
+  whose OCR misses a name is taken only on two people's word, kept in
   ``data/planes_revisados_a_mano.json`` for the verifier;
-- the plan reads as a whole plan (``_parece_el_plan_entero``).
+- the plan reads as a whole plan (``_parece_el_plan_entero``; a completion
+  cycle's own plan counts as whole).
 
 Every row's verdict goes to ``data/planes_manuales_resultado.csv``, with the
 reason a row was sent back. Preview by default; ``--apply`` writes.
@@ -77,21 +79,35 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     if not v.es_oficial(link, universidad["sitio_web"]):
         return f"el link no es del sitio oficial ({urlparse(link).netloc})", [], False
     cargo, reviso = (fila.get("cargado_por") or "").strip(), (fila.get("revisado_por") or "").strip()
-    if not cargo or not reviso or cargo.lower() == reviso.lower():
+    por_ia = cargo.lower().startswith("ia")
+    if not por_ia and (not cargo or not reviso or cargo.lower() == reviso.lower()):
         return "faltan dos personas distintas en cargado_por y revisado_por", [], False
     materias = materias_de(fila.get(COLUMNA_MATERIAS) or "")
     if isinstance(materias, str):
         return materias, [], False
     imagen = bool(_IMAGEN.search(urlparse(link).path))
-    if not imagen:
-        leida = fuentes.leer(link)
+    # The document read as the verifier reads it (a picture, by OCR); every
+    # subject must be written in it. Only a picture copied by two people may
+    # go on their word when its OCR does not read a name.
+    leida = fuentes.leer(link)
+    faltan = [n for n, _ in materias if not v.dice(leida["texto"], n)] if leida["ok"] else []
+    if not (imagen and not por_ia):
         if not leida["ok"]:
             return "no se pudo leer el link (¿es el documento del plan?)", materias, False
-        faltan = [n for n, _ in materias if not v.dice(leida["texto"], n)]
         if faltan:
             return "no figuran en el documento: " + "; ".join(faltan[:5]) + (" …" if len(faltan) > 5 else ""), \
                 materias, False
-    if not _parece_el_plan_entero(carrera["nombre_carrera"], materias, carrera.get("duracion_anios")):
+    # A picture whose OCR reads every name needs no one's word.
+    imagen = imagen and bool(faltan or not leida["ok"])
+    # A completion cycle's own plan, copied from it, is judged as a cycle:
+    # the readers refuse one because its page may show the whole degree's
+    # plan, which whoever copied it saw it was not; its stored duration may
+    # be the degree's.
+    nombre, duracion = carrera["nombre_carrera"], carrera.get("duracion_anios")
+    marca = re.compile(r"(?i)\s*[–-]?\s*(?:ciclo de complementaci[óo]n curricular|\(ccc\))")
+    if marca.search(nombre):
+        nombre, duracion = "Ciclo " + marca.sub("", nombre), None
+    if not _parece_el_plan_entero(nombre, materias, duracion):
         return "no parece el plan completo (pocas materias o faltan años)", materias, imagen
     return "", materias, imagen
 

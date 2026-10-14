@@ -65,6 +65,90 @@ def texto(documento: Path, paginas: int = PAGINAS) -> str:
     return resultado
 
 
+def texto_de_imagen(contenido: bytes) -> str:
+    """The text of a picture (a plan's brochure), read by tesseract in
+    Spanish word by word with each word's place, laid out column by column:
+    a line's words split where a wide gap parts them, the pieces gathered
+    into columns by where they start, each column read top to bottom, so a
+    name wrapped over two lines of its column stays whole. The strokes a
+    Roman numeral comes out as after a word ("Matemática ll", "Contables |!",
+    "Electiva 11") are written as the numeral; a piece of fewer than three
+    letters (the stray marks a table's column letters come out as) is
+    dropped. A small picture is read again at twice its size, laid on white
+    (a transparent background reads as black once enlarged), its two readings
+    one after the other: each loses lines the other keeps. Empty when it
+    cannot be read."""
+    lecturas = [_lectura(contenido)]
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+        dibujo = Image.open(BytesIO(contenido)).convert("RGBA")
+        if dibujo.width < 2000:
+            fondo = Image.new("RGB", dibujo.size, "white")
+            fondo.paste(dibujo, mask=dibujo)
+            salida = BytesIO()
+            fondo.resize((fondo.width * 2, fondo.height * 2), Image.LANCZOS).save(salida, "PNG")
+            lecturas.append(_lectura(salida.getvalue()))
+    except Exception:
+        pass
+    return "\n".join(lectura for lectura in lecturas if lectura)
+
+
+def _lectura(contenido: bytes) -> str:
+    """One reading of a picture by tesseract, laid out column by column (see
+    ``texto_de_imagen``)."""
+    with tempfile.TemporaryDirectory() as carpeta:
+        imagen = Path(carpeta) / "imagen.png"
+        imagen.write_bytes(contenido)
+        try:
+            tsv = subprocess.run(["tesseract", str(imagen), "-", "-l", "spa", "tsv"], capture_output=True,
+                                 text=True, timeout=120).stdout
+        except (subprocess.SubprocessError, OSError):
+            return ""
+    palabras = []
+    for fila in tsv.splitlines()[1:]:
+        campos = fila.split("\t")
+        if len(campos) == 12 and campos[11].strip() and campos[10] not in ("-1",):
+            palabras.append({"linea": tuple(campos[2:5]), "x": int(campos[6]), "y": int(campos[7]),
+                             "ancho": int(campos[8]), "alto": int(campos[9]), "texto": campos[11]})
+    if not palabras:
+        return ""
+    altos = sorted(p["alto"] for p in palabras)
+    hueco = 3 * altos[len(altos) // 2]
+    # A line's pieces: its words, cut where a gap wider than three letters' height parts them.
+    piezas: list[dict] = []
+    por_linea: dict[tuple, list[dict]] = {}
+    for palabra in palabras:
+        por_linea.setdefault(palabra["linea"], []).append(palabra)
+    for linea in por_linea.values():
+        linea.sort(key=lambda p: p["x"])
+        actual = [linea[0]]
+        for palabra in linea[1:]:
+            if palabra["x"] - (actual[-1]["x"] + actual[-1]["ancho"]) > hueco:
+                piezas.append(actual)
+                actual = []
+            actual.append(palabra)
+        piezas.append(actual)
+    # The columns: the pieces' starts, a new column where they jump right.
+    ancho = max(p["x"] + p["ancho"] for p in palabras)
+    comienzos = sorted({pieza[0]["x"] for pieza in piezas})
+    cortes = [b for a, b in zip(comienzos, comienzos[1:]) if b - a > ancho * 0.15]
+    columnas: dict[int, list[list[dict]]] = {}
+    for pieza in piezas:
+        columna = sum(1 for corte in cortes if pieza[0]["x"] >= corte)
+        columnas.setdefault(columna, []).append(pieza)
+    renglones = []
+    for columna in sorted(columnas):
+        for pieza in sorted(columnas[columna], key=lambda p: p[0]["y"]):
+            renglon = " ".join(p["texto"] for p in pieza)
+            if len(re.findall(r"[a-záéíóúñ]", renglon, re.I)) >= 3 or re.fullmatch(r"[IVX]+|\d+", renglon):
+                renglones.append(renglon)
+    texto = "\n".join(renglones)
+    return re.sub(r"(?<=[a-záéíóúñA-ZÁÉÍÓÚÑ]) ([|lI!1]{1,3})(?=[\s,.;:]|$)",
+                  lambda m: " " + "I" * len(m.group(1)), texto)
+
+
 def vocabulario(nombres: set[str]) -> dict[str, str]:
     """Known subjects by their comparison key: the key a line is matched on,
     the name it is written as."""

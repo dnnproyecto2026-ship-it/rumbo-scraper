@@ -126,6 +126,12 @@ class Fuentes:
         tipo = respuesta.headers.get("content-type", "")
         if "pdf" in tipo or url.lower().split("?")[0].endswith(".pdf") or respuesta.content[:5] == b"%PDF-":
             return {"ok": True, "html": "", "texto": v.plano(_texto_del_pdf(respuesta.content))}
+        # A plan published as a picture (a brochure): its text, read by OCR.
+        if tipo.startswith("image/") or re.search(r"(?i)\.(?:png|jpe?g|webp)$", url.split("?")[0]):
+            from rumbo_scraper.parsers.ocr import texto_de_imagen
+
+            leido = texto_de_imagen(respuesta.content)
+            return {"ok": bool(leido.strip()), "html": "", "texto": v.plano(leido)}
         # A catalogue's spreadsheet (INET's institutes per degree): its cells.
         if "spreadsheet" in tipo or url.lower().split("?")[0].endswith(".xlsx"):
             from rumbo_scraper.parsers.terciarios_inet import filas_de_la_planilla
