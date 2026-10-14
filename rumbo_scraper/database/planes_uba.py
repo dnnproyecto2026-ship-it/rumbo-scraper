@@ -39,6 +39,11 @@ what that page links, never off a search engine's memory of the site.
   reader ``planes_documentos`` keeps for ffyb.uba.ar, their subjects
   numbered ("01- TRABAJO Y SOCIEDAD (70) (CBC)"); taken when the numbers run
   from 1 without a gap, the number and the CBC's code left out.
+- Derecho: its page of plans lists, under each career's heading ("Carrera
+  de Traductor Público"), its subjects by area (CBC, the career's own, the
+  ones shared with Abogacía), one item each ("Lengua I: Gramática -
+  anual"); the term after the name is not part of it (``plan_de_derecho``).
+  No year is given.
 - Exactas, Ciencias Geológicas: its department's page lists the plan year
   by year (``planes_sitios.plan_por_anios``); a section's title after it
   ("Tutores y TFL") is not a subject.
@@ -101,6 +106,10 @@ SOLO_LA_FUENTE = {
     "Sociología": "https://sociologia.sociales.uba.ar/plan-de-estudios/",
     "Licenciatura en Ciencias de la Comunicación": "https://comunicacion.sociales.uba.ar/plan-de-estudios/",
 }
+DERECHO = ("https://www.derecho.uba.ar/estudiantes/planes-de-estudio.php", {
+    "Traductorado Público": "Carrera de Traductor Público",
+    "Calígrafo Público": "Carrera de Calígrafo Público",
+})
 DATOS = ("Licenciatura en Ciencias de Datos", "https://lcd.exactas.uba.ar/materias/")
 POR_ANIOS = {
     "Licenciatura en Ciencias Geológicas": "https://gl.fcen.uba.ar/lic-geo/",
@@ -177,6 +186,34 @@ def _de_ffyb(visitante: Visitante, carrera: str, documento: str) -> list[tuple[s
         limpio = re.sub(r"(?:\s*\((?:\d{2,3}|CBC)\))+$", "", nombre[numero.end():]).strip(" .")
         materias.append((limpio, anio))
     return materias if numeros == list(range(1, len(numeros) + 1)) else []
+
+
+def plan_de_derecho(html: str, titulo: str) -> list[tuple[str, None]]:
+    """The items of the lists under the heading that starts with ``titulo``,
+    up to the next career's heading, each list under an area's title ("a) Ciclo
+    Básico Común"); "- cuatrimestral", "(Anual)" are its term."""
+    sopa = BeautifulSoup(html or "", "html.parser")
+    encabezado = next((h for h in sopa.find_all(["h2", "h3", "h4"])
+                       if h.get_text(" ", strip=True).startswith(titulo)), None)
+    if encabezado is None:
+        return []
+    materias: list[tuple[str, None]] = []
+    for elemento in encabezado.find_all_next(["h2", "h3", "h4", "li"]):
+        if elemento.name != "li":
+            # (The next career's heading ends this one's; "Estructura del plan..." does not.)
+            if re.match(r"(?i)carrera de|profesorado", elemento.get_text(" ", strip=True)):
+                break
+            continue
+        # Only the lists under an area's title ("b) Asignaturas específicas"):
+        # the resolutions listed above them are not subjects.
+        area = elemento.find_parent(["ul", "ol"]).find_previous_sibling() if elemento.find_parent(["ul", "ol"]) else None
+        if not (area and re.match(r"^[a-z]\)", area.get_text(" ", strip=True))):
+            continue
+        nombre = re.sub(r"(?i)\s*(?:-\s*(?:anual|cuatrimestral)|\((?:anual|cuatrimestral)\))\s*$", "",
+                        " ".join(elemento.get_text(" ").split()))
+        if nombre and comparison_key(nombre) not in {comparison_key(n) for n, _ in materias}:
+            materias.append((nombre, None))
+    return materias
 
 
 def plan_de_datos(html: str) -> list[tuple[str, int]]:
@@ -443,6 +480,12 @@ def main() -> None:
             if materias:
                 planes[carrera] = materias
                 fuentes[carrera] = documento
+        html = visitante.get(DERECHO[0])
+        for carrera, titulo in DERECHO[1].items():
+            materias = plan_de_derecho(html, titulo)
+            if materias:
+                planes[carrera] = materias
+                fuentes[carrera] = DERECHO[0]
         materias = plan_de_datos(visitante.get(DATOS[1]))
         if materias:
             planes[DATOS[0]] = materias
