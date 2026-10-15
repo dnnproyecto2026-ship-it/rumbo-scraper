@@ -11,7 +11,8 @@ A row is taken only when:
 - its career exists and has no subjects yet;
 - the link is on the university's own site (``verificacion.es_oficial``);
 - two different people copied and checked it, or the AI reader proposed it
-  (``cargado_por`` "IA ..."), which then needs every name in the document;
+  (``cargado_por`` "IA ...") or a common reader did (``cargado_por``
+  "lector ..."), which then needs every name in the document;
 - every subject is written in that document, read as the verifier reads it
   (a picture by OCR; a misspelt name is sent back with its name); a picture
   whose OCR misses a name is taken only on two people's word, kept in
@@ -79,7 +80,8 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     if not v.es_oficial(link, universidad["sitio_web"]):
         return f"el link no es del sitio oficial ({urlparse(link).netloc})", [], False
     cargo, reviso = (fila.get("cargado_por") or "").strip(), (fila.get("revisado_por") or "").strip()
-    por_ia = cargo.lower().startswith("ia")
+    # A row an AI reader or a common reader proposed needs no second person: every name is in the document.
+    por_ia = cargo.lower().startswith(("ia", "lector"))
     if not por_ia and (not cargo or not reviso or cargo.lower() == reviso.lower()):
         return "faltan dos personas distintas en cargado_por y revisado_por", [], False
     materias = materias_de(fila.get(COLUMNA_MATERIAS) or "")

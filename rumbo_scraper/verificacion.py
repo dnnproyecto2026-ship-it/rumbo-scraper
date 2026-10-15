@@ -47,7 +47,8 @@ def dominio(url: str | None) -> str:
 
 # A university's other domains, linked from its own site's home: they are
 # its own (UNTREF's distance careers live on untrefvirtual.edu.ar).
-OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}}
+# (UNDEF's faculties at Córdoba teach at the IUA, which publishes their plans.)
+OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}, "undef.edu.ar": {"iua.edu.ar"}}
 # Another site of the same body, by its host (its domain is everyone's): the
 # home of Córdoba's Dirección General de Educación Superior (dges-cba.edu.ar,
 # its institutes' map) links its curricular designs on its INFoD site.

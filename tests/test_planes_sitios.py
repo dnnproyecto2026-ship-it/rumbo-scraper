@@ -478,3 +478,22 @@ class PlanUnahur(unittest.TestCase):
         ])
         self.assertEqual(p.plan_unahur(texto), [("Química", 1), ("Cultura y alfabetización digital en la universidad", 1),
                                                 ("Física II", 2), ("Espacio de integración curricular II", 3)])
+
+
+class PlanTablasPorAnio(unittest.TestCase):
+    HTML = ("<html><head><title>Contador Público – Facultad</title></head><body><article>"
+            "<h3>Plan Vigente – Plan de Estudios 2019</h3>"
+            "<table><tr><td>Primer Año</td><td>Segundo Año</td></tr>"
+            "<tr><td>Contabilidad I</td><td>Contabilidad II</td></tr>"
+            "<tr><td>1º SEMESTRE</td><td>Inglés (*)</td></tr>"
+            "<tr><td></td><td>Contador Público</td></tr></table>"
+            "<h3>Plan de Estudios 2001</h3>"
+            "<table><tr><td>Primer Año</td></tr><tr><td>Materia Vieja</td></tr></table>"
+            "</article></body></html>")
+
+    def test_reads_the_current_plan_only(self):
+        self.assertEqual(p.plan_tablas_por_anio(self.HTML),
+                         [("Contabilidad I", 1), ("Contabilidad II", 2), ("Inglés", 2)])
+
+    def test_a_page_without_year_tables_is_empty(self):
+        self.assertEqual(p.plan_tablas_por_anio("<html><body><table><tr><td>Nombre</td></tr></table></body></html>"), [])

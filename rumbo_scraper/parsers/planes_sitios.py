@@ -5613,3 +5613,49 @@ def plan_unsada(texto_con_columnas: str) -> list[tuple[str, int]]:
         _agregar(materias, re.sub(r"\s*\(\*+\)\s*$", "", nombre), anio)
     return materias
 plan_unsada.respaldo = True  # type: ignore[attr-defined]
+
+
+_ANIO_DE_TABLA = {"primer": 1, "primero": 1, "segundo": 2, "tercer": 3, "tercero": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+_PLAN_ANTERIOR = re.compile(r"(?i)transici[óo]n|plan(?: de estudios?)?\s*(?:19|20)\d\d\b|plan anterior")
+
+
+def plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
+    """A page whose current plan is tables headed by "Primer Año", "Segundo
+    Año" … one column per year (IUA's faculties), or one table per year and
+    term ("PRIMER AÑO – PRIMER CUATRIMESTRE"). Only the tables before the
+    page's next heading naming a transition or an older plan are read: the
+    page keeps the plans it replaced below the current one. A table with no
+    year in its head, or a cell that is not a name, ends nothing: it is left
+    out. Empty when the page has no such table."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    cuerpo = soup.find("article") or soup.find("main") or soup
+    # The degree's own name closes the table of some pages ("Contador Público").
+    titulo = comparison_key(re.split(r"\s+[–|-]\s+", soup.title.get_text(" ", strip=True))[0]) if soup.title else ""
+    materias: list[tuple[str, int]] = []
+    vistas_tablas = 0
+    for el in cuerpo.find_all(["h1", "h2", "h3", "h4", "table"]):
+        if el.name != "table":
+            if vistas_tablas and _PLAN_ANTERIOR.search(el.get_text(" ", strip=True)):
+                break
+            continue
+        filas = el.find_all("tr")
+        if not filas:
+            continue
+        cabecera = [c.get_text(" ", strip=True) for c in filas[0].find_all(["td", "th"])]
+        anios: list[int | None] = []
+        for celda in cabecera:
+            m = re.match(r"(?i)\s*(\w+)\s+a[ñn]o\b", celda)
+            anios.append(_ANIO_DE_TABLA.get(comparison_key(m.group(1))) if m else None)
+        if not any(anios):
+            continue
+        vistas_tablas += 1
+        for fila in filas[1:]:
+            for columna, celda in enumerate(fila.find_all(["td", "th"])):
+                anio = anios[columna] if columna < len(anios) else None
+                nombre = re.sub(r"\s*\(\*+\)\s*$|\s*\*+\s*$", "", " ".join(celda.get_text(" ", strip=True).split()))
+                if re.fullmatch(r"(?i)\d+\s*[º°o]?\s*semestre|\d+\s*[º°o]?\s*cuatrimestre", nombre):
+                    continue
+                if anio and nombre and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", nombre) \
+                        and comparison_key(nombre) != titulo:
+                    _agregar(materias, nombre, anio)
+    return materias
