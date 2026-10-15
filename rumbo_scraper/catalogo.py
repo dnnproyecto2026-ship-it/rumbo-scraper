@@ -226,6 +226,16 @@ UNIVERSIDADES: tuple[Universidad, ...] = (
         "https://www.ufasta.edu.ar", "ufasta.edu.ar", "Mar del Plata",
         "Buenos Aires", "Mar del Plata",
     ),
+    # ---------------------------------------------------------- Patagonia
+    # The Balseiro is an academic unit of the UNCuyo run with the CNEA, in
+    # Bariloche, with its own site, admission and four degrees: students look
+    # for it by its own name, not under the UNCuyo.
+    Universidad(
+        "Instituto Balseiro", "IB", "Estatal",
+        "https://www.ib.edu.ar", "ib.edu.ar", "Patagonia",
+        "Río Negro", "San Carlos de Bariloche",
+        semillas=("https://www.ib.edu.ar/academicas/carreras-de-grado/",),
+    ),
 )
 
 POR_CLAVE = {universidad.nombre_corto.lower(): universidad
