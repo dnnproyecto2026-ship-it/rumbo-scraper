@@ -49,11 +49,16 @@ def dominio(url: str | None) -> str:
 # its own (UNTREF's distance careers live on untrefvirtual.edu.ar).
 # (UNDEF's faculties teach in the schools of the forces: the IUA, the *.mil.ar
 # sites, the Escuela de Guerra Naval and the Escuela de Náutica publish their plans.)
-OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}, "undef.edu.ar": {"iua.edu.ar", "mil.ar", "esgn.edu.ar", "escueladenautica.edu.ar"}}
+OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}, "hospitalitaliano.edu.ar": {"hospitalitaliano.org.ar"},
+                  "undef.edu.ar": {"iua.edu.ar", "mil.ar", "esgn.edu.ar", "escueladenautica.edu.ar"}}
 # Another site of the same body, by its host (its domain is everyone's): the
 # home of Córdoba's Dirección General de Educación Superior (dges-cba.edu.ar,
 # its institutes' map) links its curricular designs on its INFoD site.
-OTROS_SITIOS = {"dges-cba.edu.ar": {"dges-cba.infd.edu.ar"}}
+# (ITBA serves its site's files from its own bucket; the Agencia's IFTS have
+# their plans' resolutions in the Boletín Oficial of the City.)
+OTROS_SITIOS = {"dges-cba.edu.ar": {"dges-cba.infd.edu.ar"},
+                "itba.edu.ar": {"webitba.s3.amazonaws.com"},
+                "bue.edu.ar": {"documentosboletinoficial.buenosaires.gob.ar"}}
 
 
 def es_oficial(url: str | None, sitio_web: str | None) -> bool:
