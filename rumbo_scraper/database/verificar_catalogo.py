@@ -183,6 +183,20 @@ def _textos_del_json(datos: Any) -> list[str]:
     return [str(datos)] if isinstance(datos, str) else []
 
 
+def _sin_encabezados(texto: str) -> str:
+    """The text of a document's pages (separated by form feeds) without the
+    lines most pages repeat, compared with their digits made one: a running
+    header and footer ("Pág. 4 de 5", "Reporte de Plan de Estudios - …")."""
+    paginas = texto.split("\f")
+    if len(paginas) < 3:
+        return ""
+    forma = lambda linea: re.sub(r"\d+", "#", " ".join(linea.split()))
+    cuenta = Counter(forma(l) for pagina in paginas for l in set(pagina.splitlines()) if l.strip())
+    repetidas = {f for f, n in cuenta.items() if n >= max(3, 0.6 * len(paginas))}
+    return " ".join(l for pagina in paginas for l in pagina.splitlines()
+                    if l.strip() and forma(l) not in repetidas)
+
+
 def _texto_del_pdf(contenido: bytes) -> str:
     import io
 
@@ -220,6 +234,11 @@ def _texto_del_pdf(contenido: bytes) -> str:
             # la" / "1 Cuatrimestral" / "Computación"), comes out whole there.
             partes.append(subprocess.run(["pdftotext", "-raw", archivo.name, "-"], capture_output=True,
                                          text=True, timeout=120).stdout)
+            # And the pages joined with what every page repeats (its running
+            # header and footer, numbers aside) left out: a name that breaks
+            # at a page's end goes on after the table's header on the next.
+            partes.append(_sin_encabezados(subprocess.run(["pdftotext", "-raw", archivo.name, "-"],
+                                                          capture_output=True, text=True, timeout=120).stdout))
             # And each block of text on its own: a name wrapped within its
             # column, beside other columns (the YMCA's plans), is one block.
             cajas = subprocess.run(["pdftotext", "-bbox-layout", archivo.name, "-"], capture_output=True,
