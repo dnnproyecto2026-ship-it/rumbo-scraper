@@ -138,6 +138,21 @@ class NombreConGuion(unittest.TestCase):
         self.assertFalse(v.dice(v.plano("Economía Política I"), "Economía Política II"))
 
 
+class NombreConCortes(unittest.TestCase):
+    def test_a_long_name_cut_inside_its_words_is_found(self):
+        casos = [("Curso de Inglés para Ciencias de la Salud", "curso de ingles para ciencias dela salud"),
+                 ("Química Inorgánica Aplicada", "quimica inorg a nica aplicada"),
+                 ("Técnicas Kinésicas III", "tecnicas kinesicas i i i"),
+                 ("Electrofisiología No Invasiva", "electrofisiologia no lnvasiva")]
+        for nombre, fuente in casos:
+            self.assertTrue(v.dice(v.plano(fuente), nombre), nombre)
+
+    def test_short_names_and_other_words_are_not_matched(self):
+        self.assertFalse(v.dice(v.plano("fisicaii"), "Física II"))
+        self.assertFalse(v.dice(v.plano("matematica discretas aplicadas"), "Matemática Discreta Avanzada"))
+        self.assertFalse(v.dice(v.plano("introduccion a la biologia celular molecular"), "Introducción a la Biología Molecular"))
+
+
 class PlanEnDrive(unittest.TestCase):
     def test_plan_en_drive_enlazado_por_la_pagina(self):
         from rumbo_scraper.database.verificar_catalogo import _planes_enlazados

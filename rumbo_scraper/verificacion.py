@@ -134,7 +134,24 @@ def dice(fuente_plana: str, nombre: str | None) -> bool:
     for largo, corto in _PALABRAS_ABREVIADAS:
         formas += [f" {forma} ".replace(largo, corto).strip() for forma in formas if largo in f" {forma} "]
     fuente = f" {fuente_plana} "
-    return any(f" {forma} " in fuente for forma in formas)
+    if any(f" {forma} " in fuente for forma in formas):
+        return True
+    return _dice_con_cortes(fuente, nombre)
+
+
+# A long name read by OCR or from a PDF with cuts inside its words ("dela",
+# "Inorg á nica", "I I I", "lnvasiva"): the same letters, from a word's start
+# to a word's end, with a space allowed between two of them and "l"/"1" for
+# an "i". Short names are not tried: too many things would match.
+_MIN_LETRAS_CON_CORTES = 15
+
+
+def _dice_con_cortes(fuente: str, nombre: str) -> bool:
+    letras = re.sub(r"[^a-z0-9]", "", nombre)
+    if len(letras) < _MIN_LETRAS_CON_CORTES:
+        return False
+    patron = " ?".join("[il1]" if letra == "i" else re.escape(letra) for letra in letras)
+    return re.search(rf"(?<![a-z0-9]){patron}(?![a-z0-9])", fuente) is not None
 
 
 _VACIAS = frozenset(
