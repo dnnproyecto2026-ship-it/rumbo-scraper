@@ -107,7 +107,12 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     # be the degree's.
     nombre, duracion = carrera["nombre_carrera"], carrera.get("duracion_anios")
     marca = re.compile(r"(?i)\s*[–-]?\s*(?:ciclo de complementaci[óo]n curricular|\(ccc\))")
-    if marca.search(nombre):
+    # A document that opens by saying it is a completion cycle ("Licenciatura
+    # en Hotelería y Turismo (Ciclo de Complementación Curricular)", UB's
+    # virtual licenciaturas) is one, whatever the career's name says.
+    inicio = (leida.get("texto") or "")[:1500] if leida["ok"] else ""
+    del_documento = bool(re.search(r"ciclo (?:de )?complementaci\w+(?: curricular)?|ciclo complementario|\bccc\b", inicio))
+    if marca.search(nombre) or del_documento:
         nombre, duracion = "Ciclo " + marca.sub("", nombre), None
     if not _parece_el_plan_entero(nombre, materias, duracion):
         return "no parece el plan completo (pocas materias o faltan años)", materias, imagen

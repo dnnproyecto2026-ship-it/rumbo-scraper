@@ -53,5 +53,14 @@ class Revisar(unittest.TestCase):
         self.assertIn("Materia Numero 13", motivo)
 
 
+    def test_a_document_that_says_it_is_a_completion_cycle_is_judged_as_one(self):
+        fila = {**self.FILA, "link_del_plan_usado": "https://www.usal.edu.ar/plan.pdf"}
+        fuentes = _Fuentes("LICENCIATURA EN HOTELERÍA Y TURISMO (Ciclo de Complementación Curricular) "
+                           + " ".join(self.MATERIAS))
+        motivo, materias, _ = revisar(fila, self.carrera("Licenciatura en Hotelería y Turismo"),
+                                      self.UNIVERSIDAD, set(), fuentes)
+        self.assertEqual((motivo, len(materias)), ("", 13))
+
+
 if __name__ == "__main__":
     unittest.main()
