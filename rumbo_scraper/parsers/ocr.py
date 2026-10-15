@@ -74,11 +74,12 @@ def texto_de_imagen(contenido: bytes) -> str:
     Roman numeral comes out as after a word ("Matemática ll", "Contables |!",
     "Electiva 11", "Siglos XV-XVI!") are written as the numeral; a piece of fewer than three
     letters (the stray marks a table's column letters come out as) is
-    dropped. A small picture is read again at twice its size, laid on white
+    dropped. A table whose cells are centred is read again by the centres of
+    its pieces. A small picture is read again at twice its size, laid on white
     (a transparent background reads as black once enlarged), its two readings
     one after the other: each loses lines the other keeps. Empty when it
     cannot be read."""
-    lecturas = [_lectura(contenido)]
+    lecturas = [_lectura(contenido), _lectura(contenido, "centro")]
     try:
         from io import BytesIO
 
@@ -89,15 +90,16 @@ def texto_de_imagen(contenido: bytes) -> str:
             fondo.paste(dibujo, mask=dibujo)
             salida = BytesIO()
             fondo.resize((fondo.width * 2, fondo.height * 2), Image.LANCZOS).save(salida, "PNG")
-            lecturas.append(_lectura(salida.getvalue()))
+            lecturas += [_lectura(salida.getvalue()), _lectura(salida.getvalue(), "centro")]
     except Exception:
         pass
     return "\n".join(lectura for lectura in lecturas if lectura)
 
 
-def _lectura(contenido: bytes) -> str:
+def _lectura(contenido: bytes, por: str = "inicio") -> str:
     """One reading of a picture by tesseract, laid out column by column (see
-    ``texto_de_imagen``)."""
+    ``texto_de_imagen``): the columns told by where the pieces start, or, for
+    a table whose cells are centred, by where their centres are (``por``)."""
     with tempfile.TemporaryDirectory() as carpeta:
         imagen = Path(carpeta) / "imagen.png"
         imagen.write_bytes(contenido)
@@ -132,11 +134,16 @@ def _lectura(contenido: bytes) -> str:
         piezas.append(actual)
     # The columns: the pieces' starts, a new column where they jump right.
     ancho = max(p["x"] + p["ancho"] for p in palabras)
-    comienzos = sorted({pieza[0]["x"] for pieza in piezas})
-    cortes = [b for a, b in zip(comienzos, comienzos[1:]) if b - a > ancho * 0.15]
+    def lugar(pieza: list[dict]) -> int:
+        if por == "centro":
+            return (pieza[0]["x"] + pieza[-1]["x"] + pieza[-1]["ancho"]) // 2
+        return pieza[0]["x"]
+
+    comienzos = sorted({lugar(pieza) for pieza in piezas})
+    cortes = [b for a, b in zip(comienzos, comienzos[1:]) if b - a > ancho * (0.08 if por == "centro" else 0.15)]
     columnas: dict[int, list[list[dict]]] = {}
     for pieza in piezas:
-        columna = sum(1 for corte in cortes if pieza[0]["x"] >= corte)
+        columna = sum(1 for corte in cortes if lugar(pieza) >= corte)
         columnas.setdefault(columna, []).append(pieza)
     renglones = []
     for columna in sorted(columnas):
