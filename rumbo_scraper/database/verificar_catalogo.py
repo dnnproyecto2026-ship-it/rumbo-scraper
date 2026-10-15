@@ -147,8 +147,12 @@ class Fuentes:
                 datos = respuesta.json()
             except ValueError:
                 return {"ok": False, "html": "", "texto": ""}
+            # A text that is a piece of a page (ISALUD's plans come as HTML
+            # in its JSON: "Anatom&iacute;a</li>") is read as the page.
+            textos = [v.texto_de_html(t) if re.search(r"<[a-zA-Z/]|&#?\w+;", t) else t
+                      for t in _textos_del_json(datos)]
             return {"ok": True, "html": "", "crudo": respuesta.text,
-                    "texto": v.plano(f" {v.CORTE} ".join(_textos_del_json(datos)))}
+                    "texto": v.plano(f" {v.CORTE} ".join(textos))}
         try:
             html = respuesta.text
         except UnicodeDecodeError:
