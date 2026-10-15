@@ -38,6 +38,10 @@ class Numerales(unittest.TestCase):
         self.assertEqual(_numerales("Matemática ll\nSeminario Optativo 11*\nSiglos XV-XVI!\nSiglos XVI!|-XIX"),
                          "Matemática II\nSeminario Optativo II*\nSiglos XV-XVII\nSiglos XVIII-XIX")
 
+    def test_strokes_after_a_closing_parenthesis(self):
+        self.assertEqual(_numerales("Navegación y Técnicas Especiales (GPS) |\nNavegación (GPS) Il"),
+                         "Navegación y Técnicas Especiales (GPS) I\nNavegación (GPS) II")
+
     def test_first_read_as_ler(self):
         self.assertEqual(_numerales("Práctica Integrada Final de ler Ciclo"), "Práctica Integrada Final de 1er Ciclo")
 

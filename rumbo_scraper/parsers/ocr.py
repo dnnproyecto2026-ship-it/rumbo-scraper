@@ -156,7 +156,7 @@ def _lectura(contenido: bytes, por: str = "inicio") -> str:
 
 def _numerales(texto: str) -> str:
     """The strokes a Roman numeral comes out as, written as the numeral."""
-    texto = re.sub(r"(?<=[a-záéíóúñA-ZÁÉÍÓÚÑ]) ([|lI!1]{1,3})(?=[\s,.;:*)]|$)",
+    texto = re.sub(r"(?<=[a-záéíóúñA-ZÁÉÍÓÚÑ)]) ([|lI!1]{1,3})(?=[\s,.;:*)]|$)",
                    lambda m: " " + "I" * len(m.group(1)), texto)
     # The same strokes ending a numeral ("Siglos XV-XVI!", "XVI!|-XIX"), and
     # "1er" read as "ler".

@@ -258,6 +258,14 @@ def _texto_del_pdf(contenido: bytes) -> str:
             documento = Path(carpeta) / "plan.pdf"
             documento.write_bytes(contenido)
             texto += " " + texto_escaneado(documento)
+            # And each page as a picture, laid out column by column (a plan
+            # in two columns: the page's lines alone interleave them).
+            from rumbo_scraper.parsers.ocr import texto_de_imagen
+
+            subprocess.run(["pdftoppm", "-r", "200", "-png", "-l", "12", str(documento), str(Path(carpeta) / "p")],
+                           capture_output=True, timeout=300)
+            for imagen in sorted(Path(carpeta).glob("p-*.png")):
+                texto += " " + texto_de_imagen(imagen.read_bytes())
     return texto
 
 
