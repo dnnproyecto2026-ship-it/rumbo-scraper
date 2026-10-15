@@ -62,5 +62,21 @@ class Revisar(unittest.TestCase):
         self.assertEqual((motivo, len(materias)), ("", 13))
 
 
+class PlanCorto(unittest.TestCase):
+    def test_twelve_names_without_years_or_five_for_a_one_year_title(self):
+        from rumbo_scraper.database.planes_manuales import _plan_corto_entero
+        doce = [(f"Materia Numero {n}", None) for n in range(12)]
+        self.assertTrue(_plan_corto_entero(doce, 4))
+        self.assertFalse(_plan_corto_entero(doce[:11], 4))
+        self.assertTrue(_plan_corto_entero(doce[:5], 1))
+        self.assertFalse(_plan_corto_entero(doce[:4], 1))
+
+    def test_cut_names_and_gaps_in_the_years_are_not_whole(self):
+        from rumbo_scraper.database.planes_manuales import _plan_corto_entero
+        doce = [(f"Materia Numero {n}", None) for n in range(11)]
+        self.assertFalse(_plan_corto_entero(doce + [("Historia de la", None)], 4))
+        self.assertFalse(_plan_corto_entero([(f"Materia Numero {n}", 1 if n < 6 else 3) for n in range(12)], 4))
+
+
 if __name__ == "__main__":
     unittest.main()

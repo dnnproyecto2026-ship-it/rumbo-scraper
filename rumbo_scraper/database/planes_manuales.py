@@ -31,13 +31,15 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
 from rumbo_scraper import verificacion as v
-from rumbo_scraper.database.planes_documentos import _parece_el_plan_entero, guardar_las_fuentes
+from rumbo_scraper.database.planes_documentos import (_TERMINA_CORTADA, _parece_el_plan_entero,
+                                                      guardar_las_fuentes)
 
 RESULTADO = Path("data/planes_manuales_resultado.csv")
 REVISADOS = Path("data/planes_revisados_a_mano.json")
@@ -64,6 +66,25 @@ def materias_de(texto: str) -> list[tuple[str, int | None]] | str:
     if None in anios and len(anios) > 1:
         return "algunas materias tienen año y otras no: o todas o ninguna"
     return materias
+
+
+def _plan_corto_entero(materias: list[tuple[str, int | None]], duracion: float | None) -> bool:
+    """A short plan the readers' minimum refuses (twenty subjects without
+    years, ten with): a profesorado or a one-year title names fewer. Here a
+    person or a reader took it from the document and every name is in it, so
+    the minimum is twelve names without years, or five for a title of a year
+    and a half or less; the names must not be cut (a connector at the end,
+    a lower-case start) and the years, if any, run from the first with no gap."""
+    minimo = 5 if duracion and duracion <= 1.5 else 12
+    if len(materias) < minimo:
+        return False
+    if any(nombre[:1].islower() or (_TERMINA_CORTADA.search(nombre) and not re.search(r"\s[A-Z]$", nombre))
+           for nombre, _ in materias):
+        return False
+    anios = [anio for _, anio in materias if anio]
+    if not anios:
+        return True
+    return set(anios) == set(range(1, max(anios) + 1)) and (not duracion or max(anios) >= math.ceil(duracion))
 
 
 def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: dict[str, Any] | None,
@@ -114,7 +135,7 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     del_documento = bool(re.search(r"ciclo (?:de )?complementaci\w+(?: curricular)?|ciclo complementario|\bccc\b", inicio))
     if marca.search(nombre) or del_documento:
         nombre, duracion = "Ciclo " + marca.sub("", nombre), None
-    if not _parece_el_plan_entero(nombre, materias, duracion):
+    if not (_parece_el_plan_entero(nombre, materias, duracion) or _plan_corto_entero(materias, duracion)):
         return "no parece el plan completo (pocas materias o faltan años)", materias, imagen
     return "", materias, imagen
 
