@@ -117,10 +117,17 @@ _PALABRAS_ABREVIADAS = ((" administracion ", " adm "), (" organizacion ", " org 
 
 def dice(fuente_plana: str, nombre: str | None) -> bool:
     """Whether the source, already made plain, has the name as whole words."""
+    # A hyphenated name the source broke at its hyphen ("Primavero-" /
+    # "Estivales") reads there as one word, as the break is undone.
+    unido = plano(re.sub(r"([^\W\d_])-(?=[^\W\d_])", r"\1", nombre or ""))
     nombre = plano(nombre)
     if not nombre:
         return False
-    formas = [nombre] + [patron.sub(corta, nombre) for patron, cortas in _ABREVIADAS
+    # A plan naming a pair at once ("Economía Política I y II") names each.
+    par = re.fullmatch(r"(.+) (ii|iii)", nombre)
+    juntas = [f"{par[1]} i y ii", f"{par[1]} i ii"] if par and par[2] == "ii" else \
+        [f"{par[1]} i ii y iii", f"{par[1]} ii y iii"] if par else []
+    formas = [nombre] + ([unido] if unido != nombre else []) + juntas + [patron.sub(corta, nombre) for patron, cortas in _ABREVIADAS
                          if patron.match(nombre) for corta in cortas]
     for largo, corto in _PALABRAS_ABREVIADAS:
         formas += [f" {forma} ".replace(largo, corto).strip() for forma in formas if largo in f" {forma} "]

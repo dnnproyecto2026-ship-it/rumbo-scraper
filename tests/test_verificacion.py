@@ -125,6 +125,19 @@ class VerificacionTest(unittest.TestCase):
                          ["norma.htm Ley", "Agroecología CFB"])
 
 
+class NombreConGuion(unittest.TestCase):
+    def test_a_name_broken_at_its_hyphen_is_found(self):
+        fuente = v.plano("Producción de Hortalizas Primavero-\nEstivales")
+        self.assertTrue(v.dice(fuente, "Producción de Hortalizas Primavero-Estivales"))
+        self.assertTrue(v.dice(v.plano("Teoría Socio-Histórica"), "Teoría Socio-Histórica"))
+
+    def test_a_pair_named_at_once_names_each(self):
+        fuente = v.plano("Economía Política I y II | Estadística Aplicada I, II y III")
+        self.assertTrue(v.dice(fuente, "Economía Política II"))
+        self.assertTrue(v.dice(fuente, "Estadística Aplicada III"))
+        self.assertFalse(v.dice(v.plano("Economía Política I"), "Economía Política II"))
+
+
 class PlanEnDrive(unittest.TestCase):
     def test_plan_en_drive_enlazado_por_la_pagina(self):
         from rumbo_scraper.database.verificar_catalogo import _planes_enlazados
