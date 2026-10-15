@@ -155,7 +155,7 @@ def _dice_con_cortes(fuente: str, nombre: str) -> bool:
     letras = re.sub(r"[^a-z0-9]", "", nombre)
     if len(letras) < _MIN_LETRAS_CON_CORTES:
         return False
-    patron = " ?".join("[il1]" if letra == "i" else re.escape(letra) for letra in letras)
+    patron = " ?".join("[il1]" if letra in "i1" else re.escape(letra) for letra in letras)
     return re.search(rf"(?<![a-z0-9]){patron}(?![a-z0-9])", fuente) is not None
 
 
