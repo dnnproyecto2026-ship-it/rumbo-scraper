@@ -225,7 +225,17 @@ def _texto_del_pdf(contenido: bytes) -> str:
                 partes.append(v.CORTE)
     except Exception:
         pass
-    return " ".join(partes)
+    texto = " ".join(partes)
+    # A scanned plan (Edición's at the UBA: thirteen page pictures, no
+    # text): its pages, read by OCR.
+    if len(re.findall(r"[A-Za-z]", texto)) < 200:
+        from rumbo_scraper.parsers.ocr import texto as texto_escaneado
+
+        with tempfile.TemporaryDirectory() as carpeta:
+            documento = Path(carpeta) / "plan.pdf"
+            documento.write_bytes(contenido)
+            texto += " " + texto_escaneado(documento)
+    return texto
 
 
 def _dominios(url: str) -> tuple[str, ...]:

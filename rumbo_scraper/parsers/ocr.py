@@ -72,7 +72,7 @@ def texto_de_imagen(contenido: bytes) -> str:
     into columns by where they start, each column read top to bottom, so a
     name wrapped over two lines of its column stays whole. The strokes a
     Roman numeral comes out as after a word ("Matemática ll", "Contables |!",
-    "Electiva 11") are written as the numeral; a piece of fewer than three
+    "Electiva 11", "Siglos XV-XVI!") are written as the numeral; a piece of fewer than three
     letters (the stray marks a table's column letters come out as) is
     dropped. A small picture is read again at twice its size, laid on white
     (a transparent background reads as black once enlarged), its two readings
@@ -144,9 +144,18 @@ def _lectura(contenido: bytes) -> str:
             renglon = " ".join(p["texto"] for p in pieza)
             if len(re.findall(r"[a-záéíóúñ]", renglon, re.I)) >= 3 or re.fullmatch(r"[IVX]+|\d+", renglon):
                 renglones.append(renglon)
-    texto = "\n".join(renglones)
-    return re.sub(r"(?<=[a-záéíóúñA-ZÁÉÍÓÚÑ]) ([|lI!1]{1,3})(?=[\s,.;:]|$)",
-                  lambda m: " " + "I" * len(m.group(1)), texto)
+    return _numerales("\n".join(renglones))
+
+
+def _numerales(texto: str) -> str:
+    """The strokes a Roman numeral comes out as, written as the numeral."""
+    texto = re.sub(r"(?<=[a-záéíóúñA-ZÁÉÍÓÚÑ]) ([|lI!1]{1,3})(?=[\s,.;:*)]|$)",
+                   lambda m: " " + "I" * len(m.group(1)), texto)
+    # The same strokes ending a numeral ("Siglos XV-XVI!", "XVI!|-XIX"), and
+    # "1er" read as "ler".
+    texto = re.sub(r"(?<=\b[XV])([XVI]*)([|l!1]{1,3})(?=[\s,.;:*)-]|$)",
+                   lambda m: m.group(1) + "I" * len(m.group(2)), texto)
+    return re.sub(r"\bler\b", "1er", texto)
 
 
 def vocabulario(nombres: set[str]) -> dict[str, str]:

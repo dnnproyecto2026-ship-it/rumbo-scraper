@@ -1,6 +1,6 @@
 import unittest
 
-from rumbo_scraper.parsers.ocr import plan_escaneado, vocabulario
+from rumbo_scraper.parsers.ocr import _numerales, plan_escaneado, vocabulario
 
 CONOCIDAS = vocabulario({"Álgebra Lineal", "Física I", "Física II", "Química General", "Análisis Matemático I",
                          "Inglés Técnico", "Estadística"})
@@ -30,6 +30,19 @@ Análisis Matemático l A 6,0 96"""
     def test_por_cuatrimestres(self):
         texto = "PRIMER CUATRIMESTRE\nFísica I\nSEGUNDO CUATRIMESTRE\nQuímica General\nTERCER CUATRIMESTRE\nEstadística"
         self.assertEqual(plan_escaneado(texto, CONOCIDAS), [("Física I", 1), ("Química General", 1), ("Estadística", 2)])
+
+
+
+class Numerales(unittest.TestCase):
+    def test_strokes_after_a_word_or_a_numeral_are_the_numeral(self):
+        self.assertEqual(_numerales("Matemática ll\nSeminario Optativo 11*\nSiglos XV-XVI!\nSiglos XVI!|-XIX"),
+                         "Matemática II\nSeminario Optativo II*\nSiglos XV-XVII\nSiglos XVIII-XIX")
+
+    def test_first_read_as_ler(self):
+        self.assertEqual(_numerales("Práctica Integrada Final de ler Ciclo"), "Práctica Integrada Final de 1er Ciclo")
+
+    def test_words_are_left_alone(self):
+        self.assertEqual(_numerales("Derecho Civil\nXIX\nIntegral"), "Derecho Civil\nXIX\nIntegral")
 
 
 if __name__ == "__main__":
