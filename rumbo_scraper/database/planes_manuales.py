@@ -68,14 +68,20 @@ def materias_de(texto: str) -> list[tuple[str, int | None]] | str:
     return materias
 
 
-def _plan_corto_entero(materias: list[tuple[str, int | None]], duracion: float | None) -> bool:
+def _plan_corto_entero(materias: list[tuple[str, int | None]], duracion: float | None,
+                       carrera: str = "") -> bool:
     """A short plan the readers' minimum refuses (twenty subjects without
     years, ten with): a profesorado or a one-year title names fewer. Here a
     person or a reader took it from the document and every name is in it, so
-    the minimum is twelve names without years, or five for a title of a year
-    and a half or less; the names must not be cut (a connector at the end,
+    the minimum is twelve names without years, five for a title of a year and
+    a half or less, three for a profesorado; the names must not be cut (a connector at the end,
     a lower-case start) and the years, if any, run from the first with no gap."""
-    minimo = 5 if duracion and duracion <= 1.5 else 12
+    # (A profesorado that completes a degree names its pedagogical subjects
+    # alone: UBA's Profesorado en Psicología has four, en Sociología three.)
+    if re.match(r"(?i)profesor", carrera):
+        minimo = 3
+    else:
+        minimo = 5 if duracion and duracion <= 1.5 else 12
     if len(materias) < minimo:
         return False
     if any(nombre[:1].islower() or (_TERMINA_CORTADA.search(nombre) and not re.search(r"\s[A-Z]$", nombre))
@@ -135,7 +141,7 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     del_documento = bool(re.search(r"ciclo (?:de )?complementaci\w+(?: curricular)?|ciclo complementario|\bccc\b", inicio))
     if marca.search(nombre) or del_documento:
         nombre, duracion = "Ciclo " + marca.sub("", nombre), None
-    if not (_parece_el_plan_entero(nombre, materias, duracion) or _plan_corto_entero(materias, duracion)):
+    if not (_parece_el_plan_entero(nombre, materias, duracion) or _plan_corto_entero(materias, duracion, nombre)):
         return "no parece el plan completo (pocas materias o faltan años)", materias, imagen
     return "", materias, imagen
 

@@ -70,6 +70,8 @@ class PlanCorto(unittest.TestCase):
         self.assertFalse(_plan_corto_entero(doce[:11], 4))
         self.assertTrue(_plan_corto_entero(doce[:5], 1))
         self.assertFalse(_plan_corto_entero(doce[:4], 1))
+        self.assertTrue(_plan_corto_entero(doce[:3], 6, "Profesorado de Enseñanza Media y Superior en Psicología"))
+        self.assertFalse(_plan_corto_entero(doce[:3], 6, "Licenciatura en Psicología"))
 
     def test_cut_names_and_gaps_in_the_years_are_not_whole(self):
         from rumbo_scraper.database.planes_manuales import _plan_corto_entero
