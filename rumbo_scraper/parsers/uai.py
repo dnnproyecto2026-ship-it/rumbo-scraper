@@ -174,6 +174,10 @@ def read_plan_codes(html: str) -> list[str]:
 _PLAN_YEAR = re.compile(r"^(\d+)\s*(?:er|do|ro|to|mo|vo|no)?\s*a[ñn]o", re.I)
 _PLAN_TERM = re.compile(r"materias del (primer|segundo|tercer) (cuatrimestre|semestre)", re.I)
 _TERMS = {"cuatrimestre": "Cuatrimestral", "semestre": "Semestral"}
+# Some plans label a block of the year "Materias anuales"; the label is the
+# regime of the subjects below it and not a subject.
+_PLAN_REGIME = re.compile(r"^materias (anuales|cuatrimestrales|semestrales)$")
+_REGIMES = {"anuales": "Anual", "cuatrimestrales": "Cuatrimestral", "semestrales": "Semestral"}
 _COLUMN_LABELS = {"codigo", "asignatura", "correlativas", "carga", "materia",
                   "carga horaria", "teoricas", "practicas", "totales", "total",
                   "porcentaje", "titulo", "carga horaria total de carrera"}
@@ -209,6 +213,10 @@ def parse_plan(html: str, career: str) -> list[dict[str, Any]]:
         term_match = _PLAN_TERM.search(key)
         if term_match:
             regime = _TERMS.get(comparison_key(term_match.group(2)))
+            continue
+        regime_match = _PLAN_REGIME.match(key)
+        if regime_match:
+            regime = _REGIMES[regime_match.group(1)]
             continue
         if re.match(r"t[íi]tulo\b", key):
             # The plan closes with the degree it awards; what follows it is
