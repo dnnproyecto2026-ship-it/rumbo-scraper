@@ -309,3 +309,18 @@ class PlanUnsadaTests(unittest.TestCase):
         self.assertEqual(plan_unsada(texto), [("Introducción a la Economía", 1),
                                               ("Enfoques Pedagógicos Aplicados a la Fonoaudiología", 1)])
         self.assertEqual(plan_unsada(texto.replace("\n3\n", "\n4\n")), [])
+
+
+class PlanUpSemestres(unittest.TestCase):
+    def test_los_dos_semestres_de_escribania(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_up_semestres
+        html = ("<main><p>La estructura curricular:</p><h4>Primer</h4><h4>semestre</h4>"
+                "<p>Derecho Notarial</p><p>Derecho Registral</p>"
+                "<h4>Segundo semestre</h4><p>Derecho Tributario</p>"
+                "<p>Los graduados recibirán el título de</p><p>Escribano/a</p></main>")
+        self.assertEqual(plan_up_semestres(html), [("Derecho Notarial", 1), ("Derecho Registral", 1),
+                                                   ("Derecho Tributario", 1)])
+
+    def test_sin_los_dos_encabezados_no_se_lee(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_up_semestres
+        self.assertEqual(plan_up_semestres("<main><h4>Primer semestre</h4><p>Derecho Notarial</p></main>"), [])

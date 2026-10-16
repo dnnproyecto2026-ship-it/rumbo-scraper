@@ -918,3 +918,5 @@ def guardar_las_fuentes(planes: Any) -> None:
 
 if __name__ == "__main__":
     main()
+# Palermo's Escribanía keeps its plan on a page of its own, by semester.
+_PLAN_EN_OTRA_PAGINA += (("palermo.edu", "plan de estudios", planes_sitios.plan_up_semestres),)

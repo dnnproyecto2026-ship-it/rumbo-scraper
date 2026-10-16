@@ -5659,3 +5659,39 @@ def plan_tablas_por_anio(html: str) -> list[tuple[str, int]]:
                         and comparison_key(nombre) != titulo:
                     _agregar(materias, nombre, anio)
     return materias
+
+
+def plan_up_semestres(html: str) -> list[tuple[str, int]]:
+    """Palermo's one-year postdegree plan, written as "Primer semestre" and
+    "Segundo semestre" over short lists of names (Escribanía): the whole plan
+    is the names under both headings, up to the line that gives the degree.
+    A page that does not print both headings is not read."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for etiqueta in soup(["script", "style"]):
+        etiqueta.decompose()
+    lineas = [clean_text(t) for t in soup.get_text("\n").split("\n")]
+    lineas = [t for t in lineas if t]
+    # A heading may be split over two lines ("Primer" / "semestre").
+    unidas: list[str] = []
+    i = 0
+    while i < len(lineas):
+        if re.fullmatch(r"(?i)(primer|segundo)", lineas[i]) and i + 1 < len(lineas) \
+                and re.fullmatch(r"(?i)semestre", lineas[i + 1]):
+            unidas.append(f"{lineas[i]} semestre")
+            i += 2
+            continue
+        unidas.append(lineas[i])
+        i += 1
+    materias: list[tuple[str, int]] = []
+    semestres = 0
+    dentro = False
+    for linea in unidas:
+        if re.fullmatch(r"(?i)(primer|segundo) semestre", linea):
+            semestres += 1
+            dentro = True
+            continue
+        if dentro and re.match(r"(?i)los graduados|ver m[aá]s|contenidos acad", linea):
+            break
+        if dentro and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", linea):
+            _agregar(materias, linea, 1)
+    return materias if semestres == 2 else []
