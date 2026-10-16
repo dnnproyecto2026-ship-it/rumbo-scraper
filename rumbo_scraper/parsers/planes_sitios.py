@@ -5863,3 +5863,21 @@ def plan_uda(html: str) -> list[tuple[str, int]]:
         if fila and anio:
             _agregar(materias, re.sub(r"\s*\*+\s*$", "", fila.group(2)), anio)
     return desde_el_primero(materias)
+
+
+def plan_ucsf(html: str) -> list[tuple[str, int]]:
+    """The UCSF's career pages, year by year, where a long name is printed as
+    two bullets ("– Administración de las" / "– Organizaciones
+    Agropecuarias"): a name that ends in a connector goes on in the next of
+    the same year."""
+    unidas: list[tuple[str, int]] = []
+    pendiente: tuple[str, int] | None = None
+    for nombre, anio in plan_texto_por_anio(html):
+        if pendiente and pendiente[1] == anio:
+            nombre = f"{pendiente[0]} {nombre}"
+        pendiente = None
+        if _CONECTOR_FINAL.search(nombre):
+            pendiente = (nombre, anio)
+            continue
+        unidas.append((nombre, anio))
+    return desde_el_primero(unidas) if pendiente is None else []

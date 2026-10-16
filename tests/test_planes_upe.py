@@ -381,3 +381,14 @@ class PlanUda(unittest.TestCase):
                 "<p>TÍTULO DE GRADO: Licenciado/a</p><p>5. Fuera</p></main>")
         self.assertEqual(plan_uda(html), [("Comportamiento Organizacional", 1), ("Matemática", 1),
                                           ("Práctica (Sólo para Título Intermedio)", 2), ("Estrategia", 3)])
+
+
+class PlanUcsf(unittest.TestCase):
+    def test_nombre_en_dos_vinetas_se_une(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_ucsf
+        html = ("<main><h3>Plan de estudio</h3><h4>Primer Año</h4><p>– Biología celular</p>"
+                "<p>– Administración de las</p><p>– Organizaciones Agropecuarias</p>"
+                "<h4>Segundo Año</h4><p>– Fisiología</p></main>")
+        self.assertEqual(plan_ucsf(html), [("Biología celular", 1),
+                                           ("Administración de las Organizaciones Agropecuarias", 1),
+                                           ("Fisiología", 2)])

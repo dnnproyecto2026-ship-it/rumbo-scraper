@@ -924,3 +924,5 @@ _PLAN_EN_OTRA_PAGINA += (("palermo.edu", "plan de estudios", planes_sitios.plan_
 _PLANES_EN_LA_PAGINA += (("ucu.edu.ar", planes_sitios.plan_ucu),)
 # The UDA's career pages: numbered subjects under a heading per year; the newest plan the page prints.
 _PLANES_EN_LA_PAGINA += (("uda.edu.ar", planes_sitios.plan_uda),)
+# The UCSF's career pages: the year-by-year reading, with a name printed as two bullets joined.
+_PLANES_EN_LA_PAGINA += (("ucsf.edu.ar", planes_sitios.plan_ucsf),)
