@@ -412,6 +412,10 @@ def build_dataset(
         facts = parse_facts(html)
         reference = parse_plan_reference(html)
         level = reference["nivel"]
+        if not level and reference["codigo"] and career_name(ref.slug).lower().startswith("licenciatura en "):
+            # The page names the plan code but not the level in its comment; the
+            # denomination "Licenciatura en" is a degree by the law's own name.
+            level = "Grado"
         if not level:
             # Without the level the page declares, the row would be filed by
             # guessing; the page is reported instead.
