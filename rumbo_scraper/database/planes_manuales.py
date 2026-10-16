@@ -114,7 +114,8 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     materias = materias_de(fila.get(COLUMNA_MATERIAS) or "")
     if isinstance(materias, str):
         return materias, [], False
-    imagen = bool(_IMAGEN.search(urlparse(link).path))
+    # (A picture, or a PDF whose table is a picture: the row says so in its notes.)
+    imagen = bool(_IMAGEN.search(urlparse(link).path)) or "imagen" in (fila.get("notas") or "").lower()
     # The document read as the verifier reads it (a picture, by OCR); every
     # subject must be written in it. Only a picture copied by two people may
     # go on their word when its OCR does not read a name.

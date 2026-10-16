@@ -62,6 +62,18 @@ class Revisar(unittest.TestCase):
         self.assertEqual((motivo, len(materias)), ("", 13))
 
 
+class TablaEnImagenDentroDelPdf(unittest.TestCase):
+    def test_two_people_take_a_pdf_whose_table_is_a_picture(self):
+        fila = {"link_del_plan_usado": "https://www.usal.edu.ar/plan.pdf", "cargado_por": "Claude (IA)",
+                "revisado_por": "Una Persona", "notas": "tabla en imagen dentro del PDF",
+                "materias (una por renglón: año | nombre)":
+                "\n".join(f"{1 + i // 4} | Materia Numero {i}" for i in range(13))}
+        carrera = {"id": "c", "universidad_id": "u", "nombre_carrera": "Licenciatura en Algo", "duracion_anios": 4}
+        universidad = {"id": "u", "nombre_corto": "USAL", "sitio_web": "https://www.usal.edu.ar"}
+        motivo, materias, imagen = revisar(fila, carrera, universidad, set(), _Fuentes("texto sin las materias"))
+        self.assertEqual((motivo, len(materias), imagen), ("", 13, True))
+
+
 class PlanCorto(unittest.TestCase):
     def test_twelve_names_without_years_or_five_for_a_one_year_title(self):
         from rumbo_scraper.database.planes_manuales import _plan_corto_entero
