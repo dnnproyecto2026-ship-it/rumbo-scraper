@@ -52,6 +52,8 @@ _ICON = re.compile(r"\s*(chevron_right|arrow_drop_down|expand_more|keyboard_arro
 _YEAR = re.compile(
     r"^(primer|segundo|tercer|cuarto|quinto|sexto|s[ée]ptimo)\s+a[ñn]o\b", re.I
 )
+# The degree a plan's year ends with ("LICENCIADO/A EN ..."), not a subject.
+_DEGREE_TITLE = re.compile(r"^(?:t[ée]cnic|licenciad|ingenier|contador|abogad|analista|profesor|traductor)\w*/a\b", re.I)
 _YEARS = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4,
           "quinto": 5, "sexto": 6, "septimo": 7}
 
@@ -191,15 +193,22 @@ def parse_study_plan(html: str, programme: str) -> list[dict[str, Any]]:
     subjects: list[dict[str, Any]] = []
     seen: set[tuple[str, int | None]] = set()
     for group in soup.find_all(["ul", "ol"]):
-        heading = group.find_previous(["h2", "h3", "h4", "strong", "p"])
+        # The year is the page's last h2: a semester's list that follows the
+        # paragraph naming the intermediate degree ("TECNICO/A UNIVERSITARIO/A
+        # EN ...") is still of that year.
+        heading = group.find_previous("h2")
         label = clean_text(heading.get_text(" ", strip=True)) if heading else ""
         year_match = _YEAR.match(label)
+        if not year_match:
+            heading = group.find_previous(["h2", "h3", "h4", "strong", "p"])
+            label = clean_text(heading.get_text(" ", strip=True)) if heading else ""
+            year_match = _YEAR.match(label)
         if not year_match:
             continue
         year = _YEARS.get(comparison_key(year_match.group(1)))
         for item in group.find_all("li", recursive=False):
             name = _ICON.sub("", clean_text(item.get_text(" ", strip=True)))
-            if len(name) < 3:
+            if len(name) < 3 or _DEGREE_TITLE.match(name):
                 continue
             identity = (comparison_key(name), year)
             if identity in seen:

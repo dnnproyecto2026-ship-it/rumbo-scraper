@@ -149,3 +149,13 @@ class TituloPartidoTest(unittest.TestCase):
                 '<h1>¿Por qué estudiar Ciencias de la Comunicación en UADE?</h1>')
         self.assertEqual(page_title(html), "Licenciatura en Ciencias de la Comunicación")
         self.assertEqual(page_title("<h1>Abogacía</h1><h1>¿Por qué?</h1>"), "Abogacía")
+
+
+class PlanConTituloIntermedio(unittest.TestCase):
+    def test_el_cuatrimestre_que_sigue_al_titulo_intermedio_es_del_mismo_anio(self):
+        html = ('<div><h2>Tercer Año</h2><h5>Primer Cuatrimestre</h5><ul><li>DERECHO INTERNACIONAL</li></ul>'
+                '<h3></h3><p>TECNICO/A UNIVERSITARIO/A EN COMERCIO INTERNACIONAL</p>'
+                '<h5>Segundo Cuatrimestre</h5><ul><li>ECONOMÍA INTERNACIONAL</li>'
+                '<li>LICENCIADO/A EN COMERCIO INTERNACIONAL</li></ul></div>')
+        filas = [(f["nombre_materia"], f["anio_cursada"]) for f in parse_study_plan(html, "Comercio")]
+        self.assertEqual(filas, [("DERECHO INTERNACIONAL", 3), ("ECONOMÍA INTERNACIONAL", 3)])
