@@ -926,3 +926,5 @@ _PLANES_EN_LA_PAGINA += (("ucu.edu.ar", planes_sitios.plan_ucu),)
 _PLANES_EN_LA_PAGINA += (("uda.edu.ar", planes_sitios.plan_uda),)
 # The UCSF's career pages: the year-by-year reading, with a name printed as two bullets joined.
 _PLANES_EN_LA_PAGINA += (("ucsf.edu.ar", planes_sitios.plan_ucsf),)
+# The UNViMe's career pages: a tab per year over a panel of its subjects.
+_PLANES_EN_LA_PAGINA += (("unvime.edu.ar", planes_sitios.plan_unvime),)

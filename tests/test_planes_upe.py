@@ -392,3 +392,21 @@ class PlanUcsf(unittest.TestCase):
         self.assertEqual(plan_ucsf(html), [("Biología celular", 1),
                                            ("Administración de las Organizaciones Agropecuarias", 1),
                                            ("Fisiología", 2)])
+
+
+class PlanUnvime(unittest.TestCase):
+    def test_una_pestana_por_anio_y_su_panel(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_unvime
+        html = ('<div class="e-n-tabs"><div class="e-n-tabs-heading">'
+                '<button class="e-n-tab-title"><span>1° Año</span></button>'
+                '<button class="e-n-tab-title"><span>2°</span></button></div>'
+                '<div class="e-n-tabs-content"><div><p>#</p><p>Cálculo I.</p><p>#</p><p>Física I.</p></div>'
+                '<div><p>#</p><p>Cálculo II.</p></div></div></div>')
+        self.assertEqual(plan_unvime(html), [("Cálculo I", 1), ("Física I", 1), ("Cálculo II", 2)])
+
+    def test_pestanas_y_paneles_desparejos_no_se_leen(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_unvime
+        html = ('<div class="e-n-tabs"><div class="e-n-tabs-heading">'
+                '<button class="e-n-tab-title"><span>1° Año</span></button></div>'
+                '<div class="e-n-tabs-content"><div><p>Cálculo I.</p></div><div><p>Otra</p></div></div></div>')
+        self.assertEqual(plan_unvime(html), [])

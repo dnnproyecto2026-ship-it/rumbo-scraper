@@ -5881,3 +5881,26 @@ def plan_ucsf(html: str) -> list[tuple[str, int]]:
             continue
         unidas.append((nombre, anio))
     return desde_el_primero(unidas) if pendiente is None else []
+
+
+def plan_unvime(html: str) -> list[tuple[str, int]]:
+    """The UNViMe's career pages (Elementor nested tabs): a tab per year
+    ("1° Año", "2°", …) and, in the same order, a panel whose lines are the
+    year's subjects, each after a "#" bullet. Tabs and panels must be as
+    many as each other."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for contenedor in soup.select(".e-n-tabs"):
+        titulos = [anio_de(_texto(t)) or (int(m.group(1)) if (m := re.match(r"\s*(\d)\s*[°º]", _texto(t))) else None)
+                   for t in contenedor.select(".e-n-tabs-heading > .e-n-tab-title")]
+        paneles = contenedor.select(".e-n-tabs-content > div")
+        if not titulos or len(titulos) != len(paneles) or None in titulos:
+            continue
+        materias: list[tuple[str, int]] = []
+        for anio, panel in zip(titulos, paneles):
+            for linea in panel.get_text("\n").split("\n"):
+                linea = clean_text(linea)
+                if linea and linea != "#" and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", linea):
+                    _agregar(materias, linea.rstrip("."), anio)
+        if materias:
+            return desde_el_primero(materias)
+    return []
