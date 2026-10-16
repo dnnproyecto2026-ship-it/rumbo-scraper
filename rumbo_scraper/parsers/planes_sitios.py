@@ -5695,3 +5695,103 @@ def plan_up_semestres(html: str) -> list[tuple[str, int]]:
         if dentro and re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", linea):
             _agregar(materias, linea, 1)
     return materias if semestres == 2 else []
+
+
+_CONECTOR_FINAL = re.compile(r"(?i)(?:\b(?:de|del|la|las|los|y|e|en|a|con|para|por)|[(-])$")
+
+
+def plan_um_filas(texto: str) -> list[tuple[str, int]]:
+    """Universidad de Mendoza's health-faculty plan sheets (``-layout``
+    text): a row per subject that opens with its year ("1°", "2º"), its term,
+    its code ("K12", "Od-03", "Nu05"), then its name and its hours. A name the
+    cell wrapped has its pieces in the lines above and below the row, at the
+    name's column: they go with the row that is missing them (an empty name,
+    a connector or an open bracket at its end), the one above first. A row
+    whose name stays empty makes the sheet unreadable."""
+    lineas = texto.splitlines()
+    fila = re.compile(r"^(\s*)(\d)\s*[°º]\s+(?:\S+\s+){0,3}?([A-Za-z]{1,3}-?\d{1,3})\s{2,}(.*)$")
+    filas: list[dict] = []
+    columna = None
+    for i, linea in enumerate(lineas):
+        m = fila.match(linea)
+        if not m:
+            continue
+        resto = m.group(4)
+        # The name is what comes before the first run of spaces that precedes the hours.
+        partes = re.split(r"\s{3,}", resto.strip())
+        nombre = partes[0] if partes and not re.fullmatch(r"[\d\s.,-]*", partes[0]) else ""
+        if nombre:
+            columna = linea.index(nombre, linea.index(m.group(3)) + len(m.group(3)))
+        filas.append({"i": i, "anio": int(m.group(2)), "nombre": clean_text(nombre),
+                      "cod": linea.index(m.group(3), len(m.group(1)))})
+    if not filas or columna is None:
+        return []
+    es_fila = {f["i"] for f in filas}
+
+    def pieza(j: int, codigo: int) -> str | None:
+        if j < 0 or j >= len(lineas) or j in es_fila:
+            return None
+        linea = lineas[j]
+        # At or past the column of the row's code, where the names are.
+        if not linea.strip() or len(linea) - len(linea.lstrip()) < codigo:
+            return None
+        cuerpo = clean_text(linea)
+        if re.search(r"\s{3,}", linea.strip()) or not re.search(r"[A-Za-zÁÉÍÓÚáéíóúñÑ]{3}", cuerpo):
+            return None
+        # (A rule of the plan, not a piece of a name.)
+        if re.match(r"(?i)(?:para|el|la|los|las|entre|a[nñ]o|c[oó]digo)\b.{20,}", cuerpo) and len(cuerpo) > 45:
+            return None
+        return cuerpo
+
+    usadas: set[int] = set()
+    materias: list[tuple[str, int]] = []
+    for f in filas:
+        nombre = f["nombre"]
+        incompleto = not nombre or _CONECTOR_FINAL.search(nombre) or nombre.count("(") > nombre.count(")")
+        arriba = pieza(f["i"] - 1, f["cod"]) if f["i"] - 1 not in usadas else None
+        if arriba and (not nombre or incompleto):
+            nombre = clean_text(f"{arriba} {nombre}")
+            usadas.add(f["i"] - 1)
+            incompleto = _CONECTOR_FINAL.search(nombre) or nombre.count("(") > nombre.count(")")
+        if not nombre or incompleto or f["nombre"] == "":
+            abajo = pieza(f["i"] + 1, f["cod"])
+            if abajo and (f["i"] + 1) not in usadas:
+                nombre = clean_text(f"{nombre} {abajo}")
+                usadas.add(f["i"] + 1)
+        if not nombre or _CONECTOR_FINAL.search(nombre) or nombre.count("(") > nombre.count(")"):
+            return []
+        nombre = re.sub(r"(?i)\s*\((?:promocional|anual|cuatrimestral)\)\s*$", "", nombre)
+        _agregar(materias, nombre, f["anio"])
+    return desde_el_primero(materias)
+
+
+def plan_um_vinetas(texto: str) -> list[tuple[str, int]]:
+    """Universidad de Mendoza's tecnicatura sheets: a heading per year
+    ("1.º AÑO") over two columns of bullets, the first term's and the
+    second's. Every bullet is a subject of that year; a line without a
+    bullet is not read."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in texto.splitlines():
+        cabecera = re.match(r"^\s*(\d)\s*\.?\s*[º°o]?\s*A[ÑN]O\b", linea)
+        if cabecera:
+            anio = int(cabecera.group(1))
+            continue
+        # The last year is headed by its stage, not by its number.
+        if anio and re.match(r"^\s*PR[ÁA]CTICA FINAL SUPERVISADA\s*$", linea):
+            anio += 1
+            continue
+        if re.match(r"^\s*INFORMACI[ÓO]N Y S[ÍI]NTESIS", linea):
+            break
+        if anio and "•" in linea:
+            for pedazo in linea.split("•")[1:]:
+                _agregar(materias, pedazo, anio)
+    return desde_el_primero(materias)
+
+
+def plan_umendoza_todos(texto: str) -> list[tuple[str, int]]:
+    """Each of the UMendoza's plan sheets in the way it is written."""
+    return plan_umendoza(texto) or plan_um_filas(texto) or plan_um_vinetas(texto)
+
+
+plan_umendoza_todos.respaldo = True  # type: ignore[attr-defined]  # the general reader after these

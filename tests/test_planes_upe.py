@@ -324,3 +324,35 @@ class PlanUpSemestres(unittest.TestCase):
     def test_sin_los_dos_encabezados_no_se_lee(self):
         from rumbo_scraper.parsers.planes_sitios import plan_up_semestres
         self.assertEqual(plan_up_semestres("<main><h4>Primer semestre</h4><p>Derecho Notarial</p></main>"), [])
+
+
+class PlanUMendoza(unittest.TestCase):
+    def test_filas_con_nombre_partido_en_dos_renglones(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_um_filas
+        texto = "\n".join([
+            "                              PRIMER AÑO",
+            " Año Semestre Código            Asignatura               Carga horaria   Correlativas",
+            " 1°      A          K1     Anatomía                                8             -",
+            "                           Seminario II (Diagnóstico por",
+            " 1°      A          K2                                              5             -",
+            "                           Imagen)",
+            " 1°      A          K3     Histología                              4             -",
+            "                           PFO (rótulo del grupo)",
+            " 2°   2do.Sem       K4     Práctica Final Obligatoria              20             -",
+            " 2°      A          K5     Fisiología                               6            K1",
+        ])
+        self.assertEqual(plan_um_filas(texto), [
+            ("Anatomía", 1), ("Seminario II (Diagnóstico por Imagen)", 1), ("Histología", 1),
+            ("Práctica Final Obligatoria", 2), ("Fisiología", 2)])
+
+    def test_fila_sin_nombre_no_se_lee(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_um_filas
+        self.assertEqual(plan_um_filas(" 1°      A          K1                                              8      -\n"), [])
+
+    def test_vinetas_por_anio_y_ultimo_anio_por_su_etapa(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_um_vinetas
+        texto = ("1.º AÑO\n • Desastre I          • Desastre II\n2.º AÑO\n • Inglés III\n"
+                 " PRÁCTICA FINAL SUPERVISADA\n • Ética Profesional\n"
+                 " INFORMACIÓN Y SÍNTESIS ACADÉMICA\n • Duración: 3 años")
+        self.assertEqual(plan_um_vinetas(texto), [("Desastre I", 1), ("Desastre II", 1),
+                                                  ("Inglés III", 2), ("Ética Profesional", 3)])
