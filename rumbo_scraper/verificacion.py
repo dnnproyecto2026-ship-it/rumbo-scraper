@@ -84,6 +84,9 @@ def plano(texto: str | None) -> str:
     """The text as a run of plain words: no case, accents or punctuation,
     and the cell boundaries kept as ``|``."""
     texto = _PARTIDA.sub(r"\1", clean_text(texto or ""))
+    # A number glued to the capital of the word after it ("4.5Práctica", a
+    # plan's row number): two tokens.
+    texto = re.sub(r"(\d)(?=[A-ZÁÉÍÓÚÑ][a-záéíóúñ])", r"\1 ", texto)
     return " ".join(re.findall(r"[a-z0-9]+|\|", comparison_key(texto)))
 
 

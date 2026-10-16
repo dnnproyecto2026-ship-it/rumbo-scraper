@@ -188,3 +188,9 @@ class TextoDeLasImagenes(unittest.TestCase):
         self.assertEqual(pedidas, ["https://www.fmed.uba.ar/sites/default/files/inline-images/Captura2_1.JPG"])
         self.assertIn("Anatomía", leido)
         self.assertEqual(largo, "")
+
+
+class NumeroPegadoALaPalabra(unittest.TestCase):
+    def test_el_numero_de_renglon_pegado_a_la_palabra_es_otro_token(self):
+        self.assertEqual(v.plano("4.5Práctica y Residencia"), "4 5 practica y residencia")
+        self.assertEqual(v.plano("Física 2"), "fisica 2")
