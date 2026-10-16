@@ -5833,3 +5833,33 @@ def plan_ucu(html: str) -> list[tuple[str, int]]:
         if not optativas:
             _agregar(materias, linea, anio)
     return desde_el_primero(materias)
+
+
+def plan_uda(html: str) -> list[tuple[str, int]]:
+    """The UDA's career pages: a heading per year ("PRIMER AÑO") over its
+    terms ("PRIMER SEMESTRE", "ASIGNATURA ANUAL"), each subject a numbered
+    line ("7. Estadística*"). A page that prints a plan more than once (the
+    old one and "Plan de estudio 2026") is read in its last: the newest. The
+    plan ends at the line of the degree ("TÍTULO DE GRADO: …"); the
+    intermediate degree's line, in the middle of it, does not end it."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for etiqueta in soup(["script", "style", "nav", "header", "footer"]):
+        etiqueta.decompose()
+    lineas = [clean_text(t) for t in soup.get_text("\n").split("\n")]
+    lineas = [t for t in lineas if t]
+    primeros = [i for i, t in enumerate(lineas) if re.fullmatch(r"(?i)primer a[ñn]o", t)]
+    if not primeros:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[primeros[-1]:]:
+        if re.match(r"(?i)t[íi]tulo (?:de grado|de pregrado|universitario|final)\b|t[íi]tulo:", linea):
+            break
+        cabecera = re.fullmatch(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o", linea)
+        if cabecera:
+            anio = anio_de(linea)
+            continue
+        fila = re.match(r"^(\d{1,2})\s*\.\s*(\S.*)$", linea)
+        if fila and anio:
+            _agregar(materias, re.sub(r"\s*\*+\s*$", "", fila.group(2)), anio)
+    return desde_el_primero(materias)

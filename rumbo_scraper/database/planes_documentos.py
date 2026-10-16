@@ -922,3 +922,5 @@ if __name__ == "__main__":
 _PLAN_EN_OTRA_PAGINA += (("palermo.edu", "plan de estudios", planes_sitios.plan_up_semestres),)
 # The UCU's career pages: a heading per year over its terms' short lists.
 _PLANES_EN_LA_PAGINA += (("ucu.edu.ar", planes_sitios.plan_ucu),)
+# The UDA's career pages: numbered subjects under a heading per year; the newest plan the page prints.
+_PLANES_EN_LA_PAGINA += (("uda.edu.ar", planes_sitios.plan_uda),)

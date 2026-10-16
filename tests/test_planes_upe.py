@@ -368,3 +368,16 @@ class PlanUcu(unittest.TestCase):
                 "<p>Facultad de Ciencias Económicas</p><p>Marketing</p></main>")
         self.assertEqual(plan_ucu(html), [("Contabilidad I", 1), ("Matemática I", 1),
                                           ("Contabilidad II", 1), ("Contabilidad III", 2)])
+
+
+class PlanUda(unittest.TestCase):
+    def test_el_ultimo_plan_de_la_pagina_y_sin_el_titulo_intermedio_como_fin(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_uda
+        html = ("<main><h3>Plan de estudio</h3><p>PRIMER AÑO</p><p>PRIMER SEMESTRE</p><p>1. Vieja I*</p>"
+                "<p>TÍTULO DE GRADO: Licenciado/a</p><h3>Plan de estudio 2026</h3>"
+                "<p>PRIMER AÑO</p><p>PRIMER SEMESTRE</p><p>1.Comportamiento Organizacional</p><p>2.Matemática*</p>"
+                "<p>SEGUNDO AÑO</p><p>ASIGNATURA ANUAL</p><p>3. Práctica (Sólo para Título Intermedio)</p>"
+                "<p>TÍTULO INTERMEDIO: Analista</p><p>TERCER AÑO</p><p>4. Estrategia</p>"
+                "<p>TÍTULO DE GRADO: Licenciado/a</p><p>5. Fuera</p></main>")
+        self.assertEqual(plan_uda(html), [("Comportamiento Organizacional", 1), ("Matemática", 1),
+                                          ("Práctica (Sólo para Título Intermedio)", 2), ("Estrategia", 3)])
