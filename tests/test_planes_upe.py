@@ -356,3 +356,15 @@ class PlanUMendoza(unittest.TestCase):
                  " INFORMACIÓN Y SÍNTESIS ACADÉMICA\n • Duración: 3 años")
         self.assertEqual(plan_um_vinetas(texto), [("Desastre I", 1), ("Desastre II", 1),
                                                   ("Inglés III", 2), ("Ética Profesional", 3)])
+
+
+class PlanUcu(unittest.TestCase):
+    def test_anios_cuatrimestres_y_optativas_aparte(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_ucu
+        html = ("<main><h3>Plan de estudios</h3><p>Consultá las materias.</p>"
+                "<h4>Primer Año</h4><h5>Primer cuatrimestre:</h5><p>Contabilidad I</p><p>Matemática I</p>"
+                "<h5>Segundo cuatrimestre</h5><p>Contabilidad II</p><p>Optativas</p><p>Bancos</p>"
+                "<h4>Segundo Año</h4><h5>Primer cuatrimestre</h5><p>Contabilidad III</p>"
+                "<p>Facultad de Ciencias Económicas</p><p>Marketing</p></main>")
+        self.assertEqual(plan_ucu(html), [("Contabilidad I", 1), ("Matemática I", 1),
+                                          ("Contabilidad II", 1), ("Contabilidad III", 2)])

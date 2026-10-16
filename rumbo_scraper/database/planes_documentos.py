@@ -920,3 +920,5 @@ if __name__ == "__main__":
     main()
 # Palermo's Escribanía keeps its plan on a page of its own, by semester.
 _PLAN_EN_OTRA_PAGINA += (("palermo.edu", "plan de estudios", planes_sitios.plan_up_semestres),)
+# The UCU's career pages: a heading per year over its terms' short lists.
+_PLANES_EN_LA_PAGINA += (("ucu.edu.ar", planes_sitios.plan_ucu),)

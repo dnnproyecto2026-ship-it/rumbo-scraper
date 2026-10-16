@@ -5795,3 +5795,41 @@ def plan_umendoza_todos(texto: str) -> list[tuple[str, int]]:
 
 
 plan_umendoza_todos.respaldo = True  # type: ignore[attr-defined]  # the general reader after these
+
+
+def plan_ucu(html: str) -> list[tuple[str, int]]:
+    """The UCU's career pages: under "Plan de estudios" a heading per year
+    ("Primer Año") over its terms ("Primer cuatrimestre", "Segundo
+    cuatrimestre"), each a run of short lines, one subject each. The lists
+    under "Optativas" are the choices offered, not the plan's subjects, and
+    are left out; a line of prose or a heading that is neither a year nor a
+    term ends the plan."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for etiqueta in soup(["script", "style", "nav", "header", "footer"]):
+        etiqueta.decompose()
+    lineas = [clean_text(t) for t in soup.get_text("\n").split("\n")]
+    lineas = [t for t in lineas if t]
+    try:
+        inicio = next(i for i, t in enumerate(lineas) if re.fullmatch(r"(?i)plan de estudios?", t))
+    except StopIteration:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio, optativas = None, False
+    for linea in lineas[inicio + 1:]:
+        if re.fullmatch(r"(?i)(?:primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o", linea):
+            anio, optativas = anio_de(linea), False
+            continue
+        if re.fullmatch(r"(?i)(?:primer|segundo)\s+cuatrimestre:?", linea):
+            optativas = False
+            continue
+        if re.fullmatch(r"(?i)(?:optativas?|opcional(?:es)?):?", linea):
+            optativas = True
+            continue
+        if anio is None:
+            continue
+        # The plan ends at its next heading: a long line, or one that closes with a colon.
+        if len(linea) > 90 or linea.endswith(":") or re.match(r"(?i)(?:facultad|escuela|departamento) de\b|(?:perfil|t[íi]tulo|alcances|requisitos|salida|contacto|duraci[óo]n|modalidad|sede|inscrip)", linea):
+            break
+        if not optativas:
+            _agregar(materias, linea, anio)
+    return desde_el_primero(materias)
