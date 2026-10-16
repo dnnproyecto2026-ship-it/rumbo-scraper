@@ -171,7 +171,42 @@ class Fuentes:
                 return {"ok": True, "html": "", "texto": v.plano(_texto_del_pdf(contenido))}
         if not _tiene_contenido(html):
             html = self.visitante.get(url) or html
-        return {"ok": True, "html": html, "texto": v.plano(v.texto_de_html(html))}
+        texto = v.texto_de_html(html)
+        return {"ok": True, "html": html, "texto": v.plano(texto + _texto_de_las_imagenes(self, html, url, texto))}
+
+
+# A picture that is not content: a logo, an icon, a social network's button.
+_NO_ES_CONTENIDO = re.compile(r"(?i)logo|icon|facebook|twitter|instagram|youtube|whatsapp|banner|avatar|sprite|favicon")
+
+
+def _texto_de_las_imagenes(fuentes: "Fuentes", html: str, url: str, texto: str) -> str:
+    """The text of the pictures a short page carries in its body, read by OCR:
+    a faculty that publishes its plan of studies as one screenshot per year
+    (the Facultad de Medicina's Fonoaudiología) says it there and nowhere else.
+    Only the pictures of the page's own site, and only a page with little text
+    of its own."""
+    if len(texto) > 6000:
+        return ""
+    from urllib.parse import urljoin, urlparse
+
+    from rumbo_scraper.parsers.ocr import texto_de_imagen
+
+    sitio = urlparse(url).netloc
+    imagenes = []
+    for ruta in re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', html, re.I):
+        direccion = urljoin(url, ruta.strip())
+        if (urlparse(direccion).netloc == sitio and re.search(r"(?i)\.(?:png|jpe?g|webp)(?:\?|$)", direccion)
+                and not _NO_ES_CONTENIDO.search(direccion) and direccion not in imagenes):
+            imagenes.append(direccion)
+    leido = []
+    for direccion in imagenes[:12]:
+        try:
+            respuesta = fuentes.visitante.client.get(direccion)
+            if respuesta.status_code < 400:
+                leido.append(texto_de_imagen(respuesta.content))
+        except Exception:
+            continue
+    return " " + " ".join(leido) if leido else ""
 
 
 def _textos_del_json(datos: Any) -> list[str]:

@@ -161,3 +161,30 @@ class PlanEnDrive(unittest.TestCase):
                 '<a href="https://drive.google.com/file/d/CD_2/view?usp=drive_link">Plan de Estudio</a>')
         self.assertEqual(_planes_enlazados(html, "https://iuymca.edu.ar/profesorado/"),
                          ["https://drive.google.com/uc?export=download&id=CD_2"])
+
+
+class TextoDeLasImagenes(unittest.TestCase):
+    def test_las_imagenes_del_cuerpo_de_una_pagina_corta_se_leen_y_los_logos_no(self):
+        from unittest import mock
+
+        from rumbo_scraper.database import verificar_catalogo as vc
+
+        pedidas = []
+
+        class Visitante:
+            class client:
+                @staticmethod
+                def get(direccion):
+                    pedidas.append(direccion)
+                    return mock.Mock(status_code=200, content=b"x")
+
+        fuentes = mock.Mock(visitante=Visitante)
+        html = ('<img src="/sites/default/files/Logo_CienciasMed_0.png">'
+                '<img src="/sites/default/files/inline-images/Captura2_1.JPG">'
+                '<img src="https://otro.com/plan.png">')
+        with mock.patch("rumbo_scraper.parsers.ocr.texto_de_imagen", return_value="SEGUNDO AÑO Anatomía"):
+            leido = vc._texto_de_las_imagenes(fuentes, html, "https://www.fmed.uba.ar/plan", "poco texto")
+            largo = vc._texto_de_las_imagenes(fuentes, html, "https://www.fmed.uba.ar/plan", "x" * 7000)
+        self.assertEqual(pedidas, ["https://www.fmed.uba.ar/sites/default/files/inline-images/Captura2_1.JPG"])
+        self.assertIn("Anatomía", leido)
+        self.assertEqual(largo, "")
