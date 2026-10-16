@@ -2653,6 +2653,38 @@ def plan_indice_pba(carrera: str, texto: str) -> list[tuple[str, int]]:
 
 
 _PIE_DISENO = re.compile(r"(?i)^(\d+|\||corresponde al exp.*|(y\s+)?su agregado.*|total\b.*|if-\d{4}-[\w-]+|p[áa]gina \d+ de \d+)$")
+def plan_up_dyc(html: str) -> list[tuple[str, int]]:
+    """Palermo's Diseño y Comunicación plans: a block per year ("1 / er año",
+    "2 / do año") of cuatrimestres, each subject a name followed by its code
+    line ("020221 | 026451") and a slogan. The plan is read up to the line
+    that gives the final degree ("Título Final: ..."): the tables after it
+    are the completion cycles'. The page repeats the subjects of a year for
+    its small screens: each name counts once a year. Its elective slots
+    ("Electiva I") count as subjects."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    for etiqueta in soup(["script", "style"]):
+        etiqueta.decompose()
+    lineas = [t for t in (clean_text(x) for x in soup.get_text("\n").split("\n")) if t]
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for i, linea in enumerate(lineas):
+        if re.match(r"(?i)t[ií]tulo final", linea) and materias:
+            break
+        if re.fullmatch(r"\d", linea) and i + 1 < len(lineas) \
+                and re.match(r"(?i)(?:er|do|ro|to|mo|vo|no)\s*a[ñn]o", lineas[i + 1]):
+            anio = int(linea)
+        elif anio and re.match(r"(?i)trabajo final de grado", linea):
+            _agregar(materias, "Trabajo Final de Grado (Proyecto de Graduación)", anio)
+        elif anio and (re.fullmatch(r"(?i)electiva [ivx]+", linea)
+                       # (A slot the student fills: "Cultura I" over "LIBERTAD DE ELEGIR".)
+                       or (i + 1 < len(lineas) and lineas[i + 1].lower() == "libertad de elegir"
+                           and len(linea) < 40)
+                       or (i + 1 < len(lineas) and re.fullmatch(r"\d{5,6}(?: \| \d{5,6})*", lineas[i + 1])
+                           and not re.fullmatch(r"\d{5,6}(?: \| \d{5,6})*", linea))):
+            _agregar(materias, linea, anio)
+    return materias
+
+
 _CONECTOR_FINAL = re.compile(r"(?i)\b(y|e|de|del|la|las|los|el|en|para|con|a|al|por)$")
 
 

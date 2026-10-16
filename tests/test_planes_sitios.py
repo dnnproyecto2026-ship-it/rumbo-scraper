@@ -497,3 +497,20 @@ class PlanTablasPorAnio(unittest.TestCase):
 
     def test_a_page_without_year_tables_is_empty(self):
         self.assertEqual(p.plan_tablas_por_anio("<html><body><table><tr><td>Nombre</td></tr></table></body></html>"), [])
+
+
+class PlanUpDyc(unittest.TestCase):
+    def test_materias_con_codigo_por_anio_hasta_el_titulo_final(self):
+        from rumbo_scraper.parsers.planes_sitios import plan_up_dyc
+
+        html = ("<div>1<span>er año</span><h4>1 er cuatrimestre</h4>"
+                "<p>Diseño de Interiores I</p><p>020221 | 026451</p><p>VIDRIERA</p>"
+                "<p>Taller de Interiores I</p><p>022575</p>"
+                "<p>Diseño de Interiores I</p><p>020221 | 026451</p>"
+                "<p>4</p><p>to año</p><p>Cultura II</p><p>LIBERTAD DE ELEGIR</p>"
+                "<p>Trabajo Final de Grado (</p><p>Proyecto de Graduación</p><p>) 053519</p>"
+                "<p>Título Final: Diseñador/a de Interiores</p>"
+                "<p>1</p><p>er año</p><p>Diseño de Negocios I</p><p>099999</p></div>")
+        self.assertEqual(plan_up_dyc(html), [
+            ("Diseño de Interiores I", 1), ("Taller de Interiores I", 1),
+            ("Cultura II", 4), ("Trabajo Final de Grado (Proyecto de Graduación)", 4)])
