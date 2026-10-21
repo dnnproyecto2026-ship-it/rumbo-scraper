@@ -1,0 +1,9 @@
+[Unit]
+Description=Rumbo mailing: una tanda por día a las 10:00 de Argentina
+
+[Timer]
+OnCalendar=*-*-* 10:00:00 America/Argentina/Buenos_Aires
+Persistent=true
+
+[Install]
+WantedBy=timers.target

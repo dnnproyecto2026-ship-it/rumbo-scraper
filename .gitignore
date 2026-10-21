@@ -22,3 +22,9 @@ data/planes_folletos/
 data/verificacion/
 data/verificaciones.json
 .cache/
+
+# Mailing: direcciones de personas, nunca al repo (es público).
+data/mailing/
+*contactos*.csv
+# Estado de la máquina fija.
+maquina_fija/PARAR

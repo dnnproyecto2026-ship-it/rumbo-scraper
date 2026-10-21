@@ -682,3 +682,17 @@ subdominio suyo: `utdt.edu.otro-sitio.com` y `https://cualquiera.com/?ref=utdt.e
 se rechazan, porque de lo contrario un enlace ajeno podría quedar guardado como
 evidencia oficial. Un campo vacío sigue siendo válido: significa que la fuente no
 lo publica.
+
+## VPS: operador permanente y mailing
+
+En el VPS (Ubuntu 24.04, usuario no root), con las claves en `~/rumbo-secrets.env`:
+
+```bash
+bash entregables/vps/instalar.sh
+claude                                   # iniciar sesión una vez, después /exit
+systemctl --user enable --now rumbo-operador
+```
+
+`rumbo-operador` corre `entregables/maquina_fija/correr.sh` (un ciclo de Claude Code cada 5 minutos, ver `prompt.md`) y vuelve a arrancar si se cae; se para con `touch maquina_fija/PARAR`. Sin las credenciales de producción en la máquina, scrapea y verifica pero no carga a producción: deja lo listo en `maquina_fija/estado.md`.
+
+El mailing (`python -m rumbo_scraper.mailing <campaña> <contactos.csv>`) es vista previa salvo `--apply`, manda solo a filas con `consentimiento` afirmativo, respeta `data/mailing/bajas.txt`, no repite una campaña a la misma dirección y corta en `MAILING_LIMITE_DIARIO` (280, debajo del gratis de Brevo). `rumbo-mailing.timer` manda a las 10:00 la tanda del día de cada línea de `data/mailing/cola.txt` (`<carpeta> <contactos.csv>`); una campaña entra a la cola solo cuando una persona la agrega. Antes de encolarla, `--prueba tu@mail` manda una copia sin registrar nada. `data/mailing/` y los `*contactos*.csv` no se suben: el repo es público.

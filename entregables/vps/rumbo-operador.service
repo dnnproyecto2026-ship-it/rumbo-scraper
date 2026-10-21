@@ -1,0 +1,15 @@
+[Unit]
+Description=Rumbo scraper: operador permanente (un ciclo por institución)
+After=network-online.target
+
+[Service]
+WorkingDirectory=__REPO__
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/bin/bash __REPO__/entregables/maquina_fija/correr.sh
+# Si el lanzador se corta por un error, vuelve a arrancar; si se paró con maquina_fija/PARAR, sale bien y no reinicia.
+Restart=on-failure
+RestartSec=300
+Nice=10
+
+[Install]
+WantedBy=default.target

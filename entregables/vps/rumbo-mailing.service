@@ -1,0 +1,7 @@
+[Unit]
+Description=Rumbo mailing: envía la tanda del día de las campañas en cola
+
+[Service]
+Type=oneshot
+WorkingDirectory=__REPO__
+ExecStart=/bin/bash __REPO__/entregables/vps/enviar_cola.sh
