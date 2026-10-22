@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-22 (ciclo 1)
+Actualizado: 2026-10-22 (ciclo 3)
 
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
@@ -23,6 +23,8 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 
 ## Bloqueadas (relevamiento/instituciones.json)
 - UNdeC, UNSAM, UNLaR y otras 4: el sitio no deja leer sus carreras (registrado 2026-10-10).
+
+- UB: 10 carreras virtuales (FEDEV) sin ficha en el sitio desde la corrida del 22/10; no re-importar UB desde una corrida nueva sin conservar esas 10. Maestría en Traducción (posgrado) sin leer.
 
 ## Notas
 - El relevamiento de universidades está casi completo (136 cargadas); el trabajo grande son los planes faltantes.
