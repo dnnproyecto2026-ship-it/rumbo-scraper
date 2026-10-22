@@ -14,8 +14,10 @@ while [ ! -f maquina_fija/PARAR ]; do
   # Sin cuota del plan: Claude contesta enseguida con el aviso del límite. Reintentar cada 5 minutos no sirve,
   # así que se anota y se espera media hora. Solo en salidas cortas: un ciclo normal puede hablar del "rate limit" de un sitio.
   if [ "$(wc -l < "$SALIDA")" -lt 6 ] && grep -qiE 'usage limit|limit reached|rate limit|out of (credits|usage)|resets (at )?[0-9]' "$SALIDA"; then
-    echo "### SIN CUOTA $(date '+%F %H:%M') — espero 30 min" >> maquina_fija/lanzador.log
-    sleep 1800
+    # Sin Claude se sigue scrapeando: un spider dedicado por vuelta, sin escribir en ninguna base.
+    echo "### SIN CUOTA $(date '+%F %H:%M') — vigilancia sin IA" >> maquina_fija/lanzador.log
+    bash entregables/vps/vigilancia_sin_ia.sh >> maquina_fija/lanzador.log 2>&1
+    sleep 600
     continue
   fi
   [ "$codigo" -ne 0 ] && echo "### ciclo terminó con error $codigo $(date '+%F %H:%M')" >> maquina_fija/lanzador.log
