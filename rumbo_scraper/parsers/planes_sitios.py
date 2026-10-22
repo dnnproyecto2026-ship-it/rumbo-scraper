@@ -6033,3 +6033,37 @@ def plan_unq_cursos(html: str) -> list[tuple[str, None]]:
                 # (_agregar keeps a subject with its year; these have none.)
                 _agregar(leidas, nombre, -1)
     return [(nombre, None) for nombre, _ in leidas]
+
+
+_ENCABEZADO_PERIO = re.compile(r"(?i)^(materias?\b|(primer|segundo|tercer)\s+(bimestre|cuatrimestre)$|optativa\b)")
+
+
+def plan_perio_unlp(html: str) -> list[tuple[str, int]]:
+    """UNLP Periodismo's "Asignaturas ..." page of a tecnicatura: a heading
+    per year ("Primer año"), its term headings ("Primer cuatrimestre",
+    "Materias Obligatorias de cursada cuatrimestral") and a subject per line,
+    up to the share links. The "Tramo inicial" (an entry workshop outside the
+    years) and the optatives to choose ("Optativa 1", "Optativa I: A/B") are
+    not taken; a plan with a ciclo in place of a year is not read."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    contenido = soup.select_one("article") or soup
+    lineas = [clean_text(l) for l in contenido.get_text("\n").split("\n") if clean_text(l)]
+    inicio = next((i for i, l in enumerate(lineas) if re.match(r"(?i)^asignaturas\b", l)), None)
+    if inicio is None:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[inicio:]:
+        if linea.lower() == "facebook":
+            break
+        if re.match(r"(?i)^(tramo inicial|primer ciclo|segundo ciclo|tercer ciclo)$", linea):
+            if "ciclo" in linea.lower():
+                return []
+            anio = None
+            continue
+        nuevo = anio_de(linea)
+        if nuevo:
+            anio = nuevo
+        elif anio and not _ENCABEZADO_PERIO.match(linea):
+            _agregar(materias, linea, anio)
+    return desde_el_primero(materias)
