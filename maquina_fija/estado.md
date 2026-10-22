@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-22 (noche, 14)
+Actualizado: 2026-10-22 (noche, 15)
 - Pendiente exportar (UNLP, UNQ, UCEMA) cuando termine el `verificar_catalogo` ajeno (PID 829774).
 
 ## Producción
@@ -11,12 +11,12 @@ Actualizado: 2026-10-22 (noche, 14)
 
 ## Listo para cargar (cuando haya credenciales, 01:00–08:00, lotes ≤ 8)
 - UNQ (planes de UNQ por núcleos; ver bitácora 2026-10-22)
-- UNLP (3 tecnicaturas de Periodismo + Trabajo Social completo + 2 tecnicaturas de Odontología: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología; ver bitácora)
+- UNLP (3 tecnicaturas de Periodismo + Trabajo Social completo + 2 tecnicaturas de Odontología: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología, Odontología (grado, 60 materias; duración del catálogo 6 vs 5 años de la tabla: revisar); ver bitácora)
 
 ## Cola de próximas (ofertas de grado/pregrado sin plan, catálogo exportado 2026-10-16)
 Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 1. UNQ — resto: páginas con orientaciones, bolsas de electivas que no suman, o tablas sin encabezado (Informática); ver bitácora
-2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; siguientes: Exactas, Odontología)
+2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; siguiente: Exactas)
 3. UNC (77/114)
 4. UCASAL (73/79) — lectura previa: el plan detallado corta cada nombre a 20 letras (commit 859fc87); falta registrar motivo por carrera
 5. UNR (60/110)

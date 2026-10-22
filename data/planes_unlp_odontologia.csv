@@ -1,0 +1,61 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Odontología;6.0;;;https://www.folp.unlp.edu.ar/caratulacar/carrera/;"1 | Introducción a la Odontología
+1 | Odontología Preventiva y Social I
+1 | Anatomía I
+1 | Bioquímica Estomatología I
+1 | Biofísica I
+1 | Biología General I
+1 | Anatomía II
+1 | Histología y Embriología I
+1 | Biofísica II
+1 | Biología General II
+2 | Odontología Preventiva y Social II
+2 | Histología y Embriología II
+2 | Microbiología y Parasitología I
+2 | Biomateriales I
+2 | Dimensión Psicológica de la Atención Odontológica
+2 | Fisiología I
+2 | Fisiología II
+2 | Patología y Clínica Estomatológica I
+2 | Microbiología y Parasitología II
+2 | Bioquímica Estomatología II
+2 | Biomateriales II
+3 | Odontología Preventiva y Social III
+3 | Farmacología y Terapéutica I
+3 | Patología y Clínica Estomatológica II
+3 | Diagnóstico por Imágenes I
+3 | Operatoria Dental I A/B
+3 | Prótesis I A/B
+3 | Cirugía I A/B
+3 | Cirugía II A/B
+3 | Farmacología y Terapéutica II
+3 | Patología y Clínica Estomatológica III
+3 | Operatoria Dental II A/B
+3 | Prótesis II A/B
+3 | Diagnóstico por Imágenes II
+4 | Odontología Preventiva y Social IV
+4 | Periodoncia I A/B
+4 | Cirugía III A/B
+4 | Operatoria Dental III A/B
+4 | Prótesis III A/B
+4 | Patología y Clínica Estomatológica IV
+4 | Endodoncia I A/B
+4 | Endodoncia II A/B
+4 | Periodoncia II A/B
+4 | Cirugía IV A/B
+4 | Operatoria Dental IV A/B
+4 | Prótesis IV A/B
+4 | Patología y Clínica Estomatológica V
+5 | Odontología Preventiva y Social V
+5 | Odontología Integral Niños I A/B
+5 | Cirugía V A/B
+5 | Odontología Legal y Forense
+5 | Operatoria Dental V A/B
+5 | Prótesis V A/B
+5 | Odontología Integral Niños II A/B
+5 | Odontología Integral Niños III A/B
+5 | Cirugía VI A/B
+5 | Bioética
+5 | Operatoria Dental VI A/B
+5 | Prótesis VI A/B
+5 | P.P.S. (Prácticas Profesionales Supervisadas)";IA operador;;"Tabla oficial de materias por año de la facultad (5 años de cursada; la tabla incluye las PPS en 5.º)";;324e8023-7779-4c02-9c03-8bc8fba02ae6
