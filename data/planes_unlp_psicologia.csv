@@ -1,0 +1,35 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Licenciatura en Psicología;6.0;;;https://wp-psico-admin.psico.unlp.edu.ar/wp-content/uploads/2025/03/Plan-Licenciatura-en-psicologia.pdf;"1 | Psicología I
+1 | Antropología Cultural y Social
+1 | Lógica
+1 | Introducción a la Filosofía
+1 | Biología Humana
+2 | Psicología II
+2 | Teoría Psicoanalítica
+2 | Sociología General
+2 | Psicología Genética
+2 | Estadística Aplicada a la Psicología
+2 | Lingüística General
+3 | Neuroanatomía y Neurofisiología
+3 | Epistemología y Metodología de la Investigación Psicológica
+3 | Fundamentos, Técnicas e Instrumentos de la Exploración Psicológica I
+3 | Corrientes Actuales en Psicología
+3 | Psicología Evolutiva I
+3 | Psicología Evolutiva II
+3 | Psicología Social
+4 | Psicopatología I
+4 | Psicología Institucional
+4 | Seminario de Psicología Experimental
+4 | Psicopatología II
+4 | Fundamentos, Técnicas e Instrumentos de la Exploración Psicológica II
+5 | Psicodiagnóstico
+5 | Psicología Educacional
+5 | Psicoterapia I
+5 | Psicoterapia II
+5 | Psicología Preventiva
+5 | Taller de Producción Textual
+6 | Psicología Clínica de Niños y Adolescentes
+6 | Psicología Clínica de Adultos y Gerontes
+6 | Orientación Vocacional
+6 | Psicología Laboral
+6 | Psicología Forense";IA operador;;"PDF oficial del plan de la Facultad de Psicología; se dejaron afuera capacitación en idioma (a elegir) y el Trabajo Integral Final";;9471cdfa-c8d5-4ad8-a445-c10d029a3ad0
