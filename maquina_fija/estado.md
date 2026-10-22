@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-22 (noche)
+Actualizado: 2026-10-22 (noche, 13)
 - Pendiente exportar (UNLP, UNQ, UCEMA) cuando termine el `verificar_catalogo` ajeno (PID 829774).
 
 ## Producción
@@ -32,3 +32,4 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 ## Notas
 - El relevamiento de universidades está casi completo (136 cargadas); el trabajo grande son los planes faltantes.
 - `relevamiento/terciarios.json` no tiene campo de estado: es un índice nombre → CUE.
+- UTDT: Maestría en Finanzas ya no publica su lista de materias (corrida 22/10); no re-importar UTDT desde esa corrida sin conservar las 88 del baseline.
