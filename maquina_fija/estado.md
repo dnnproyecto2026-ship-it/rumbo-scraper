@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-22 (noche, 13)
+Actualizado: 2026-10-22 (noche, 14)
 - Pendiente exportar (UNLP, UNQ, UCEMA) cuando termine el `verificar_catalogo` ajeno (PID 829774).
 
 ## Producción
@@ -11,7 +11,7 @@ Actualizado: 2026-10-22 (noche, 13)
 
 ## Listo para cargar (cuando haya credenciales, 01:00–08:00, lotes ≤ 8)
 - UNQ (planes de UNQ por núcleos; ver bitácora 2026-10-22)
-- UNLP (3 tecnicaturas de Periodismo + Trabajo Social completo: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología; ver bitácora)
+- UNLP (3 tecnicaturas de Periodismo + Trabajo Social completo + 2 tecnicaturas de Odontología: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología; ver bitácora)
 
 ## Cola de próximas (ofertas de grado/pregrado sin plan, catálogo exportado 2026-10-16)
 Prioridad CABA/GBA, Córdoba, Rosario, Salta:
