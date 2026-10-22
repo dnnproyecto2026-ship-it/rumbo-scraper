@@ -9,7 +9,7 @@ echo "== Operador: $(systemctl --user is-active rumbo-operador)"
 [ -f maquina_fija/PARAR ] && echo "   (hay maquina_fija/PARAR: termina el ciclo y se detiene)"
 if pgrep -f "claude -p" >/dev/null; then
   echo "   ciclo en curso desde $(grep '^### ciclo' "$LOG" | tail -1 | cut -c11-)"
-  trabajo=$(pgrep -af "rumbo_scraper" | grep -v pgrep | sed 's/.*-m //' | head -1)
+  trabajo=$(pgrep -af "python.* -m rumbo_scraper" | grep -v -e pgrep -e timeout | sed 's/.* -m //' | head -1)
   [ -n "$trabajo" ] && echo "   corriendo: $trabajo"
 else
   echo "   esperando el próximo ciclo"
