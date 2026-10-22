@@ -34,8 +34,9 @@ INDEXES: tuple[tuple[str, str], ...] = (
 )
 INDEX_URLS = tuple(url for url, _ in INDEXES)
 
-# A link is a programme when its text opens with the kind of degree it is and
-# its address is one of the pages the site keeps per programme.
+# A link is a programme when its text opens with the kind of degree it is (or,
+# in the career index, it sits in the name box of a listing) and its address is
+# one of the pages the site keeps per programme.
 _PROGRAMME_LABEL = re.compile(
     r"(?i)^(licenciatura|ingenier[íi]a|abogac[íi]a|contador|medicina|"
     r"profesorado|tecnicatura|arquitectura|traductorado|maestr[íi]a|"
@@ -78,7 +79,13 @@ def discover_programmes(pages: dict[str, str]) -> tuple[ProgrammeRef, ...]:
             continue
         for anchor in _soup(html).find_all("a", href=True):
             name = clean_text(anchor.get_text(" ", strip=True))
-            if not _PROGRAMME_LABEL.match(name) or len(name) > 110:
+            if len(name) > 110:
+                continue
+            # The career index also lists degrees that open with their own name
+            # ("Veterinaria", "Odontología"); there the name box is the signal.
+            listed = level == "Grado" and anchor.find_parent(
+                class_="propuesta_nombre") is not None
+            if not (listed or _PROGRAMME_LABEL.match(name)):
                 continue
             url = urljoin(index_url, clean_text(anchor["href"]))
             parsed = urlparse(url)

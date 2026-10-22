@@ -203,6 +203,13 @@ class UsalTests(unittest.TestCase):
         refs = usal.discover_programmes({usal.INDEXES[0][0]: index})
         self.assertEqual([ref.name for ref in refs], ["Contador Público"])
 
+    def test_a_career_listed_by_its_own_name_is_a_programme_of_the_career_index(self) -> None:
+        item = ('<div class="propuesta_nombre"><a href="https://www.usal.edu.ar/'
+                'ingreso/propuesta/veterinaria/">Veterinaria</a></div>')
+        grade = usal.discover_programmes({usal.INDEXES[0][0]: item})
+        self.assertEqual([ref.name for ref in grade], ["Veterinaria"])
+        self.assertEqual(usal.discover_programmes({usal.INDEXES[1][0]: item}), ())
+
     def test_the_modality_is_written_inside_the_name(self) -> None:
         self.assertEqual(usal.modality("Especialización en Comercio (A DISTANCIA)"),
                          "Virtual")
