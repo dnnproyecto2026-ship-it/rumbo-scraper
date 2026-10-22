@@ -215,6 +215,35 @@ Código   Asignatura                 Régimen         Horas
         self.assertEqual(p.plan_ucasal(texto), [("Filosofía", 1), ("Planificación, Producción y Logística de Eventos", 1),
                                                 ("Teología", 2)])
 
+    def test_unq_los_cursos_obligatorios_de_cada_nucleo(self):
+        html = """<p>Ciclo Introductorio</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Lectura y escritura académica</td><td>5</td><td>10</td></tr>
+        <tr><td>Matemática</td><td>5</td><td>10</td></tr>
+        <tr><td>Total Ciclo Introductorio</td><td></td><td>20</td></tr></table>
+        <p>Cursos del Ciclo Superior</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Núcleo Obligatorio</td><td></td><td></td></tr>
+        <tr><td>Pedagogía</td><td>5</td><td>10</td></tr>
+        <tr><td>Curso Electivo 1</td><td>5</td><td>10</td></tr>
+        <tr><td>Núcleo Electivo</td><td></td><td></td></tr>
+        <tr><td>Mención: Gestión</td><td></td><td></td></tr>
+        <tr><td>Economía de la educación</td><td>4</td><td>8</td></tr>
+        <tr><td>Otros requisitos</td><td></td><td></td></tr>
+        <tr><td>Inglés</td><td>3</td><td>10</td></tr></table>
+        <p>Núcleo de cursos electivos</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Historia de los medios</td><td>5</td><td>10</td></tr></table>"""
+        self.assertEqual(p.plan_unq_cursos(html), [("Lectura y escritura académica", None), ("Matemática", None),
+                                                   ("Pedagogía", None), ("Inglés", None)])
+        # A table whose credits do not add up to its total is a pool to choose from.
+        self.assertEqual(p.plan_unq_cursos(html.replace("<td>20</td>", "<td>40</td>")), [])
+        # A page with an orientation, or a table going on without its heading row, is not read.
+        self.assertEqual(p.plan_unq_cursos(html.replace("Cursos del Ciclo Superior",
+                                                        "Núcleo de Orientación en Periodismo")), [])
+        self.assertEqual(p.plan_unq_cursos(html + """<table><tr><td>Sexto cuatrimestre</td></tr>
+        <tr><td>Lógica</td><td>6</td><td>12</td></tr></table>"""), [])
+
 
 if __name__ == "__main__":
     unittest.main()

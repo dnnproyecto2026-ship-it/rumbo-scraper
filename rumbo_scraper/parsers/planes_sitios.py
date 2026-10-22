@@ -5936,3 +5936,87 @@ def plan_unvime(html: str) -> list[tuple[str, int]]:
         if materias:
             return desde_el_primero(materias)
     return []
+
+
+_COLUMNA_DE_CURSOS = re.compile(r"(?i)^(?:cursos?|asignaturas?|materias?)$")
+# A row that holds a place for a choice: "Curso Electivo 1", "Electiva 2",
+# "Créditos en Historia de la Música", the "Complementaria" of an orientation.
+_LUGAR_A_ELEGIR = re.compile(r"(?i)^(?:(?:curso|asignatura|materia)s?\s+)?(?:electiv|optativ)|^cr[ée]ditos\s+en\b"
+                             r"|^complementaria$")
+
+
+def _lo_que_la_precede(tabla: Tag) -> str:
+    """The words between a table and the one before it: its heading."""
+    partes: list[str] = []
+    for texto in tabla.find_all_previous(string=True):
+        if texto.find_parent("table") not in (None, tabla):
+            break
+        partes.append(texto.strip())
+        if sum(map(len, partes)) > 300:
+            break
+    return " ".join(reversed([p for p in partes if p]))
+
+
+def plan_unq_cursos(html: str) -> list[tuple[str, None]]:
+    """UNQ's plans by cycles and núcleos, without years: a table per núcleo
+    ("Cursos Básicos del Ciclo Inicial", "Otros requisitos curriculares")
+    with a column of courses and one of credits, and its total row. The
+    obligatory tables are the plan; a table, or the rows after a heading
+    inside one ("Asignaturas Electivas"), of electives is a pool to choose
+    from and is left out, and so are the rows that hold a choice's place
+    ("Curso Electivo 1").
+
+    Nothing is read when the page cannot be taken whole: a table whose
+    rows' credits do not add up to its total is a pool presented as a list
+    (Arquitectura Naval's complementary courses: 108 credits listed, 48
+    taken); a page with an orientation has its own pool or alternatives
+    (Comunicación Social's two); and a table without its heading row is the
+    plan going on where the columns are not known (Informática's from the
+    sixth term)."""
+    leidas: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        filas = [[_texto(c) for c in fila.find_all(["td", "th"])] for fila in tabla.find_all("tr")]
+        filas = [celdas for celdas in filas if any(celdas)]
+        if not filas:
+            continue
+        encabezado = [c.replace("A signatura", "Asignatura") for c in filas[0]]
+        if re.search(r"(?i)\borientaci[óo]n\b", _lo_que_la_precede(tabla)[-150:]):
+            return []
+        cursos = next((i for i, c in enumerate(encabezado) if _COLUMNA_DE_CURSOS.match(c)), None)
+        creditos = next((i for i, c in enumerate(encabezado) if re.match(r"(?i)cr[ée]ditos", c)), None)
+        if cursos is None or creditos is None:
+            if re.search(r"\d", " ".join(encabezado)) and not re.search(r"(?i)total|cr[ée]ditos", encabezado[0]) \
+                    or re.fullmatch(r"(?i)\S+\s+(?:cuatrimestre|semestre|a[ñn]o)", encabezado[0]):
+                return []
+            continue
+        # ("Tres cursos, a elegir de las áreas listadas a continuación".)
+        if re.search(r"(?i)electiv|optativ|a elegir", _lo_que_la_precede(tabla)[-150:]):
+            continue
+        suma, nombres, total, electivas = 0, [], None, False
+        for celdas in filas[1:]:
+            if any(re.match(r"(?i)(?:sub)?total(?:es)?\b", c) for c in celdas):
+                total = [int(re.sub(r"\s", "", c)) for c in celdas if re.fullmatch(r"\d[\d\s]{0,3}", c)]
+                continue
+            llenas = [c for c in celdas if c]
+            # A row of one cell is a heading inside the table; the electives
+            # after "Núcleo Electivo" run past its "Mención: ..." headings to
+            # the next obligatory one ("Otros requisitos").
+            if len(llenas) == 1:
+                if re.search(r"(?i)electiv|optativ", llenas[0]):
+                    electivas = True
+                elif re.search(r"(?i)obligatori|requisito|b[áa]sic|orientad|formaci[óo]n general", llenas[0]):
+                    electivas = False
+                continue
+            if electivas or not celdas[cursos]:
+                continue
+            if len(celdas) != len(encabezado) or not re.fullmatch(r"\d{1,2}", celdas[creditos]):
+                return []
+            suma += int(celdas[creditos])
+            nombres.append(celdas[cursos])
+        if total is not None and suma not in total:
+            return []
+        for nombre in nombres:
+            if not _LUGAR_A_ELEGIR.search(nombre):
+                # (_agregar keeps a subject with its year; these have none.)
+                _agregar(leidas, nombre, -1)
+    return [(nombre, None) for nombre, _ in leidas]
