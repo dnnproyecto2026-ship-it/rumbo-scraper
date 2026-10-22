@@ -5,6 +5,9 @@ Actualizado: 2026-10-22 (ciclo 1)
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
 
+## Git
+- Esta máquina no tiene credenciales de GitHub ni identidad de git: los commits quedan locales en la rama `maquina-fija` (autor del historial pasado con `-c user.name/-c user.email`). Hace falta que una persona haga `git push -u origin maquina-fija`.
+
 ## Listo para cargar (cuando haya credenciales, 01:00–08:00, lotes ≤ 8)
 - UNQ (planes de UNQ por núcleos; ver bitácora 2026-10-22)
 
