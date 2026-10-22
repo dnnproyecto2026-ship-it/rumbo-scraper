@@ -1,7 +1,7 @@
 # Estado de la máquina fija
 
 Actualizado: 2026-10-22 (noche, 16)
-- Pendiente exportar (UNLP, UNQ, UCEMA) cuando termine el `verificar_catalogo` ajeno (PID 829774).
+- Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
