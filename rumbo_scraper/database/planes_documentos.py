@@ -536,8 +536,11 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
         return False
     # ("Seminario A", "Optativa B": a capital alone is a label, not a cut "a".)
     # ("e-Business" opens in lower case and is whole.)
+    # (A name ending on a comma or with a bracket left open goes on in a
+    # line that was not read: "Algunas materias optativas: Management Político,".)
     if len(materias) < 10 or any((nombre[:1].islower() and not re.match(r"e-[A-Z]", nombre)) or (_TERMINA_CORTADA.search(nombre)
                                                           and not re.search(r"\s[A-Z]$", nombre))
+                                 or nombre.endswith(",") or nombre.count("(") > nombre.count(")")
                                  for nombre, _ in materias):
         return False
     anios = [anio for _, anio in materias if anio]

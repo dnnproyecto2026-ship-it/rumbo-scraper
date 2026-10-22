@@ -5396,10 +5396,18 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                         lineas[-1].append(p)
                     else:
                         lineas.append([p])
+                # A name the cell wrapped sits closer under its first line
+                # than the next subject does: Psicología's "Metodología de la
+                # Investigación" / "Cuantitativa" 8 points apart, subjects 10.
+                saltos = [b[0]["top"] - a[0]["top"] for a, b in zip(lineas, lineas[1:])]
+                paso = sorted(saltos)[len(saltos) // 2] if len(saltos) >= 4 else None
                 items: list[list] = []
                 margen = None
                 tras_vineta = False
+                anterior = None
                 for linea in lineas:
+                    pegada = bool(paso and anterior is not None and linea[0]["top"] - anterior < 0.85 * paso)
+                    anterior = linea[0]["top"]
                     # A wide gap leaves the name: what follows is a legend beside it ("Cursada").
                     linea = sorted(linea, key=lambda p: p["x0"])
                     corte = next((k for k in range(1, len(linea)) if linea[k]["x0"] - linea[k - 1]["x1"] > 40), len(linea))
@@ -5408,6 +5416,11 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                     if not texto or _ETIQUETA_DE_FOLLETO.match(texto):
                         # (What a bullet wraps onto the next line is the bullet's.)
                         tras_vineta = bool(texto) and texto[0] in "-–•·"
+                        continue
+                    # "Optativa" alone is a choice's place, not a subject; a
+                    # remark below it ("y adaptarse según...") is not its name.
+                    if re.match(r"(?i)^optativas?(?:\s+(?:[IVX]+|\d+))?$", texto):
+                        tras_vineta = True
                         continue
                     letras = [c for c in texto if c.isalpha()]
                     # A heading in capitals ("DOBLE TITULACIÓN ...") or the brochure's own matter ends the year.
@@ -5421,10 +5434,10 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                     if margen is not None and x > margen + 40:
                         continue
                     sigue = _CONTINUA.match(texto) or (margen is not None and x > margen + 4)
-                    if tras_vineta and sigue:
+                    if tras_vineta and (sigue or pegada):
                         continue
                     tras_vineta = False
-                    if items and (sigue or _CORTADO_EN.search(items[-1][0])):
+                    if items and (sigue or pegada or _CORTADO_EN.search(items[-1][0])):
                         items[-1][0] += " " + texto
                         continue
                     margen = x if margen is None else min(margen, x)
