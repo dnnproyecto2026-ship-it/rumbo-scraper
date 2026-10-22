@@ -25,6 +25,7 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - UNdeC, UNSAM, UNLaR y otras 4: el sitio no deja leer sus carreras (registrado 2026-10-10).
 
 - UB: 10 carreras virtuales (FEDEV) sin ficha en el sitio desde la corrida del 22/10; no re-importar UB desde una corrida nueva sin conservar esas 10. Maestría en Traducción (posgrado) sin leer.
+- UBA: corrida de vigilancia del 22/10 incompleta (Psicología 403 en posgrados; Médicas y Farmacia sin descargar). No re-importar UBA desde ella; reintentar Médicas/Farmacia en otra rotación.
 
 ## Notas
 - El relevamiento de universidades está casi completo (136 cargadas); el trabajo grande son los planes faltantes.
