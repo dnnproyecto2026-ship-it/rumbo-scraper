@@ -7,6 +7,7 @@ LOG=maquina_fija/lanzador.log
 
 echo "== Operador: $(systemctl --user is-active rumbo-operador)"
 [ -f maquina_fija/PARAR ] && echo "   (hay maquina_fija/PARAR: termina el ciclo y se detiene)"
+[ -f maquina_fija/SIN_CLAUDE ] && echo "   modo SIN_CLAUDE: solo spiders, sin ciclos de Claude"
 if pgrep -f "claude -p" >/dev/null; then
   echo "   ciclo en curso desde $(grep '^### ciclo' "$LOG" | tail -1 | cut -c11-)"
   trabajo=$(pgrep -af "python.* -m rumbo_scraper" | grep -v -e pgrep -e timeout | sed 's/.* -m //' | head -1)

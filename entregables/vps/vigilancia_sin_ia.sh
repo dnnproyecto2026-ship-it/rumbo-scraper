@@ -12,7 +12,14 @@ touch "$ROTACION"
 # El que no figura en la rotación, o el que figura hace más tiempo.
 elegido=""
 for s in $SPIDERS; do grep -q "^$s " "$ROTACION" || { elegido=$s; break; }; done
-[ -z "$elegido" ] && elegido=$(sort -k2 "$ROTACION" | head -1 | cut -d' ' -f1)
+if [ -z "$elegido" ]; then
+  read -r elegido ultima < <(sort -k2 -n "$ROTACION" | head -1)
+  # Cortesía: un sitio se re-lee como mucho una vez por día.
+  if [ $(( $(date +%s) - ultima )) -lt 86400 ]; then
+    echo "vigilancia: los $(wc -l < "$ROTACION") spiders ya corrieron en las últimas 24 h"
+    exit 0
+  fi
+fi
 
 salida="data/vigilancia/${elegido}_completo.json"
 inicio=$(date '+%F %H:%M')

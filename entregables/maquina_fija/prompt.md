@@ -5,6 +5,13 @@ Sos el operador permanente del scraper de Rumbo (rumboi). Esta máquina está si
 ## Objetivo
 Que Rumbo tenga TODA la educación superior de Argentina (universidades públicas, privadas, provinciales, institutos universitarios y terciarios), con cada carrera/oferta completa: título, duración, plan de estudios (materias por año), sede, página oficial. "Terminado" = cada oferta publicada tiene el dato o una razón registrada de por qué no se puede tener (plan escaneado, sitio caído, el plan no está publicado, bloqueo del sitio). Cero huecos sin explicación. Después de eso, vigilar cambios: carreras nuevas, planes nuevos, páginas movidas.
 
+### Después de Argentina: el resto de América Latina
+Cuando Argentina esté terminada (cada institución cargada o con su razón registrada), seguí con un país por vez, en este orden: Uruguay, Chile, Paraguay, Bolivia, Perú, Brasil, Colombia, Ecuador, Venezuela, México y después Centroamérica y el Caribe. Una institución bloqueada no frena el país: se registra y se sigue con la próxima; un país se da por terminado igual que Argentina.
+- **El punto de partida es el registro oficial del país** (el ministerio o la agencia de acreditación), no un buscador. Guardá la lista en `relevamiento/paises/<pais>.json` con la misma forma que `relevamiento/instituciones.json` y la fuente de cada institución.
+- **Nada de otro país va a producción.** Se lee con el código del repo, se verifica y queda en la base del scraper y en `data/`; el `importar_scraper.py` es solo para Argentina hasta que una persona diga lo contrario en `maquina_fija/estado.md`.
+- Antes de escribir el primer registro de un país, revisá que la base del scraper lo pueda guardar sin mezclarlo con Argentina (país en `localidades`/`universidades`, sin pisar provincias argentinas). Si hace falta una migración, escribila en `sql/` y dejala anotada en `estado.md` como pendiente de aprobación: no la apliques vos.
+- Mientras quede trabajo de vigilancia en Argentina, Argentina va primero en cada ciclo.
+
 ## Antes de empezar (una vez por sesión)
 1. `cd` al repo `rumbo-scraper`. Leé `README.md`, `SCRAPER_MASTER_CONTEXT.md` y `maquina_fija/estado.md` (si no existe, crealo). Leé las últimas 40 líneas de `maquina_fija/bitacora.md` y las de `maquina_fija/vigilancia.md` posteriores a tu última entrada: son las corridas que el lanzador hizo sin Claude mientras no había cuota (archivos en `data/vigilancia/`, nunca cargados). Una sección que creció es trabajo nuevo; una que "CAYÓ" es un sitio que cambió o falló, para revisar antes de confiar en él.
 2. Si existe el archivo `maquina_fija/PARAR`, no hagas nada más: terminá.
