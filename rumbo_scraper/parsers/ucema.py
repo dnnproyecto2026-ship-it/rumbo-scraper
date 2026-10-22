@@ -29,7 +29,8 @@ DOMAIN = "ucema.edu.ar"
 # The sitemap is served in pages of two thousand addresses.
 SITEMAP_URLS = tuple(f"{BASE_URL}/sitemap.xml?page={page}" for page in range(1, 5))
 
-_GRADO = re.compile(r"^/grado/([^/]+)$")
+# The site moved some undergraduate pages from /grado/ to /carrera-grado/.
+_GRADO = re.compile(r"^/(?:carrera-)?grado/([^/]+)$")
 _POSGRADO = re.compile(r"^/posgrado/([^/]+)$")
 
 # Each fact is written as a label above its value, in the same box.

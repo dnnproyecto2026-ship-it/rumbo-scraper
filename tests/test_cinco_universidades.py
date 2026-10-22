@@ -125,6 +125,13 @@ class UcemaTests(unittest.TestCase):
         self.assertEqual([(r.slug, r.level) for r in refs],
                          [("licenciatura-en-economia", "Grado"), ("mba", "Posgrado")])
 
+    def test_undergraduate_pages_under_carrera_grado_are_discovered(self) -> None:
+        sitemap = ("<loc>https://ucema.edu.ar/carrera-grado/actuario</loc>"
+                   "<loc>https://ucema.edu.ar/carrera-grado/inia</loc>")
+        refs = ucema.discover_programmes({"a": sitemap})
+        self.assertEqual([(r.slug, r.level) for r in refs],
+                         [("actuario", "Grado"), ("inia", "Grado")])
+
     def test_a_page_that_states_no_fact_is_not_a_programme(self) -> None:
         refs = ucema.discover_programmes(
             {"a": "<loc>https://ucema.edu.ar/posgrado/reunion</loc>"}
