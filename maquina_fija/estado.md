@@ -16,7 +16,7 @@ Actualizado: 2026-10-22 (noche, 16)
 ## Cola de próximas (ofertas de grado/pregrado sin plan, catálogo exportado 2026-10-16)
 Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 1. UNQ — resto: páginas con orientaciones, bolsas de electivas que no suman, o tablas sin encabezado (Informática); ver bitácora
-2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; Psicología: falta Profesorado; Exactas bloqueada por el sitio (timeout + certificado TLS), reintentar; siguiente: Económicas, Agrarias, Humanidades)
+2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; Psicología: Profesorado pendiente (PDF escaneado, OCR incompleto, ver bitácora 17); Exactas bloqueada por el sitio (timeout + certificado TLS), reintentar; siguiente: Económicas, Agrarias, Humanidades)
 3. UNC (77/114)
 4. UCASAL (73/79) — lectura previa: el plan detallado corta cada nombre a 20 letras (commit 859fc87); falta registrar motivo por carrera
 5. UNR (60/110)
