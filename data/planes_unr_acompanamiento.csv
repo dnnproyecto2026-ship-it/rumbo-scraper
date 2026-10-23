@@ -1,0 +1,17 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Tecnicatura Universitaria en Acompañamiento Terapéutico;1.0;;;https://fpsico.unr.edu.ar/wp-content/uploads/2025/11/DI-SSPU-1120-25-TECNICO_A-UNIVERSITARIO_A-EN-ACOMPANAMIENTO-TERAPEUTICO.pdf;"1|Desarrollos Psicológicos Contemporáneos
+1|Problemas Epistemológicos de la Psicología
+1|Psicología
+1|Problemática Filosófica
+1|Lingüística y Discursividad Social
+2|Historia de la Psicología
+2|Metodología y Gestión de la Investigación en Psicología
+2|Psicoanálisis I
+2|Teoría Social
+2|Biología Humana
+2|Acompañamiento Terapéutico y Salud Mental Comunitaria
+2|Acompañamiento Terapéutico y Paradigma de Derechos
+2|La Clínica en el Acompañamiento Terapéutico
+2|Acompañamiento Terapéutico en Infancias y Adolescencias
+2|Taller de Trabajo Integrador
+2|Taller de Formación Práctica";lector planes_manuales;;Plan anexo IF-2025-111656054 de la DI-2025-1120-APN-SSPU (RCS 503/2025), los códigos 11 y 12 tienen dos módulos (a y b) cada uno, cargados por separado como los 4 módulos que nombra la página de la carrera.;Universidad Nacional de Rosario;f2b7952e-835a-4061-b22b-d891b0e68576

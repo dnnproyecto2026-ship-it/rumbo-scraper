@@ -318,3 +318,9 @@
 - Lic. en Recursos Naturales: `fcagr.unr.edu.ar/?page_id=39` no respondió al lector; reintentar.
 - Cadena exportar→verificar (UNR: materias 2263/2284)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Tec. Acompañamiento Terapéutico (PDF `DI-SSPU-1120-25` en fpsico.unr.edu.ar), Recursos Naturales, Ciencia de Datos (página "en construcción"), tecnicaturas del Politécnico; luego UNLZ/UNAJ.
+
+## 2026-10-23 (40) — UNR: Tec. Universitaria en Acompañamiento Terapéutico
+- Cargada por `planes_manuales` (16 materias, 1.º–2.º; nombres comprobados literalmente contra `fpsico.unr.edu.ar/wp-content/uploads/2025/11/DI-SSPU-1120-25-TECNICO_A-UNIVERSITARIO_A-EN-ACOMPANAMIENTO-TERAPEUTICO.pdf`, anexo de la DI-2025-1120-APN-SSPU, RCS 503/2025, enlazado desde la página de la carrera). Hoja `data/planes_unr_acompanamiento.csv`. Los códigos 11 y 12 tienen dos módulos (a y b) cada uno: se cargaron los 4 módulos por separado, como los nombra la página.
+- Ojo: el catálogo trae duración 1 año; la página y el plan dicen 2 años. No se tocó (revisar, como Terapia Ocupacional).
+- Cadena exportar→verificar (UNR: materias 2279/2300, las 16 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Recursos Naturales (reintentar `fcagr.unr.edu.ar/?page_id=39`), Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico, Baigorria); luego UNLZ/UNAJ.
