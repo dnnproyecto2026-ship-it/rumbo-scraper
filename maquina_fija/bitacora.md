@@ -202,3 +202,8 @@
 - `verificar_catalogo` terminó (ofertas verificadas 14523; materias 182820) y la exportación final cerró con `Archivo: data/catalogo_depurado.json`. Incluye Prof. Geografía y Prof. Letras Modernas de UNC. Tests: 877 OK.
 - USPT: 45 ofertas con fuente caída en la verificación (sitio sin respuesta); revisar en vigilancia.
 - Sin credenciales de producción ni de GitHub: nada cargado ni empujado. Siguiente UNC: Letras, FCEFyN, FAMAF, Trabajo Social, Odontología.
+
+## 2026-10-23 (19) — UNC FAMAF: Analista y dos tecnicaturas (nada cargado)
+- FAMAF ya tiene plan en la base para Lic. Computación, Física, Matemática, Mat. Aplicada, Astronomía, Hidrometeorología y los profesorados (el lector `plan_famaf` los toma). Faltaban Analista en Computación, Tec. Univ. en Matemática Aplicada y Tec. Univ. en Astronomía.
+- Las tres páginas (`famaf.unc.edu.ar/academica/grado/...`) responden 200 pero no traen `div.year`: ningún plan en HTML. Analista no enlaza ningún documento; las dos tecnicaturas enlazan `corr_602.pdf` / `corr_611.pdf`, que son las correlatividades de las **licenciaturas** (602 Mat. Aplicada, 611 Astronomía), no de la tecnicatura. **No se cargan**: el tramo de la tecnicatura sería una inferencia.
+- Sin cambios de código ni de datos; tests 877 OK. Pendiente UNC: Letras, FCEFyN, Trabajo Social, Odontología (sin respuesta). Sin credenciales de producción ni de GitHub.
