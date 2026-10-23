@@ -277,3 +277,9 @@
 - Cargadas por `planes_manuales` (Farmacia 39 materias 1.º–5.º; Bioquímica 38 materias 1.º–6.º). Fuente: tabla HTML del plan en `www.fbioyf.unr.edu.ar/website/ofertaeducativa/{farmacia,bioquimica}.php`; nombres comprobados literalmente. Hoja `data/planes_unr_farmacia_bioquimica.csv`. Se tomó el primer bloque (códigos F25xx, plan vigente); el bloque "Plan de Estudios 2018" de la misma página queda afuera. Afuera: Optativas/Electivas.
 - Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Enfermería, Agronómica, Letras, Bellas Artes, Química, Biotecnología, Terapia Ocupacional, Fonoaudiología; luego UNLZ/UNAJ.
+
+## 2026-10-23 (33) — UNR FCByF: Biotecnología, Ciencia y Tecnología de los Alimentos, Prof. en Química
+- Cargadas por `planes_manuales` (Biotecnología 30 materias 1.º–5.º; Alimentos 36, 1.º–5.º; Prof. Química 27, 1.º–4.º). Fuente: tabla HTML del plan en `www.fbioyf.unr.edu.ar/website/ofertaeducativa/{licbiotecnologia,liccytalimentos,profquimica}.php`; nombres comprobados literalmente. Hoja `data/planes_unr_fbioyf_2.csv`. Afuera: Optativas/Electivas.
+- **Lic. en Química NO se carga:** la página publica dos planes (uno sin correlativas y "Plan de Estudios 2018", con materias y cargas distintas) sin decir cuál rige. Pendiente de que una persona confirme el vigente.
+- Exportación lanzada; verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Enfermería, Terapia Ocupacional, Fonoaudiología (Ciencias Médicas), Agronómica, Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
