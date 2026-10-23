@@ -373,3 +373,10 @@
 - Cadena exportar→verificar (UNLZ: ofertas 68/69, materias 592/592)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Vigilancia sin Claude del 23/10: USAL creció 72→80 carreras (trabajo nuevo, revisar); el resto igual que el 22/10.
 - Siguiente: UNLZ Agrarias (5 tecnicaturas + Agroecología) y Derecho (Prof. Cs. Jurídicas); luego UNAJ.
+
+## 2026-10-23 (48) — UNLZ: Agrarias, 4 tecnicaturas
+- Cargadas por `planes_manuales` (62 materias), comprobadas literalmente contra los PDF que enlaza `agrarias.unlz.edu.ar/oferta-academica/` (`/DOCS/OFERTA ACADEMICA/GRADO/…`): Tec. Agroecología (21, Res. CS 111/20, con año), Procesamiento Agroalimentario (21, plan 002/18, RM 1021/20, **sin año**: el rótulo de año está centrado al costado de la tabla y no marca dónde empieza cada año), Arboricultura y Vivericultura (10 asignaturas anuales + nada más: 480+480+576+288 = 1824 h, plan 047/14) y Diseño y Mantenimiento de Espacios Verdes (10, plan 045/14). Hoja `data/planes_unlz_agrarias.csv`.
+- **Producción Animal y Producción Vegetal NO cargables:** cada PDF trae dos planes (orientaciones Producción Extensiva e Intensiva, distintos desde la materia 16/17).
+- Grado de Agrarias (Agronómica, Zootecnista, Economía Social, Enseñanza de las Cs. Biológicas, Gestión de la Calidad) no figura entre las ofertas sin plan de la base: revisar si faltan en la base.
+- Cadena exportar→verificar (UNLZ: materias 654/654)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente: UNLZ Derecho (Prof. Cs. Jurídicas), Comercio Internacional y Aduanas; luego UNAJ.

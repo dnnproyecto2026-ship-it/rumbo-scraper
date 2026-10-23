@@ -1,0 +1,63 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLZ;Tecnicatura Universitaria en Agroecología;;;;https://agrarias.unlz.edu.ar/DOCS/OFERTA%20ACADEMICA/GRADO/TECNICATURA%20UNIVERSITARIA%20EN%20AGROECOLOGIA%20%20FCA%20UNLZ%202%20(1).pdf;"1 | Matemática
+1 | Química
+1 | Botánica y Fisiología Vegetal
+1 | Anatomía y Fisiología Animal
+1 | Bases de Agroecología
+1 | Agrometeorología
+1 | Ecología y Fitogeografía
+1 | Microbiología
+2 | Zoología
+2 | Fitopatología
+2 | Problemática Ambiental
+2 | Edafología
+2 | Forrajicultura y Manejo de Recursos Forrajeros
+2 | Maquinaria Agrícola
+2 | Manejo de Suelos y Agua
+2 | Sistemas Agroecológicos de Producción
+3 | Tecnologías Sustentables
+3 | Economía
+3 | Sociología y Extensión
+3 | Diseño, Manejo y Evaluación de Agroecosistemas
+3 | Trabajo Final";lector planes_manuales;;"Res. CS 111/20; 1856 h; año de la columna AÑO";Universidad Nacional de Lomas de Zamora;1a2d1710-7438-4c35-aaf4-d87fc76a509a
+UNLZ;Técnico Universitario en Procesamiento Agroalimentario;;;;https://agrarias.unlz.edu.ar/DOCS/OFERTA%20ACADEMICA/GRADO/Tecnicatura%20Universitaria%20en%20Procesamiento%20Agroalimentario%20FCA%20UNLZ.pdf;"Elementos de Matemática
+Química Gral. e Inorgánica
+Biología
+Física
+Química Orgánica y Biológica
+Estadística Aplicada
+Gestión Ambiental
+Fundamentos de Economía
+Microbiología
+Conservación de Alimentos
+Química Analítica
+Control y Gestión de la Calidad Agroalimentaria
+Formulación y Evaluación Estratégica de Proyectos Agroindustriales
+Bromatología y Legislación Sanitaria
+Industrias de la Cadena de Cereales y Oleaginosas
+Industrias de la Cadena de Productos Agrarios
+Industrias de la Cadena de Bebidas
+Industrias de la Cadena de la Carne
+Industrias de la Cadena de la Leche
+Industrias de la Cadena Frutihortícola
+Trabajo Final";lector planes_manuales;;"Plan 002/18, RM 1021/20; 1804 h; sin año: el rótulo de año está centrado al costado y no marca límites";Universidad Nacional de Lomas de Zamora;ea786cbf-8013-4e6a-a476-93b4b2162a1f
+UNLZ;Técnico Universitario en Arboricultura y Vivericultura;;;;https://agrarias.unlz.edu.ar/DOCS/OFERTA%20ACADEMICA/GRADO/TUA y V   FCA UNLZ (1).pdf;"1 | Botánica
+1 | Ecología
+1 | Jardinería
+2 | Arboricultura
+2 | Sanidad Vegetal
+2 | Dibujo y Construcciones
+3 | Vivericultura
+3 | Clima y Suelo
+3 | Frutales y Forestales
+3 | Trabajo Final";lector planes_manuales;;"Plan 047/14, RM 1936/15; 1824 h; asignaturas anuales";Universidad Nacional de Lomas de Zamora;7bcd304e-a890-414e-bfa7-d7ca47f782f3
+UNLZ;Técnico Universitario en Diseño y Mantenimiento de Espacios Verdes;;;;https://agrarias.unlz.edu.ar/DOCS/OFERTA%20ACADEMICA/GRADO/Tecnicatura%20Universitaria%20en%20Diseno%20y%20Mantenimiento%20de%20Espacios%20Verdes%20FCA%20UNLZ.pdf;"1 | Botánica
+1 | Ecología
+1 | Jardinería
+2 | Arboricultura
+2 | Sanidad Vegetal
+2 | Dibujo y Construcciones
+3 | Diseño y Planificación de Espacios Verdes
+3 | Clima y Suelo
+3 | Arquitectura Paisajística
+3 | Trabajo Final";lector planes_manuales;;"Plan 045/14, RM 1591/16; 1824 h; asignaturas anuales";Universidad Nacional de Lomas de Zamora;3a7cf6bb-1505-49ad-aba7-4bf0b502d388
