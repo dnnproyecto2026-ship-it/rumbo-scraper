@@ -1,0 +1,292 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNTREF;Contador Público;;;;http://materiales.untrefvirtual.edu.ar/planes/lic_y_tec/contador_publico19.pdf;"1 | Cultura, Comunicación y Conflictos en las Organizaciones
+1 | Teorías de la Administración
+1 | Informática para Administradores
+1 | Elementos de Matemáticas y Estadística
+1 | Instituciones de Derecho Privado
+1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Contabilidad I
+2 | Cuestiones de Sociología, Economía y Política
+2 | Análisis Matemático
+2 | Comercialización
+2 | Sistemas Administrativos
+2 | Historia socio-económica Argentina
+2 | Fundamentos de Economía
+3 | Cálculo Financiero
+3 | Costos
+3 | Derecho del Trabajo y Legislación Laboral
+3 | Instituciones de Derecho Público
+3 | Régimen Tributario
+3 | Formulación y Evaluación de Proyectos
+4 | Macroeconomía y Política Económica
+4 | Álgebra Lineal
+4 | Contabilidad II
+4 | Teoría de la Decisión y Cambio Organizacional
+4 | Estadística para Administradores
+4 | Microeconomía
+4 | Costos y Presupuesto
+4 | Estados Contables
+5 | Metodología de la Investigación
+5 | Sistemas de Información
+5 | Contabilidad y Presupuestos en el Sector Público
+5 | Procedimiento Tributario
+5 | Auditoría
+5 | Derecho Comercial
+5 | Actuación Pericial Profesional
+5 | Práctica Profesional Supervisada";lector planes_manuales;;"Hoja Plan 2019 (35, 1.º-5.º); coincide con la nómina de la Res. CS 2020 (34 + PPS); la página corta su lista en 31";Universidad Nacional de Tres de Febrero;1d5d8a81-1ccb-4b14-8df6-2cd64751e490
+UNTREF;Tecnicatura en Martillero Público y Corredor Inmobiliario;;;;https://untrefvirtual.edu.ar/carrera/20;"1 | Principios de Derecho Civil
+1 | Elementos de Topografía y Geodesia
+1 | Cultura Contemporánea
+1 | Matemática y Estadística
+1 | Principios de Derecho Comercial
+1 | Principios de Arquitectura y Urbanismo
+1 | Tasaciones de Bienes Inmuebles
+1 | Cuestiones de Sociología, Economía y Política
+2 | Introducción a la Problemática del Mundo Contemporáneo
+2 | Principios de Derechos Reales y Registrales
+2 | Valoración del Patrimonio Monumental y Natural
+2 | Tasaciones de Bienes Muebles
+2 | Fundamentos de Economía
+2 | Administración General
+2 | Introducción a la Contabilidad y las Finanzas
+2 | Gestión de Subastas
+3 | Gestión de Desarrollos Inmobiliarios
+3 | Marketing de Productos y Servicios
+3 | Informática Aplicada
+3 | Corretaje Inmobiliario";lector planes_manuales;;Lista de la página = plan 2022 (RM, IF-2021-120199417), años del cuadro del PDF;Universidad Nacional de Tres de Febrero;dc95e60c-614e-45b5-b03f-c021c04eb301
+UNTREF;Tecnicatura en Gestión de las Migraciones Internacionales;;;;https://untrefvirtual.edu.ar/carrera/64;"1 | Introducción a las migraciones internacionales
+1 | Introducción a la problemática del mundo contemporáneo
+1 | Introducción a los derechos humanos y migraciones
+1 | Políticas y Programas de las migraciones internacionales
+1 | Conducción de la Gestión Migratoria. Admisión y Control Migratorio
+1 | Seminario de Tecnologías Aplicadas al Control Migratorio
+2 | Cultura Contemporánea
+2 | Elementos de Metodología y técnicas de investigación social
+2 | Desarrollo económico y migraciones
+2 | Teoría de las migraciones internacionales
+2 | Introducción al Derecho Migratorio Internacional
+2 | Políticas y gestión pública
+2 | Cuestiones de Sociología, Economía y Política
+2 | Información migratoria
+3 | Políticas, legislación y programas para la gestión migratoria en el MERCOSUR
+3 | Políticas y Legislación Migratoria en Argentina
+3 | Administración de las Migraciones Internacionales
+3 | Migraciones Forzadas
+2 | Inglés Nivel I
+3 | Inglés Nivel II
+3 | Informática para Administradores
+2 | Taller de Trabajo Final";lector planes_manuales;;"22 de la nómina; año por cuatrimestre del cuadro 9.1 del PDF; afuera el Trabajo Final";Universidad Nacional de Tres de Febrero;e2394c0c-ce0e-460b-927b-d41c0cabd02f
+UNTREF;Licenciatura en Marketing;;;;https://materiales.untrefvirtual.edu.ar/planes/lic_y_tec/marketing.pdf;"1 | Fundamentos de Marketing
+1 | Elementos de Matemáticas y Estadística
+1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Elementos de Informática
+1 | Inglés Nivel I
+1 | Comportamiento de Compra y Consumo
+1 | Comunicación Integrada de Marketing
+1 | Inglés Nivel II
+2 | Estadística Aplicada al Marketing
+2 | Investigación de Mercados I
+2 | Creación y Desarrollo de Productos
+2 | Cultura Contemporánea
+2 | Marketing Digital
+2 | Canales de Comercialización
+2 | Investigación de Mercados II
+2 | Taller Integrador de Marketing
+3 | Marketing Global
+3 | Gestión de Ventas
+3 | Cuestiones de Sociología, Economía y Política
+3 | Negocios Digitales
+3 | Marketing de Servicios
+3 | Gestión de Marcas
+3 | Problemas de Historia del Siglo XX
+4 | Gestión de Precios
+4 | Marketing Industrial
+4 | Marketing para la Pequeña y Mediana Empresa
+4 | Marketing Estratégico
+4 | Tecnologías Emergentes Aplicadas al Marketing
+4 | Modelos de Negocios y Análisis de Marketing
+4 | Seminario de Trabajo Final de Licenciatura";lector planes_manuales;;"Nómina 11.1 del plan (RCS 27/25), año por el cuadro 12.1 (= página); afuera electivas, optativas y TFA";Universidad Nacional de Tres de Febrero;1ed29adc-3693-4a53-953b-46dfea5d2863
+UNTREF;Licenciatura en Gestión de Políticas Públicas;;;;https://untrefvirtual.edu.ar/carrera/30;"Cuestiones de Sociología, Economía y Política
+Introducción a la Problemática del Mundo Contemporáneo. Introducción a las Políticas Públicas
+Estructura y Funcionamiento del Estado
+Derecho Administrativo
+Relaciones Laborales
+Formulación y Evaluación de Proyectos
+Administración Financiera y Técnicas Presupuestarias
+Sistemas de Control en la Administración Nacional
+Administración y Desarrollo de Recursos Humanos
+Planeamiento de Mediano y Largo Plazo
+Dirección General
+Teoría de las Organizaciones. Sistemas de Decisiones
+Gestión del Conocimiento en el Sector Público
+Calidad en el Sector Público. Gestión de Calidad
+Liderazgo, Estrategia y Poder
+Políticas de Seguridad
+Políticas de desarrollo productivo: Políticas de empleo a nivel local
+Política de Comercio Exterior
+Inglés Nivel I
+Inglés Nivel II
+Informática I
+Informática II
+Comunicación Institucional
+Diagnóstico e Intervenciones Organizacionales
+Negociación y Transformación de las Relaciones Laborales
+Problemas de Historia del Siglo XX
+Finanzas Públicas y Federalismo Fiscal
+Políticas de Desarrollo Local
+Cultura Contemporánea
+Políticas de Medio Ambiente
+Política y Derecho del Consumidor
+Metodología de la Investigación 1
+Metodología de la Investigación 2";lector planes_manuales;;33 de la nómina (CBG + CS), sin año: el cuadro por año del PDF nombra distinto varias materias;Universidad Nacional de Tres de Febrero;6b3668a2-9ef4-467f-b5d2-772e9531a533
+UNTREF;Licenciatura en Sociología;;;;https://untrefvirtual.edu.ar/carrera/111;"1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Cultura Contemporánea
+1 | Problemas de Historia del Siglo XX
+1 | Cuestiones de Sociología, Política y Economía
+2 | Metodología de la investigación
+1 | Introducción a las teorías sociales de Karl Marx, Émile Durkheim y Max Weber I
+1 | Introducción a las teorías sociales de Karl Marx, Émile Durkheim y Max Weber II
+2 | La teoría social de Antonio Gramsci
+2 | La teoría social de Michel Foucault
+4 | La sociología de Talcott Parsons
+2 | La sociología de Pierre Bourdieu
+3 | La sociología de Alain Touraine
+3 | La sociología de Anthony Giddens
+3 | Las sociologías de Ulrich Beck y de Zygmunt Bauman
+4 | Teorías de los movimientos sociales
+3 | Métodos Investigación cuantitativa y cualitativa
+2 | Análisis sociológico de la estructura social argentina
+3 | Análisis sociológico de los procesos políticos argentinos desde 1930
+2 | Historia Argentina
+4 | Problemas de Historia Argentina
+3 | Introducción a las Ciencias Políticas
+4 | Sociología Política
+1 | Inglés Nivel I
+2 | Inglés Nivel II
+3 | Inglés Nivel III
+1 | Informática Nivel I
+2 | Informática Nivel II
+3 | Escritura de textos científicos
+4 | Seminario de discusión de investigaciones y de Trabajos Finales I
+4 | Taller de Trabajo Final I
+4 | Seminario de discusión de investigaciones y de Trabajos Finales II
+4 | Taller de Trabajo Final II";lector planes_manuales;;"32 de la página (= nómina del PDF); año por el cuadro por cuatrimestre del PDF; afuera el Trabajo Final";Universidad Nacional de Tres de Febrero;eb5b54e1-6ecc-44a3-b98a-6a2c69ce96a9
+UNTREF;Tecnicatura en Gestión de la Industria Musical;;;;https://untrefvirtual.edu.ar/carrera/127;"Historia de la industria musical global
+Propiedad intelectual y legislación musical
+Gestión de la música grabada
+Gestión musical editorial
+Financiamiento y sustentabilidad en la industria musical
+Gestión de la música en vivo
+Problemas de historia del siglo XX
+La gestión de artistas
+Marketing de proyectos musicales
+Producción de eventos en vivo, giras y festivales
+Comunicación y prensa
+Redes, plataformas y marketing digital
+Taller I: Desarrollo de proyecto musical en vivo
+Taller II: Desarrollo de proyecto musical fonográfico o editorial
+Gestión de música en organizaciones comunitarias
+Financiamiento de proyectos musicales
+La internacionalización y el sector exterior en la industria de la música (fonográfica/editorial)
+Cultura Contemporánea
+Introducción a los problemas del mundo contemporáneo
+Producción musical fonográfica
+Ingles Nivel I
+Ingles Nivel II";lector planes_manuales;;22 actividades de la página (= PDF), sin año: el cuadro por cuatrimestre está en columnas;Universidad Nacional de Tres de Febrero;d741858e-f797-486c-9aae-958ded343175
+UNTREF;Licenciatura en Turismo;;;;https://untrefvirtual.edu.ar/carrera/129;"Circuitos Turísticos Nacionales
+Informática Nivel I
+Sistemas de Información Geográfica aplicados al turismo
+Inglés Nivel I
+Cuestiones de Sociología, Economía y Política
+TICS, Redes Sociales on line, y Turismo
+Promoción y Comercialización en Turismo
+Derecho Privado en Turismo
+Desarrollo Turístico I
+Introducción al análisis del Patrimonio Natural
+Inglés Nivel II
+TICS y Aplicaciones de reservas turísticas
+Estadística aplicada al turismo
+Cultura Contemporánea
+Gestión de la Calidad en Organizaciones Turísticas
+Metodología de la investigación
+Derecho público del Turismo
+Administración de Recursos Humanos
+Marketing digital turístico y comportamiento del consumidor
+Desarrollo turístico II
+Inglés Nivel III
+Gestión de redes sociales y community management en el turismo
+Turismo y Economía Social y Solidaria
+Formulación y evaluación de proyectos
+Problemas de Historia del Siglo XX
+Introducción a la Problemática del Mundo Contemporáneo
+Introducción al análisis del patrimonio cultural
+Formulación de proyectos turísticos
+Métodos de investigación social aplicados al turismo
+Geografía turística y circuitos turísticos nacionales
+Gestión pública del turismo
+Seminario de Trabajo Final";lector planes_manuales;;Nómina (34) sin el seminario optativo ni el Trabajo Final, sin año;Universidad Nacional de Tres de Febrero;8f6b5a12-819f-4a68-8e9f-85343f63b34f
+UNTREF;Tecnicatura Universitaria en Gestión de Medios Digitales;;;;https://untrefvirtual.edu.ar/carrera/134;"Estudio del marco social - cultural de las comunidades y organizaciones
+Consumos culturales y tendencias
+Planificación estratégica de la comunicación I: Diagnóstico situacional y plan estratégico
+Planificación estratégica de la comunicación II: Monitorización y evaluación de procesos
+Nuevos paradigmas de la comunicación virtual
+Narrativa digital: Multimedia y transmedia. Interactividad
+Redacción y géneros
+La imagen fotográfica y su lenguaje
+Lenguaje y composición sonora
+Lenguaje audiovisual, géneros y técnicas de producción
+Realización I: Composición visual
+Realización II: Composición sonora
+Realización III: Relatos audiovisuales
+Realización IV: Diseño de sitios
+Funcionamiento y configuración de las redes sociales
+Aplicaciones virtuales interactivas
+Problemas de historia del siglo XX
+Introducción a la problemática del mundo contemporáneo
+Inglés Nivel I
+Inglés Nivel II
+Cultura Contemporánea
+Planificación y transmisión de eventos en plataformas digitales
+Cuestiones de Sociología, Economía y Política";lector planes_manuales;;23 actividades de la página (= nómina del PDF), sin año;Universidad Nacional de Tres de Febrero;0b019cc1-94f9-4726-a6e5-68279b77296c
+UNTREF;Licenciatura en Gestión y Desarrollo de Personas en las Organizaciones;;;;https://untrefvirtual.edu.ar/carrera/140;"Teorías de la administración
+Cuestiones de sociología, economía y política
+Relaciones sociales del trabajo
+Introducción a la gestión de las personas
+Informática Nivel I
+Fundamentos de Matemáticas y Estadística
+Cultura contemporánea
+Ordenamiento jurídico y mundo del trabajo
+Inglés Nivel I
+Diseño de Organizaciones y procesos
+Fundamentos de economía y finanzas
+Introducción a la Problemática del Mundo Contemporáneo
+Tecnologías aplicadas a la gestión de personas
+Gestión de personas I
+Psicología laboral
+Problemas de Historia del Siglo XX
+Derecho Individual del trabajo
+Indicadores de gestión de personas
+Administración General
+Liderazgo y Trabajo en Equipo
+Prácticas en la gestión de personas I
+Gestión de personas II
+Taller y trabajo final integrador de tecnicatura
+Tendencias en el mundo del trabajo
+Cultura organizacional
+Informática Nivel II
+Derecho colectivo del trabajo
+Gestión de personas III
+Inglés Nivel II
+Calidad de vida laboral
+Herramientas para el cambio, la innovación y el desarrollo organizacional
+Metodología de la Investigación
+Gestión de personas IV
+Condiciones y medio ambiente del trabajo
+Sistema de Relaciones laborales
+Dirección Estratégica de personas
+Inglés Nivel III
+Negociación y resolución de conflictos
+Marco normativo de la Seguridad social
+Gestión de personas V
+Prácticas en la gestión de personas II
+Taller y Trabajo Final Integrador de Licenciatura";lector planes_manuales;;42 de la página (ciclo de tecnicatura + ciclo superior), sin año;Universidad Nacional de Tres de Febrero;6594a6fa-4bbe-4f37-aad4-0134dbe7e641
