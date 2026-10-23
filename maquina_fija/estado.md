@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 27: UNR Veterinaria ya cargada, falta Fisiología; ciclo 26, UNR FCEIA cerrada: Mecánica y Agrimensura escaneadas; falta verificar y exportar desde el lanzador)
+Actualizado: 2026-10-23 (ciclo 29: UNR Diseño Industrial cargada; falta verificar desde el lanzador)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
@@ -16,7 +16,7 @@ Actualizado: 2026-10-23 (ciclo 27: UNR Veterinaria ya cargada, falta Fisiología
 - Esta máquina no tiene credenciales de GitHub ni identidad de git: los commits quedan locales en la rama `maquina-fija` (autor del historial pasado con `-c user.name/-c user.email`). Hace falta que una persona haga `git push -u origin maquina-fija`.
 
 ## Listo para cargar (cuando haya credenciales, 01:00–08:00, lotes ≤ 8)
-- UNR: Ingeniería Electrónica (45), Lic. Diseño Gráfico (30)
+- UNR: Ingeniería Electrónica (45), Lic. Diseño Gráfico (30), Lic. Diseño Industrial (34)
 - UNC: Ciencias Biológicas (33), Prof. Letras Clásicas (27), Lic. Letras Clásicas (25), Tec. Corrección Literaria (21), Prof. Geografía (25), Prof. Letras Modernas (33), Lic. Cine y Artes Audiovisuales (32), Prof. en Teatro (31), Lic. Sociología (34), Lic. Ciencia Política (35), Abogacía (38), Trad. Alemán (30) y Lic. Italianas (31)
 - UNQ (planes de UNQ por núcleos; ver bitácora 2026-10-22)
 - UNLP (Económicas: Tec. Cooperativismo y Ciencia de Datos; Tec. Agroecología; Humanidades: Lic. Francés Or. Ling. y Lit. (14 c/u), Lic. Inglés Or. Lingüística (17), Lic. Inglés Or. Literaria (17), Lic. Cs. de la Educación (23), Lic. Bibliotecología, 5 carreras de Lenguas (Prof. Inglesas/Francesas/Portugués, Trad. Inglés/Francés); 3 tecnicaturas de Periodismo + Trabajo Social completo + 2 tecnicaturas de Odontología: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología, Psicología (Lic., 34 materias), Odontología (grado, 60 materias; duración del catálogo 6 vs 5 años de la tabla: revisar); ver bitácora)

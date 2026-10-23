@@ -1,0 +1,35 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Licenciatura en Diseño Industrial;5.0;;;https://fapyd.unr.edu.ar/licenciatura-en-diseno-industrial/;"1|Introducción al Proceso Proyectual
+1|Taller de Diseño I
+1|Sistemas de Representación Gráfica
+1|Morfología I
+1|Introducción al Pensamiento Científico
+1|Introducción a la Tecnología
+1|Matemáticas
+1|Física I
+1|Historia del Diseño Industrial I
+1|Ergonomía
+2|Taller de Diseño II
+2|Morfología II
+2|Tecnología I
+2|Física II
+2|Diseño Asistido
+2|Historia del Diseño Industrial II
+2|Economía, Industria y Desarrollo
+3|Taller de Diseño III
+3|Morfología III
+3|Tecnología II
+3|Práctica de Servicios Supervisada I
+3|Práctica de Servicios Supervisada II
+3|Tecnología, Diseño y Sociedad
+3|Gestión Empresarial y Mercadotecnia
+4|Taller de Especialización en Diseño I
+4|Tecnología Avanzada I
+4|Gestión del Diseño y la Innovación
+4|Legislación y Práctica Profesional
+4|Semiótica y Cultura Visual
+4|Teoría y Crítica del Diseño
+5|Taller de Especialización en Diseño II
+5|Tecnología Avanzada II
+5|Metodología del Proyecto y de la Investigación
+5|Taller de Proyecto Final";lector Claude máquina fija;;"Plan por semestres de fapyd.unr.edu.ar/licenciatura-en-diseno-industrial/ (1º–10º semestre; año = semestre/2). Afuera: Opcional I a IV.";UNR;519c99ed-3c8c-4798-bc16-e2e821fbb7c3

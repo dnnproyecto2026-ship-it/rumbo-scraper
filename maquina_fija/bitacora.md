@@ -254,3 +254,8 @@
 - Cargada por `planes_manuales` (30 materias, 1.º–4.º; nombres comprobados contra `fapyd.unr.edu.ar/wp-content/uploads/2022/05/220304_LDG_PLAN_DE_ESTUDIOS.pdf`; año de cada materia comparado con las fichas "Año:" del PDF). Hoja `data/planes_unr_diseno_grafico.csv`. Afuera: 2 optativas. PSE y PPS puestas en 3.º (Ciclo Medio, 2.º–3.º; el año exacto no figura en una ficha).
 - Exportación del catálogo en curso; verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR sin plan en la base: Medicina, Arquitectura, Bellas Artes, Diseño Industrial/Indumentaria, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras.
+
+## 2026-10-23 (29) — UNR: Licenciatura en Diseño Industrial
+- Cargada por `planes_manuales` (34 materias, 1.º–5.º; nombres comprobados contra `fapyd.unr.edu.ar/licenciatura-en-diseno-industrial/`, plan por semestres 1.º–10.º; año = semestre/2). Hoja `data/planes_unr_diseno_industrial.csv`. Afuera: Opcional I a IV.
+- Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR sin plan en la base: Arquitectura (no figura en la lista: ya tiene), Diseño de Indumentaria, Bellas Artes, Medicina, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras.
