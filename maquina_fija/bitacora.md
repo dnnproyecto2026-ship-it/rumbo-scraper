@@ -259,3 +259,9 @@
 - Cargada por `planes_manuales` (34 materias, 1.º–5.º; nombres comprobados contra `fapyd.unr.edu.ar/licenciatura-en-diseno-industrial/`, plan por semestres 1.º–10.º; año = semestre/2). Hoja `data/planes_unr_diseno_industrial.csv`. Afuera: Opcional I a IV.
 - Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR sin plan en la base: Arquitectura (no figura en la lista: ya tiene), Diseño de Indumentaria, Bellas Artes, Medicina, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras.
+
+## 2026-10-23 (30) — UNR: Diseño de Indumentaria y Arquitectura: no se cargan
+- Lista de UNR sin materias sacada de la base del scraper (55 carreras sin plan). Lic. en Diseño de Indumentaria: `fapyd.unr.edu.ar/licenciatura-en-diseno-de-indumentaria/` da 404 y la búsqueda del sitio (API de WordPress) no devuelve página ni PDF del plan; solo una nota de convocatoria. Plan no publicado/no hallado en el sitio de la facultad.
+- Arquitectura: la facultad está cambiando el plan (Consejo Directivo aprobó una grilla "preliminar"); un plan en transición no se carga hasta que haya uno vigente.
+- Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Medicina, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras, Bellas Artes, Química, Biotecnología; luego UNLZ/UNAJ.
