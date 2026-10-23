@@ -162,3 +162,9 @@
 - Cargada por `planes_manuales` (38 materias, 1.º–6.º año; cada nombre comprobado contra la grilla de programas de derecho.unc.edu.ar/programas-carrera-de-abogacia). Hoja `data/planes_unc_derecho.csv`. Afuera: Opcionales I–IV e Idiomas. El PDF del Plan 2000 está en Google Drive (no es del dominio oficial), por eso se usó la grilla.
 - Pendiente UNC alcanzable: Notariado, Prof. Cs. Jurídicas (Derecho), Químicas, Odontología, Artes, Lenguas, Letras, Económicas, FCEFyN, FAMAF, Trabajo Social.
 - `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
+
+## 2026-10-23 (11) — UNC Derecho: Notariado y Prof. en Cs. Jurídicas (no cargados)
+- Planes oficiales encontrados: Notariado (`derecho.unc.edu.ar/wp-content/uploads/sites/21/2025/08/plan-de-estudio-notariado-digesto-2001.pdf`) y Profesorado (`.../Plan-de-Estudios-Profesorado-en-Ciencias-Juridicas.pdf`). Descargados a /tmp, leídos con pdftotext.
+- **Notariado: no se carga.** Es un ciclo notarial de 3 semestres posterior a Abogacía; la tabla repite "Derecho Notarial II" (el tercer semestre y la fila 07 de correlatividades; evidente errata de "III") y no da años. No se puede comprobar el nombre literal ni el año.
+- **Profesorado: no se carga.** Los nombres son legibles pero el semestre de cada materia sale de una tabla con rótulos desalineados; el año sería una inferencia por posición. Un plan con años dudosos es peor que ninguno. Reintentar solo con una fuente por año (programas o grilla en HTML).
+- Siguiente en UNC: Químicas, Odontología, Artes, Lenguas, Letras, Económicas, FCEFyN, FAMAF. `verificar_catalogo` (PID 972835, mío) sigue. Sin credenciales de producción.
