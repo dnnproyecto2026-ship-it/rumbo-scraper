@@ -1,0 +1,62 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Traductorado Público Nacional de Alemán;5.0;;;https://lenguas.unc.edu.ar/carreras-de-grado/trad-publiconacional-aleman;"1 | Lengua Alemana I
+1 | Práctica Gramatical
+1 | Práctica de la Pronunciación
+1 | Lengua Castellana I
+1 | Introducción a la Traductología
+2 | Lengua Alemana II
+2 | Gramática Alemana I
+2 | Fonética y Fonología I
+2 | Lengua Castellana II
+2 | Teoría y Práctica de la Investigación
+2 | Métodos y Técnicas de la Traducción
+2 | Terminología y Documentación
+3 | Lengua Alemana III
+3 | Gramática Alemana II
+3 | Fonética y Fonología II
+3 | Traducción Técnica
+3 | Elementos del Derecho Aplicados a la Traducción
+3 | Traducción Comercial
+4 | Lengua Alemana IV
+4 | Lingüística I
+4 | Cultura y Civilización de los Pueblos de Habla Alemana I
+4 | Gramática Contrastiva
+4 | Traducción Jurídica
+4 | Introducción a la Literatura de Habla Alemana
+5 | Lengua Alemana V
+5 | Lingüística II
+5 | Cultura y Civilización de los Pueblos de Habla Alemana II
+5 | Traducción Científica
+5 | Traducción Periodística
+5 | Traducción Literaria";IA Claude;;Afuera: ciclo de nivelación, optativas de Latina, Gabinete o Interpretación (a elegir);UNC;51fbd856-4cc1-4081-8c2b-54a28d8b34cd
+UNC;Licenciatura en Lengua y Literatura Italianas;5.0;;;https://lenguas.unc.edu.ar/carreras-de-grado/lic-lenguayliteratura-italianas;"1 | Lengua Italiana I
+1 | Práctica Gramatical del Italiano
+1 | Práctica de la Pronunciación del Italiano
+1 | Lengua Castellana I
+1 | Introducción al Pensamiento Filosófico
+1 | Lengua y Cultura Latina I
+2 | Lengua Italiana II
+2 | Gramática Italiana I
+2 | Fonética y Fonología I
+2 | Lengua Castellana II
+2 | Teoría y Práctica de la Investigación
+2 | Introducción a los Estudios Literarios
+2 | Lengua y Cultura Latina II
+3 | Lengua Italiana III
+3 | Gramática Italiana II
+3 | Fonética y Fonología II
+3 | Teoría y Análisis del Discurso Literario
+3 | Antropología Cultural
+4 | Lengua Italiana IV
+4 | Lingüística I
+4 | Historia de la Lengua
+4 | Cultura y Civilización de los Pueblos de Habla Italiana I
+4 | Literatura de Habla Italiana I
+4 | Metodología de la Investigación Literaria
+5 | Lengua Italiana V
+5 | Lingüística II
+5 | Cultura y Civilización de los Pueblos de Habla Italiana II
+5 | Literatura de Habla Italiana II
+5 | Literatura Occidental Contemporánea
+5 | Seminario de Literatura de Habla Italiana desde la Posguerra
+5 | Metodología de la Investigación Lingüística";IA Claude;;Afuera: ciclo de nivelación;UNC;6d055724-2d5a-417a-a84e-ffe2fc2d3fa1
