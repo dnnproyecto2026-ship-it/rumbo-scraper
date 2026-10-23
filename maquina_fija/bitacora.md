@@ -168,3 +168,8 @@
 - **Notariado: no se carga.** Es un ciclo notarial de 3 semestres posterior a Abogacía; la tabla repite "Derecho Notarial II" (el tercer semestre y la fila 07 de correlatividades; evidente errata de "III") y no da años. No se puede comprobar el nombre literal ni el año.
 - **Profesorado: no se carga.** Los nombres son legibles pero el semestre de cada materia sale de una tabla con rótulos desalineados; el año sería una inferencia por posición. Un plan con años dudosos es peor que ninguno. Reintentar solo con una fuente por año (programas o grilla en HTML).
 - Siguiente en UNC: Químicas, Odontología, Artes, Lenguas, Letras, Económicas, FCEFyN, FAMAF. `verificar_catalogo` (PID 972835, mío) sigue. Sin credenciales de producción.
+
+## 2026-10-23 (12) — UNC Económicas y Químicas (nada cargado)
+- Económicas: Contador Público (36), Lic. en Administración (35) y Lic. en Economía (28) ya tienen materias en la base (las lee el spider); el catálogo exportado estaba viejo. Sin trabajo. Pendiente del mismo sitio: Lic. en Gestión Universitaria y Prof. en Cs. Económicas (la página no lista materias; el plan está en el Digesto).
+- Químicas, Lic. en Química: el PDF oficial (`fcq.unc.edu.ar/wp-content/uploads/carreras/Plan-Lic-Quimica-ampliado.pdf`) agrupa por ciclo (básico/intermedio/superior), no por año, y abrevia nombres. **No se carga**: el año sería inferido. Farmacia/Bioquímica: planes nuevos recién aprobados (vigencia 2028), no mirados.
+- Siguiente UNC: Lenguas (lenguas.unc.edu.ar/carreras-de-grado responde 200), Odontología (fo.unc.edu.ar sin respuesta), FAMAF (rutas viejas 404). `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
