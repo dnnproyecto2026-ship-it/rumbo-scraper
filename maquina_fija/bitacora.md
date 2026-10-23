@@ -142,3 +142,8 @@
 ## 2026-10-23 (6) — UNLP Humanidades: Lic. en Inglés (Orientación Literaria)
 - Cargada por `planes_manuales` (17 materias, 1.º–5.º año; cada nombre comprobado contra el PDF oficial del Plan 2016 en fahce.unlp.edu.ar). Hoja `data/planes_unlp_ingles_lit.csv`. Afuera: electivas/optativas a elegir, seminarios de licenciatura, tesina, capacitaciones en idioma e "Introducción a los Estudios del Lenguaje y de la Comunicación" (nombre abreviado en el PDF).
 - Pendiente en Humanidades: Lic. Francés (ambas orientaciones), Prof. Cs. de la Educación. `verificar_catalogo` (PID 972835, mío) sigue corriendo; exportación pendiente de su fin. Sin credenciales de producción.
+
+## 2026-10-23 (7) — UNLP Humanidades: Lic. en Francés (Lingüística y Literaria)
+- Cargadas por `planes_manuales` (14 materias cada una, 1.º–5.º año; cada nombre comprobado contra el PDF oficial del Plan 2016 en fahce.unlp.edu.ar, enlace `download/1`; el `download/0` es el Régimen de Licenciaturas, no el plan). Hojas `data/planes_unlp_frances_ling.csv` y `data/planes_unlp_frances_lit.csv`.
+- Afuera: electivas/optativas a elegir, seminarios de licenciatura, tesina, capacitaciones en idioma, Introducción a los Estudios del Lenguaje (abreviada en el PDF) y, en Lingüística, Literatura Francesa Contemporánea ("LITER." abreviado).
+- Humanidades: solo queda Prof. en Cs. de la Educación (no mirado). `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
