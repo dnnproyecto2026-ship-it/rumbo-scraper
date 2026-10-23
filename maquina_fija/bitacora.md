@@ -336,3 +336,12 @@
 - Prof. Universitario en Educación Física cargado (33 espacios, 1.º–4.º; contra la tabla `famhyc.unr.edu.ar/wp-content/uploads/2025/10/b.-ESPACIOS-CURRICULARES-Y-CORRELATIVIDADES-Profesorado-en-Educacion-Fisica.pdf`, enlazada desde la página de la carrera; año según el código). Hoja `data/planes_unr_educacion_fisica.csv`. Afuera: Optativa I y II. El plan (PE) dice 4 años, como el catálogo; nombra 4.2.32 "Educación e Inclusión" y la tabla "Educación Física e Inclusión" (se usó la tabla).
 - Cadena exportar→verificar (UNR: materias 2357/2378, las 59 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico); Recursos Naturales en otro ciclo; luego UNLZ/UNAJ.
+
+## 2026-10-23 (43) — UNR: Tec. Universitaria en Gestión y Producción (Politécnico)
+- Cargada por `planes_manuales` (42 asignaturas, 1.º–3.º; nombres comprobados literalmente contra `ips.edu.ar/wp-content/uploads/2018/05/TUGP.pdf`, enlazado desde `ips.edu.ar/gestion`; año según el código). Hoja `data/planes_unr_gestion_produccion.csv`. Es el mismo plan que el "Nuevo Plan de Estudio 2012" de la página de planes (solo cambian de cuatrimestre 2.16.1 y 2.23.2, y la ortografía). Incluye Proyecto Final (tiene código).
+- El verificador ahora toma `ips.edu.ar` (Instituto Politécnico Superior, enlazado desde `unr.edu.ar/tecnicaturas/`) como dominio de la UNR, como UNTREF con untrefvirtual.
+- **Resto del Politécnico pendiente** (Química, Plásticos y Elastómeros, Sistemas Electrónicos, Construcciones, Mecatrónica, Óptica, Analista en Sistemas): cada página enlaza un PDF en ips.edu.ar y además un "Plan vigente" solo en Google Drive; la descarga de Drive no respondió. No se cargan sin confirmar que el PDF del sitio es el vigente.
+- **Ciencia de Datos NO se carga:** la tabla de `fcecon.unr.edu.ar/.../licenciatura-en-ciencia-de-datos-pagina-en-construccion` está vacía y el plan 2024 está solo en Google Drive. Ojo: la página muestra 5 años (1.º–5.º) y el catálogo dice 4.
+- Cadena exportar→verificar UNR (materias 2399/2420, las 42 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Vigilancia sin Claude del 23/10: mismas caídas que el 22/10 (Austral, Palermo posgrados, UB, UBA); UCEMA ahora 16→17 carreras (el 22/10 daba 14). No re-importar desde esas corridas.
+- Siguiente: Recursos Naturales (reintento), Tec. Tecnología Alimentaria (Baigorria); luego UNLZ/UNAJ.

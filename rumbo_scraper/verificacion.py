@@ -49,8 +49,11 @@ def dominio(url: str | None) -> str:
 # its own (UNTREF's distance careers live on untrefvirtual.edu.ar).
 # (UNDEF's faculties teach in the schools of the forces: the IUA, the *.mil.ar
 # sites, the Escuela de Guerra Naval and the Escuela de Náutica publish their plans.)
+# (UNR's Instituto Politécnico Superior, whose tecnicaturas unr.edu.ar lists,
+# publishes their plans on ips.edu.ar.)
 OTROS_DOMINIOS = {"untref.edu.ar": {"untrefvirtual.edu.ar"}, "hospitalitaliano.edu.ar": {"hospitalitaliano.org.ar"},
-                  "undef.edu.ar": {"iua.edu.ar", "mil.ar", "esgn.edu.ar", "escueladenautica.edu.ar"}}
+                  "undef.edu.ar": {"iua.edu.ar", "mil.ar", "esgn.edu.ar", "escueladenautica.edu.ar"},
+                  "unr.edu.ar": {"ips.edu.ar"}}
 # Another site of the same body, by its host (its domain is everyone's): the
 # home of Córdoba's Dirección General de Educación Superior (dges-cba.edu.ar,
 # its institutes' map) links its curricular designs on its INFoD site.

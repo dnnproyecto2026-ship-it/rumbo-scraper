@@ -16,6 +16,9 @@ class VerificacionTest(unittest.TestCase):
         self.assertTrue(v.es_oficial("https://www.fi.uba.ar/plan", "https://www.uba.ar"))
         self.assertFalse(v.es_oficial("https://ar.linkedin.com/in/alguien", "https://www.utdt.edu"))
         self.assertFalse(v.es_oficial("https://www.unla.edu.ar/x", "https://www.unq.edu.ar"))
+        # A school of the university on a domain of its own, linked from its home.
+        self.assertTrue(v.es_oficial("http://www.ips.edu.ar/wp-content/uploads/2018/05/TUGP.pdf", "https://unr.edu.ar"))
+        self.assertFalse(v.es_oficial("http://www.ips.edu.ar/x.pdf", "https://www.unc.edu.ar"))
 
     def test_la_fuente_dice_la_materia_con_palabras_enteras(self):
         fuente = v.plano("1er año: ANÁLISIS MATEMÁTICO I - Álgebra y Geometría Analítica")
