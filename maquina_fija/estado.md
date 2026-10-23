@@ -5,6 +5,8 @@ Actualizado: 2026-10-23 (ciclo 17)
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
 
+- Ciclo 17: exportación hecha (06:05) con Geografía y Letras Modernas de UNC. `verificar_catalogo` (PID 1026526, mío) sigue corriendo desde ~06:10; al terminar, correr `exportar_catalogo` otra vez (debe cerrar con `Archivo:`). Cuando no haya procesos, hacer eso primero.
+
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
 
