@@ -151,3 +151,9 @@
 ## 2026-10-23 (8) — UNLP Humanidades completa
 - Prof. en Cs. de la Educación ya tenía 33 materias (carga del 28/9); comparadas con el PDF oficial A2002 de fahce.unlp.edu.ar: mismos nombres y años. No hizo falta cargar nada. Humanidades queda completa.
 - Siguiente: UNLP Exactas (reintentar, estaba bloqueada por timeout/TLS) o UNC. `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
+
+## 2026-10-23 (9) — UNC Sociales: Sociología y Ciencia Política
+- UNLP Exactas sigue sin abrir (TLS). UNC: seis sitios de facultad están detrás de Anubis (prueba de trabajo/JS): FCM, FAUD, Agropecuarias, Psicología, Comunicación y Esc. Belgrano → **bloqueadas**, no se evaden. Sin respuesta (desconexión/DNS): FFyH (sitio.ffyh/blogs.ffyh) y Monserrat.
+- Cargadas por `planes_manuales` (34 y 35 materias, 1.º–5.º año; nombres comprobados contra las páginas oficiales de plan de sociales.unc.edu.ar; año = cuatrimestre/2). Hoja `data/planes_unc_sociales.csv`. Afuera: Ciclo de Nivelación, optativa del 4.º cuatrimestre, Sociología Especial, trabajo final; "Teoría Sociológica III" (el sitio la escribe sin espacio, no se pudo comprobar literal).
+- Pendiente en Sociales: Lic. en Trabajo Social (la página de la carrera no enlaza el plan). Otras UNC alcanzables: Derecho, Químicas, Odontología, Artes, Lenguas, Letras, Económicas, Exactas (FCEFyN), FAMAF.
+- `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.

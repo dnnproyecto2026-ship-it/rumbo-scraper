@@ -1,0 +1,70 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Licenciatura en Sociología;5.0;;;https://sociales.unc.edu.ar/content/plan-de-estudios-0;"1 | Fundamentos de la Ciencia Política
+1 | Sociología Sistemática
+1 | Introducción al Conocimiento en las Ciencias Sociales
+1 | Historia Social y Política I (Contemporánea)
+1 | Teoría Política I
+1 | Teoría Sociológica I (Clásica)
+1 | Economía Política I (Clásica)
+1 | Historia Social y Política II (Latinoamericana)
+2 | Teoría Política II (Contemporánea)
+2 | Teoría Sociológica II (Contemporánea)
+2 | Historia Social y Política III (Argentina)
+2 | Economía Política II
+2 | Teoría Política III (Contemporánea)
+2 | Metodología de la Investigación Social I (Cuantitativa)
+3 | Problemática de la Sociología Latinoamericana y Argentina
+3 | Sociología de las Organizaciones
+3 | Metodología de la Investigación Social II (Cualitativa)
+3 | Estadística I
+3 | Teoría y análisis de las desigualdades sociales
+3 | Demografía
+3 | Estadística II
+3 | Taller de Técnicas Cuantitativas
+4 | Teorías y procesos de cambio social
+4 | Análisis de la Sociedad Argentina Contemporánea
+4 | Taller de técnicas cualitativas
+4 | Seminario sobre Problemas Sociales
+4 | Políticas sociales
+4 | Desarrollo Social y Económico
+4 | Seminario de Formación Práctica I
+5 | Planificación y diseño de proyectos sociales
+5 | Realidad local y regional
+5 | Seminario de Formación Práctica II
+5 | Taller de investigación (Preparación del Trabajo Final)
+5 | Seminario de lecturas orientadas";IA operador;;Año = cuatrimestre/2 redondeado hacia arriba (el plan se organiza por cuatrimestres). Quedan afuera el Ciclo de Nivelación, la optativa del 4.º cuatrimestre, Sociología Especial, el taller de trabajo final y el trabajo final.;Universidad Nacional de Córdoba;599a04f7-30fb-4ef4-9313-328cb0f60a26
+UNC;Licenciatura en Ciencia Política;5.0;;;https://sociales.unc.edu.ar/content/plan-de-estudios;"1 | Fundamentos de la Ciencia Política
+1 | Sociología Sistemática
+1 | Introducción al Conocimiento en las Ciencias Sociales
+1 | Historia Social y Política I (Contemporánea)
+1 | Teoría Política I
+1 | Teoría Sociológica I (Clásica)
+1 | Economía Política I (Clásica)
+1 | Historia Social y Política II (Latinoamericana)
+2 | Teoría Política II (Contemporánea)
+2 | Teoría Sociológica II (Contemporánea)
+2 | Historia Social y Política III (Argentina)
+2 | Economía Política II
+2 | Teoría Política III (Contemporánea)
+2 | Metodología de la Investigación Social I (Cuantitativa)
+3 | Teoría del Estado y sus Transformaciones Históricas
+3 | Metodología de la Investigación Social II
+3 | Estadística I
+3 | Derecho Constitucional
+3 | Teoría de la Democracia y de la Ciudadanía
+3 | Estadística II
+3 | Instituciones de Gobierno y Administración Pública
+3 | Taller de Técnicas Cuantitativas
+4 | Partidos Políticos
+4 | Procesos Políticos latinoamericanos
+4 | Derechos Humanos
+4 | Taller de Técnicas Cualitativas
+4 | Análisis Político
+4 | Opinión Pública y Comunicación Política
+4 | Estudios sobre Regionalización e Integración
+4 | Sistemas Políticos Comparados
+5 | Políticas Sociales
+5 | Teoría y Análisis de las Políticas Públicas
+5 | Política Comparada
+5 | Formulación y Evaluación de Proyectos
+5 | Seminario de lecturas orientadas";IA operador;;Año = cuatrimestre/2 redondeado hacia arriba (el plan se organiza por cuatrimestres). Quedan afuera el Ciclo de Nivelación, la optativa del 4.º cuatrimestre, Sociología Especial, el taller de trabajo final y el trabajo final.;Universidad Nacional de Córdoba;b13ce1af-f104-41d4-a24f-70eb4fcba8fe
