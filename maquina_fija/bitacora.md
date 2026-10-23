@@ -177,3 +177,8 @@
 ## 2026-10-23 (13) — UNC Lenguas: Traductorado de Alemán y Lic. en Italianas
 - Lenguas ya tenía 13 de 15 carreras con plan (las lee el spider). Cargadas por `planes_manuales` las dos que faltaban: Traductorado Público Nacional de Alemán (30 materias) y Lic. en Lengua y Literatura Italianas (31), 1.º–5.º año; nombres comprobados contra las páginas oficiales de lenguas.unc.edu.ar. Hoja `data/planes_unc_lenguas.csv`. Afuera: Ciclo de Nivelación, optativas de Latina (Alemán) y "Gabinete de Traducción o Introducción a la Interpretación" (a elegir).
 - Pendiente UNC alcanzable: Odontología (sin respuesta), FAMAF, Letras, Artes, FCEFyN, Trabajo Social. `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
+
+## 2026-10-23 (14) — UNC Artes: Profesorado en Teatro
+- Cargado por `planes_manuales` (31 materias, 1.º–4.º año; nombres comprobados contra el PDF oficial `artes.unc.edu.ar/files/Prof-Teatro.pdf`). Hoja `data/planes_unc_artes.csv`. Afuera: Curso de Nivelación, tres seminarios electivos y prueba de idioma.
+- **Lic. en Teatro: no se carga.** El PDF (`artes.unc.edu.ar/files/Lic-en-Teatro.pdf`) está en OCR, con los números romanos rotos ("Actuación 11", "Escenotecnia 11") y tres orientaciones (Actuación, Teatrología, Escenotécnicas) en el mismo documento; no se puede comprobar el nombre literal.
+- Pendiente en Artes: Música, Artes Visuales, Cine (cada departamento enlaza sus planes desde `?page_id=` de "Carreras y Programas"; no mirados). `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.

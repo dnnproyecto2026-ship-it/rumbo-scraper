@@ -1,0 +1,32 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Profesorado en Teatro;4.0;;;https://artes.unc.edu.ar/files/Prof-Teatro.pdf;"1 | Actuación I
+1 | Cuerpo y Movimiento I
+1 | Voz y Lenguaje Sonoro I
+1 | Escenotecnia I
+1 | Taller de Composición y Producción Escénica I
+1 | Teatro Occidental
+1 | Práctica Docente I
+1 | Pedagogía
+2 | Actuación II
+2 | Cuerpo y Movimiento II
+2 | Voz y Lenguaje Sonoro II
+2 | Introducción a la Teatrología
+2 | Teatro Argentino
+2 | Psicología y Educación
+2 | Didáctica General
+2 | Práctica Docente II: Contextos no formales
+3 | Actuación III
+3 | Cuerpo y Movimiento III
+3 | Voz y Lenguaje Sonoro III
+3 | Teatro Latinoamericano
+3 | Filosofía y Educación
+3 | Tecnología Educativa
+3 | Práctica Docente y Residencia III: Nivel inicial y primario
+3 | Metodología de la Enseñanza Teatral I
+3 | Análisis del Texto Dramático
+4 | Estudios Culturales y Educación
+4 | Seminario de Educación Especial
+4 | Análisis del Texto Escénico
+4 | Poéticas del Teatro Moderno y Contemporáneo
+4 | Metodología de la Enseñanza Teatral II
+4 | Práctica Docente y Residencia IV: Nivel Secundario";IA Claude;;Afuera: Curso de Nivelación, tres seminarios electivos, prueba de idioma extranjero;UNC;a787b8c1-3a27-497a-a06e-66884033a852
