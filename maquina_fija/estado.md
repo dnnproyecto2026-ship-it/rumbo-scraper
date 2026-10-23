@@ -3,7 +3,7 @@
 Actualizado: 2026-10-22 (noche, 20)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
-- PENDIENTE: la cadena exportar→verificar→exportar del ciclo 20 se cortó por tiempo en `verificar_catalogo`; repetirla en segundo plano con timeout máximo (catálogo exportado 23:50 sin verificar Agroecología).
+- Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
 
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
