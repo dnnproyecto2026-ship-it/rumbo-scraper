@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 2)
+Actualizado: 2026-10-23 (ciclo 3)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
@@ -18,7 +18,7 @@ Actualizado: 2026-10-23 (ciclo 2)
 ## Cola de próximas (ofertas de grado/pregrado sin plan, catálogo exportado 2026-10-16)
 Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 1. UNQ — resto: páginas con orientaciones, bolsas de electivas que no suman, o tablas sin encabezado (Informática); ver bitácora
-2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; Psicología: Profesorado pendiente (PDF escaneado, OCR incompleto, ver bitácora 17); Exactas bloqueada por el sitio (timeout + certificado TLS), reintentar; Económicas hecha; Agrarias: Agroecología hecha, Agronómica/Forestal/Cultivos Protegidos con PDF escaneado (bitácora 20), Prod. Agropecuaria sin buscar; Humanidades: Lenguas hecha (5); faltan Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit., Lic. Bibliotecología, Lic. Cs. de la Educación, fuente: PDFs en las páginas de carrera de fahce.unlp.edu.ar)
+2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; Psicología: Profesorado pendiente (PDF escaneado, OCR incompleto, ver bitácora 17); Exactas bloqueada por el sitio (timeout + certificado TLS), reintentar; Económicas hecha; Agrarias: Agroecología hecha, Agronómica/Forestal/Cultivos Protegidos con PDF escaneado (bitácora 20), Prod. Agropecuaria sin buscar; Humanidades: Lenguas hecha (5); faltan Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit., Lic. Cs. de la Educación (Lic. Bibliotecología hecha), fuente: PDFs en las páginas de carrera de fahce.unlp.edu.ar)
 3. UNC (77/114)
 4. UCASAL (73/79) — lectura previa: el plan detallado corta cada nombre a 20 letras (commit 859fc87); falta registrar motivo por carrera
 5. UNR (60/110)

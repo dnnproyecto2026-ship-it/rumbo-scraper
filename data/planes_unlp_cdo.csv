@@ -1,0 +1,29 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Ciencia de Datos en Organizaciones;4.0;;;https://www.econo.unlp.edu.ar/cdo;"1 | Algoritmos y Programación I
+1 | Matemática A
+1 | Gestión de las organizaciones
+1 | Algoritmos y Programación II
+1 | Matemática B
+1 | Economía y Medición Económica
+2 | Taller de lenguajes
+2 | Introducción a Base de Datos
+2 | Contabilidad e interpretación de estados contables
+2 | Matemática C
+2 | Base de Datos
+2 | Procesos de negocio
+2 | Matemática D
+2 | Inglés (Prueba lecto-comprensión y traducción)
+3 | Fundamentos de Arquitectura de Computadoras, Sistemas Operativos y Redes
+3 | Ingeniería de Software
+3 | Costos e información para la gestión
+3 | Gestión de personas y equipos
+3 | Visualización de grandes volúmenes de datos
+3 | Minería de Datos y Aprendizaje Automático
+3 | Tecnologías para la Gestión
+4 | Conceptos y aplicaciones en Big Data
+4 | Finanzas de empresas
+4 | Estrategia de tecnología y gestión de proyectos
+4 | Marketing estratégico y operativo
+4 | Aplicaciones de Inteligencia de Datos en organizaciones
+4 | Dirección general
+4 | Práctica Profesional Supervisada (PPS)";IA operador;;"Tabla del plan de estudios de la página de la carrera; la optativa (sin nombre) queda afuera";;ddd3da91-1ecf-4f3a-89fd-0b43418d59b2

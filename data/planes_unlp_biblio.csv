@@ -1,0 +1,25 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Licenciatura en Bibliotecología y Ciencia de la Información;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/bibliotecologia/carreras/licenciatura-en-bibliotecologia-y-ciencia-de-la-informacion/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/2;"1 | Introducción a la Bibliotecología y Ciencia de la Información
+1 | Metodología del trabajo intelectual
+1 | Capacitación en informática
+1 | Descripción bibliográfica I
+1 | Organización del conocimiento I
+1 | Servicio de información y referencia general
+1 | Gestión de colecciones
+2 | Socioestadística
+2 | Descripción bibliográfica II
+2 | Organización del conocimiento II
+2 | Tratamiento automático de la información I
+2 | Historia del libro y de las bibliotecas
+2 | Historia del pensamiento filosófico-científico
+3 | Tratamiento automático de la información II
+3 | Servicio de información y referencia especializada
+3 | Tecnología y medios de comunicación
+3 | Política de la información
+3 | Administración de unidades de información
+3 | Gestión de la información
+4 | Gestión de unidades de información
+4 | Usuarios de información
+4 | Procesamiento de materiales especiales
+4 | Investigación bibliotecológica
+4 | Seminario general";IA operador;;"Año según el tramo sugerido de la facultad (PDF de tramo sugerido); nombres del PDF de correlatividades. Quedan afuera capacitaciones en idioma, Seminarios 1-3 a elección y práctica/tesina.";Universidad Nacional de La Plata;76211b53-3b58-4803-b3e7-7b380a8fa603
