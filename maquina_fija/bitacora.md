@@ -299,3 +299,9 @@
 - Fonoaudiología NO se carga: el plan 2024 de `fcm.unr.edu.ar/fonoaudiologia-plan-2024/` se publica solo como descarga de Google Drive (fuera del dominio de la UNR, el cargador lo rechaza).
 - Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
+
+## 2026-10-23 (37) — UNR Humanidades y Artes: Indumentaria y 3 tecnicaturas de música
+- Cargadas por `planes_manuales` desde el plan en texto de cada página de carrera en `fhumyar.unr.edu.ar` (nombres comprobados literalmente): Lic. en Diseño de Indumentaria (y Textil; 37 materias, 1.º–4.º), Tec. en Acordeón (22), Bajo Eléctrico (21) y Guitarra Eléctrica (23), 1.º–3.º. Hoja `data/planes_unr_humanidades.csv`. Afuera: electivas/optativas con opciones y Trabajo Final. (La carrera de Indumentaria es de Humanidades, no de FAPyD: corrige la bitácora 30.)
+- **NO se cargan:** Lic. en Letras, Lic. y Prof. en Bellas Artes — 4.º y 5.º año por orientación (ciclos/orientaciones mezclados). El PDF del plan está solo en Google Drive.
+- Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: FCEIA (Computación, Matemática, Física), Tec. Gestión Cultural; luego UNLZ/UNAJ.
