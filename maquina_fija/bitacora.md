@@ -239,3 +239,8 @@
 - `fder.unr.edu.ar/secretaria-academica/carreras-de-grado/` enlaza `PLAN_2012-1.pdf` (Res. CS 447/2011): escaneo sin texto, OCR ruidoso ("Derechó'", "introducción" en minúscula). Además la misma página publica un "plan de transición entre los Planes 2011 y 2015" (Res. CD 728/18), así que el plan 2012 puede no ser el vigente; la Res. 385/15 también es escaneo sin texto. Un plan viejo o con OCR dudoso no se carga.
 - Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Medicina, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica; luego UNLZ/UNAJ. Verificación completa y exportación final siguen pendientes desde el lanzador.
+
+## 2026-10-23 (26) — UNR FCEIA: Ing. Mecánica y Agrimensura: no se cargan
+- Los PDF oficiales del plan 2014 (`fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_375_2014_CS_Plan_2014__Ingenieria_Mecanica_1.pdf` y `Res_374_2014_CS_Plan_2014__Agrimensura.pdf`) son escaneos sin texto (`pdftotext` devuelve ~25 bytes). Sin plan en HTML. Un plan por OCR sin comprobar no se carga.
+- FCEIA queda cerrada: solo Electrónica tiene texto. Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Medicina, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica; luego UNLZ/UNAJ.

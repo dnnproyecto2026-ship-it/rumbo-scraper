@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 25, UNR Derecho no cargable; antes ciclo 23, UNR Ing. Electrónica; falta verificar y exportar desde el lanzador)
+Actualizado: 2026-10-23 (ciclo 26, UNR FCEIA cerrada: Mecánica y Agrimensura escaneadas; falta verificar y exportar desde el lanzador)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
