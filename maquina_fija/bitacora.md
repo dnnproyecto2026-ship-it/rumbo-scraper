@@ -380,3 +380,9 @@
 - Grado de Agrarias (Agronómica, Zootecnista, Economía Social, Enseñanza de las Cs. Biológicas, Gestión de la Calidad) no figura entre las ofertas sin plan de la base: revisar si faltan en la base.
 - Cadena exportar→verificar (UNLZ: materias 654/654)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNLZ Derecho (Prof. Cs. Jurídicas), Comercio Internacional y Aduanas; luego UNAJ.
+
+## 2026-10-23 (49) — UNLZ: Derecho y escaneos de Ingeniería (sin carga)
+- `derecho.unlz.edu.ar/carreras-2/` lista Abogacía, Lic. en Seguridad, Lic. en Comercio Internacional y Aduanas (ciclo de complementación, 18 materias en la página), Corredor y Martillero, Técnico Superior en Seguridad y Despachante de Aduana. **Prof. en Ciencias Jurídicas y "Técnico en Comercio Internacional y Aduanas" no figuran:** vienen de la guía del Ministerio (sin página de origen); razón: plan no publicado en el sitio de la facultad.
+- **Faltan en la base:** Lic. en Comercio Internacional y Aduanas (CCC) y Lic. en Seguridad: entran con una corrida del spider de UNLZ, no a mano.
+- `planes_escaneados UNLZ` da 0 planes: las licenciaturas de Ingeniería (Higiene y Seguridad, Gestión de la Información, Automatización y Robótica) no tienen `url_oficial` en sus ofertas, así que no encuentra el PDF. Pendiente: que la corrida del spider les asigne la página (`ingenieria.unlz.edu.ar/oferta-academica/grado/`).
+- Sin cambios en la base. Siguiente: UNAJ.
