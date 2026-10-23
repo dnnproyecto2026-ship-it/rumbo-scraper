@@ -147,3 +147,7 @@
 - Cargadas por `planes_manuales` (14 materias cada una, 1.º–5.º año; cada nombre comprobado contra el PDF oficial del Plan 2016 en fahce.unlp.edu.ar, enlace `download/1`; el `download/0` es el Régimen de Licenciaturas, no el plan). Hojas `data/planes_unlp_frances_ling.csv` y `data/planes_unlp_frances_lit.csv`.
 - Afuera: electivas/optativas a elegir, seminarios de licenciatura, tesina, capacitaciones en idioma, Introducción a los Estudios del Lenguaje (abreviada en el PDF) y, en Lingüística, Literatura Francesa Contemporánea ("LITER." abreviado).
 - Humanidades: solo queda Prof. en Cs. de la Educación (no mirado). `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
+
+## 2026-10-23 (8) — UNLP Humanidades completa
+- Prof. en Cs. de la Educación ya tenía 33 materias (carga del 28/9); comparadas con el PDF oficial A2002 de fahce.unlp.edu.ar: mismos nombres y años. No hizo falta cargar nada. Humanidades queda completa.
+- Siguiente: UNLP Exactas (reintentar, estaba bloqueada por timeout/TLS) o UNC. `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
