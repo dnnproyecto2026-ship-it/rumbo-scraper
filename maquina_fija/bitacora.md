@@ -265,3 +265,10 @@
 - Arquitectura: la facultad está cambiando el plan (Consejo Directivo aprobó una grilla "preliminar"); un plan en transición no se carga hasta que haya uno vigente.
 - Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Medicina, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras, Bellas Artes, Química, Biotecnología; luego UNLZ/UNAJ.
+
+## 2026-10-23 (31) — UNR Medicina y Psicología: no se cargan
+- Medicina (`fcm.unr.edu.ar/wp-content/uploads/2019/08/PLAN_DE_ESTUDIOS_MEDICINA.pdf`, Res. CS 158/2001): tiene texto, pero es un mapa curricular por áreas y ciclos vitales (semanas), sin materias por año; además hay una resolución posterior (`CS-31-24.pdf`) sin revisar. No se carga.
+- Psicología (`fpsico.unr.edu.ar`, plan 2014 Res. CS 437): PDF escaneado sin texto (`pdftotext` ~21 bytes). No se carga.
+- Firecrawl (búsqueda web) sin créditos: no se usa; los PDF se leen con curl + user agent del spider (el cliente por defecto da 403 en fcm.unr).
+- Sin cambios de código ni de datos; sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Farmacia, Bioquímica, Enfermería, Agronómica, Letras, Bellas Artes, Química, Biotecnología; luego UNLZ/UNAJ.

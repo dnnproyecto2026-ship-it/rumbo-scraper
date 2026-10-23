@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 30: UNR Indumentaria/Arquitectura registradas sin plan; ciclo 29: UNR Diseño Industrial cargada; falta verificar desde el lanzador)
+Actualizado: 2026-10-23 (ciclo 31: UNR Medicina y Psicología registradas como no cargables; falta verificar desde el lanzador)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
