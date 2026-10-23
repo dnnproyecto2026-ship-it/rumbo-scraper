@@ -133,3 +133,8 @@
 - Cargada por `planes_manuales` (23 materias, 1.º–4.º año; cada nombre comprobado contra el PDF oficial del plan A2002 en fahce.unlp.edu.ar). Hoja `data/planes_unlp_cseducacion.csv`. Afuera: Didáctica a elegir (3.º), capacitaciones en informática e idiomas y 5.º año (tres orientaciones, optativas, tesina). Duración del catálogo sin tocar.
 - Pendiente en Humanidades: Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit., Profesorado en Cs. de la Educación (no mirado).
 - La cadena de exportación (`verificar_catalogo` PID 972835, mío) sigue corriendo; exportará al terminar e incluirá esta carrera. Sin credenciales de producción.
+
+## 2026-10-23 (5) — UNLP Humanidades: Lic. en Inglés (Orientación Lingüística)
+- Cargada por `planes_manuales` (17 materias, 1.º–5.º año; cada nombre comprobado contra el PDF oficial del Plan 2016 en fahce.unlp.edu.ar). Hoja `data/planes_unlp_ingles_ling.csv`. Afuera: electivas a elegir, seminarios de licenciatura, tesina, capacitaciones en idioma e "Introducción a los Estudios del Lenguaje y de la Comunicación" (el PDF la abrevia y no se puede comprobar el nombre literal).
+- Pendiente en Humanidades: Lic. Inglés Orientación Literaria, Lic. Francés (ambas orientaciones), Prof. Cs. de la Educación. Las PDFs están en las páginas de carrera (`.../carreras/<carrera>/@@edit/...@@download/0`).
+- `verificar_catalogo` (PID 972835, mío) sigue corriendo; la cadena exportará al terminar. Sin credenciales de producción.
