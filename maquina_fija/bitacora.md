@@ -117,3 +117,9 @@
 ## 2026-10-23 — Cadena de exportación del ciclo 20 completada
 - `exportar_catalogo` → `verificar_catalogo` → `exportar_catalogo` corridos en segundo plano, sin errores; ambas exportaciones terminan con `Archivo: data/catalogo_depurado.json`. Incluye la Tec. en Agroecología de UNLP. 877 pruebas OK.
 - Sin credenciales de producción: sigue "listo para cargar". Siguiente: UNLP Humanidades (11).
+
+## 2026-10-23 (2) — UNLP Humanidades: 5 carreras de Lenguas Modernas
+- Los planes de FaHCE están como PDF con texto en la página de cada carrera (`.../deptos/<depto>/carreras/<carrera>`). Cargadas por `planes_manuales` (cada nombre comprobado contra el PDF oficial): Prof. Lengua y Literatura Inglesas (21), Trad. Público Nacional Inglés (23), Prof. Lengua y Literatura Francesas (20), Trad. Público Nacional Francés (22), Prof. en Portugués (28). Hoja `data/planes_unlp_lenguas.csv`.
+- Solo materias obligatorias, sin año de la tabla "sugerido" movido: las optativas ("a elegir entre") y las capacitaciones en idiomas quedan afuera y está anotado en la hoja.
+- Pendiente en Humanidades (PDF con texto ya identificado): Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit. (régimen de licenciaturas 2012 + plan 2016, hay que leerlos), Lic. Bibliotecología, Lic. Cs. de la Educación. Ojo: las hojas de Geografía/Historia/Filosofía/Letras/Sociología del catálogo ya tenían materias en la base (mi primer conteo del JSON era erróneo: las materias no vienen dentro de cada carrera).
+- Exportación/verificación lanzadas. Sin credenciales de producción.

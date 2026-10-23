@@ -1,0 +1,115 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Profesorado en Lengua y Literatura inglesas;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/profesorado-en-lengua-y-literatura-inglesas/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/0;"1 | Introducción a la Lengua Inglesa
+1 | Fundamentos de la Educación
+1 | Introducción a los Estudios del Lenguaje y de la Comunicación
+2 | Fonética y Fonología Inglesas 1
+2 | Gramática Inglesa 1
+2 | Lengua Inglesa 1
+2 | Técnicas de Expresión en Castellano
+2 | Historia y Política del Sistema Educativo Argentino
+3 | Fonética y Fonología Inglesas 2
+3 | Gramática Inglesa 2
+3 | Lengua Inglesa 2
+3 | Gramática Comparada (Castellano-Inglés)
+3 | Lingüística
+3 | Psicología y Cultura en el Proceso Educativo
+4 | Lengua Inglesa 3
+4 | Dicción Inglesa 1
+4 | Dicción Inglesa 2
+4 | Historia de la Lengua Inglesa
+4 | Didáctica Especial y Prácticas Docentes en Lengua Inglesa 1
+5 | Lengua Inglesa 4
+5 | Didáctica Especial y Prácticas Docentes en Lengua Inglesa 2";IA operador;;"Plan 2016; solo las materias obligatorias (optativas y capacitación en idiomas a elegir quedan afuera)";Universidad Nacional de La Plata;294de967-4c6e-4966-b05a-24601a48d65a
+UNLP;Traductorado Público Nacional en Lengua Inglesa;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/traductorado-publico-nacional-en-lengua-inglesa/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/0;"1 | Introducción a la Lengua Inglesa
+1 | Introducción a los Estudios del Lenguaje y de la Comunicación
+1 | Derecho 1
+2 | Lengua Inglesa 1
+2 | Fonética y Fonología Inglesas 1
+2 | Gramática Inglesa 1
+2 | Técnicas de Expresión en Castellano
+2 | Derecho 2
+3 | Lengua Inglesa 2
+3 | Fonética y Fonología Inglesas 2
+3 | Gramática Inglesa 2
+3 | Gramática Comparada (Castellano-Inglés)
+4 | Lengua Inglesa 3
+4 | Traducción Literaria 1
+4 | Traducción Científico-Técnica 1
+4 | Traducción Jurídico-Economica 1
+4 | Dicción Inglesa 1
+4 | Lingüística
+5 | Lengua Inglesa 4
+5 | Interpretación
+5 | Traducción Literaria 2
+5 | Traducción Científico-Técnica 2
+5 | Traducción Jurídico-Economica 2";IA operador;;"Plan 2016; solo las materias obligatorias (optativas y capacitación en idiomas a elegir quedan afuera)";Universidad Nacional de La Plata;9482716d-c75b-43d1-8b96-c7e75e5be9cc
+UNLP;Profesorado en Lengua y Literatura Francesas;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/profesorado-en-lengua-y-literatura-francesas/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/0;"1 | Introducción a la Lengua Francesa
+1 | Fundamentos de la Educación
+1 | Introducción a los Estudios del Lenguaje y de la Comunicación
+2 | Lengua Francesa 1
+2 | Fonética y Fonología Francesas 1
+2 | Gramática Francesa 1
+2 | Técnicas de Expresión en Castellano
+2 | Historia y Política del Sistema Educativo Argentino
+3 | Lengua Francesa 2
+3 | Psicología y Cultura en el Proceso Educativo
+3 | Fonética y Fonología Francesas 2
+3 | Gramática Francesa 2
+3 | Gramática Contrastiva (Castellano- Inglés)
+4 | Lengua Francesa 3
+4 | Dicción Francesa 1
+4 | Dicción Francesa 2
+4 | Historia de la Lengua Francesa
+4 | Didáctica Especial y Prácticas Docentes en Lengua Francesa 1
+5 | Lengua Francesa 4
+5 | Didáctica Especial y Prácticas Docentes en Lengua Francesa 2";IA operador;;"Plan 2016; solo las materias obligatorias (optativas y capacitación en idiomas a elegir quedan afuera)";Universidad Nacional de La Plata;8694f8d0-c957-4f7f-bd4e-2f9e7cdbf366
+UNLP;Traductorado Público Nacional en Lengua Francesa;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/traductorado-publico-nacional-en-lengua-francesa/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/0;"1 | Introducción a la Lengua Francesa
+1 | Introducción a los Estudios del Lenguaje y de la Comunicación
+1 | Derecho 1
+2 | Fonética y Fonología Francesas 1
+2 | Gramática Francesa 1
+2 | Lengua Francesa 1
+2 | Derecho 2
+3 | Fonética y Fonología Francesas 2
+3 | Gramática Francesa 2
+3 | Lengua Francesa 2
+3 | Gramática Contrastiva (Castellano-Francés)
+4 | Lengua Francesa 3
+4 | Dicción Francesa 1
+4 | Traducción Jurídico-Económico 1
+4 | Traducción Científico-Técnica 1
+4 | Traducción Literaria 1
+5 | Lengua Francesa 4
+5 | Interpretación
+5 | Traducción Científico-Técnica 2
+5 | Traducción Literaria 2
+5 | Traducción Jurídico-Económico 2
+5 | Prácticas en Traducción";IA operador;;"Plan 2016; solo las materias obligatorias (optativas y capacitación en idiomas a elegir quedan afuera)";Universidad Nacional de La Plata;a0fa30d0-bade-49bd-bdfe-bee18e596a2b
+UNLP;Profesorado en Portugués;4.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/profesorado-en-portugues/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/0;"1 | Lengua y Gramática Portuguesa I
+1 | Fonética y Fonología Portuguesa I
+1 | Técnicas de Expresión en Castellano
+1 | Introducción a los Estudios del Lenguaje
+1 | Introducción a la Literatura
+1 | Cultura y Sociedad
+2 | Lengua y Gramática Portuguesa II
+2 | Fonética y Fonología Portuguesa II
+2 | Lingüística
+2 | Lingüística Aplicada: Enseñanza de Portugués Lengua Extranjera
+2 | Fundamentos de la Educación
+2 | Psicología y Cultura en el Proceso Educativo
+2 | Historia Sociocultural del Mundo Luso-Brasileño I
+3 | Didáctica del Portugués y Prácticas Docentes I
+3 | Lengua y Gramática Portuguesa III
+3 | Lengua y Gramática Portuguesa IV
+3 | Historia Sociocultural del Mundo Luso-Brasileño II
+3 | Literaturas Lusófonas I
+3 | Historia, Política y Gestión del Sistema Educativo Argentino
+3 | Análisis Comparativo de las Lenguas (Castellano-Portugués)
+4 | Didáctica del Portugués y Prácticas Docentes 2
+4 | Lengua y Gramática Portuguesa V
+4 | Lengua y Gramática Portuguesa VI
+4 | Literaturas Lusófonas II
+4 | Recursos, Materiales y Nuevas Tecnologías
+4 | Historia de la Lengua
+4 | Historia de las Ideas del Mundo Luso
+4 | Relaciones Internacionales e Integración Regional";IA operador;;"Plan 2014; solo las materias obligatorias (seminarios optativos y capacitación en lengua extranjera a elegir quedan afuera)";Universidad Nacional de La Plata;6114c491-ced7-4c7e-9bb6-a0787046cfa1
