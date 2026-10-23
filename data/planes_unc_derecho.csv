@@ -1,0 +1,39 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Abogacía;6.0;;;https://derecho.unc.edu.ar/programas-carrera-de-abogacia/;"1 | Introducción al Derecho
+1 | Derecho Constitucional
+1 | Derecho Privado I
+1 | Derecho Penal I
+2 | Derecho Privado II
+2 | Teoría General del Proceso
+2 | Derecho Penal II
+2 | Derecho Privado III
+2 | Derecho Público Provincial y Municipal
+2 | Derecho Procesal Penal
+2 | Taller de Jurisprudencia I
+3 | Derecho Privado IV
+3 | Derecho Administrativo
+3 | Derecho Procesal Civil
+3 | Derecho Privado V
+3 | Derecho Procesal Constitucional
+3 | Derecho Procesal Administrativo
+3 | Derecho del Trabajo y de la Seguridad Social
+3 | Taller de Jurisprudencia II
+4 | Derecho Privado VI
+4 | Derecho Político
+4 | Sociología Jurídica
+4 | Práctica Profesional I
+4 | Derecho Privado VII
+4 | Derecho Privado VIII
+4 | Filosofía del Derecho
+4 | Economía
+5 | Derecho Concursal y Cambiario
+5 | Historia del Derecho
+5 | Teorías del Conflicto y de la Decisión. Métodos de Resolución de Conflictos
+5 | Derecho Internacional Público
+5 | Ética
+5 | Práctica Profesional II
+6 | Derecho Internacional Privado
+6 | Derecho Tributario
+6 | Derecho de los Recursos Naturales y Ambiental
+6 | Derecho de la Navegación, Transporte y Comunicaciones
+6 | Práctica Profesional III";IA operador;;Plan 2000, grilla de programas de la Facultad de Derecho. Afuera: Opcionales I–IV (bolsas de electivas) e Idiomas. El PDF del plan está en Google Drive (no es del dominio oficial).;Universidad Nacional de Córdoba;cef9a03c-73f6-49c8-8c7f-ad33acdb67e0
