@@ -234,3 +234,8 @@
 ## 2026-10-23 (24) — Revisión: FCEcon UNR ya tiene lector
 - La nota del ciclo 23 ("FCEcon por JS, falta endpoint") estaba desactualizada: `rumbo_scraper/database/planes_unr.py` ya lee el servicio `admin.fceyeua.fcecon.unr.edu.ar` (Contador, Administración, Economía, Estadística, Turismo). Sin cambios de datos ni de código; tests 877 OK.
 - Pendiente sin cambios: verificación completa y exportación final desde el lanzador; sin credenciales de producción ni de GitHub. Siguiente: UNR (Medicina, Derecho, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica), luego UNLZ/UNAJ.
+
+## 2026-10-23 (25) — UNR Derecho (Abogacía): no se carga
+- `fder.unr.edu.ar/secretaria-academica/carreras-de-grado/` enlaza `PLAN_2012-1.pdf` (Res. CS 447/2011): escaneo sin texto, OCR ruidoso ("Derechó'", "introducción" en minúscula). Además la misma página publica un "plan de transición entre los Planes 2011 y 2015" (Res. CD 728/18), así que el plan 2012 puede no ser el vigente; la Res. 385/15 también es escaneo sin texto. Un plan viejo o con OCR dudoso no se carga.
+- Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Medicina, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica; luego UNLZ/UNAJ. Verificación completa y exportación final siguen pendientes desde el lanzador.
