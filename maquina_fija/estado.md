@@ -1,11 +1,13 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 20, Letras; exportar→verificar→exportar en curso)
+Actualizado: 2026-10-23 (ciclo 20, Letras; verificación cortada por el límite de 2 h)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
 
 - Ciclo 18: cadena exportar→verificar→exportar completa (cierra con `Archivo: data/catalogo_depurado.json`, incluye Geografía y Letras Modernas de UNC). No hay procesos míos corriendo.
+
+- Ciclo 20: `verificar_catalogo` se cortó dos veces por el límite de tiempo de la herramienta (10 min y 2 h); no hay procesos míos corriendo. Falta la verificación completa y la exportación final (`Archivo: ...`) con Letras Clásicas y Corrección Literaria; el catálogo exportado (09:39) ya los incluye pero sin verificar. Reintentar fuera de la herramienta de segundo plano (lanzador).
 
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
