@@ -244,3 +244,8 @@
 - Los PDF oficiales del plan 2014 (`fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_375_2014_CS_Plan_2014__Ingenieria_Mecanica_1.pdf` y `Res_374_2014_CS_Plan_2014__Agrimensura.pdf`) son escaneos sin texto (`pdftotext` devuelve ~25 bytes). Sin plan en HTML. Un plan por OCR sin comprobar no se carga.
 - FCEIA queda cerrada: solo Electrónica tiene texto. Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Medicina, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica; luego UNLZ/UNAJ.
+
+## 2026-10-23 (27) — UNR Medicina Veterinaria: ya estaba cargada
+- La lista de "sin plan" sale del catálogo exportado, que está atrasado respecto de la base del scraper: Medicina Veterinaria figuraba sin plan pero ya tiene 47 materias (1.º–6.º). Comparada con `fveter.unr.edu.ar/catedras.html` falta **Fisiología** (2.12, 2.º año); no se puede agregar con `planes_manuales` (la carrera ya tiene materias). Pendiente de corrección puntual por una persona.
+- Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
+- Regla para los próximos ciclos: sacar "sin plan" de la base (`materias.carrera_id`), no del catálogo exportado. UNR sin plan en la base: Medicina, Farmacia, Bioquímica, Psicología, Enfermería, Arquitectura, Agronómica, Odontología no figura (ya tiene), Letras, Bellas Artes, Química, Biotecnología, Diseño Gráfico/Industrial/Indumentaria, Física/Matemática (escaneo), etc.
