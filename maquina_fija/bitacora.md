@@ -351,3 +351,9 @@
 - Cargada por `planes_manuales` (34 espacios, 1.º–5.º; nombres comprobados literalmente contra `fcagr.unr.edu.ar/wp-content/uploads/2024/02/Asignaturas-Plan-de-estudios-Lic.-en-RRNN-FCA-UNR.pdf`, RCS 311/13, RM 2381/2013, enlazado desde la página, que lista las mismas por año). Hoja `data/planes_unr_recursos_naturales.csv`. Incluye Informática (2.º) e Inglés (3.º), pruebas de suficiencia con código, y Tesina; afuera los 210 h de cursos electivos. Título intermedio de Bachiller (1500 h), no cargado aparte.
 - Cadena exportar→verificar (UNR: materias 2433/2454, las 34 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: Tec. Tecnología Alimentaria (Baigorria, sin duración en la base); luego UNLZ/UNAJ.
+
+## 2026-10-23 (45) — UNR: "Tecnicatura en Tecnología Alimentaria en Baigorria" retirada
+- No es educación superior: la fila salía de una noticia del 19/8/2024 (`unr.edu.ar/tecnicatura-en-tecnologia-alimentaria-en-granadero-baigorria/`) sobre la sede Baigorria del Politécnico ("cursar toda la escuela", "completar su formación secundaria"). `ips.edu.ar/especialidades` la lista entre las "tecnicaturas de nivel medio" (Técnico/a en Tecnología de los Alimentos) y no está en `ed-superior`.
+- Borrada de la base del scraper (no tenía materias, actividades ni ofertas). Ojo: una corrida genérica nueva de unr.edu.ar podría volver a tomar esa noticia como carrera.
+- Cadena exportar→verificar (UNR: ofertas 210/217, materias 2433/2454)→exportar completa (`Archivo: data/catalogo_depurado.json`, sin la fila). Sin credenciales de producción ni de GitHub.
+- Siguiente: UNR queda sin pendientes fáciles (Politécnico solo en Drive); pasar a UNLZ/UNAJ.
