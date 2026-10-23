@@ -330,3 +330,9 @@
 - Recursos Naturales: `fcagr.unr.edu.ar/?page_id=39` sigue sin responder (segundo intento).
 - Cadena exportar→verificar (UNR: materias 2298/2319)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Prof. Comunicación Educativa y Educación Física (buscar facultad), Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico); Recursos Naturales en otro ciclo; luego UNLZ/UNAJ.
+
+## 2026-10-23 (42) — UNR: Prof. Comunicación Educativa y Prof. Educación Física
+- Prof. de Comunicación Educativa cargado por `planes_manuales` (26 espacios, 1.º–4.º; nombres comprobados literalmente contra `fcpolit.unr.edu.ar/wp-content/uploads/2020/04/Profesorado-Comunicación-Educativa-PlanVigente.pdf`, CD 2586/14, CS 1075/14, RM 222/17, enlazado desde `fcpolit.unr.edu.ar/?page_id=6966`; nombres de los contenidos mínimos, año según el código). Hoja `data/planes_unr_comunicacion_educativa.csv`. Sin optativas.
+- Prof. Universitario en Educación Física cargado (33 espacios, 1.º–4.º; contra la tabla `famhyc.unr.edu.ar/wp-content/uploads/2025/10/b.-ESPACIOS-CURRICULARES-Y-CORRELATIVIDADES-Profesorado-en-Educacion-Fisica.pdf`, enlazada desde la página de la carrera; año según el código). Hoja `data/planes_unr_educacion_fisica.csv`. Afuera: Optativa I y II. El plan (PE) dice 4 años, como el catálogo; nombra 4.2.32 "Educación e Inclusión" y la tabla "Educación Física e Inclusión" (se usó la tabla).
+- Cadena exportar→verificar (UNR: materias 2357/2378, las 59 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico); Recursos Naturales en otro ciclo; luego UNLZ/UNAJ.
