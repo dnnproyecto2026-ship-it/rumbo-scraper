@@ -345,3 +345,9 @@
 - Cadena exportar→verificar UNR (materias 2399/2420, las 42 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Vigilancia sin Claude del 23/10: mismas caídas que el 22/10 (Austral, Palermo posgrados, UB, UBA); UCEMA ahora 16→17 carreras (el 22/10 daba 14). No re-importar desde esas corridas.
 - Siguiente: Recursos Naturales (reintento), Tec. Tecnología Alimentaria (Baigorria); luego UNLZ/UNAJ.
+
+## 2026-10-23 (44) — UNR: Lic. en Recursos Naturales
+- Los "reintentos" de las bitácoras 39 y 41 leían un fallo guardado el 27/9 en `data/verificacion/` (caché de `Fuentes`); borrada esa entrada, `fcagr.unr.edu.ar/?page_id=39` da 404: la página se mudó a `fcagr.unr.edu.ar/agro/licenciatura-rrnn`. Ojo con otros "no respondió": mirar si es caché vieja.
+- Cargada por `planes_manuales` (34 espacios, 1.º–5.º; nombres comprobados literalmente contra `fcagr.unr.edu.ar/wp-content/uploads/2024/02/Asignaturas-Plan-de-estudios-Lic.-en-RRNN-FCA-UNR.pdf`, RCS 311/13, RM 2381/2013, enlazado desde la página, que lista las mismas por año). Hoja `data/planes_unr_recursos_naturales.csv`. Incluye Informática (2.º) e Inglés (3.º), pruebas de suficiencia con código, y Tesina; afuera los 210 h de cursos electivos. Título intermedio de Bachiller (1500 h), no cargado aparte.
+- Cadena exportar→verificar (UNR: materias 2433/2454, las 34 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente: Tec. Tecnología Alimentaria (Baigorria, sin duración en la base); luego UNLZ/UNAJ.

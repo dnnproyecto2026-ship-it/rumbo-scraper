@@ -1,0 +1,35 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Licenciatura en Recursos Naturales;5.0;;;https://fcagr.unr.edu.ar/wp-content/uploads/2024/02/Asignaturas-Plan-de-estudios-Lic.-en-RRNN-FCA-UNR.pdf;"1|Introducción a los recursos naturales
+1|Química general e inorgánica
+1|Matemática
+1|Química Orgánica
+1|Física
+1|Biología
+2|Química biológica
+2|Climatología
+2|Botánica general
+2|Microbiología
+2|Estadística
+2|Zoología general
+2|Botánica criptogámica
+2|Informática
+3|Genética
+3|Suelos
+3|Biología molecular
+3|Teledetección aplicada y sistemas de información geográfica
+3|Fisiología vegetal
+3|Anatomía y fisiología comparada
+3|Diversidad de vertebrados
+3|Inglés
+4|Ecología
+4|Evaluación de impacto ambiental
+4|Biología de poblaciones y evolución
+4|Biología de la Conservación
+4|Diversidad vegetal
+4|Invertebrados I
+4|Invertebrados II
+4|Epistemología
+5|Biogeografía
+5|Legislación Ambiental
+5|Metodología de la Investigación Científica
+5|Tesina";lector planes_manuales;;"RCS 311/13, RM 2381/2013; fuera: 210 h de cursos electivos";Universidad Nacional de Rosario;b3761c70-e346-4ed0-a978-33e5d8417c1b
