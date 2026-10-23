@@ -305,3 +305,10 @@
 - **NO se cargan:** Lic. en Letras, Lic. y Prof. en Bellas Artes — 4.º y 5.º año por orientación (ciclos/orientaciones mezclados). El PDF del plan está solo en Google Drive.
 - Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: FCEIA (Computación, Matemática, Física), Tec. Gestión Cultural; luego UNLZ/UNAJ.
+
+## 2026-10-23 (38) — UNR: Tec. en Gestión Cultural
+- Cargada por `planes_manuales` (27 materias, 1.º–3.º; nombres comprobados literalmente contra el plan en texto de `fhumyar.unr.edu.ar/tecnicatura-en-gestion-cultural/`). Hoja `data/planes_unr_gestion_cultural.csv`.
+- FCEIA (Computación, Matemática, Física) ya estaba cerrada desde las bitácoras 23 y 26 (PDF escaneados o plan viejo); el "siguiente" de la 37 estaba desactualizado.
+- **Lic. y Prof. en Interpretación NO se cargan:** son nombres genéricos de una lista vieja; Humanidades hoy publica una carrera por instrumento (Canto, Piano, Guitarra, Órgano, Cuerdas, Vientos), que ya tienen plan. Revisar si sobran en el catálogo.
+- Cadena exportar→verificar (UNR: materias 2239/2260, sin "no lo dice")→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Lic. Recursos Naturales, Lic. Sistemas Integrales de Cuidado, Ciencia de Datos, tecnicaturas del Politécnico (ips.edu.ar) y de Ciencia Política; luego UNLZ/UNAJ.
