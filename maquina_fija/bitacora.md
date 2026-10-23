@@ -249,3 +249,8 @@
 - La lista de "sin plan" sale del catálogo exportado, que está atrasado respecto de la base del scraper: Medicina Veterinaria figuraba sin plan pero ya tiene 47 materias (1.º–6.º). Comparada con `fveter.unr.edu.ar/catedras.html` falta **Fisiología** (2.12, 2.º año); no se puede agregar con `planes_manuales` (la carrera ya tiene materias). Pendiente de corrección puntual por una persona.
 - Sin cambios de código ni de datos; tests 877 OK. Sin credenciales de producción ni de GitHub.
 - Regla para los próximos ciclos: sacar "sin plan" de la base (`materias.carrera_id`), no del catálogo exportado. UNR sin plan en la base: Medicina, Farmacia, Bioquímica, Psicología, Enfermería, Arquitectura, Agronómica, Odontología no figura (ya tiene), Letras, Bellas Artes, Química, Biotecnología, Diseño Gráfico/Industrial/Indumentaria, Física/Matemática (escaneo), etc.
+
+## 2026-10-23 (28) — UNR: Licenciatura en Diseño Gráfico
+- Cargada por `planes_manuales` (30 materias, 1.º–4.º; nombres comprobados contra `fapyd.unr.edu.ar/wp-content/uploads/2022/05/220304_LDG_PLAN_DE_ESTUDIOS.pdf`; año de cada materia comparado con las fichas "Año:" del PDF). Hoja `data/planes_unr_diseno_grafico.csv`. Afuera: 2 optativas. PSE y PPS puestas en 3.º (Ciclo Medio, 2.º–3.º; el año exacto no figura en una ficha).
+- Exportación del catálogo en curso; verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR sin plan en la base: Medicina, Arquitectura, Bellas Artes, Diseño Industrial/Indumentaria, Psicología, Farmacia, Bioquímica, Enfermería, Agronómica, Letras.
