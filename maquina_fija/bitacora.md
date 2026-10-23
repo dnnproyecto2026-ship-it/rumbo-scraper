@@ -224,3 +224,9 @@
 - **Prof. en Ciencias Biológicas: no se carga.** Su PDF (`documents/575/archivo_90.pdf`, plan 1990) es un reporte de correlativas por ciclo, sin año por materia.
 - **Lic. en Trabajo Social: no se carga.** `sociales.unc.edu.ar/content/plan-de-estudio` no trae plan (sin texto ni PDF; solo noticias). Plan no publicado en el sitio.
 - UNC restante: solo Odontología (sin respuesta). Pendiente: cadena exportar→verificar→exportar desde el lanzador. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-23 (23) — UNR FCEIA: Ingeniería Electrónica
+- Cargada por `planes_manuales` (45 materias, 1.º–5.º; nombres comprobados contra `web.fceia.unr.edu.ar/images/PDF/planes_de_estudio/electronica_grilla_plan_2014.pdf`, Res. 372/2014). Año = cuatrimestre/2. Afuera: optativas, electivas. Hoja `data/planes_unr_electronica.csv`.
+- **No cargables (FCEIA):** Ing. Civil, Eléctrica, Industrial y Lic. Matemática/Física: PDF escaneado sin texto. Lic. Ciencias de la Computación: el PDF legible es del plan 2010 y la página vigente dice plan 2024 (PDF escaneado): un plan viejo no se carga. Ing. Mecánica no mirada.
+- **FCEcon (Económicas UNR):** `portal.fcecon.unr.edu.ar` arma el plan por JavaScript/API; el HTML no trae materias. Pendiente: encontrar el endpoint antes de escribir lector.
+- Exportación en curso; verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.

@@ -1,0 +1,46 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Ingeniería Electrónica;5.0;;;https://web.fceia.unr.edu.ar/images/PDF/planes_de_estudio/electronica_grilla_plan_2014.pdf;"1|Introducción a la Ingeniería Electrónica
+1|Introducción a la Física
+1|Cálculo I
+1|Algebra y Geometría Analítica
+1|Informática
+1|Representación Gráfica
+1|Calculo II
+1|Física I
+1|Legislación y Organización de Empresas
+1|Gestión de Calidad y de las Operaciones
+2|Calculo III
+2|Algebra Lineal
+2|Física III
+2|Cálculo IV
+2|Ingles I
+2|Química
+2|Teoría de Circuitos
+2|Física II
+2|Matemática Aplicada
+2|Ingles II
+3|Sistemas y Señales I
+3|Laboratorio de Electromagnetismo
+3|Informática Aplicada
+3|Física de los Dispositivos Electrónicos
+3|Probabilidad y Estadística
+3|Sistemas y Señales II
+3|Dispositivos y circuitos Electrónicos I
+3|Máquinas Eléctricas
+3|Sistemas Digitales I
+3|Gestión de Proyectos de Ingeniería
+4|Dinámica de sistemas físicos
+4|Fundamento de las Comunicaciones Eléctricas
+4|Sistemas Digitales II
+4|Dispositivos y circuitos Electrónicos II
+4|Laboratorio de Mediciones
+4|Teoría de control
+4|Mediciones Electrónicas
+4|Dispositivos y Circuitos Electrónicos III
+5|Proyecto I
+5|Economía y Costos
+5|Higiene y Seguridad y Gestión Ambiental
+5|Proyecto II
+5|Emprendedorismo y Evaluación de Proyectos de Inversión
+5|Responsabilidad Social y Factor Humano
+5|Práctica Profesional Supervisada";lector Claude máquina fija;;"Plan 2014 Res. 372/2014 CS; año = cuatrimestre/2. Afuera: optativas y electivas.";UNR;d84268a5-8f9d-4ef2-8a8e-fec59036b97f
