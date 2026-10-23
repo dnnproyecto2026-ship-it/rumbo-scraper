@@ -230,3 +230,7 @@
 - **No cargables (FCEIA):** Ing. Civil, Eléctrica, Industrial y Lic. Matemática/Física: PDF escaneado sin texto. Lic. Ciencias de la Computación: el PDF legible es del plan 2010 y la página vigente dice plan 2024 (PDF escaneado): un plan viejo no se carga. Ing. Mecánica no mirada.
 - **FCEcon (Económicas UNR):** `portal.fcecon.unr.edu.ar` arma el plan por JavaScript/API; el HTML no trae materias. Pendiente: encontrar el endpoint antes de escribir lector.
 - Exportación en curso; verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-23 (24) — Revisión: FCEcon UNR ya tiene lector
+- La nota del ciclo 23 ("FCEcon por JS, falta endpoint") estaba desactualizada: `rumbo_scraper/database/planes_unr.py` ya lee el servicio `admin.fceyeua.fcecon.unr.edu.ar` (Contador, Administración, Economía, Estadística, Turismo). Sin cambios de datos ni de código; tests 877 OK.
+- Pendiente sin cambios: verificación completa y exportación final desde el lanzador; sin credenciales de producción ni de GitHub. Siguiente: UNR (Medicina, Derecho, Humanidades, Arquitectura, Agrarias, Veterinaria, Bioquímica), luego UNLZ/UNAJ.
