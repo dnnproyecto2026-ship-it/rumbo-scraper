@@ -312,3 +312,9 @@
 - **Lic. y Prof. en Interpretación NO se cargan:** son nombres genéricos de una lista vieja; Humanidades hoy publica una carrera por instrumento (Canto, Piano, Guitarra, Órgano, Cuerdas, Vientos), que ya tienen plan. Revisar si sobran en el catálogo.
 - Cadena exportar→verificar (UNR: materias 2239/2260, sin "no lo dice")→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Lic. Recursos Naturales, Lic. Sistemas Integrales de Cuidado, Ciencia de Datos, tecnicaturas del Politécnico (ips.edu.ar) y de Ciencia Política; luego UNLZ/UNAJ.
+
+## 2026-10-23 (39) — UNR: Lic. en Sistemas Integrales de Cuidado
+- Cargada por `planes_manuales` (24 espacios, 1.º–4.º; nombres comprobados literalmente contra `famhyc.unr.edu.ar/wp-content/uploads/2025/10/b.-ESPACIOS-CURRICULARES-Y-CORRELATIVIDADES-Licenciatura-en-Sistemas-Integrales-de-Cuidado.pdf`, enlazado desde la página de la carrera; año según el código del espacio). Hoja `data/planes_unr_cuidado.csv`. El plan no tiene optativas; da título intermedio de Bachiller Universitario (1500 h), no cargado aparte.
+- Lic. en Recursos Naturales: `fcagr.unr.edu.ar/?page_id=39` no respondió al lector; reintentar.
+- Cadena exportar→verificar (UNR: materias 2263/2284)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Tec. Acompañamiento Terapéutico (PDF `DI-SSPU-1120-25` en fpsico.unr.edu.ar), Recursos Naturales, Ciencia de Datos (página "en construcción"), tecnicaturas del Politécnico; luego UNLZ/UNAJ.
