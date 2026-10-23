@@ -128,3 +128,8 @@
 - Cargada por `planes_manuales` (24 materias, 1.º–4.º año; cada nombre comprobado contra el PDF de correlatividades de fahce.unlp.edu.ar; el año sale del PDF de tramo sugerido). Hoja `data/planes_unlp_biblio.csv`. Afuera: capacitaciones en idioma, Seminarios 1–3 a elegir y práctica/tesina.
 - Pendiente en Humanidades: Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit., Lic. Cs. de la Educación. El Profesorado en Bibliotecología ya tenía 28 materias.
 - `verificar_catalogo` (PID 972835, mío) sigue corriendo; la cadena exportará al terminar e incluirá esta carrera. Sin credenciales de producción.
+
+## 2026-10-23 (4) — UNLP Humanidades: Lic. en Cs. de la Educación
+- Cargada por `planes_manuales` (23 materias, 1.º–4.º año; cada nombre comprobado contra el PDF oficial del plan A2002 en fahce.unlp.edu.ar). Hoja `data/planes_unlp_cseducacion.csv`. Afuera: Didáctica a elegir (3.º), capacitaciones en informática e idiomas y 5.º año (tres orientaciones, optativas, tesina). Duración del catálogo sin tocar.
+- Pendiente en Humanidades: Lic. Inglés Ling./Lit., Lic. Francés Ling./Lit., Profesorado en Cs. de la Educación (no mirado).
+- La cadena de exportación (`verificar_catalogo` PID 972835, mío) sigue corriendo; exportará al terminar e incluirá esta carrera. Sin credenciales de producción.
