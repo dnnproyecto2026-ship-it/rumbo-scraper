@@ -1,0 +1,34 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Ciencias Biológicas;5.0;;;https://fcefyn.unc.edu.ar/documents/576/Ciencias_Biologicas_bxgf4em.pdf;"1|Introducción a la Biología
+1|Química General
+1|Matemática I
+1|Epistemología y Metodología de la Ciencia
+1|Fundamentos de Evolución
+1|Química Orgánica
+1|Matemática II
+1|Física I
+1|Inglés
+2|Química Biológica
+2|Bioestadística I
+2|Física II
+2|Módulo Informática
+2|Ambiente Físico
+2|Bioestadística II
+2|Morfología Vegetal
+2|Biología Celular y Molecular
+2|Morfología Animal
+3|Diversidad Biológica I
+3|Diversidad Biológica II
+3|Fisiología Animal
+3|Fisiología Vegetal
+3|Genética
+3|Diversidad Biológica III
+3|Teoría y Métodos Taxonómicos
+3|Ecología y Conservación
+3|Diversidad Biológica IV
+4|Problemática Ambiental
+4|Microbiología
+4|Genética de Poblaciones y Evolución
+4|Biogeografía
+4|Legislación en Biología
+5|Tesina de Grado";IA Claude;;Plan 2015: semestres 1-8 del reporte oficial (año = semestre/2) + Tesina de Grado (anual, 5.º según la página del plan). Afuera: Ciclo de Nivelación, selectivas y optativas.;UNC;182acaa4-0e70-4ba4-adf8-c0a0f188ec42

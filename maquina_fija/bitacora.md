@@ -217,3 +217,10 @@
 ## 2026-10-23 (21) — UNC Letras: Profesorado en Letras Clásicas
 - Cargado por `planes_manuales` (27 materias, 1.º–5.º; nombres comprobados contra `ffyh.unc.edu.ar/wp-content/uploads/2024/04/CLASICAS-PLAN-NUEVO-PROF.pdf`, cap. 4.2). Hoja `data/planes_unc_letras_prof.csv`. Afuera: Optativas I y II y Literatura Argentina/Latinoamericana I y II (a elegir).
 - Pendiente: cadena exportar→verificar→exportar (la verificación se corta en la herramienta; hacerla desde el lanzador). UNC restante: Trabajo Social, Biológicas (FCEFyN), Odontología (sin respuesta). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-23 (22) — UNC FCEFyN: Ciencias Biológicas (Plan 2015)
+- Cargada por `planes_manuales` (33 materias, 1.º–5.º; nombres comprobados contra el reporte oficial `fcefyn.unc.edu.ar/documents/576/Ciencias_Biologicas_bxgf4em.pdf`). Año = semestre/2 según las secciones "PRIMER…OCTAVO SEMESTRE" del PDF (coincide con la página `…/ciencias-biologicas/plan-2015/`); Tesina de Grado en 5.º. Afuera: Ciclo de Nivelación, selectivas y optativas. Hoja `data/planes_unc_biologicas.csv`.
+- La base tenía 4 años de duración; la facultad dice cinco de cursado. La herramienta no escribe la duración: queda a corregir.
+- **Prof. en Ciencias Biológicas: no se carga.** Su PDF (`documents/575/archivo_90.pdf`, plan 1990) es un reporte de correlativas por ciclo, sin año por materia.
+- **Lic. en Trabajo Social: no se carga.** `sociales.unc.edu.ar/content/plan-de-estudio` no trae plan (sin texto ni PDF; solo noticias). Plan no publicado en el sitio.
+- UNC restante: solo Odontología (sin respuesta). Pendiente: cadena exportar→verificar→exportar desde el lanzador. Sin credenciales de producción ni de GitHub.
