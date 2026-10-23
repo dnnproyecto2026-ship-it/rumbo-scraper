@@ -207,3 +207,9 @@
 - FAMAF ya tiene plan en la base para Lic. Computación, Física, Matemática, Mat. Aplicada, Astronomía, Hidrometeorología y los profesorados (el lector `plan_famaf` los toma). Faltaban Analista en Computación, Tec. Univ. en Matemática Aplicada y Tec. Univ. en Astronomía.
 - Las tres páginas (`famaf.unc.edu.ar/academica/grado/...`) responden 200 pero no traen `div.year`: ningún plan en HTML. Analista no enlaza ningún documento; las dos tecnicaturas enlazan `corr_602.pdf` / `corr_611.pdf`, que son las correlatividades de las **licenciaturas** (602 Mat. Aplicada, 611 Astronomía), no de la tecnicatura. **No se cargan**: el tramo de la tecnicatura sería una inferencia.
 - Sin cambios de código ni de datos; tests 877 OK. Pendiente UNC: Letras, FCEFyN, Trabajo Social, Odontología (sin respuesta). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-23 (20) — UNC Letras: Lic. en Letras Clásicas y Tec. en Corrección Literaria
+- Cargadas por `planes_manuales` (nombres comprobados contra los PDF oficiales de `ffyh.unc.edu.ar/wp-content/uploads/2024/04/`): Lic. en Letras Clásicas (25, 1.º–5.º) y Tec. en Corrección Literaria (21, 1.º–3.º). Hoja `data/planes_unc_letras.csv`. Afuera: optativas, seminarios electivos, prueba de idioma, TFL y examen de habilitación.
+- **Lic. en Letras Modernas: no se carga.** El PDF trae 1.º–3.º común y 4.º–5.º en tres orientaciones (Literarios, Lingüísticos, Crítico del Discurso); la base tiene una sola licenciatura. Prof. en Letras Clásicas: PDF de 133 mil caracteres (`CLASICAS-PLAN-NUEVO-PROF.pdf`), no mirado.
+- Tec. en Corrección Literaria queda sin duración en la base (el PDF muestra 3 años, pero la herramienta no la escribe). Verificación y exportación final en curso; sin credenciales de producción ni de GitHub.
+- Pendiente UNC: Prof. Letras Clásicas, Trabajo Social, Ciencias Biológicas y su profesorado, Odontología (sin respuesta).

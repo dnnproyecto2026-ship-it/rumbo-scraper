@@ -1,0 +1,47 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Licenciatura en Letras Clásicas;5.0;;;https://ffyh.unc.edu.ar/wp-content/uploads/2024/04/PLAN-DE-ESTUDIOS-LICENCIATURA-LETRAS-CLASICAS.pdf;"1|Lengua y Cultura Latinas I
+1|Lengua y Cultura Griegas I
+1|Introducción a la Literatura
+1|Lingüística I
+1|Gramática Superior Castellana
+2|Lengua y Cultura Latinas II
+2|Lengua y Cultura Griegas II
+2|Filosofía Antigua
+2|Mito y Religión en Gracia y Roma
+2|Historia Antigua
+3|Lengua y Cultura Latinas III
+3|Lengua y Cultura Griegas III
+3|Estética clásica y medieval
+3|Historia de la Lengua española
+3|Teoría y Metodología Literaria I
+4|Lingüística clásica
+4|Filología latina I
+4|Filología griega I
+4|Historia de la Literatura latina I
+4|Historia de la Literatura griega I
+5|Filología latina II
+5|Filología griega II
+5|Seminario de Investigación Filológica
+5|Historia de la Literatura latina II
+5|Historia de la Literatura griega II";IA Claude;;Afuera: optativas de área (Letras, Historia, Filosofía), seminarios electivos, prueba de suficiencia de idioma y Seminario de TFL;UNC;a81d0bab-6b14-46bb-a035-dd3a4f3547e3
+UNC;Tecnicatura en Corrección Literaria;3.0;;;https://ffyh.unc.edu.ar/wp-content/uploads/2024/04/PLAN-DE-ESTUDIOS-TECNICATURA-CORRECCION-LITERARIA.pdf;"1|Literatura Española I
+1|Literatura Clásica Griega y Latina
+1|Introducción a la Literatura
+1|Teoría Literaria
+1|Lingüística I
+1|Gramática I
+2|Gramática II
+2|Teoría y Metodología literarias I
+2|Literatura Latinoamericana I
+2|Seminario de Traducción
+2|Lingüística II
+2|Literatura de habla francesa
+2|Semiótica
+2|Seminario de Producción Textual
+3|Literatura Argentina I
+3|Sociología del Discurso
+3|Seminario de Variación Lingüística
+3|Gramática aplicada
+3|Literatura Argentina II
+3|Literatura Latinoamericana II
+3|Teoría de los Discursos Sociales I";IA Claude;;Afuera: examen de habilitación;UNC;a29271ce-1c59-4fd9-92fc-fedebfbff53e
