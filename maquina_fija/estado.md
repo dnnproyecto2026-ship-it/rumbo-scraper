@@ -1,6 +1,6 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 14)
+Actualizado: 2026-10-23 (ciclo 15)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
@@ -12,7 +12,7 @@ Actualizado: 2026-10-23 (ciclo 14)
 - Esta máquina no tiene credenciales de GitHub ni identidad de git: los commits quedan locales en la rama `maquina-fija` (autor del historial pasado con `-c user.name/-c user.email`). Hace falta que una persona haga `git push -u origin maquina-fija`.
 
 ## Listo para cargar (cuando haya credenciales, 01:00–08:00, lotes ≤ 8)
-- UNC: Prof. en Teatro (31), Lic. Sociología (34), Lic. Ciencia Política (35), Abogacía (38), Trad. Alemán (30) y Lic. Italianas (31)
+- UNC: Lic. Cine y Artes Audiovisuales (32), Prof. en Teatro (31), Lic. Sociología (34), Lic. Ciencia Política (35), Abogacía (38), Trad. Alemán (30) y Lic. Italianas (31)
 - UNQ (planes de UNQ por núcleos; ver bitácora 2026-10-22)
 - UNLP (Económicas: Tec. Cooperativismo y Ciencia de Datos; Tec. Agroecología; Humanidades: Lic. Francés Or. Ling. y Lit. (14 c/u), Lic. Inglés Or. Lingüística (17), Lic. Inglés Or. Literaria (17), Lic. Cs. de la Educación (23), Lic. Bibliotecología, 5 carreras de Lenguas (Prof. Inglesas/Francesas/Portugués, Trad. Inglés/Francés); 3 tecnicaturas de Periodismo + Trabajo Social completo + 2 tecnicaturas de Odontología: Lic., Profesorado, Tec. Gestión del riesgo y Fonoaudiología, Psicología (Lic., 34 materias), Odontología (grado, 60 materias; duración del catálogo 6 vs 5 años de la tabla: revisar); ver bitácora)
 
@@ -20,7 +20,7 @@ Actualizado: 2026-10-23 (ciclo 14)
 Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 1. UNQ — resto: páginas con orientaciones, bolsas de electivas que no suman, o tablas sin encabezado (Informática); ver bitácora
 2. UNLP (84/151 sin plan; Periodismo hecho salvo Lic., Profesorado y Com. Popular; Trabajo Social: Lic. y Profesorado hechos, Trabajo Social completo; Odontología hecha; Psicología: Profesorado pendiente (PDF escaneado, OCR incompleto, ver bitácora 17); Exactas bloqueada por el sitio (timeout + certificado TLS), reintentar; Económicas hecha; Agrarias: Agroecología hecha, Agronómica/Forestal/Cultivos Protegidos con PDF escaneado (bitácora 20), Prod. Agropecuaria sin buscar; Humanidades: Lenguas hecha (5); Lic. Francés Ling. y Lit. hechas (bitácora 7); Prof. Cs. de la Educación ya estaba cargado (33 materias, coincide con el PDF A2002; Humanidades completa); Lic. Inglés Lingüística hecha (bitácora 5); Lic. Cs. de la Educación hecha (1.º–4.º, bitácora 4), Lic. Bibliotecología hecha, fuente: PDFs en las páginas de carrera de fahce.unlp.edu.ar)
-3. UNC (75/114): Sociales hecha salvo Trabajo Social; Derecho: Abogacía hecha (bitácora 10), Notariado y Prof. Cs. Jurídicas NO cargables por ahora (errata en nombre / semestre inferido, bitácora 11); BLOQUEADAS por Anubis: FCM, FAUD, Agropecuarias, Psicología, Comunicación, Belgrano; FFyH y Monserrat sin respuesta (bitácora 9); Lenguas hecha (bitácora 13); Artes: Prof. Teatro hecho, Lic. Teatro NO cargable (OCR, bitácora 14), faltan Música/Visuales/Cine; alcanzables: Químicas (no cargable), Odontología, Artes, Letras, Económicas, FCEFyN, FAMAF
+3. UNC (75/114): Sociales hecha salvo Trabajo Social; Derecho: Abogacía hecha (bitácora 10), Notariado y Prof. Cs. Jurídicas NO cargables por ahora (errata en nombre / semestre inferido, bitácora 11); BLOQUEADAS por Anubis: FCM, FAUD, Agropecuarias, Psicología, Comunicación, Belgrano; FFyH y Monserrat sin respuesta (bitácora 9); Lenguas hecha (bitácora 13); Artes: Prof. Teatro y Lic. Cine hechos (bitácora 15), Lic. Teatro NO cargable (OCR, bitácora 14), faltan Música/Visuales; alcanzables: Químicas (no cargable), Odontología, Artes, Letras, Económicas, FCEFyN, FAMAF
 4. UCASAL (73/79) — lectura previa: el plan detallado corta cada nombre a 20 letras (commit 859fc87); falta registrar motivo por carrera
 5. UNR (60/110)
 6. UNLZ (32/38), UNAJ (23/24), UNTREF (19/44), UNSO (16/16), UNO (15/23), UNAHUR (14/34), UNPAZ (14/23)

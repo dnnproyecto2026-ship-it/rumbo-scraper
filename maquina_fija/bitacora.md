@@ -182,3 +182,7 @@
 - Cargado por `planes_manuales` (31 materias, 1.º–4.º año; nombres comprobados contra el PDF oficial `artes.unc.edu.ar/files/Prof-Teatro.pdf`). Hoja `data/planes_unc_artes.csv`. Afuera: Curso de Nivelación, tres seminarios electivos y prueba de idioma.
 - **Lic. en Teatro: no se carga.** El PDF (`artes.unc.edu.ar/files/Lic-en-Teatro.pdf`) está en OCR, con los números romanos rotos ("Actuación 11", "Escenotecnia 11") y tres orientaciones (Actuación, Teatrología, Escenotécnicas) en el mismo documento; no se puede comprobar el nombre literal.
 - Pendiente en Artes: Música, Artes Visuales, Cine (cada departamento enlaza sus planes desde `?page_id=` de "Carreras y Programas"; no mirados). `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
+
+## 2026-10-23 (15) — UNC Artes: Lic. en Cine y Artes Audiovisuales
+- Cargada por `planes_manuales` (32 materias, 1.º–5.º año; nombres comprobados contra el PDF oficial `artes.unc.edu.ar/files/Plan-de-estudios-2018-Licenciatura-en-Cine-y-Medios-Audiovisuales.pdf`; año de la tabla de cursado y de los contenidos mínimos, que coinciden). Hoja `data/planes_unc_artes_cine.csv`. Afuera: 6 optativas, 2 electivas, Trabajo Final y prueba de idioma.
+- Pendiente en Artes: Música (6 PDF de plan en `departamento-de-musica/carreras/`) y Artes Visuales (`Licenciatura.pdf`, `profesorado.pdf`); no mirados aún. `verificar_catalogo` (PID 972835, mío) sigue; exportar al terminar. Sin credenciales de producción.
