@@ -288,3 +288,8 @@
 - Cargada por `planes_manuales` (44 materias, 1.º–5.º; nombres comprobados contra `fcagr.unr.edu.ar/wp-content/uploads/2024/08/CS-416-23-2-Plan-de-Estudios-IA.pdf`, RCS 416/2023, "vigente desde 2024" según la página). Hoja `data/planes_unr_agronomica.csv`. Afuera: Optativas I y II, Electivas, y Inglés, Informática y Práctica Social Educativa (la grilla no les da año; el cargador exige año en todas o en ninguna).
 - Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Enfermería, Terapia Ocupacional, Fonoaudiología, Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
+
+## 2026-10-23 (35) — UNR: Enfermería
+- Cargada por `planes_manuales` (40 materias, 1.º–5.º; nombres comprobados contra `fcm.unr.edu.ar/wp-content/uploads/2019/08/LicEnfermeria-Plan2017.pdf`, plan 2017; año según la tabla de asignación horaria). Hoja `data/planes_unr_enfermeria.csv`. Afuera: Materias Optativas.
+- Exportación y verificación completa pendientes desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Terapia Ocupacional, Fonoaudiología (plan 2024 en fcm.unr.edu.ar/fonoaudiologia/), Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
