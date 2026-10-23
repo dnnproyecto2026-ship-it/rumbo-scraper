@@ -365,3 +365,11 @@
 - Los sitios de las facultades se mudaron: `economicas.unlz.edu.ar`, `agrarias.unlz.edu.ar` y `derecho.unlz.edu.ar` responden (las direcciones viejas `www.economicas…`, `agrarias…/web18/`, `www.derecho…/web2017/` no).
 - Cadena exportar→verificar (UNLZ: ofertas 68/69, materias 473/473)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNLZ Económicas (Contador, Administración, tecnicaturas), Agrarias (tecnicaturas) y Derecho (Prof. Cs. Jurídicas); luego UNAJ.
+
+## 2026-10-23 (47) — UNLZ: Económicas (Contador, Lic. Administración y sus títulos intermedios)
+- Cargadas por `planes_manuales` (119 materias, con año), comprobadas literalmente contra las páginas de carrera (el plan está en el HTML): `www.economicas.unlz.edu.ar/nuevosite/index.php/contador-publico/` → Contador Público (36, incluye PPS; 2708 h) y Tec. Universitaria Contable (23, título intermedio); `…/licenciatura-en-administracion/` → Lic. en Administración (37, incluye PPS; 2772 h) y Tec. Universitaria en Administración y Gestión (23). Hoja `data/planes_unlz_economicas.csv`. Solo se ajustaron mayúsculas/tildes contra la lista de programas de la misma página.
+- Las dos tecnicaturas siguen sin duración en la base: la página dice 3 años y medio (no se carga por `planes_manuales`).
+- **Técnico en Comercio Internacional y Aduanas:** no aparece en el sitio de Económicas; buscar de qué facultad es.
+- Cadena exportar→verificar (UNLZ: ofertas 68/69, materias 592/592)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Vigilancia sin Claude del 23/10: USAL creció 72→80 carreras (trabajo nuevo, revisar); el resto igual que el 22/10.
+- Siguiente: UNLZ Agrarias (5 tecnicaturas + Agroecología) y Derecho (Prof. Cs. Jurídicas); luego UNAJ.
