@@ -357,3 +357,11 @@
 - Borrada de la base del scraper (no tenía materias, actividades ni ofertas). Ojo: una corrida genérica nueva de unr.edu.ar podría volver a tomar esa noticia como carrera.
 - Cadena exportar→verificar (UNR: ofertas 210/217, materias 2433/2454)→exportar completa (`Archivo: data/catalogo_depurado.json`, sin la fila). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNR queda sin pendientes fáciles (Politécnico solo en Drive); pasar a UNLZ/UNAJ.
+
+## 2026-10-23 (46) — UNLZ: 9 licenciaturas de Ciencias Sociales
+- Cargadas por `planes_manuales` (276 materias, sin año: los planes numeran las asignaturas sin decir el año), comprobadas literalmente contra los PDF que enlaza cada página de carrera de `sociales.unlz.edu.ar/index.php/<carrera>/`: Periodismo (30, RM 1081/12), Publicidad (31, RM 1266/12), Relaciones Públicas (31, RM 1183/12), Relaciones Laborales (30, RM 2109/12), Psicopedagogía (33, RM 1272/12), Trabajo Social (32, RM 1549/88), Letras (29, RM 635/88), Comunicación Social (30, RM 319/12) y Ciencias de la Educación (30, RM 736/88). Hoja `data/planes_unlz_sociales.csv`. Cada licenciatura incluye el tramo de tecnicatura/profesorado/tronco común del mismo documento; afuera las optativas genéricas y los 2 niveles de idioma.
+- **Ingeniería (Industrial, Mecánica, Mecatrónica, Ferroviaria) NO cargable:** "Ver plan de estudio" lleva a carpetas de Google Drive.
+- **Lic. Higiene y Seguridad, Gestión de la Información y Gestión de Sistemas de Automatización y Robótica pendientes:** los PDF de `ingenieria.unlz.edu.ar/oferta-academica/grado/*.pdf` son escaneos de la resolución ministerial (sin texto; el verificador no les hace OCR). El OCR se lee bien (Higiene: 13 asignaturas en 3 cuatrimestres); probar `planes_escaneados UNLZ`.
+- Los sitios de las facultades se mudaron: `economicas.unlz.edu.ar`, `agrarias.unlz.edu.ar` y `derecho.unlz.edu.ar` responden (las direcciones viejas `www.economicas…`, `agrarias…/web18/`, `www.derecho…/web2017/` no).
+- Cadena exportar→verificar (UNLZ: ofertas 68/69, materias 473/473)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente: UNLZ Económicas (Contador, Administración, tecnicaturas), Agrarias (tecnicaturas) y Derecho (Prof. Cs. Jurídicas); luego UNAJ.
