@@ -293,3 +293,9 @@
 - Cargada por `planes_manuales` (40 materias, 1.º–5.º; nombres comprobados contra `fcm.unr.edu.ar/wp-content/uploads/2019/08/LicEnfermeria-Plan2017.pdf`, plan 2017; año según la tabla de asignación horaria). Hoja `data/planes_unr_enfermeria.csv`. Afuera: Materias Optativas.
 - Exportación y verificación completa pendientes desde el lanzador. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Terapia Ocupacional, Fonoaudiología (plan 2024 en fcm.unr.edu.ar/fonoaudiologia/), Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
+
+## 2026-10-23 (36) — UNR: Terapia Ocupacional (Fonoaudiología no)
+- Terapia Ocupacional cargada por `planes_manuales` (19 materias, 1.º–5.º; nombres comprobados contra `fcm.unr.edu.ar/wp-content/uploads/2025/12/769-2025-TEO.pdf`, RCS 769/2025, plan 2025, año según el anexo de carga horaria). Hoja `data/planes_unr_terapia_ocupacional.csv`. Ojo: el catálogo trae duración 4 años y el plan son 5; no se tocó (revisar).
+- Fonoaudiología NO se carga: el plan 2024 de `fcm.unr.edu.ar/fonoaudiologia-plan-2024/` se publica solo como descarga de Google Drive (fuera del dominio de la UNR, el cargador lo rechaza).
+- Exportación hecha (`Archivo: data/catalogo_depurado.json`); verificación completa desde el lanzador. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Letras, Bellas Artes, Ciencias de la Computación/Matemática (FCEIA); luego UNLZ/UNAJ.
