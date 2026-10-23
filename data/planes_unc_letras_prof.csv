@@ -1,0 +1,28 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Profesorado en Letras Clásicas;5.0;;;https://ffyh.unc.edu.ar/wp-content/uploads/2024/04/CLASICAS-PLAN-NUEVO-PROF.pdf;"1|Introducción a los Estudios Universitarios
+1|Lengua y Cultura Latinas I
+1|Lengua y Cultura Griegas I
+1|Lingüística I
+1|Introducción a la Literatura
+1|Práctica docente I
+1|Gramática I
+1|Problemáticas educativas
+2|Lengua y Cultura Latinas II
+2|Lengua y Cultura Griegas II
+2|Literaturas Clásicas Griega y Latinas
+2|Gramática II
+2|Práctica docente II
+2|Didáctica General
+2|Seminario de lectocomprensión de Idioma Moderno
+3|Lengua y Cultura Latinas III
+3|Lengua y Cultura Griegas III
+3|Historia de la lengua española
+3|Sujetos y Aprendizaje
+4|Filología Latina I
+4|Filología Griega I
+4|Historia de la Literatura Latina I
+4|Didáctica de las Lenguas y las Literaturas Clásicas
+4|Historia de la Literatura Griega I
+4|Práctica docente III
+5|Lingüística Clásica
+5|Práctica Docente IV";IA Claude;;Afuera: optativas I y II, Literatura Argentina/Latinoamericana I y II (a elegir);UNC;be1ed0a7-6f6f-4117-ad8a-f4a4c07a8fd6

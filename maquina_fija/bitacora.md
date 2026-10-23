@@ -213,3 +213,7 @@
 - **Lic. en Letras Modernas: no se carga.** El PDF trae 1.º–3.º común y 4.º–5.º en tres orientaciones (Literarios, Lingüísticos, Crítico del Discurso); la base tiene una sola licenciatura. Prof. en Letras Clásicas: PDF de 133 mil caracteres (`CLASICAS-PLAN-NUEVO-PROF.pdf`), no mirado.
 - Tec. en Corrección Literaria queda sin duración en la base (el PDF muestra 3 años, pero la herramienta no la escribe). Verificación y exportación final en curso; sin credenciales de producción ni de GitHub.
 - Pendiente UNC: Prof. Letras Clásicas, Trabajo Social, Ciencias Biológicas y su profesorado, Odontología (sin respuesta).
+
+## 2026-10-23 (21) — UNC Letras: Profesorado en Letras Clásicas
+- Cargado por `planes_manuales` (27 materias, 1.º–5.º; nombres comprobados contra `ffyh.unc.edu.ar/wp-content/uploads/2024/04/CLASICAS-PLAN-NUEVO-PROF.pdf`, cap. 4.2). Hoja `data/planes_unc_letras_prof.csv`. Afuera: Optativas I y II y Literatura Argentina/Latinoamericana I y II (a elegir).
+- Pendiente: cadena exportar→verificar→exportar (la verificación se corta en la herramienta; hacerla desde el lanzador). UNC restante: Trabajo Social, Biológicas (FCEFyN), Odontología (sin respuesta). Sin credenciales de producción ni de GitHub.
