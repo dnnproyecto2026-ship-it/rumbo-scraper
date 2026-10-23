@@ -324,3 +324,9 @@
 - Ojo: el catálogo trae duración 1 año; la página y el plan dicen 2 años. No se tocó (revisar, como Terapia Ocupacional).
 - Cadena exportar→verificar (UNR: materias 2279/2300, las 16 nuevas verificadas)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente UNR: Recursos Naturales (reintentar `fcagr.unr.edu.ar/?page_id=39`), Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico, Baigorria); luego UNLZ/UNAJ.
+
+## 2026-10-23 (41) — UNR: Tec. Universitaria en Administración Pública
+- Cargada por `planes_manuales` (19 asignaturas, 1.º–3.º; nombres comprobados literalmente contra `fcpolit.unr.edu.ar/wp-content/uploads/2020/04/Tecnicatura-Universitaria-en-Administración-Pública-PlanVigente.pdf`, RCD 586/15, enlazado desde `fcpolit.unr.edu.ar/escuelacienciapolitica/tuap/`). Hoja `data/planes_unr_administracion_publica.csv`. La RCS 229/2018 (vigente 2017, también enlazada) solo cambia correlatividades y horas y deja 2.13.2 sin la alternativa (b): se cargó como "Régimen Jurídico de la Administración Pública Provincial y Local". Incluye Taller y Trabajo Final (asignatura anual con código).
+- Recursos Naturales: `fcagr.unr.edu.ar/?page_id=39` sigue sin responder (segundo intento).
+- Cadena exportar→verificar (UNR: materias 2298/2319)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente UNR: Prof. Comunicación Educativa y Educación Física (buscar facultad), Ciencia de Datos, Tec. Tecnología Alimentaria (Politécnico); Recursos Naturales en otro ciclo; luego UNLZ/UNAJ.
