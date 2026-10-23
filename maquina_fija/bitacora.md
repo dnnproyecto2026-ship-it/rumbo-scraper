@@ -197,3 +197,8 @@
 - Cargadas por `planes_manuales` (nombres comprobados contra el PDF): Prof. en Geografía (25, 1.º–4.º; `Profesorado_Geografia_OHCD_01-2021.pdf`) y Prof. en Letras Modernas (33, 1.º–4.º; Ordenanza HCD 03/22, cuadro 7.2). Afuera: nivelación y optativas. Hoja `data/planes_unc_ffyh.csv`.
 - No cargables: Prof. Filosofía (PDF escaneado, OCR ruidoso) y las resoluciones ministeriales de Historia, Lic. Letras, Lic. Geografía, etc. (escaneos sin texto). Los "Ord.-Res.-*" son índices de resoluciones, no planes. Antropología (24 pág.) sin texto.
 - Pendiente UNC: Odontología (sin respuesta), FAMAF, FCEFyN, Trabajo Social. Exportación en curso; sin credenciales de producción.
+
+## 2026-10-23 (18) — Cierre de la cadena exportar→verificar→exportar
+- `verificar_catalogo` terminó (ofertas verificadas 14523; materias 182820) y la exportación final cerró con `Archivo: data/catalogo_depurado.json`. Incluye Prof. Geografía y Prof. Letras Modernas de UNC. Tests: 877 OK.
+- USPT: 45 ofertas con fuente caída en la verificación (sitio sin respuesta); revisar en vigilancia.
+- Sin credenciales de producción ni de GitHub: nada cargado ni empujado. Siguiente UNC: Letras, FCEFyN, FAMAF, Trabajo Social, Odontología.

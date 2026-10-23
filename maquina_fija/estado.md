@@ -1,11 +1,11 @@
 # Estado de la máquina fija
 
-Actualizado: 2026-10-23 (ciclo 17)
+Actualizado: 2026-10-23 (ciclo 18)
 - Exportado 2026-10-22 (noche, 18): UNLP, UNQ y UCEMA incluidos.
 
 - Cadena exportar→verificar→exportar del ciclo 20 completada (2026-10-23, incluye Agroecología); termina con `Archivo: data/catalogo_depurado.json`.
 
-- Ciclo 17: exportación hecha (06:05) con Geografía y Letras Modernas de UNC. `verificar_catalogo` (PID 1026526, mío) sigue corriendo desde ~06:10; al terminar, correr `exportar_catalogo` otra vez (debe cerrar con `Archivo:`). Cuando no haya procesos, hacer eso primero.
+- Ciclo 18: cadena exportar→verificar→exportar completa (cierra con `Archivo: data/catalogo_depurado.json`, incluye Geografía y Letras Modernas de UNC). No hay procesos míos corriendo.
 
 ## Producción
 - Sin credenciales de producción en `~/Desktop/Rumbo/.env`: no se carga nada; lo listo queda abajo.
