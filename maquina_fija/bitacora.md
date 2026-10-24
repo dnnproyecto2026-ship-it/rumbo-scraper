@@ -482,3 +482,4 @@
 - Cargada por `planes_manuales` (hoja `data/planes_unahur_enfermeria.csv`, vista previa OK y `--apply`; cotejada renglón por renglón con la tabla y 6 filas al azar de la base): 39 materias, años 1–5 (afuera los 3 "Créditos ACA"). "Práctica pre- Profesional" queda como lo escribe el plan.
 - Cadena exportar→verificar UNAHUR (ofertas 52/52, materias 872/872)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNAHUR Viverismo (lector por posición de palabras); resto de UNO.
+- (62, después) `plan_unahur_numerado`: un renglón en blanco cierra la fila abierta (Desarrollo Agrario alinea los nombres arriba, no centrados; sigue dando nada). Las tres hojas cargadas salen iguales; `planes_documentos UNAHUR` (vista previa, sin `--apply`) solo propone Diseño Industrial, ya NO cargable por palabras pegadas.

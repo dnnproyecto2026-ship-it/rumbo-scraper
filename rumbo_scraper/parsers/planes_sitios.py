@@ -3536,7 +3536,11 @@ def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
     arriba: list[str] = []
     abierta = None
     for linea in (texto_con_columnas or "").splitlines():
-        if not linea.strip() or re.fullmatch(r"\s*\d{1,3}\s*", linea):
+        # (A blank line ends a row's cell; a page's number does not.)
+        if not linea.strip():
+            abierta = None
+            continue
+        if re.fullmatch(r"\s*\d{1,3}\s*", linea):
             continue
         termino, anual = _CUATRIMESTRE_UNAHUR.match(linea), _ANIO_UNAHUR_NUMERADO.match(linea)
         if termino or anual:
