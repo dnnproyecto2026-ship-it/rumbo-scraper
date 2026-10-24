@@ -382,10 +382,12 @@ puede leer queda enlazado y declarado.
 ```bash
 python -m rumbo_scraper.spiders.uai      && python -m rumbo_scraper.database.load_uai --apply
 python -m rumbo_scraper.spiders.palermo  && python -m rumbo_scraper.database.load_palermo --apply
-python -m rumbo_scraper.spiders.ucema    && python -m rumbo_scraper.database.load_ucema --apply
+python -m rumbo_scraper.spiders.ucema    && python -m rumbo_scraper.database.load_ucema --solo-carreras --apply
 python -m rumbo_scraper.spiders.uces     && python -m rumbo_scraper.database.load_uces --apply
-python -m rumbo_scraper.spiders.usal     && python -m rumbo_scraper.database.load_usal --apply
+python -m rumbo_scraper.spiders.usal     && python -m rumbo_scraper.database.load_usal --solo-nuevas --apply
 ```
+
+UCEMA y USAL no publican listas de materias: sus planes los lee `planes_adaptador`. Un `--apply` entero de sus cargadores sincroniza las materias con las de la corrida, que no trae ninguna, y las borra.
 
 Cada una publica de una forma distinta y el adapter lee la que tiene:
 

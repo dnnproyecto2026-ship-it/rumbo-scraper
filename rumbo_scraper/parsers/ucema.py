@@ -74,16 +74,19 @@ def discover_programmes(sitemaps: dict[str, str]) -> tuple[ProgrammeRef, ...]:
     for sitemap in sitemaps.values():
         for url in re.findall(r"<loc>\s*([^<\s]+)\s*</loc>", sitemap or ""):
             parsed = urlparse(clean_text(url))
-            if parsed.netloc.lower().lstrip("www.") != DOMAIN:
+            host = parsed.netloc.lower()
+            if host != DOMAIN and not host.endswith("." + DOMAIN):
                 continue
+            # The sitemap may name the site under another host of the
+            # university (cl2.ucema.edu.ar since 24/10): the page is read and
+            # recorded at the public address.
+            url = BASE_URL + parsed.path
             grade = _GRADO.match(parsed.path)
             postgraduate = _POSGRADO.match(parsed.path)
             if grade:
-                refs.setdefault(clean_text(url),
-                                ProgrammeRef(grade.group(1), clean_text(url), "Grado"))
+                refs.setdefault(url, ProgrammeRef(grade.group(1), url, "Grado"))
             elif postgraduate:
-                refs.setdefault(clean_text(url), ProgrammeRef(
-                    postgraduate.group(1), clean_text(url), "Posgrado"))
+                refs.setdefault(url, ProgrammeRef(postgraduate.group(1), url, "Posgrado"))
     return tuple(refs.values())
 
 
@@ -130,6 +133,13 @@ def description(html: str) -> str | None:
             if len(value) >= 40:
                 return value
     return None
+
+
+# "90 minutos", "Martes 18 y Jueves 20 de octubre, 17h.": a talk, not a
+# course ("15 clases" is one).
+_EVENT_DURATION = re.compile(
+    r"(?i)\bminutos?\b|\b\d{1,2}\s*h(?:s|rs)?\b|\b(?:lunes|martes|mi[ée]rcoles|jueves|viernes|"
+    r"s[áa]bados?|domingos?)\b")
 
 
 def duration_years(value: str | None) -> float | None:
@@ -194,9 +204,11 @@ def build_dataset(
                              "motivo": "la página no se pudo descargar"})
             continue
         facts = parse_facts(html)
-        if not facts.get("titulacion") and not facts.get("duracion"):
+        if not facts.get("titulacion") and (not facts.get("duracion")
+                                            or _EVENT_DURATION.search(facts["duracion"])):
             # A page of the branch that states neither what it awards nor how
-            # long it lasts is a landing, not a programme.
+            # long it lasts is a landing, not a programme; an event's page
+            # gives its "Duración" in minutes or as the day and hour it meets.
             excluded.append({"programa": ref.slug, "url": ref.url,
                              "motivo": "la página no publica datos del programa"})
             continue

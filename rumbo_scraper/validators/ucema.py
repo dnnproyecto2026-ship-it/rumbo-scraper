@@ -35,6 +35,8 @@ def validate_dataset(dataset: dict[str, object]) -> None:
         raise ValueError(
             f"Se descubrieron {discovered} programas y se resolvieron {resolved}."
         )
+    if not discovered:
+        raise ValueError("El sitemap de la UCEMA no listó ningún programa.")
     if discovered and not names:
         raise ValueError("El sitio publicó carreras y no se pudo leer ninguna.")
     validate_contract_urls(sections, DOMAIN)

@@ -557,3 +557,15 @@
 - Corrector Literario sigue sin duración: la página solo da la del título intermedio.
 - Cadena exportar → verificar USAL (ofertas 142/142) → exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub; commit c67d1be queda local.
 - Siguiente: planes de las 6 carreras nuevas de USAL; UCEMA (la vigilancia del 23/10 da 17 carreras contra 16); Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
+
+## 2026-10-24 (71) — UCEMA: BA nuevo, sitemap movido a cl2 y eventos fuera
+- Hoy el sitemap de UCEMA lista las páginas bajo `cl2.ucema.edu.ar`, y el spider encontraba 0 programas. El validador lo dejaba pasar porque no había nada descubierto. Ahora el spider toma cualquier subdominio de ucema.edu.ar, pero lee y guarda la dirección pública (`ucema.edu.ar/...`). Además, un sitemap sin programas es un error. Esto evita un "CAYÓ" a 0 en la vigilancia de esta noche.
+- "Experiencia Ucema" y "Elegí Tu Futuro" (y el posgrado "Mayo31 Charlas") son eventos: su "Duración" es "90 minutos" o "Martes 18 y Jueves 20 de octubre, 17h.". Ahora quedan excluidos. Los cursos que se cuentan en clases ("46 clases") siguen entrando.
+- Nuevo `load_ucema --solo-carreras`: agrega las carreras que faltan en la base y completa solo los campos vacíos. No toca materias: `--apply` entero las borraría, como en USAL. La lectura pasa a ser `data/ucema_completo.json`. El README tenía `--apply` entero para UCEMA y USAL: corregido.
+- Cargado (cotejado con cada página):
+  - BA - Artes Liberales y Ciencias (Licenciado/a, 4 años, RM 2864/21).
+  - Ing. en Inteligencia Artificial: título y 5 años, que estaban vacíos.
+- Plan del BA con `planes_adaptador ucema --apply`: 32 materias, años 1–4. Los 32 nombres aparecen literal en la página y en su año (16 son electivas "libre"/"focalizada", como las publica el plan). Solo se escribió el BA; los otros 10 planes ya tenían materias.
+- Tests: 914 OK. Cadena exportar → verificar UCEMA (ofertas 27/27, materias 577/577) → exportar completa (`Archivo: data/catalogo_depurado.json`). UCEMA queda con 15 carreras, todas con título, duración y plan.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: planes de las 6 carreras nuevas de USAL; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.

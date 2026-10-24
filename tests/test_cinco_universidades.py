@@ -132,6 +132,14 @@ class UcemaTests(unittest.TestCase):
         self.assertEqual([(r.slug, r.level) for r in refs],
                          [("actuario", "Grado"), ("inia", "Grado")])
 
+    def test_another_host_of_the_university_is_read_at_the_public_address(self) -> None:
+        sitemap = ("<loc>https://cl2.ucema.edu.ar/carrera-grado/ba</loc>"
+                   "<loc>https://ucema.edu.ar/carrera-grado/ba</loc>"
+                   "<loc>https://ucema.edu.ar.example.com/grado/x</loc>")
+        refs = ucema.discover_programmes({"a": sitemap})
+        self.assertEqual([(r.slug, r.url) for r in refs],
+                         [("ba", "https://ucema.edu.ar/carrera-grado/ba")])
+
     def test_a_page_that_states_no_fact_is_not_a_programme(self) -> None:
         refs = ucema.discover_programmes(
             {"a": "<loc>https://ucema.edu.ar/posgrado/reunion</loc>"}
@@ -141,6 +149,24 @@ class UcemaTests(unittest.TestCase):
         self.assertIn("no publica datos",
                       dataset["control_calidad"]["programas_excluidos"][0]["motivo"])
 
+
+    def test_an_event_that_lasts_minutes_is_not_a_programme(self) -> None:
+        refs = ucema.discover_programmes(
+            {"a": "<loc>https://ucema.edu.ar/grado/experiencia-ucema</loc>"}
+        )
+        for duration in ("90 minutos", "Martes 18 y Jueves 20 de octubre, 17h."):
+            page = (f'<div><div class="field-label-above">Duración</div>{duration}</div>'
+                    '<div><div class="field-label-above">Modalidad</div>Presencial</div>')
+            dataset = ucema.build_dataset(refs, {refs[0].url: page})
+            self.assertEqual(dataset["datos"]["carreras"], [])
+
+    def test_a_course_counted_in_classes_is_a_programme(self) -> None:
+        refs = ucema.discover_programmes(
+            {"a": "<loc>https://ucema.edu.ar/posgrado/quant</loc>"}
+        )
+        page = '<div><div class="field-label-above">Duración</div>46 clases</div>'
+        dataset = ucema.build_dataset(refs, {refs[0].url: page})
+        self.assertEqual(len(dataset["datos"]["posgrados"]), 1)
 
 class UcesTests(unittest.TestCase):
     INDEX = ('<script>laravel.data = {"Ciencias Econ\\u00f3micas":[{"id":402,'

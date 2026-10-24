@@ -1,4 +1,9 @@
-"""Validate and load the la UCEMA dataset into Supabase."""
+"""Validate and load the la UCEMA dataset into Supabase.
+
+A whole load syncs the subjects to the reading's, and the reading has none
+(UCEMA's plans come from the plan readers): it would delete them. A newer
+reading's careers go in with ``--solo-carreras``.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +16,7 @@ from rumbo_scraper.database.load_utdt import (
     _boolean, _insert_chunks, _sync_subjects, _upsert_one,
 )
 from rumbo_scraper.database.load_utn import SCHEMA_CHANNELS
+from rumbo_scraper.normalizers.text import comparison_key
 from rumbo_scraper.validators.ucema import validate_dataset
 
 DEFAULT_INPUT = Path("data/ucema_completo.json")
@@ -146,12 +152,69 @@ def apply_dataset(dataset: dict[str, Any], client: Any | None = None) -> dict[st
     return counts
 
 
+# Facts a newer reading may give a career the DB holds without them.
+_FILLABLE = ("titulo_otorgado", "duracion_anios", "descripcion_breve")
+
+
+def load_careers(dataset: dict[str, Any], apply: bool,
+                 client: Any | None = None) -> list[tuple[str, str, dict[str, Any]]]:
+    """Add the careers the scraper DB lacks and fill the facts it lacks of
+    the ones it has; nothing else, so the subjects stay. Returns what was
+    (or, without ``apply``, would be) written: ("nueva" | "completada",
+    name, fields)."""
+    validate_dataset(dataset)
+    data = dataset["datos"]
+    if client is None:
+        from rumbo_scraper.database.supabase import get_supabase_client
+        client = get_supabase_client()
+    university_id = client.table("universidades").select("id").eq(
+        "nombre_oficial", data["universidades"][0]["nombre_oficial"]).execute().data[0]["id"]
+    loaded = {comparison_key(row["nombre_carrera"]): row for row in client.table("carreras").select(
+        "id,nombre_carrera," + ",".join(_FILLABLE)).eq("universidad_id", university_id).execute().data}
+    actions: list[tuple[str, str, dict[str, Any]]] = []
+    for row in data["carreras"]:
+        held = loaded.get(comparison_key(row["nombre_carrera"]))
+        if held is None:
+            fields = {
+                "universidad_id": university_id, "facultad_id": None,
+                "nombre_carrera": row["nombre_carrera"],
+                "denominacion_canonica": row["denominacion_canonica"],
+                "nivel": row["nivel"], "titulo_otorgado": row["titulo_otorgado"],
+                "tiene_titulo_intermedio": _boolean(row["tiene_titulo_intermedio"]),
+                "duracion_anios": row["duracion_anios"],
+                "descripcion_breve": row["descripcion_breve"],
+                "cantidad_materias_total": row["cantidad_materias_total"],
+            }
+            actions.append(("nueva", row["nombre_carrera"], fields))
+            if apply:
+                _upsert_one(client, "carreras", fields, "universidad_id,nombre_carrera")
+            continue
+        fields = {key: row[key] for key in _FILLABLE if held[key] is None and row[key] is not None}
+        if fields:
+            actions.append(("completada", held["nombre_carrera"], fields))
+            if apply:
+                client.table("carreras").update(fields).eq("id", held["id"]).execute()
+    return actions
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar el dataset de la UCEMA")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--apply", action="store_true", help="Escribir en Supabase")
+    # Only careers, into the scraper DB; the reading becomes data/ucema_completo.json.
+    parser.add_argument("--solo-carreras", action="store_true")
     args = parser.parse_args()
     dataset = load_file(args.input)
+    if args.solo_carreras:
+        actions = load_careers(dataset, args.apply)
+        if args.apply and args.input.resolve() != DEFAULT_INPUT.resolve():
+            # The export takes each career's page from the artefact.
+            DEFAULT_INPUT.write_text(args.input.read_text(encoding="utf-8"), encoding="utf-8")
+        print("CARGADO" if args.apply else "VISTA PREVIA (sin escribir)")
+        for kind, name, fields in actions:
+            shown = {k: v for k, v in fields.items() if k not in ("universidad_id", "facultad_id")}
+            print(f"- {kind}: {name} {shown}")
+        return
     counts = apply_dataset(dataset) if args.apply else preview(dataset)
     print("CARGADO" if args.apply else "VALIDADO (sin escribir)")
     for section, count in counts.items():
