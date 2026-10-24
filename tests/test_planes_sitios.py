@@ -570,6 +570,39 @@ class PlanUnahur(unittest.TestCase):
         self.assertEqual(p.plan_unahur_campos(partida), [])
 
 
+class PlanUnahurNumerado(unittest.TestCase):
+    # UNAHUR's Tecnicatura en Metalurgia, abridged.
+    TEXTO = "\n".join([
+        "Códi-                     Asignatura                      Régimen         Carga     Carga",
+        "                                                    1° Cuatrimestre",
+        "",
+        "1       Introducción a la Metalurgia                      Cuatrimestral   4         64        -",
+        "2       Introducción al Análisis Matemático               Cuatrimestral   4         64        -",
+        "        Nuevos entornos y lenguajes: la producción",
+        "3                                                         Cuatrimestral   2         32        -",
+        "        de conocimiento en la cultura digital",
+        "4       Química                                           Cuatrimestral   4         64        -",
+        "",
+        "                                                    3° Cuatrimestre",
+        "",
+        "5       Metalurgia ll                                     Cuatrimestral   6         96        8         3",
+        "        Créditos                                                                    80                  20",
+        "6       Ajena                                             Cuatrimestral   6         96",
+    ])
+
+    def test_the_name_around_its_row_and_two_terms_a_year(self):
+        self.assertEqual(p.plan_unahur_numerado(self.TEXTO), [
+            ("Introducción a la Metalurgia", 1), ("Introducción al Análisis Matemático", 1),
+            ("Nuevos entornos y lenguajes: la producción de conocimiento en la cultura digital", 1),
+            ("Química", 1), ("Metalurgia II", 2)])
+
+    def test_a_line_no_row_takes_gives_nothing(self):
+        # A named row's name going on below (Viverismo's layout) is not read.
+        texto = self.TEXTO.replace("4       Química   ", "4       Química\n        general   ")
+        self.assertEqual(p.plan_unahur_numerado(texto), [])
+        self.assertEqual(p.plan_unahur_numerado(self.TEXTO.replace("4       Química", "7       Química")), [])
+
+
 class PlanTablasPorAnio(unittest.TestCase):
     HTML = ("<html><head><title>Contador Público – Facultad</title></head><body><article>"
             "<h3>Plan Vigente – Plan de Estudios 2019</h3>"

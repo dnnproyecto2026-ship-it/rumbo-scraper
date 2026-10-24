@@ -3501,7 +3501,68 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
     then the older brochures', then the 2025-2026 plan documents' table."""
     return (plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
-            or plan_unahur_tabla(texto_con_columnas) or plan_unahur_campos(texto_con_columnas))
+            or plan_unahur_tabla(texto_con_columnas) or plan_unahur_campos(texto_con_columnas)
+            or plan_unahur_numerado(texto_con_columnas))
+
+
+_CUATRIMESTRE_UNAHUR = re.compile(r"(?i)^\s*(\d{1,2})\s*(?:er|do|ro|to|vo|mo|no|°|º)?\.?\s*cuatrimestre\s*$")
+# "7   Análisis matemático I   cuatrimestral   6   96 ...", or the number
+# alone when the name wraps around the row ("3      cuatrimestral  2  32").
+_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral|anual)\b")
+_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total)\b")
+
+
+def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's tecnicaturas' brochures (Energía Eléctrica, Metalurgia): a
+    table "Código  Asignatura  Régimen ..." under term headings ("1er.
+    cuatrimestre", "3° Cuatrimestre"), each row numbered in order. A name too
+    long for its cell is centred on its row: its first line above the
+    number, the rest below ("Nuevos Entornos y Lenguajes: la" / "3
+    cuatrimestral 2 32" / "producción del conocimiento ..."). Two terms make
+    a year. A line no row can take, or a number out of order, gives
+    nothing; the plan ends at its "Créditos" or "Carga horaria total". A
+    Roman figure typed as lower-case Ls ("Metalurgia ll") is the figure."""
+    filas: list[dict[str, Any]] = []
+    cuatrimestre = None
+    arriba: list[str] = []
+    abierta = None
+    for linea in (texto_con_columnas or "").splitlines():
+        if not linea.strip():
+            abierta = None
+            continue
+        termino = _CUATRIMESTRE_UNAHUR.match(linea)
+        if termino:
+            if arriba:
+                return []
+            cuatrimestre, abierta = int(termino.group(1)), None
+            continue
+        if cuatrimestre is None:
+            continue
+        if _FIN_UNAHUR_NUMERADO.match(linea):
+            break
+        fila = _FILA_UNAHUR_NUMERADA.match(linea)
+        if fila:
+            nombre = clean_text(fila.group(2) or "")
+            if nombre and arriba:
+                return []
+            filas.append({"n": int(fila.group(1)), "anio": (cuatrimestre + 1) // 2,
+                          "partes": arriba + ([nombre] if nombre else [])})
+            # (Only a row whose cell was empty goes on below.)
+            abierta = None if nombre else filas[-1]
+            arriba = []
+            continue
+        if abierta is not None:
+            abierta["partes"].append(clean_text(linea))
+        else:
+            arriba.append(clean_text(linea))
+    numeros = [f["n"] for f in filas]
+    if arriba or not filas or numeros != list(range(1, len(numeros) + 1)) or not all(f["partes"] for f in filas):
+        return []
+    materias: list[tuple[str, int]] = []
+    for f in filas:
+        nombre = re.sub(r"\s(l{1,3})$", lambda m: " " + "I" * len(m.group(1)), " ".join(f["partes"]))
+        _agregar(materias, nombre, f["anio"])
+    return desde_el_primero(materias)
 
 
 _ANIO_UNAHUR_CAMPOS = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\b(?:\s*\(.*\))?\s*$")
