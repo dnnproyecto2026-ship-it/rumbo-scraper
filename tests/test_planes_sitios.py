@@ -655,10 +655,39 @@ class PlanUnahurNumerado(unittest.TestCase):
             ("Química", 1), ("Metalurgia II", 2)])
 
     def test_a_line_no_row_takes_gives_nothing(self):
-        # A named row's name going on below (Viverismo's layout) is not read.
-        texto = self.TEXTO.replace("4       Química   ", "4       Química\n        general   ")
+        # Below a named row with nothing above it, a line in upper case is no
+        # part of its name.
+        texto = self.TEXTO.replace("4       Química   ", "4       Química\n        General   ")
         self.assertEqual(p.plan_unahur_numerado(texto), [])
         self.assertEqual(p.plan_unahur_numerado(self.TEXTO.replace("4       Química", "7       Química")), [])
+
+    def test_a_name_going_on_below_its_row_and_the_field_first(self):
+        # Viverismo's annex: the field right after the name, a name going on
+        # below its row, the page's motto and the credits the plan counts apart.
+        texto = "\n".join([
+            "      Código                  Asignatura              Campo        Carga       Carga horaria",
+            "                                                    1° año",
+            "                                                1° cuatrimestre",
+            "      1            Introducción al                    CFE           4               64",
+            "                   viverismo",
+            "",
+            "      2            Ateneo de estudio de casos         CIC           4               64",
+            "                                                    “75 avo aniversario de la gratuidad universitaria”",
+            "3    Nuevos entornos y                     CFC          2   32",
+            "     lenguajes: la producción de",
+            "     conocimiento en la cultura",
+            "     digital",
+            "",
+            "                                      3° cuatrimestre",
+            "4    Floricultura                          CIC                   1",
+            "",
+            "                               15 créditos incluidos en materias (60 horas)",
+            "                        CARGA HORARIA TOTAL                                   1.424",
+        ])
+        self.assertEqual(p.plan_unahur_numerado(texto), [
+            ("Introducción al viverismo", 1), ("Ateneo de estudio de casos", 1),
+            ("Nuevos entornos y lenguajes: la producción de conocimiento en la cultura digital", 1),
+            ("Floricultura", 2)])
 
     def test_years_and_a_named_row_centred_between_lines(self):
         # Enfermería's RCS 385/2024, abridged.

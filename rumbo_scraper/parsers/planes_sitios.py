@@ -3754,9 +3754,10 @@ _CUATRIMESTRE_UNAHUR = re.compile(r"(?i)^\s*(\d{1,2})\s*(?:er|do|ro|to|vo|mo|no|
 _ANIO_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(\d)\s*[°º]\s*año\s*$")
 # "7   Análisis matemático I   cuatrimestral   6   96 ...", "3  Anatomo-Fisiología I  C  4  64",
 # or the number alone when the name wraps around the row ("3   cuatrimestral  2  32",
-# "29   20 (6)   100 ...").
-_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral\b|anual\b|C\s|\d)")
-_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total|total\b)")
+# "29   20 (6)   100 ..."); or the field first ("1   Introducción al   CFE   4   64").
+_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral\b|anual\b|C\s|(?-i:C[A-Z]{2})\s|\d)")
+# (Also the credits the plan counts apart: "40 créditos externos (160 horas)".)
+_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total|total\b|\d+ cr[ée]ditos\b)")
 # Between the rows: a cycle's heading, or the intermediate title and its
 # hours ("Enfermero/a Universitario/a   1977   1356 ...").
 _ENTRE_FILAS_UNAHUR = re.compile(r"(?i)^\s*(?:(?:primer|segundo|tercer)\s+ciclo\s*$|\S+/a\b)")
@@ -3774,18 +3775,22 @@ def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
     ("Práctica pre- Profesional   Mensual"). A line no row takes, one
     starting in lower case above a row, or a number out of order gives
     nothing; the plan ends at its "Créditos", "Carga horaria total" or
-    "TOTAL". Credit slots ("Créditos ACA") are not subjects. A Roman figure
-    typed as lower-case Ls ("Metalurgia ll") is the figure."""
+    "TOTAL" (or "40 créditos externos"). Credit slots ("Créditos ACA") are
+    not subjects. A Roman figure typed as lower-case Ls ("Metalurgia ll")
+    is the figure. A name may instead start on its row and go on below it,
+    in lower case and with no blank line between (Viverismo: "1
+    Introducción al  CFE  4  64" / "viverismo"). The page's motto
+    ("“75 avo aniversario de la gratuidad ...”") is not part of the table."""
     filas: list[dict[str, Any]] = []
     anio = None
     arriba: list[str] = []
     abierta = None
     for linea in (texto_con_columnas or "").splitlines():
-        # (A blank line ends a row's cell; a page's number does not.)
+        # (A blank line ends a row's cell; a page's number or motto does not.)
         if not linea.strip():
             abierta = None
             continue
-        if re.fullmatch(r"\s*\d{1,3}\s*", linea):
+        if re.fullmatch(r"\s*\d{1,3}\s*", linea) or re.fullmatch(r"\s*“[^”]*”\s*", linea):
             continue
         termino, anual = _CUATRIMESTRE_UNAHUR.match(linea), _ANIO_UNAHUR_NUMERADO.match(linea)
         if termino or anual:
@@ -3812,14 +3817,16 @@ def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
             if re.fullmatch(r"(?i)c|anual|mensual|cuatrimestral|\d.*", nombre):
                 nombre = ""
             filas.append({"n": int(fila.group(1)), "anio": anio, "debajo": len(arriba),
-                          "partes": arriba + ([nombre] if nombre else [])})
-            abierta = filas[-1] if arriba else None
+                          "partes": arriba + ([nombre] if nombre else []), "sigue": not arriba and bool(nombre)})
+            abierta = filas[-1] if arriba or nombre else None
             arriba = []
             continue
         parte = clean_text(re.split(r"\s{2,}", linea.strip())[0])
         if abierta is not None and abierta["debajo"]:
             abierta["partes"].append(parte)
             abierta["debajo"] -= 1
+        elif abierta is not None and abierta["sigue"] and parte[:1].islower():
+            abierta["partes"].append(parte)
         else:
             arriba.append(parte)
     numeros = [f["n"] for f in filas]

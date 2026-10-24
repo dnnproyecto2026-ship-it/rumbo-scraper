@@ -620,3 +620,13 @@
 - Cadena exportar → verificar UCASAL (ofertas 122/122, materias 609/609; las 40 verificadas) → exportar completa (`Archivo: data/catalogo_depurado.json`).
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UNAHUR Viverismo / Periurbana / Agronómica; UCASAL Traductorado y Filosofía.
+
+## 2026-10-24 (77) — UNAHUR: Ing. Agronómica (53) y Tec. Viverismo (23)
+- Vigilancia sin novedades (Austral e ITBA, igual que el 23/10).
+- `plan_unahur_numerado`: lee una fila con el campo enseguida del nombre ("1  Introducción al  CFE  4  64"), un nombre que sigue debajo de su fila en minúscula y sin renglón en blanco (Viverismo), saltea el lema de cada página ("“75 avo aniversario …”") y corta en "40 créditos externos". Prueba nueva y una ajustada en `tests/test_planes_sitios.py`. Tests: 923 OK.
+- Cargadas con `planes_documentos --apply UNAHUR` (Diseño Industrial sacado del archivo de hallados): Ing. Agronómica 53 (EXP. 764/2024; afuera "Materia electiva" y el menú de electivas) y Tec. Viverismo 23 (EXP. 189/2020). Leídas de vuelta: las 76 literales en su PDF; años cotejados con la tabla.
+- El verificador daba "Química general" e "Inglés I" como no_lo_dice: su caché del PDF de Viverismo era del 24/09 (solo pdfplumber, palabras pegadas). Borrada esa entrada de `data/verificacion/`, UNAHUR verifica 948/948.
+- Siguen sin plan 6 de UNAHUR, cada una con su motivo en `relevamiento/planes_sin_cargar.json` (nuevo para UNAHUR): Desarrollo Agrario (nombres partidos ambiguos sin posición), Tecnología de los Alimentos, Educación (CCC), Diseño Industrial, Periurbana, Gestión del Mantenimiento.
+- Cadena exportar → verificar UNAHUR → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 2 salen con su plan.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UCASAL Traductorado y Filosofía; lector por posición de palabras para Desarrollo Agrario.

@@ -707,5 +707,66 @@
    "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-traductor.pdf"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Desarrollo Agrario",
+  "carrera_id": "26a86bc4-93c6-416a-b599-d9b5270c6298",
+  "motivo": "La tabla parte los nombres unas veces arriba de la fila y otras alrededor, sin renglón en blanco entre filas: sin la posición de las palabras no se sabe a qué fila va cada pedazo. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-estudios-Licenciatura-en-Desarrollo-Agrario-EXP.-898-23.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Tecnología de los Alimentos",
+  "carrera_id": "3923f45a-126d-41e6-84fe-1224fb522603",
+  "motivo": "Tabla por cuatrimestre con columnas IPS/IPP que ningún lector toma; la resolución RES-1372-17 es un escaneo. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/Licenciatura-en-Tecnologia-de-los-Alimentos.pdf",
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/RES-1372-17-LIC.-EN-TECNOLOGIA-DE-LOS-ALIMENTOS.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Educación",
+  "carrera_id": "3bc8b68a-fb00-467b-9a99-e14fcae3cc4c",
+  "motivo": "Es un ciclo de complementación (CCC) con \"Unidad curricular electiva 1–4\": los ciclos no se cargan por diseño.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/Licenciatura-en-Educacion-Presencial-_-A-Distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Diseño Industrial",
+  "carrera_id": "3d72158c-9af3-48ef-9591-0dfb11f037a6",
+  "motivo": "El lector la lee entera (36), pero el texto del PDF pega palabras (\"TecnologíaI\", \"InglésI\", \"Proyectoﬁnal\") y el verificador no las encuentra. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-estudios-de-Licenciatura-en-Diseno-Industrial-con-titulo-intermedio.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Tecnicatura Universitaria en Producción Agroecológica Periurbana",
+  "carrera_id": "5580871a-0317-40c1-8a81-bfa30670e800",
+  "motivo": "El texto del PDF tiene las tildes y ligaduras rotas (\"Biologıá\", \"cientı icas\") y columnas mezcladas: los nombres no se pueden comprobar. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/09/Plan-de-estudios-Tecnicatura-Universitaria-en-Produccion-Agroecologica-Periurbana.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Gestión del Mantenimiento",
+  "carrera_id": "625ff4e1-a9a2-4b38-9e6c-d0d5b6e78601",
+  "motivo": "Filas partidas: la \"C\" del régimen en un renglón, campo y horas en otro; ningún lector las toma enteras. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-Estudios-de-la-Lic-en-Gestion-del-Mantenimiento-con-titulo-intermedio-RCS-381_2024.pdf"
+  ],
+  "revisado": "2026-10-24"
  }
 ]
