@@ -1,0 +1,313 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNAHUR;Profesorado Universitario de Biología;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/RCS.-431-2024-Profesorado-Universitario-de-Biologia_removed.pdf;"1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+1 | Introducción a la Biología celular y molecular
+1 | Química general e inorgánica
+1 | Problemáticas matemáticas para Biología
+1 | Zoología
+1 | Botánica
+1 | Cultura y alfabetización digital en la universidad
+2 | Didáctica y currículum
+2 | Educación Sexual Integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Prácticas de la enseñanza en el ámbito socioeducativo
+2 | Biofísica I
+2 | Didáctica de las Ciencias naturales I
+2 | Química orgánica
+2 | Anatomía y Fisiología humana
+2 | Biofísica II
+2 | Prácticas docentes en el laboratorio
+3 | Historia de la Nación argentina y sus proyectos educativos
+3 | Didáctica en contextos de Educación superior
+3 | Asignatura UNAHUR
+3 | Bioquímica
+3 | Didáctica de las Ciencias naturales II
+3 | Microbiología e Inmunología
+3 | Evolución
+3 | Genética
+3 | Historia de la ciencia
+3 | Prácticas docentes en el nivel secundario
+4 | Tecnología educativa
+4 | Política educativa
+4 | Estadística y diseño experimental
+4 | Epistemología de las Ciencias naturales
+4 | Ciencias de la Tierra
+4 | Educación ambiental
+4 | Educación para la salud
+4 | Ecología general
+4 | Prácticas docentes en el nivel superior";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;de0a151e-c4ca-4bcf-95cf-d6f20b4d1727
+UNAHUR;Profesorado Universitario de Geografía;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/PLAN-PROFESORADO-UNIVERSITARIO-DE-GEOGRAFIA.docx_removed.pdf;"1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+1 | Introducción a la Geografía
+1 | Cartografía
+1 | Geografía social I
+1 | Geografía económica
+1 | Cultura y alfabetización digital en la universidad
+2 | Didáctica y curriculum
+2 | Educación Sexual Integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Prácticas de la enseñanza en el ámbito socioeducativo
+2 | Geografía social II
+2 | Geografía ambiental I
+2 | Geografía política
+2 | Geografía ambiental II
+2 | Teoría de la Geografía
+3 | Historia de la Nación Argentina y sus proyectos Educativos
+3 | Didáctica en contextos de Educación superior
+3 | Asignatura UNAHUR
+3 | Didáctica de las Ciencias sociales
+3 | Geografía ambiental de la Argentina
+3 | Geografía urbana
+3 | Geografía rural
+3 | Didáctica de la Geografía
+3 | Sistemas Informáticos Geográficos
+3 | Prácticas docentes en el nivel secundario
+4 | Tecnología educativa
+4 | Política educativa
+4 | Problemáticas de los territorios capitalistas periféricos I
+4 | Problemas territoriales de la Argentina
+4 | Problemáticas de los territorios capitalistas centrales
+4 | Problemáticas de la provincia de Buenos Aires y de la Región Metropolitana de Buenos Aires
+4 | Problemáticas de los territorios capitalistas periféricos II
+4 | Investigación educativa en Geografía
+4 | Prácticas docentes en el nivel superior";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA. La tabla del 4.º año dice 'Problemáticas de los territoriales capitalistas centrales' (errata); se usa la forma de la lista de asignaturas y de los contenidos mínimos del mismo documento ('territorios').";Universidad Nacional de Hurlingham;42cfccb8-a6ff-478e-8516-3e4812fe3be5
+UNAHUR;Profesorado Universitario en Educación Física;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/PLAN-PROFESORADO-UNIVERSITARIO-DE-EDUCACION-FISICA.docx_removed.pdf;"1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+1 | Deporte comunitario
+1 | Educación física en la niñez
+1 | Taller de prácticas lúdicas
+1 | Educación física en el joven y el adulto
+1 | Prácticas deportivas de conjunto y su didáctica I
+1 | Prácticas gimnásticas I
+2 | Didáctica y curriculum
+2 | Educación sexual integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Cultura y alfabetización digital en la universidad
+2 | Prácticas de enseñanza en el ámbito socioeducativo
+2 | Prácticas deportivas de conjunto y su didáctica II
+2 | Prácticas gimnásticas II
+2 | Prácticas deportivas de conjunto y su didáctica III
+2 | Prácticas deportivas individuales y su didáctica - Natación I
+2 | Bases anatómicas y biomecánicas de la Educación física
+3 | Historia de la Nación Argentina y sus proyectos educativos
+3 | Didáctica en contextos de Educación superior
+3 | Asignatura UNAHUR
+3 | Prácticas docentes en los niveles inicial y primario
+3 | Diseño de proyectos sociocomunitarios
+3 | Prácticas deportivas de conjunto y su didáctica IV
+3 | Educación física: perspectivas en la discapacidad
+3 | Taller de primeros auxilios
+3 | Prácticas deportivas individuales y su didáctica - Natación II
+3 | Historia de la Educación física argentina
+4 | Tecnología educativa
+4 | Política educativa
+4 | Prácticas docentes en los niveles secundario y superior
+4 | Educación ambiental
+4 | Prácticas deportivas individuales y su didáctica - Atletismo
+4 | Teoría de la Educación física
+4 | Investigación educativa en Educación física y desarrollo curricular
+4 | Taller de prácticas corporales expresivas
+4 | Fisiología del ejercicio y bases del entrenamiento deportivo";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;609e7d21-b256-4fa6-b231-7b05569fbd18
+UNAHUR;Profesorado Universitario de Letras;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/CS-429-2024-Profesorado-Letras.pdf;"1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+1 | Introducción a los Estudios Literarios
+1 | Taller de escritura creativa
+1 | Introducción a los Estudios lingüísticos
+1 | Taller de escritura académica
+1 | Literatura infantil y juvenil
+1 | Cultura y alfabetización digital en la universidad
+2 | Didáctica y currículum
+2 | Educación Sexual Integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Prácticas de la enseñanza en el ámbito socioeducativo
+2 | Gramática
+2 | Cultura y literatura de la antigüedad clásica
+2 | Literaturas premodernas europeas
+2 | Teoría y práctica de proyectos culturales
+2 | Didáctica de la lectura y la escritura
+3 | Historia de la Nación Argentina y sus proyectos Educativos
+3 | Didáctica en contextos de Educación Superior
+3 | Asignatura UNAHUR
+3 | Lingüística general
+3 | Didáctica de la literatura
+3 | Lenguas y culturas de los pueblos originarios de América
+3 | Didáctica de la Lengua
+3 | Literatura argentina
+3 | Literatura latinoamericana
+3 | Prácticas docentes en el Nivel Secundario
+4 | Tecnología educativa
+4 | Política educativa
+4 | Alfabetización
+4 | Teoría y crítica literaria
+4 | Análisis del discurso
+4 | Políticas del lenguaje
+4 | Literaturas modernas europeas
+4 | Prácticas de alfabetización de jóvenes y adultos
+4 | Prácticas docentes en el Nivel Superior";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;bd9b52a9-dccd-4074-9827-dfdf29617d08
+UNAHUR;Profesorado Universitario de Inglés;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/RCS-384-2024-Profesorado-Universitario-de-Ingles_removed.pdf;"1 | Lengua inglesa I
+1 | Gramática inglesa I
+1 | Fonética y práctica en laboratorio I
+1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+2 | Lengua inglesa II
+2 | Gramática inglesa II
+2 | Fonética y práctica en laboratorio II
+2 | Didáctica y curriculum
+2 | Educación Sexual Integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Cultura y alfabetización digital en la universidad
+2 | Prácticas de la enseñanza en el ámbito socioeducativo
+3 | Lengua inglesa III
+3 | Fonética y práctica en laboratorio III
+3 | Lingüística
+3 | Adquisición de la lengua materna y extranjera
+3 | Didáctica del Inglés para el nivel primario
+3 | Historia de la Nación Argentina y sus proyectos educativos
+3 | Didáctica en contextos de Educación superior
+3 | Asignatura UNAHUR
+3 | Prácticas docentes en el nivel primario
+4 | Lengua inglesa IV
+4 | Fonética y práctica en laboratorio IV
+4 | Análisis contrastivo del Inglés y el Español
+4 | Didáctica del inglés para el nivel secundario y superior
+4 | Investigación educativa en lenguas extranjeras
+4 | Estudios literarios
+4 | Tecnología educativa
+4 | Política educativa
+4 | Prácticas docentes en los niveles Secundario y Superior";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;b1cca4ad-fb5b-40a0-8d57-883020c74b94
+UNAHUR;Profesorado Universitario de Matemática;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/09/RCS-383-2024-Profesorado-Universitario-de-Matematica-2_removed.pdf;"1 | Pedagogía
+1 | Lectura, escritura y oralidad
+1 | Aprendizajes y prácticas educativas
+1 | Territorio, sujetos e instituciones
+1 | Introducción al análisis matemático
+1 | Geometría euclideana y analítica
+1 | Algoritmos y estructura de datos
+1 | Cultura y alfabetización digital en la universidad
+2 | Didáctica y curriculum
+2 | Educación sexual integral
+2 | Pensamiento pedagógico latinoamericano
+2 | Prácticas de enseñanza en el ámbito socioeducativo
+2 | Álgebra lineal
+2 | Análisis matemático I
+2 | Análisis matemático II
+2 | Teoría de números
+2 | Matemática discreta
+2 | Prácticas docentes en el nivel secundario I
+3 | Historia de la Nación Argentina y sus proyectos educativos
+3 | Didáctica en contextos de Educación Superior
+3 | Asignatura UNAHUR
+3 | Informática para la enseñanza de la matemática
+3 | Probabilidad y estadística
+3 | Didáctica de la matemática I
+3 | Fundamentos de la matemática I
+3 | Análisis complejo
+3 | Prácticas docentes en el nivel secundario II
+4 | Tecnología educativa
+4 | Política educativa
+4 | Computación científica
+4 | Didáctica de la matemática II
+4 | Fundamentos de la matemática II
+4 | Modelos matemáticos
+4 | Prácticas docentes en el nivel superior
+4 | Investigación educativa en matemática";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;b5529f8e-14c2-477f-bed4-ea977d1001e3
+UNAHUR;Tecnicatura Universitaria en Mantenimiento Hospitalario;2.5;;;https://unahur.edu.ar/wp-content/uploads/2026/01/Tecnicatura-Universitaria-en-Mantenimiento-hospitalario-1.pdf;"1 | Matemática
+1 | Introducción a la gestión del mantenimiento
+1 | Cultura y alfabetización digital en la universidad
+1 | Organización de sistemas de salud
+1 | Química general
+1 | Física
+1 | Electrotecnia
+1 | Asignatura Unahur
+1 | Seguridad, higiene y medio ambiente
+1 | Sistemas de Representación Gráfica
+2 | Materiales y elementos de máquinas
+2 | Hidráulica y neumática
+2 | Planificación del Mantenimiento
+2 | Instalaciones eléctricas
+2 | Instalaciones hospitalarias
+2 | Control de gestión
+2 | Gases medicinales y acondicionamiento de aire
+2 | Gestión de la calidad
+3 | Redes de datos y comunicaciones
+3 | Proyecto de integración";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA.";Universidad Nacional de Hurlingham;c9aba8bf-7aea-4106-beaa-28ffb66b8564
+UNAHUR;Licenciatura en Diseño Industrial;4.0;;;https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-estudios-de-Licenciatura-en-Diseno-Industrial-con-titulo-intermedio.pdf;"1 | Introducción al Diseño
+1 | Sistemas de representación gráfica
+1 | Tecnología I
+1 | Modelado
+1 | Taller de Diseño I
+1 | Matemática
+1 | Morfología I
+1 | Cultura y alfabetización digital en la universidad
+2 | Taller de Diseño II
+2 | Tecnología y sociedad
+2 | Taller de producción I
+2 | Tecnología II
+2 | Programación
+2 | Ciencias aplicadas al diseño
+2 | Taller de Diseño III
+2 | Morfología II
+2 | Tecnologías de fabricación digital I
+2 | Asignatura UNAHUR
+3 | Taller de Diseño IV
+3 | Tecnología III
+3 | Tecnologías de fabricación digital II
+3 | Diseño e industria
+3 | Inglés I
+3 | Industrial Diseño Centrado en las personas
+3 | Taller de producción II
+3 | Metodología de investigación en diseño
+3 | Gestión del conocimiento
+4 | Laboratorio de diseño e innovación
+4 | Nuevas tecnologías
+4 | Diseño de experiencias e interfaces de usuario
+4 | Gestión de proyectos
+4 | Comunicación de proyecto
+4 | Proyecto final
+4 | Economía y diseño
+4 | Diseño, ética y sociedad
+4 | Sustentabilidad";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA. Recarga: los nombres viejos traían la columna de campo pegada (' C CFE').";Universidad Nacional de Hurlingham;3d72158c-9af3-48ef-9591-0dfb11f037a6
+UNAHUR;Profesorado Universitario de Chino;4.0;;;https://unahur.edu.ar/wp-content/uploads/2026/02/RCS.-008-18-02-2026-EXP.-870-2023-Modificacion-al-plan-de-estudios-del-Profesorado-Universitario-de-Chino.pdf;"1 | Chino Integral Avanzado I
+1 | Comprensión y Producción Oral en Chino I
+1 | Fonética y Práctica en Laboratorio
+1 | Caracteres Chinos
+1 | Introducción a la Cultura China
+1 | Cultura y Alfabetización Digital en la Universidad
+1 | Pedagogía
+1 | Lectura, Escritura y Oralidad
+1 | Aprendizajes y Prácticas Educativas
+1 | Territorio, Sujetos e Instituciones
+2 | Chino Integral Avanzado II
+2 | Comprensión y Producción Oral en Chino II
+2 | Gramática China
+2 | Historia China
+2 | Lectura y Escritura en Chino
+2 | Didáctica y Currículum
+2 | Educación Sexual Integral
+2 | Pensamiento Pedagógico Latinoamericano
+2 | Prácticas de la Enseñanza en el Ámbito Socioeducativo
+3 | Chino Integral Avanzado III
+3 | Comprensión y Producción Oral en Chino III
+3 | Didáctica del Chino
+3 | Sociedad China Contemporánea
+3 | Historia de la Nación Argentina y sus Proyectos Educativos
+3 | Didáctica en Contextos de Educación Superior
+3 | Asignatura UNAHUR
+3 | Prácticas Docentes en el Nivel Primario
+4 | Chino Integral Avanzado IV
+4 | Literatura China
+4 | Análisis Contrastivo del Chino y el Español
+4 | Comunicación Intercultural
+4 | Investigación Educativa en Lenguas Extranjeras
+4 | Tecnología Educativa
+4 | Política Educativa
+4 | Prácticas Docentes en el Nivel Secundario y Superior";lector plan_unahur_campos;;"Cuadro 'Estructura del plan de estudios' del documento, por año; sin títulos intermedios ni ACA. Plan modificado (RCS 008/2026). Recarga: los nombres viejos traían la columna de campo pegada.";Universidad Nacional de Hurlingham;888b5c39-a065-4e00-98f5-91230b2c0249

@@ -508,6 +508,67 @@ class PlanUnahur(unittest.TestCase):
         self.assertEqual(p.plan_unahur(texto), [("Química", 1), ("Cultura y alfabetización digital en la universidad", 1),
                                                 ("Física II", 2), ("Espacio de integración curricular II", 3)])
 
+    def test_a_table_without_numbers_its_names_centred_on_their_rows(self):
+        texto = "\n".join([
+            "   Titulación Final: 6.000 horas - 240 créditos",
+            "  UNIDAD CURRICULAR             D      CP          HIS    HIT      HTAT       HT        CRE",
+            "                                         PRIMER AÑO",
+            "Pedagogía                       C     CFB           4      64        61       125        5",
+            "Aprendizajes y prácticas",
+            "                                C     CFB           4      64        61       125        5",
+            "educativas",
+            "Territorio, sujetos e",
+            "                                C      CIC          4      64        86       150        6",
+            "instituciones",
+            "                   TOTAL PRIMER AÑO                       640       760      1400        56",
+            "Técnico/a universitario/a en prácticas",
+            "                                                         1209      1791      3000       120",
+            "socioeducativas de Biología",
+            "TERCER AÑO",
+            "Historia de la Nación Argentina y sus       C     CFB      3       48      77      125       5",
+            "                                                13",
+            "proyectos educativos",
+            "Didáctica en contextos de",
+            "                                    C       CFB         3       48        77       125     5",
+            "Educación superior",
+            "                      TOTAL CARRERA                            2379     3621       6000   240",
+        ])
+        # (No second year: not the whole plan.)
+        self.assertEqual(p.plan_unahur_campos(texto), [])
+        texto = texto.replace("TERCER AÑO", "SEGUNDO AÑO")
+        self.assertEqual(p.plan_unahur_campos(texto), [
+            ("Pedagogía", 1), ("Aprendizajes y prácticas educativas", 1),
+            ("Territorio, sujetos e instituciones", 1),
+            ("Historia de la Nación Argentina y sus proyectos educativos", 2),
+            ("Didáctica en contextos de Educación superior", 2)])
+
+    def test_the_field_before_the_length(self):
+        texto = "\n".join([
+            "                                                        PRIMER AÑO",
+            "Matemática                                               CFB        Cuatr.    64         86         150             6",
+            "Sistemas de Representación Gráﬁca                        CFB        Cuatr.    32         68         100             4",
+            "                                                       SEGUNDO AÑO",
+            "Gestión de la calidad                                    CFE        Cuatr.    64         86         150             6",
+        ])
+        self.assertEqual(p.plan_unahur_campos(texto), [("Matemática", 1), ("Sistemas de Representación Gráfica", 1),
+                                                       ("Gestión de la calidad", 2)])
+
+    def test_a_row_it_cannot_read_is_not_skipped(self):
+        texto = "\n".join([
+            "                                            PRIMER AÑO",
+            "Pedagogía                                   C     CFB        4      64",
+            "                                           SEGUNDO AÑO",
+            "Tecnología educativa                      C.      CFB       2       32      68     100       4",
+            "Didáctica del Chino                                          C1      CFE      3        48    77",
+        ])
+        self.assertEqual(p.plan_unahur_campos(texto), [("Pedagogía", 1), ("Tecnología educativa", 2),
+                                                       ("Didáctica del Chino", 2)])
+        # Gestión del Mantenimiento's: the length on one line, the field and hours on the next.
+        partida = texto + "\n".join(["", "Economía y Costo del ciclo de vida de los",
+                                     "                                                    C        CFE      4",
+                                     "Activos                                                                       64       61"])
+        self.assertEqual(p.plan_unahur_campos(partida), [])
+
 
 class PlanTablasPorAnio(unittest.TestCase):
     HTML = ("<html><head><title>Contador Público – Facultad</title></head><body><article>"

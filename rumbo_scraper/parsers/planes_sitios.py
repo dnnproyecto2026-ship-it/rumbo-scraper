@@ -3368,7 +3368,84 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
     then the older brochures', then the 2025-2026 plan documents' table."""
     return (plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
-            or plan_unahur_tabla(texto_con_columnas))
+            or plan_unahur_tabla(texto_con_columnas) or plan_unahur_campos(texto_con_columnas))
+
+
+_ANIO_UNAHUR_CAMPOS = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\b(?:\s*\(.*\))?\s*$")
+# "Zoología   C   CFE   6   96 ..." (the profesorados of 2024) or
+# "Física   CFB   Cuatr.   64 ..." (Mantenimiento Hospitalario): the name,
+# its length and its field, either way round, then the hours.
+# (The length may read "C." or "C1": Geografía's and Chino's.)
+_FILA_UNAHUR_CAMPOS = re.compile(r"^\s*(?:(\S.*?)\s{2,})?(?:[CA][.\d]?\s+C[A-Z]{1,3}|C[A-Z]{1,3}\s+(?:Cuatr\.|Anual|[CA]))\s+\d")
+
+
+def plan_unahur_campos(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's plans whose table has no subject numbers ("UNIDAD
+    CURRICULAR  D  CP  HIS ...", the profesorados' resolutions of 2024):
+    "PRIMER AÑO" alone over rows "Zoología  C  CFE  6  96 ...". A name too
+    long for its cell is centred on its row, as many lines above as below
+    ("Aprendizajes y prácticas" / "C CFB 4 64 ..." / "educativas"; with three,
+    the middle one beside the data). A year's total, the intermediate
+    title's line and a page's number are not subjects; the plan ends at
+    "TOTAL CARRERA" or where the first year starts again."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    arriba: list[str] = []
+    abajo: list[str] = []
+    debe_abajo = 0
+    vistos: set[int] = set()
+    for linea in texto_con_columnas.splitlines():
+        texto = clean_text(linea).replace("\xa0", " ").strip()
+        cabeza = _ANIO_UNAHUR_CAMPOS.match(linea)
+        if cabeza:
+            nuevo = _ORDINALES[cabeza.group(1).lower()]
+            if nuevo in vistos:
+                break
+            vistos.add(nuevo)
+            anio, arriba, debe_abajo = nuevo, [], 0
+            continue
+        if anio is None or not texto:
+            continue
+        if re.match(r"(?i)total (?:de la )?carrera|titulaci[óo]n final", texto.translate(_LIGADURAS)):
+            break
+        fila = _FILA_UNAHUR_CAMPOS.match(linea)
+        if fila:
+            nombre = [*arriba, *([clean_text(fila.group(1))] if fila.group(1) else [])]
+            if not nombre:
+                return []
+            abajo = nombre
+            materias.append((" ".join(nombre), anio))
+            # (A name on its row that stops on a connector goes on below,
+            # past a page break: "Historia de la Nación Argentina y sus" /
+            # "13" / "proyectos educativos".)
+            debe_abajo, arriba = len(arriba) or int(bool(_SIGUE.search(nombre[-1]) or nombre[-1].endswith(" sus"))), []
+            continue
+        # A row split over lines ("C" here, its field and hours on the next):
+        # a row this does not read, so not the whole plan.
+        if re.search(r"(?:^|\s{2,})(?:[CA][.\d]?|C[A-Z]{1,3})(?:\s{2,}|$)", linea.strip()):
+            return []
+        # A page's number: the name may go on after it.
+        if re.fullmatch(r"\d{1,3}", texto):
+            continue
+        # A name beside hours that are not a row's ("Activos   64   61"):
+        # the rest of a row split over lines.
+        if (re.match(r"[^\W\d_][^\d]*?\s{2,}\d", linea.strip())
+                and not re.match(r"(?i)total|actividades|cr[ée]ditos|t[íi]tulaci|t[ée]cnic", texto)):
+            return []
+        # A total, the intermediate title's hours.
+        if re.search(r"\d", texto) or re.match(r"(?i)total|actividades curriculares", texto):
+            arriba, debe_abajo = [], 0
+            continue
+        if debe_abajo:
+            abajo.append(texto)
+            materias[-1] = (" ".join(abajo), anio)
+            debe_abajo -= 1
+        else:
+            arriba.append(texto)
+    resultado: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        _agregar(resultado, nombre, anio)
+    return desde_el_primero(resultado)
 
 
 def plan_ffyb_uba(texto: str) -> list[tuple[str, int]]:
