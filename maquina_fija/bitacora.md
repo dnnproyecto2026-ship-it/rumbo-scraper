@@ -529,3 +529,17 @@
 - Carga con `planes_manuales` (hoja `data/planes_untref_ccc.csv`, vista previa y `--apply`): 2 aceptadas, 44 materias. Se cotejaron 8 filas al azar de la base con el PDF o la página.
 - Cadena exportar → verificar UNTREF (ofertas 135/135, materias 2117/2117) → exportar completa (`Archivo: data/catalogo_depurado.json`). Las dos carreras cargadas no salen en la exportación porque el exportador descarta los ciclos por diseño. Sin credenciales de producción ni de GitHub.
 - Siguiente: decidir si el verificador acepta un nombre cortado por el salto de página (Geografía Compl.); UNAHUR Viverismo (lector por posición de palabras).
+
+## 2026-10-24 (69) — USAL: 6 carreras nuevas de la vigilancia del 23/10
+- La corrida del 23/10 (`data/vigilancia/usal_completo.json`) trae 80 carreras, contra 72 en la base. `load_usal --apply` **no se puede usar**: sincroniza las materias con las de la corrida, que no trae ninguna (los planes de USAL vienen de otros lectores), y borraría todas. Tampoco sirve `agregar_carrera`: su lector genérico toma "Secretaría de Ingreso" como nombre.
+- Nuevo `load_usal --solo-nuevas`: agrega solo las carreras que no están (comparando las palabras del nombre) a la base y a `data/usal_completo.json` (carrera, oferta con su URL, arancel). No toca materias. El artefacto se valida antes de escribir. Ya no validaba antes de este ciclo (144 programas descubiertos contra 147 resueltos, por carreras agregadas a mano); ahora se revisa todo menos ese conteo.
+- Cargadas (título, duración y facultad cotejados con cada página usando `parse_facts`): Agronomía (5), Actuario (4), Martillero y Corredor Universitario (Pregrado), Corrector Literario, Notariado (CCC a distancia, 1), Higiene y Seguridad en el Trabajo (CCC).
+- Quedaron afuera:
+  - "Dermatocosmiatría (Tecnicatura)": es la "Tecnicatura en Dermatocosmiatría" ya cargada (21 materias); se conserva el nombre de la base.
+  - Los 2 Ciclos Pedagógicos: el título es "Profesor en (la disciplina que corresponda)", así que no es una carrera propia.
+- Cambios en el parser de USAL: la marca "(pregrado)" del índice fija el nivel y sale del nombre; la duración se lee también como "(2 años y 1 cuatrimestre)" y "(2 años )".
+- Cambio en `parsers/duracion.py`: "con planes de estudio de 3 (tres) años de duración" es el título que se pide para entrar, no la duración. Sin esto, `completar_duraciones` proponía 3 para Higiene (CCC), que dura 2; esa duración no se aplicó.
+- Tests: 906 OK.
+- Cadena exportar → verificar USAL (ofertas 142/142) → exportar. Salen 4 de las 6; las 2 CCC no, por diseño. Sin credenciales de producción ni de GitHub.
+- Pendiente: Martillero (2,5) y Higiene CCC (2) siguen sin duración en la base. La próxima corrida de USAL ya las lee con el parser arreglado; hay que pasarlas a la base. Corrector Literario no tiene duración en la página: solo dice "Título Intermedio: 2 años y 1 cuatrimestre". Ninguna de las 6 tiene plan.
+- Siguiente: planes de las 6 nuevas de USAL; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
