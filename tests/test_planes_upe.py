@@ -365,9 +365,18 @@ class PlanUnoCodigosTests(unittest.TestCase):
             ("Acompañamiento Historia", 1), ("Bioética", 1), ("Teoría Comunitaria", 1), ("Salud Mental", 2)])
 
     def test_una_fila_sin_codigo_no_da_nada(self) -> None:
-        # Redes' "Electiva": it would join the row above.
+        # It would join the row above.
         from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos
-        self.assertEqual(plan_uno_codigos(self._primera((90, 398, "Electiva"), (225, 398, "4"))), [])
+        self.assertEqual(plan_uno_codigos(self._primera((90, 398, "Seminario"), (225, 398, "4"))), [])
+
+    def test_la_electiva_sin_codigo_es_su_fila(self) -> None:
+        # Redes' "Electiva" with its value: a row of its own, not a subject.
+        # Its "2º AÑO" heading over the values' column is no row's.
+        from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos
+        self.assertEqual(plan_uno_codigos(self._primera(
+            (90, 398, "Electiva"), (225, 398, "4"), (215, 420, "2º"), (232, 420, "AÑO"),
+            (30, 440, "03090"), (90, 440, "Salud"), (225, 440, "4"))), [
+            ("Acompañamiento Historia", 1), ("Bioética", 1), ("Teoría Comunitaria", 1), ("Salud", 2)])
 
     def test_un_renglon_entre_dos_filas_no_da_nada(self) -> None:
         from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos

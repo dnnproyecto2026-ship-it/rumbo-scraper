@@ -491,3 +491,10 @@
 - **NO cargables por ahora:** Tec. Redes Informáticas (la Electiva no tiene código: el control la rechaza, si no se pegaba a "Análisis y Producción del Discurso"), Enfermería (sin códigos; columna de áreas y nombres partidos debajo), Odontología (PDF gráfico). Siguen sin plan Arquitectura, Ing. Química y Tec. Administración (bitácora 54).
 - Cadena exportar→verificar UNO (ofertas 45/45, materias 490/490)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNO Redes (permitir una fila sin código si tiene su propio valor), Enfermería; UNAHUR Viverismo; resto de UNTREF.
+
+## 2026-10-24 (64) — UNO: Tec. Redes Informáticas con `plan_uno_codigos`
+- `plan_uno_codigos` ajustado (2 pruebas): una fila sin código cuenta como fila propia solo si su nombre es "Electiva"/"Optativa N" y tiene su valor al lado, a menos de 30 pt de las filas con código (no es materia: `_agregar` la saca); cualquier otra fila sin código sigue anulando el plan. Además, el "2º AÑO" que cae sobre la columna de cuatrimestre ya no se cuenta como valor (era el otro motivo por el que Redes daba nada). Los 8 planes del ciclo 63 salen idénticos a la hoja cargada. Tests: 895 OK.
+- Cargada por `planes_manuales` (hoja `data/planes_uno_redes.csv`, salida del lector; vista previa OK y `--apply`; cotejada renglón por renglón con el PDF y 7 filas al azar de la base): Tec. Redes Informáticas (21, años 1–3, duración 2,5). Afuera Electiva, Optativa I, Inglés I y Trabajo Social Obligatorio (otros requisitos).
+- Cadena exportar→verificar UNO (ofertas 45/45, materias 511/511)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguen sin plan en UNO: Enfermería (sin códigos), Odontología (PDF gráfico), Arquitectura, Ing. Química, Tec. Administración.
+- Siguiente: UNAHUR Viverismo (lector por posición de palabras); resto de UNTREF (corregir duración de Cs. de la Educación).

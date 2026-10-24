@@ -1,0 +1,22 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNO;Tecnicatura Universitaria en Redes Informáticas;2.5;;;http://www.uno.edu.ar/images/documentos/escuelas/Tecnicatura%20Univ%20en%20Redes%20Informaticas_actualizado.pdf;"1 | Álgebra y Geometría Analítica
+1 | Tecnología Aplicada
+1 | Algoritmos y Estructura de Datos
+1 | Matemática Discreta
+1 | Arquitectura de Computadores I
+1 | Circuitos Electrónicos
+1 | Programación con Objetos I
+1 | Análisis y Producción del Discurso
+2 | Comunicación y Redes I
+2 | Medidas Electrónicas
+2 | Arquitectura de Computadores II
+2 | Análisis Matemático I
+2 | Problemática Regional
+2 | Probabilidad y Estadística
+2 | Base de Datos I
+2 | Comunicación y Redes II
+3 | Programación en Comunicación
+3 | Taller de Redes
+3 | Seguridad en Redes
+3 | Universidad, Ciencia y Sociedad
+3 | Práctica Profesional Supervisada";lector plan_uno_codigos (salida del código del repo);;"Plan de estudios de la página de la carrera (2 años y medio, años 1.º-3.º). Afuera: Electiva (1.º año, 2.º cuatr.) y Optativa I (3.º año), sin código; Inglés I y Trabajo Social Obligatorio (otros requisitos).";Universidad Nacional del Oeste;934d26a7-481e-4781-a09b-6a9b2e461c01

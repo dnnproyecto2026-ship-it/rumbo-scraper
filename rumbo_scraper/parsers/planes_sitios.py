@@ -3361,6 +3361,8 @@ _CODIGO_UNO = re.compile(r"\d{4,5}|\d{2}-\d{2,3}|-{3,}")
 # Lines in the name's column that are not a subject's: the year's hours, the
 # intermediate title ("Título obtenido: ANALISTA ..."), a layer laid over
 # the table ("CICLO INICIAL  Hs  2432").
+# An elective's slot, a row without a code.
+_ELECTIVA_UNO = re.compile(r"(?i)(?:electiva|optativa)(?: [IVX\d]+)?")
 _NO_ES_FILA_UNO = re.compile(r"(?i)^(?:sub)?total\b|^horas totales$|^certificaci[óo]n\b|^plan de estudios$|^t[íi]tulo\b"
                              r"|carga horaria total|^ciclo inicial$|^obtenido:|^[\d\s*°º/–-]+$|^c$")
 
@@ -3418,11 +3420,22 @@ def plan_uno_codigos(cajas: str) -> list[tuple[str, int]]:
         if not filas:
             continue
         izquierda = max(x for _, x in filas) + 1
+        # An elective's slot has no code ("Electiva", "Optativa I" in Redes):
+        # a row of its own when its line has its value beside it, near the
+        # coded rows. It is not a subject (``_agregar`` leaves it out).
+        for y, renglon in renglones.items():
+            nombre = [(x0, t) for x0, t in renglon if izquierda < x0 < siguiente[0] - 1]
+            if (_ELECTIVA_UNO.fullmatch(" ".join(t for _, t in sorted(nombre)))
+                    and any(siguiente[0] - 8 <= x0 <= siguiente[1] + 8 for x0, _ in renglon)
+                    and 4 < min(abs(y - fy) for fy, _ in filas) < 30 and y > hy):
+                filas.append((y, izquierda - 1))
+        filas.sort()
         arriba, abajo = filas[0][0] - 16, filas[-1][0] + 16
         valores = sorted((y0 + y1) / 2 for x0, y0, x1, y1, t in palabras
                          if siguiente[0] - 8 <= (x0 + x1) / 2 <= siguiente[1] + 8 and arriba <= (y0 + y1) / 2 <= abajo
                          and re.fullmatch(r"\d+[°º*]?|[cx]|Anual|Semestral|Cuatrimestr(?:e|al)", t))
-        # (One row's "1º Cuatrimestre" is one value.)
+        # (One row's "1º Cuatrimestre" is one value; a year's "2º AÑO" over the column is none.)
+        valores = [v for v in valores if all(abs(v - ty) > 3 for ty, _ in titulos)]
         valores = [v for i, v in enumerate(valores) if i == 0 or v - valores[i - 1] > 4]
         if (len(valores) != len(filas)
                 or len({min(range(len(filas)), key=lambda i: abs(filas[i][0] - v)) for v in valores}) != len(filas)):
