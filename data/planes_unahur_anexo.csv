@@ -1,0 +1,22 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNAHUR;Tecnicatura Universitaria en Inteligencia Artificial;2.5;;;https://unahur.edu.ar/wp-content/uploads/2026/01/RES-790-23-TEC-UNIV-EN-INTELIGENCIA-ARTIFICIAL.pdf;"1 | Matemática para informática I
+1 | Introducción a lógica y problemas computacionales
+1 | Introducción a la inteligencia artificial
+1 | Nuevos entornos y lenguajes: la producción del conocimiento en la cultura digital
+1 | Álgebra lineal
+1 | Cálculo
+1 | Taller de programación I
+1 | Tecnología y sociedad
+1 | Inglés I
+2 | Bases de datos
+2 | Probabilidad y estadística
+2 | Taller de programación II
+2 | Fundamentos de redes neuronales
+2 | Fundamentos de ciencias de datos
+2 | Aprendizaje automático
+2 | Taller de programación III
+2 | Inglés II
+3 | Asignatura UNAHUR
+3 | Aprendizaje automático avanzado
+3 | Procesamiento de imágenes y visión por computadora
+3 | Proyecto integrador";lector plan_untref_anexo;;"Anexo RM 790/2023 (IF-2023-28361910); 5 cuatrimestres; afuera Electiva y Créditos";;8799e877-6531-42a2-8a10-462ce626853d

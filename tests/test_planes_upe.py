@@ -322,6 +322,21 @@ class PlanUntrefAnexoTests(unittest.TestCase):
             (165, 300, "Cartografía"), (248, 300, "Cuatrimestral"))
         self.assertEqual(plan_untref_anexo(pagina), [])
 
+    def test_la_cabecera_de_una_pagina_que_sigue_no_es_un_nombre(self) -> None:
+        # UNAHUR's Inteligencia Artificial: the second page goes on with the
+        # fifth term, its first row 18 points under "COD  ASIGNATURA".
+        from rumbo_scraper.parsers.planes_sitios import plan_untref_anexo
+        primera = self._pagina(
+            (112, 169, "COD"), (163, 169, "ASIGNATURA"),
+            (107, 200, "QUINTO"), (150, 200, "CUATRIMESTRE"),
+            (140, 211, "Asignatura"), (204, 211, "UNAHUR"), (248, 211, "Cuatrimestral"))
+        segunda = self._pagina(
+            (112, 169, "COD"), (163, 169, "ASIGNATURA"),
+            (151, 187.5, "Proyecto"), (189, 187.5, "integrador"), (248, 187.5, "Cuatrimestral"),
+            (108, 210.2, "OTROS"), (146, 210.2, "REQUISITOS"))
+        self.assertEqual(plan_untref_anexo(primera + segunda),
+                         [("Asignatura UNAHUR", 3), ("Proyecto integrador", 3)])
+
 
 class PlanUnahurTablaTests(unittest.TestCase):
     def test_nombre_centrado_en_su_fila(self) -> None:

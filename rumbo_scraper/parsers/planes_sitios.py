@@ -5736,7 +5736,7 @@ def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
     for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
         palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
                     for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
-        cabeza = next((x0 for x0, _, _, _, t in palabras if t == "ASIGNATURA"), None)
+        cabeza, techo = next(((x0, y1) for x0, _, _, y1, t in palabras if t == "ASIGNATURA"), (None, None))
         regimenes = [(x0, (y0 + y1) / 2) for x0, y0, _, y1, t in palabras if t in ("Cuatrimestral", "Anual")]
         if cabeza is None or not regimenes:
             continue
@@ -5756,8 +5756,9 @@ def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
             cuatrimestre = _CUATRIMESTRE_UNTREF.match(texto)
             if cuatrimestre:
                 titulos.append((y, (_NUMERO_DEL_CUATRIMESTRE[cuatrimestre.group(1).lower()] + 1) // 2))
-            # (The header above the first row, and the degree a part leads to.)
-            elif filas[0] - 30 < y < fin and not re.match(r"(?i)t[íi]tulos?:|carga horaria", texto):
+            # (The header above the first row -- near it on a page that goes on
+            # with the term before, UNAHUR's -- and the degree a part leads to.)
+            elif max(filas[0] - 30, techo) < y < fin and not re.match(r"(?i)t[íi]tulos?:|carga horaria", texto):
                 nombres.append((y, texto))
         for fila in filas:
             anio = next((a for y, a in reversed(titulos) if y < fila), anterior)

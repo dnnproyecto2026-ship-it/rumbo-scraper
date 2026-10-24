@@ -460,3 +460,10 @@
 - Pendientes UNTREF: Edición y Políticas y Adm. de la Cultura (virtuales, ver bitácora 52), Geografía (Compl.), Instrumentación Quirúrgica (CCC), Resolución de Conflictos (CCC), Gestión Logística (escaneada).
 - Cadena exportar→verificar UNTREF (ofertas 135/135, materias 2042/2042)→exportar completa (`Archivo: data/catalogo_depurado.json`). Tests: 887 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente: resto de UNO/UNAHUR; cargar las 4 CCC de UNSO; probar `plan_untref_anexo` con los demás anexos de UNTREF.
+
+## 2026-10-24 (60) — UNAHUR: Tec. Inteligencia Artificial con `plan_untref_anexo`
+- El PDF que enlaza la página (`RES-790-23-TEC-UNIV-EN-INTELIGENCIA-ARTIFICIAL.pdf`, anexo IF-2023-28361910) es el mismo formato de anexo del Ministerio que UNTREF: nombres centrados sobre su fila. `plan_untref_anexo` leía la 1.ª página y devolvía nada por la 2.ª: sin título de cuatrimestre arriba, la cabecera "COD ASIGNATURA" quedaba a menos de 30 pt de la primera fila y se tomaba como nombre. Arreglo: solo cuentan renglones debajo de "ASIGNATURA" (con prueba). Tests: 888 OK.
+- Cargada por `planes_manuales` (hoja `data/planes_unahur_anexo.csv`, "lector plan_untref_anexo", vista previa OK y `--apply`; las 21 cotejadas renglón por renglón con el PDF): 21 materias en 5 cuatrimestres (años 1–3, duración 2,5). Afuera Electiva (menú de 6) y Créditos. "Asignatura UNAHUR" queda como materia, igual que en los profesorados (bitácora 55).
+- **UNSO, 4 CCC:** no se agregan. Los lectores de guías descartan a propósito los ciclos de complementación (`es_ciclo` en `guias_nacionales._carrera`: no son carreras para empezar). Queda registrado como decisión, no como hueco.
+- Cadena exportar→verificar UNAHUR (ofertas 52/52, materias 791/791)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente: probar `plan_untref_anexo` con los demás PDF de UNAHUR por cuatrimestre (Metalurgia, Energía Eléctrica, Viverismo, Periurbana, Agronómica); resto de UNO.
