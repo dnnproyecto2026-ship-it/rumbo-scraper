@@ -19,7 +19,7 @@ from __future__ import annotations
 import math
 import re
 import unicodedata
-from collections import Counter
+from collections import Counter, defaultdict
 from html import unescape
 
 from bs4 import BeautifulSoup, Tag
@@ -578,6 +578,8 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
         return _ucasal_tabla_con_codigo(texto)
     if re.search(r"(?m)^\s*COD\s+ASIGNATURA\s+REGIMEN", texto):
         return _ucasal_anexo_con_codigo(texto)
+    if "Nómina de Asignaturas por régimen" in texto:
+        return _ucasal_nomina(texto)
     materias: list[tuple[str, int]] = []
     anio = 0
     if "PLAN DE ESTUDIO POR CARRERA" in texto:
@@ -746,6 +748,60 @@ def _ucasal_anexo_con_codigo(texto: str) -> list[tuple[str, int]]:
         _agregar(materias, con_tildes(" ".join(t for _, t in renglones[inicio:fin] if t)), anio)
         inicio = fin
     if inicio != len(renglones):
+        return []
+    return desde_el_primero(materias)
+
+
+_UCASAL_SEMESTRE = r"[12]\s*[º°]\s*Sem\b"
+
+
+def _ucasal_nomina(texto: str) -> list[tuple[str, int]]:
+    """A faculty's whole plan (Producción Animal), whose last pages are the
+    "Nómina de Asignaturas por régimen de cursado": under each year's
+    heading a row per subject, "Fundamentos de Química   1º Sem.   5   80",
+    its code ("1.3") on the row or on a line of its own beside it. A row
+    with no name ("2.11   2º Sem.  2  32") has it on the next line. The
+    names of each year must be as many as its codes, 1 to n."""
+    materias: list[tuple[str, int]] = []
+    codigos: dict[int, set[int]] = defaultdict(set)
+    por_anio: Counter = Counter()
+    anio = 0
+    sin_nombre = False      # a row whose name is on the next line
+    for linea in texto.split("Nómina de Asignaturas por régimen", 1)[1].splitlines():
+        linea = linea.replace("\xa0", " ").replace("​", "")
+        if not linea.strip():
+            continue
+        ordinal = re.fullmatch(r"\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*", linea)
+        if ordinal:
+            if sin_nombre:
+                return []
+            anio = _UCASAL_ORDINAL[ordinal.group(1)]
+            continue
+        if not anio:
+            continue
+        # (A code is near the margin; the correlatives, far to the right.)
+        codigo = re.match(r"^\s{0,9}(\d)\.(\d{1,2})\b", linea)
+        if codigo:
+            if int(codigo.group(1)) != anio:
+                return []
+            codigos[anio].add(int(codigo.group(2)))
+        resto = linea[codigo.end():] if codigo else linea
+        fila = re.match(rf"^\s*(\S.*?)\s{{2,}}{_UCASAL_SEMESTRE}", resto)
+        if sin_nombre:
+            nombre = re.split(r"\s{3,}", resto.strip())[0]
+            if fila or re.search(r"\d", nombre) or not re.search(r"[a-záéíóúñ]", nombre):
+                return []
+            _agregar(materias, nombre, anio)
+            por_anio[anio] += 1
+            sin_nombre = False
+        elif fila:
+            _agregar(materias, fila.group(1), anio)
+            por_anio[anio] += 1
+        elif re.match(rf"^\s*{_UCASAL_SEMESTRE}", resto):
+            sin_nombre = True
+    if sin_nombre or not por_anio or sorted(por_anio) != list(range(1, max(por_anio) + 1)):
+        return []
+    if any(codigos[a] != set(range(1, n + 1)) for a, n in por_anio.items()):
         return []
     return desde_el_primero(materias)
 

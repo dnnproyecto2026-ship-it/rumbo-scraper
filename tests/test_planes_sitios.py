@@ -213,6 +213,33 @@ TÍTULO: LICENCIADO/A EN TRABAJO SOCIAL"""
         # A name whose lines do not centre on its code: unread.
         self.assertEqual(p.plan_ucasal(texto.replace("           INTERVENCIÓN\n", "")), [])
 
+    def test_ucasal_nomina_de_asignaturas(self):
+        texto = """             CONTENIDOS MINIMOS POR AREA
+                 ●     Fundamentos de Química
+Nómina de Asignaturas por régimen de cursado, carga horaria y sistema de correlatividades
+Código    Asignatura                                               a
+                                        PRIMER AÑO
+          Filosofía                                    1º Sem.     2        32              -            -
+1.1
+          Fundamentos de Química                       1º Sem.     5        80                           -
+1.2
+                                                                                        1.1             1.1
+1.3       Anatomía y Fisiología                        2º Sem.     5        80
+                                                                                        1.2             1.2
+                      TOTAL                                                            784 hrs.
+                                       SEGUNDO AÑO
+                                                                                        1.3
+2.1      Nutrición y Alimentación Animal               1º Sem      5        80                          1.3
+Universidad Católica de Salta
+2.2                                                2º Sem.   2   32           2.1            2.1
+        Ética Profesional I
+TOTAL                                                                  768 hrs."""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Filosofía", 1), ("Fundamentos de Química", 1), ("Anatomía y Fisiología", 1),
+            ("Nutrición y Alimentación Animal", 2), ("Ética Profesional I", 2)])
+        # A year with a code more than its names: unread.
+        self.assertEqual(p.plan_ucasal(texto.replace("2.2     ", "2.3     ")), [])
+
     def test_anexo_con_codigo_de_anio_y_nombre_partido(self):
         texto = """                                              PRIMER AÑO
 Código   Asignatura                 Régimen         Horas

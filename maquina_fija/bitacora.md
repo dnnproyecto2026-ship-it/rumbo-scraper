@@ -648,3 +648,12 @@
 - Cadena exportar → verificar UCASAL (ofertas 122/122, materias 715/715) → exportar completa (`Archivo: data/catalogo_depurado.json`). Trabajo Social sale con 47.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UCASAL Producción Animal (plan completo de la facultad); lector por posición de palabras para Desarrollo Agrario (UNAHUR).
+
+## 2026-10-24 (80) — UCASAL: Lic. Producción Animal, 45 materias (nómina del plan de la facultad)
+- Vigilancia sin novedades (la corrida del lanzador de hoy: Austral, ITBA, Palermo y UADE, igual que el 23/10).
+- `plan_ucasal` lee la "Nómina de Asignaturas por régimen de cursado" al final del plan completo de la facultad (`_ucasal_nomina`): una fila por materia con "1º Sem."; el código ("1.3") en la fila o en un renglón propio; una fila sin nombre lo tiene en el renglón siguiente ("2.11 … 2º Sem." / "Ética Profesional I"). Los nombres de cada año tienen que ser tantos como sus códigos, de 1 a n; si no, no se lee. Prueba nueva en `tests/test_planes_sitios.py`. Tests: 927 OK.
+- Cargada con `planes_documentos --apply UCASAL` (Ing. Informática e Imagen y Sonido sacadas del archivo de hallados): 45 materias (12/12/10/11), plan 2019. Leídas de vuelta: las 45 literales en la tabla del PDF; años cotejados con la tabla. Ningún otro PDF del caché trae esa nómina.
+- Sacada de `relevamiento/planes_sin_cargar.json` (68 UCASAL sin plan).
+- Cadena exportar → verificar UCASAL (ofertas 122/122, materias 760/760) → exportar completa (`Archivo: data/catalogo_depurado.json`).
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: lector por posición de palabras para Desarrollo Agrario (UNAHUR); UCASAL: los 3 PDF escaneados (OCR).

@@ -354,16 +354,6 @@
  },
  {
   "universidad": "UCASAL",
-  "carrera": "Licenciatura en Producción Animal",
-  "carrera_id": "2db1fec5-0ffb-4d45-94f7-fac690b6661a",
-  "motivo": "El documento es el plan completo de la facultad (43 mil caracteres, con contenidos): ningún lector lo toma todavía.",
-  "documentos": [
-   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-Estudios-LPA-PRESENCIAL.doc.pdf"
-  ],
-  "revisado": "2026-10-24"
- },
- {
-  "universidad": "UCASAL",
   "carrera": "Licenciatura en Producción de Bioimágenes (Ciclo de Complementación Curricular)",
   "carrera_id": "15748fac-54e3-4998-94a8-37a19732a306",
   "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos. Además: PDF sin texto (imagen): necesita OCR (planes_escaneados).",
