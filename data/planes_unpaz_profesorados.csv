@@ -1,0 +1,94 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNPAZ;Profesorado Universitario en Educación Física;4;https://www.unpaz.edu.ar/puef;PLAN DE ESTUDIO;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-11-23%20PUEF_plan%20A4.pdf;"1 | Atletismo y Gimnasia I
+1 | Natación I
+1 | Handball
+1 | Taller de Observación y Práctica Profesional
+1 | Pedagogía
+1 | Psicología de la Niñez
+1 | Anatomía I
+1 | Didáctica y Currículum
+1 | Taller de Informática
+1 | Enseñanza de la Educación Física I (Inicial)
+1 | Anatomía II
+1 | Psicología del Adolescente y del Adulto
+1 | Recreación
+1 | Historia de la Educación Física
+2 | Atletismo y Gimnasia II
+2 | Natación II
+2 | Básquetbol
+2 | Taller de la Construcción de la Práctica Profesional I (Inicial)
+2 | Práctica Profesional I (Inicial)
+2 | Fisiología I
+2 | Educación para la Salud
+2 | Enseñanza de la Educación Física II (Primaria)
+2 | Psicología de la Educación
+2 | Historia y Política de la Educación Argentina
+2 | Taller de Actividad en la Naturaleza
+2 | Taller Expresivo
+3 | Actividades Acuáticas
+3 | Softbol y Hockey
+3 | Gimnasia III
+3 | Vóleibol
+3 | Taller de la Construcción de la Práctica Profesional II (Primaria)
+3 | Práctica Profesional II (Primaria)
+3 | Fisiología II
+3 | Teoría y Diseño de Proyectos en Educación Física
+3 | Taller de Inglés Técnico
+3 | Enseñanza de la Educación Física III (Adolescentes y Adultos)
+3 | Biomecánica
+3 | Taller de Evaluación de las Capacidades
+4 | Fútbol
+4 | Cestoball (Mujeres) / Rugby (Hombres)
+4 | Danza Creativa Educacional
+4 | Taller de la Construcción de la Práctica Profesional III (Media)
+4 | Práctica Profesional III (Media)
+4 | Filosofía de la Educación
+4 | Metodología de la Investigación
+4 | Fisiología de la Actividad Física
+4 | Teoría y Práctica del Entrenamiento
+4 | Sociología de la Educación
+4 | Ética y Deontología Profesional
+4 | Taller de Estrategias de Integración para Personas con Discapacidad
+4 | Taller de Diseño de Proyectos Educativos";lector plan_unpaz;;"51 asignaturas, 4 años; sin optativas";Universidad Nacional de José C. Paz;0bff1b87-40ba-44e7-ab61-57fa6a0bbaee
+UNPAZ;Profesorado Universitario de Inglés;4;https://www.unpaz.edu.ar/profingles;PLAN DE ESTUDIO;https://www.unpaz.edu.ar/sites/default/files/inline-files/2023-05-22%20Profesorado%20Univ%20Ingl%C3%A9s_plan%20A4.pdf;"1 | Prácticas discursivas: Lectura y escritura 1
+1 | Prácticas discursivas: Oralidad 1
+1 | Pedagogía
+1 | Subjetividades, cultura y tecnologías
+1 | Estado, conocimiento y educación
+1 | Pensamiento pedagógico latinoamericano
+1 | Psicología educacional
+1 | Estudios interculturales 1
+1 | Taller de aprendizaje y participación comunitaria
+2 | Prácticas discursivas: Lectura y escritura 2
+2 | Prácticas discursivas: Oralidad 2
+2 | Didáctica Específica 1
+2 | Didáctica y Curriculum
+2 | Sistema y políticas educativas
+2 | Estudios interculturales 2
+2 | Sujetos de la educación inicial y primaria
+2 | Instituciones educativas
+2 | Lengua adicional
+3 | Prácticas discursivas: Lectura y escritura 3
+3 | Prácticas discursivas: Oralidad 3
+3 | Trabajo de campo
+3 | Didáctica específica 2
+3 | Taller de práctica 1
+3 | Estudios interculturales 3
+3 | Reflexiones sobre la adquisición de la lengua materna y extranjera
+3 | Taller de prácticas 2
+3 | Sujetos de la educación secundaria y superior
+4 | Prácticas discursivas: Lectura y escritura 4
+4 | Prácticas discursivas: oralidad 4
+4 | Estudios interculturales 4
+4 | Taller de Análisis y Diseño de Materiales
+4 | Didáctica Específica 3
+4 | Taller de prácticas 3
+4 | Lingüística general
+4 | Inglés con fines específicos: académicos y técnicos
+4 | Trabajo Docente
+4 | Enseñanza de inglés mediada por tecnologías
+4 | Investigación en lengua extranjera
+4 | Taller de prácticas 4
+4 | Educación y Proyecto Nacional
+4 | Enseñanza del inglés en contextos no escolares
+4 | Educación sexual integral en la enseñanza de lengua extranjera";lector plan_unpaz;;"afuera Optativa 1 (06) y Optativa 2 (25), que son menús; reemplaza 28 nombres rotos retirados el 2026-10-24";Universidad Nacional de José C. Paz;6711d3ba-535c-4f84-9e47-139fa429d06a
