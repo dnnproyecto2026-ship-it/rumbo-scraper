@@ -1818,5 +1818,15 @@
    "https://www.facet.unt.edu.ar/ingmecanica/plan-de-estudios/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "00e09f00-87bc-4b8e-9f17-abd6924a382d",
+  "motivo": "El plan está repartido en cinco páginas por año (1o-ano a 5-ano) y la lista de programas omite el primer año; no hay un único documento oficial contra el que comprobar los nombres de las 44 materias, y el verificador lee un solo enlace.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/ingindustrial/plan-de-estudio/"
+  ],
+  "revisado": "2026-10-25"
  }
 ]

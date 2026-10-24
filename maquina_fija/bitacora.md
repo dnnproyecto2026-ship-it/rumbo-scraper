@@ -794,3 +794,9 @@
 - Ing. en Computación (FACET): tabla oficial del Plan 2005 modificado (HTML de la página, módulos I a X → 5 años, dos módulos por año); 40 materias, Trabajo de Graduación incluido, exigencias adicionales (inglés, PPS) afuera. Por `planes_manuales` (hoja `data/planes_unt_computacion.csv`, cargado_por "lector html (máquina fija)"). Vista previa y carga: 40/40 verificadas contra la página. "Estruturas de Datos y Algoritmos" va con la ortografía literal de la página.
 - Pendiente UNT sin materias: Industrial, Electrónica, Eléctrica, Civil, Biomédica, Azucarera, Agrimensura (FACET: las páginas existen en la guía, mismo formato probable), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
 - Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (99) — UNT: Ing. Eléctrica cargada; Ing. Industrial NO cargable
+- Ing. Eléctrica (FACET): Plan 2004, PDF oficial de la página de la carrera (texto, módulos 1 a 10, dos por año → 5 años); 38 materias, Trabajo de Graduación incluido, Electivas I a III, PPS e inglés afuera. Por `planes_manuales` (hoja `data/planes_unt_electrica.csv`, cargado_por "lector pdftotext (máquina fija)"): 38/38 verificadas contra el PDF. La RES-1875 de 2024 es un escaneo sin texto; no se usó.
+- Ing. Industrial: el plan está en cinco páginas por año y la lista de programas omite el primer año; no hay un único documento para comprobar los nombres (el verificador lee un solo enlace). Registrada en `relevamiento/planes_sin_cargar.json`.
+- Ing. Electrónica: su página de correlativas no se leyó (las correlativas del sitio no traen año); queda para el próximo ciclo con Civil, Biomédica, Azucarera y Agrimensura.
+- Tests: 932 OK. Sin credenciales de producción ni de GitHub.

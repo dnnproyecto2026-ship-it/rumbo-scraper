@@ -1,0 +1,39 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Eléctrica;5;;;https://www.facet.unt.edu.ar/ingelectrica/wp-content/uploads/sites/63/2021/07/PLAN-DE-ESTUDIOS-INGENIERIA-ELECTRICA.pdf;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica I
+1 | Fundamentos de Química General
+1 | Física I
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Sistemas de Representación
+2 | Física III
+2 | Cálculo III
+2 | Circuitos Eléctricos I
+2 | Programación I
+2 | Cálculo IV
+2 | Probabilidades y Estadística
+2 | Mediciones Eléctricas
+2 | Circuitos Eléctricos II
+3 | Cálculo V
+3 | Electrónica I
+3 | Materiales Eléctricos
+3 | Propagación Electromagnética
+3 | Máquinas Eléctricas I
+3 | Electrónica II
+3 | Máquina de Fuerza Motriz
+3 | Sistema de Control I
+4 | Máquinas Eléctricas II
+4 | Mediciones Eléctricas Industriales (II)
+4 | Instalaciones Eléctricas I
+4 | Electrónica de Potencia
+4 | Centrales Eléctricas
+4 | Transmisión de Energía
+4 | Instalaciones Eléctricas II
+4 | Introducción al Derecho
+5 | Sistemas Eléctricos de Potencia
+5 | Técnicas de Alta Tensión
+5 | Org. Industrial y Gestión Ambiental
+5 | Principios de Economía
+5 | Trabajo de Graduación";lector pdftotext (máquina fija);;Plan 2004, PDF oficial de la página de la carrera, módulos 1 a 10 (dos por año). Electivas I a III, PPS e inglés afuera.;Universidad Nacional de Tucumán;eeba2e10-643a-4c39-a20f-982c02d590c4
