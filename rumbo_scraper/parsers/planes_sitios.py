@@ -574,6 +574,8 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
     texto = texto_con_columnas or ""
     if "CORRELATIVIDADES DETALLADAS" in texto:
         return []
+    if re.search(r"\bCód\.", texto) and "Régimen" in texto:
+        return _ucasal_tabla_con_codigo(texto)
     materias: list[tuple[str, int]] = []
     anio = 0
     if "PLAN DE ESTUDIO POR CARRERA" in texto:
@@ -628,6 +630,63 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
     for nombre, anio in _ucasal_unir_partidos(renglones):
         # (Its short names in capitals too: "ÉTICA".)
         _agregar(materias, con_tildes(nombre), anio)
+    return desde_el_primero(materias)
+
+
+_UCASAL_REGIMEN = r"(?:Semestral|Anual|Cuatrimestral)\b"
+_UCASAL_ORDINAL = {"PRIMER": 1, "SEGUNDO": 2, "TERCER": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6}
+
+
+def _ucasal_tabla_con_codigo(texto: str) -> list[tuple[str, int]]:
+    """The Jurídicas' plan sheets: a table per term ("Cód.", "MATERIA",
+    "Régimen") under each year's heading ("PRIMER AÑO"). A name too long for
+    its cell is wrapped around the row's code ("Negociación comercial,
+    transcultural y" / "6   Semestral" / "relaciones humanas"). A code
+    with no name in the text (one drawn as curves) leaves the plan unread."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    cabeza = ""        # a name's first line, before its code
+    codigo = False     # a code read on a line of its own, its name not yet whole
+    for linea in texto.splitlines():
+        linea = linea.replace("\xa0", " ").strip()
+        if not linea:
+            continue
+        if re.match(r"(?i)^seminarios\s+electivos", linea):
+            break
+        ordinal = re.fullmatch(r"(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO", linea)
+        fila = re.match(rf"^(\d{{1,2}})\s+(\S.*?)\s+{_UCASAL_REGIMEN}", linea)
+        solo_codigo = re.fullmatch(rf"\d{{1,2}}(?:\s+{_UCASAL_REGIMEN}.*)?", linea)
+        if codigo and (ordinal or fila or solo_codigo or not cabeza):
+            # (The name ended on its first line: "Teología I" over "14".)
+            if not cabeza:
+                return []
+            _agregar(materias, cabeza, anio)
+            cabeza, codigo = "", False
+        if ordinal:
+            anio, cabeza = _UCASAL_ORDINAL[ordinal.group(1)], ""
+        elif fila and anio:
+            _agregar(materias, fila.group(2), anio)
+            cabeza = ""
+        elif solo_codigo and anio:
+            codigo = True
+        elif re.match(rf"^-?\s*{_UCASAL_REGIMEN}", linea):
+            continue
+        else:
+            nombre = re.split(rf"\s+-?\s*{_UCASAL_REGIMEN}|\s{{3,}}", linea)[0]
+            # A heading, a total or the sheet's own title ("LICENCIATURA EN ...").
+            if (not anio or nombre.isupper() or re.match(r"(?i)^(cód|materia|horas|total|carga|\d\S*\s+semestre|plan de|facultad)", nombre)
+                    or not re.search(r"[a-záéíóúñ]", nombre)):
+                cabeza, codigo = "", False
+                continue
+            if codigo:
+                _agregar(materias, f"{cabeza} {nombre}", anio)
+                cabeza, codigo = "", False
+            else:
+                cabeza = nombre
+    if codigo:
+        if not cabeza:
+            return []
+        _agregar(materias, cabeza, anio)
     return desde_el_primero(materias)
 
 

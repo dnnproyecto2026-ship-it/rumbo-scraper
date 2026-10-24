@@ -236,6 +236,43 @@ Código   Asignatura                 Régimen         Horas
         self.assertEqual(p.plan_ucasal(texto), [("Filosofía", 1), ("Planificación, Producción y Logística de Eventos", 1),
                                                 ("Teología", 2)])
 
+    def test_ucasal_tabla_con_codigo(self):
+        texto = """PLAN DE ESTUDIOS                                                FACULTAD DE
+LICENCIATURA EN CRIMINOLOGÍA                                    CIENCIAS JURÍDICAS
+                                           PRIMER AÑO
+                            1er Semestre
+ Cód.                                                      Régimen    por semestre de
+                             MATERIA
+  1     Filosofía I                                      Semestral  3         -   48
+        Negociación comercial, transcultural y
+  6                                                        Semestral     4         64
+        relaciones humanas
+                                                         TOTAL DE HORAS DEL SEMESTRE
+               Facultad de Ciencias Jurídicas | sead.juridicas@ucasal.edu.ar
+PLAN DE ESTUDIOS                                                FACULTAD DE
+LICENCIATURA EN CRIMINOLOGÍA                                    CIENCIAS JURÍDICAS
+                                           SEGUNDO AÑO
+  11    Teología I                                    Semestral      3       -             48
+        Seminario: Técnicas de Comunicación Científica
+                                               -      Semestral      4       -             64
+  14
+        Criminológica
+     Seminario: Investigación Criminal en Lavado de Semestral    4       -              64
+  32
+     activos
+        Teología II                                   Semestral    2       -             32
+  14
+  15    Seguridad Pública                             Semestral      4       -             64
+                                 SEMINARIOS ELECTIVOS
+  Técnicas de resolución de conflictos."""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Filosofía I", 1), ("Negociación comercial, transcultural y relaciones humanas", 1),
+            ("Teología I", 2), ("Seminario: Técnicas de Comunicación Científica Criminológica", 2),
+            ("Seminario: Investigación Criminal en Lavado de activos", 2), ("Teología II", 2),
+            ("Seguridad Pública", 2)])
+        # A code whose name is drawn, not written: the plan is not read.
+        self.assertEqual(p.plan_ucasal(texto.replace("  1     Filosofía I    ", "  1                ")), [])
+
     def test_unq_los_cursos_obligatorios_de_cada_nucleo(self):
         html = """<p>Ciclo Introductorio</p><table>
         <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>

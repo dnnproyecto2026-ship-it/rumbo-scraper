@@ -610,3 +610,13 @@
 - Cadena exportar → verificar UCASAL (ofertas 122/122, materias 569/569) → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 8 carreras salen con su plan.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: lector para las tablas de UCASAL con código y nombre completo (Relaciones Internacionales, Criminología); UNAHUR Viverismo / Periurbana / Agronómica.
+
+## 2026-10-24 (76) — UCASAL: Lic. Criminología, 40 materias (tabla con código)
+- Vigilancia sin novedades (Austral 1375→1095 materias, igual que el 23/10).
+- `plan_ucasal` lee las planillas de Jurídicas ("Cód.", "MATERIA", "Régimen", un año por "PRIMER AÑO"): un nombre largo partido alrededor del código ("Negociación comercial, transcultural y" / "6 Semestral" / "relaciones humanas") se une; un código sin nombre en el texto descarta el plan entero. Corta en "SEMINARIOS ELECTIVOS". Prueba nueva en `tests/test_planes_sitios.py`. Tests: 922 OK.
+- Cargada con `planes_documentos --apply UCASAL` (solo Criminología en el archivo de hallados): 40 materias, 10 por año. Leídas de vuelta de la base: 38 literales en el PDF; las 2 partidas (cód. 14 y 32) cotejadas con la imagen.
+- NO cargables: Relaciones Internacionales (los 5 nombres de cód. 1–5 están dibujados como curvas, sin texto); Corretaje (CCC) se lee entero (20) pero es ciclo: `planes_documentos` lo saltea y el exportador lo deja afuera. Motivos en `relevamiento/planes_sin_cargar.json` (71 UCASAL sin plan).
+- La vista previa vuelve a traer Ing. Informática e Imagen y Sonido: siguen afuera (bitácora 75); antes de `--apply UCASAL` hay que filtrar `data/planes_documentos.json`.
+- Cadena exportar → verificar UCASAL (ofertas 122/122, materias 609/609; las 40 verificadas) → exportar completa (`Archivo: data/catalogo_depurado.json`).
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UNAHUR Viverismo / Periurbana / Agronómica; UCASAL Traductorado y Filosofía.

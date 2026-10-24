@@ -186,19 +186,9 @@
   "universidad": "UCASAL",
   "carrera": "Licenciatura en Corretaje, Tasación y Administración de Consorcios (Ciclo de Complementación Curricular)",
   "carrera_id": "93b347ab-c3d8-4c60-a000-cb6860ad925d",
-  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo. Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "motivo": "Tabla con código y nombre completo: `plan_ucasal` la lee entera (20 materias, 2 años). Ciclo de complementación: `planes_documentos` saltea los ciclos y el exportador los deja afuera.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2026/04/PLAN-DE-ESTUDIO-LICENCIATURA-EN-CORRETAJE-TASACION-Y-ADMINISTRACION-DE-CONSORCIOS-2.pdf"
-  ],
-  "revisado": "2026-10-24"
- },
- {
-  "universidad": "UCASAL",
-  "carrera": "Licenciatura en Criminología",
-  "carrera_id": "d0d1a55a-5cc1-4381-99fd-1617d549df48",
-  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo.",
-  "documentos": [
-   "https://www.ucasal.edu.ar/wp-content/uploads/2025/05/PLAN-DE-ESTUDIOS-LIC.-EN-CRIMINOLOGIA.pdf"
   ],
   "revisado": "2026-10-24"
  },
@@ -436,7 +426,7 @@
   "universidad": "UCASAL",
   "carrera": "Licenciatura en Relaciones Internacionales",
   "carrera_id": "79a00090-e598-43e9-a124-7861634a38d8",
-  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo.",
+  "motivo": "Tabla con código y nombre completo (la lee `plan_ucasal`), pero los 5 primeros nombres del 1.er semestre (códigos 1–5) están dibujados como curvas: no hay texto que verificar. El lector descarta el plan.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/PLAN-DE-ESTUDIOS-LIC.-EN-RRII-1.pdf"
   ],
