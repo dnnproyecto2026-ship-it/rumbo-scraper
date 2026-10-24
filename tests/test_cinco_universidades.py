@@ -188,6 +188,12 @@ class UsalTests(unittest.TestCase):
         self.assertEqual(usal.duration_years(facts["duracion"]), 4.0)
         self.assertEqual(facts["coneau"], "RESFC-2020-572- APN-CONEAU#ME")
 
+    def test_reads_a_length_with_a_term_or_a_space_in_the_brackets(self) -> None:
+        for page, years in (("<p>Título:</p><p>Martillero y Corredor Universitario (2 años y 1 cuatrimestre)</p>", 2.5),
+                            ("<p>Título:</p><p>Licenciado/a en Higiene y Seguridad en el Trabajo (2 años )</p>", 2.0)):
+            with self.subTest(page=page):
+                self.assertEqual(usal.duration_years(usal.parse_facts(page)["duracion"]), years)
+
     def test_reads_what_the_career_costs(self) -> None:
         fees = usal.parse_fees(self.PAGE)
         self.assertEqual(fees["monto_matricula"], 759957)
@@ -209,6 +215,24 @@ class UsalTests(unittest.TestCase):
         grade = usal.discover_programmes({usal.INDEXES[0][0]: item})
         self.assertEqual([ref.name for ref in grade], ["Veterinaria"])
         self.assertEqual(usal.discover_programmes({usal.INDEXES[1][0]: item}), ())
+
+    def test_a_career_the_index_marks_pregrado_is_one_without_the_mark(self) -> None:
+        item = ('<div class="propuesta_nombre"><a href="https://www.usal.edu.ar/ingreso/propuesta/'
+                'martillero-y-corredor-universitario/">Martillero y Corredor Universitario (pregrado)</a></div>')
+        [ref] = usal.discover_programmes({usal.INDEXES[0][0]: item})
+        self.assertEqual((ref.name, ref.level), ("Martillero y Corredor Universitario", "Pregrado"))
+
+    def test_only_careers_the_db_lacks_by_the_words_of_their_name_are_new(self) -> None:
+        from rumbo_scraper.database.load_usal import new_careers
+
+        def fila(nombre: str) -> dict:
+            return {"nombre_carrera": nombre, "denominacion_canonica": nombre, "nivel": "Grado"}
+        dataset = {"datos": {"carreras": [fila("Dermatocosmiatría (Tecnicatura)"), fila("Actuario"),
+                                          fila("Martillero y Corredor Universitario (pregrado)"),
+                                          fila("Ciclo Pedagógico Universitario")]}}
+        nuevas = new_careers(dataset, ["Tecnicatura en Dermatocosmiatría", "Contador Público"])
+        self.assertEqual([(r["nombre_carrera"], r["nivel"]) for r in nuevas],
+                         [("Actuario", "Grado"), ("Martillero y Corredor Universitario", "Pregrado")])
 
     def test_the_modality_is_written_inside_the_name(self) -> None:
         self.assertEqual(usal.modality("Especialización en Comercio (A DISTANCIA)"),

@@ -43,9 +43,11 @@ _DURACION_ES = re.compile(
     + r")\s*" + _UNIDAD + r"(\s+y\s+medio)?")
 # "5 años de duración", and a card's figure over its label ("3 años
 # Duración 23 Materias", UNLZ's Derecho; "5 cuatrim. Duración").
-# "de no menos de 4 años de duración" is the title an applicant needs.
+# "de no menos de 4 años de duración" is the title an applicant needs, and so
+# is "Técnico Superior ..., con planes de estudio de 3 (tres) años de
+# duración" (USAL's Higiene y Seguridad, a cycle of two years).
 _ANIOS_DE_DURACION = re.compile(
-    r"(?<!menos de )" + _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD
+    r"(?<!menos de )(?<!planes de estudio de )(?<!planes de estudios de )" + _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD
     + r"\.?(\s+y\s+medio)?\s+(?:de\s+)?duracion\b")
 # What a cycle's applicant must hold ("Condiciones de ingreso: título ...
 # correspondiente a una carrera con una duración mínima de 3 años") is not

@@ -68,6 +68,12 @@ class Duracion(unittest.TestCase):
         html = "<main><div><div> 5</div><h5>Años</h5></div><div><div> 4400</div><h5>Hs</h5></div></main>"
         self.assertEqual(duracion_de_la_pagina(html), 5)
 
+    def test_los_planes_de_los_titulos_que_se_piden_no_cuentan(self):
+        self.assertEqual(duraciones_en(
+            "Técnico Superior en Higiene y Seguridad en el Trabajo, con planes de estudio de 3 (tres) años "
+            "de duración y un mínimo de 1800 horas"), set())
+        self.assertEqual(duraciones_en("Un plan de estudios de 4 años de duración"), {4})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -93,9 +93,22 @@ def discover_programmes(pages: dict[str, str]) -> tuple[ProgrammeRef, ...]:
                 continue
             if not _PROGRAMME_PATH.match(parsed.path):
                 continue
+            name, kind = programme_name(name, level)
             refs.setdefault(comparison_key(name),
-                            ProgrammeRef(name, f"{BASE_URL}{parsed.path}", level))
+                            ProgrammeRef(name, f"{BASE_URL}{parsed.path}", kind))
     return tuple(refs.values())
+
+
+_PREGRADO = re.compile(r"(?i)\s*\(pregrado\)\s*$")
+
+
+def programme_name(name: str, level: str) -> tuple[str, str]:
+    """The name and level of a programme the index lists: the career index
+    marks a short degree after its name ("Martillero y Corredor
+    Universitario (pregrado)")."""
+    if level == "Grado" and _PREGRADO.search(name):
+        return _PREGRADO.sub("", name), "Pregrado"
+    return name, level
 
 
 _FACULTY = re.compile(r"^(facultad|escuela)\s+de\s+\w")
@@ -116,7 +129,8 @@ def faculty_name(html: str) -> str | None:
 
 # The page writes the degree and, in brackets beside it, how long it takes.
 _DEGREE = re.compile(r"(?i)t[íi]tulo\s*:?\s*")
-_YEARS_IN_BRACKETS = re.compile(r"\((\d+(?:[.,]\d+)?)\s*a[ñn]os?\)")
+# "(5 años)", "(2 años )", "(2 años y 1 cuatrimestre)": a term is half a year.
+_YEARS_IN_BRACKETS = re.compile(r"(?i)\((\d+(?:[.,]\d+)?)\s*a[ñn]os?(\s+y\s+(?:1|un)\s+cuatrimestre)?\s*\)")
 _CONEAU = re.compile(r"(RESFC-\d{4}-\d+-?\s*APN-CONEAU#ME|"
                      r"RES(?:OLUCI[ÓO]N)?\.?\s*(?:CONEAU\s*)?N?[º°]?\s*\d+/\d+)", re.I)
 
@@ -135,7 +149,10 @@ def parse_facts(html: str) -> dict[str, str]:
         if "duracion" not in facts:
             years = _YEARS_IN_BRACKETS.search(line)
             if years:
-                facts["duracion"] = years.group(1)
+                value = years.group(1)
+                if years.group(2):
+                    value = str(float(value.replace(",", ".")) + 0.5)
+                facts["duracion"] = value
         if "coneau" not in facts:
             accreditation = _CONEAU.search(line)
             if accreditation:
@@ -267,7 +284,7 @@ def build_dataset(
             continue
         data["carreras"].append(blank_record(
             "carreras", universidad_nombre=UNIVERSITY, facultad_nombre=faculty,
-            nombre_carrera=ref.name, denominacion_canonica=ref.name, nivel="Grado",
+            nombre_carrera=ref.name, denominacion_canonica=ref.name, nivel=ref.level,
             titulo_otorgado=facts.get("titulo"), tiene_titulo_intermedio=None,
             duracion_anios=duration_years(facts.get("duracion")),
             descripcion_breve=description(html), cantidad_materias_total=None,
