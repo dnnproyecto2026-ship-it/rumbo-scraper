@@ -699,16 +699,6 @@
   "revisado": "2026-10-24"
  },
  {
-  "universidad": "UCASAL",
-  "carrera": "Traductorado Público en Inglés",
-  "carrera_id": "5581e9c8-0afe-465f-846f-7a3b3d3cf941",
-  "motivo": "El folleto se lee (59 materias) pero planes_documentos no lo acepta como plan entero de la carrera: revisar por qué.",
-  "documentos": [
-   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-traductor.pdf"
-  ],
-  "revisado": "2026-10-24"
- },
- {
   "universidad": "UNAHUR",
   "carrera": "Licenciatura en Desarrollo Agrario",
   "carrera_id": "26a86bc4-93c6-416a-b599-d9b5270c6298",

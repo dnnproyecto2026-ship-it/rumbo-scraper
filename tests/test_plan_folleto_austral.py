@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from rumbo_scraper.database.planes_documentos import _parece_el_plan_entero
+from rumbo_scraper.database.planes_documentos import _nombra, _parece_el_plan_entero
 from rumbo_scraper.parsers.planes_sitios import plan_folleto_columnas
 
 
@@ -63,6 +63,14 @@ class NombreCortado(unittest.TestCase):
             "Ciencia Política", plan + [("Algunas materias optativas: Management Político,", 3)], 4))
         self.assertFalse(_parece_el_plan_entero(
             "Ciencia Política", plan + [("Naturales y muchas más (la oferta se renueva cada", 3)], 4))
+
+
+class LaHojaNombraLaCarrera(unittest.TestCase):
+    def test_el_titulo_nombra_el_traductorado(self):
+        hoja = "PLAN DE ESTUDIO CARRERA (109) TRADUCTOR PÚBLICO EN INGLÉS MODALIDAD PRESENCIAL"
+        self.assertTrue(_nombra(hoja, "Traductorado Público en Inglés"))
+        self.assertFalse(_nombra(hoja, "Traductorado Público en Francés"))
+        self.assertFalse(_nombra("PLAN DE ESTUDIO PROFESORADO EN INGLÉS", "Traductorado Público en Inglés"))
 
 
 if __name__ == "__main__":

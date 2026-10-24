@@ -630,3 +630,12 @@
 - Cadena exportar → verificar UNAHUR → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 2 salen con su plan.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UCASAL Traductorado y Filosofía; lector por posición de palabras para Desarrollo Agrario.
+
+## 2026-10-24 (78) — UCASAL: Traductorado Público en Inglés, 59 materias
+- Vigilancia sin novedades (Austral, ITBA y Palermo, igual que el 23/10).
+- `planes_documentos` no aceptaba el folleto: pide que el documento nombre la carrera y la hoja dice "TRADUCTOR PÚBLICO EN INGLÉS", no "Traductorado". `_nombra` ahora toma "traductor" por "traductorado". Prueba nueva en `tests/test_plan_folleto_austral.py`. Tests: 924 OK.
+- Cargada con `planes_documentos --apply UCASAL` (Ing. Informática e Imagen y Sonido sacadas del archivo de hallados, bitácora 75): 59 materias (13/16/16/14), plan 2002. Leídas de vuelta de la base: las 59 en el PDF; años cotejados con la hoja. "Lingüística" lleva la diéresis que el folleto en mayúsculas no imprime ("LINGUÍSTICA").
+- Sacada de `relevamiento/planes_sin_cargar.json` (70 UCASAL sin plan).
+- Cadena exportar → verificar UCASAL (ofertas 122/122, materias 668/668) → exportar completa (`Archivo: data/catalogo_depurado.json`).
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UCASAL Filosofía (anexo de la DI-2026-392); lector por posición de palabras para Desarrollo Agrario (UNAHUR).

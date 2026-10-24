@@ -205,6 +205,10 @@ def _nombra(texto: str, carrera: str) -> bool:
     # A name set on its side down a margin comes out backwards (Austral's
     # brochures: "rodatnoC :arerraC").
     palabras |= {palabra[::-1] for palabra in palabras}
+    # A plan sheet names the title, not the career: UCASAL's "CARRERA (109)
+    # TRADUCTOR PÚBLICO EN INGLÉS" for its Traductorado.
+    if "traductor" in palabras:
+        palabras.add("traductorado")
     propias = [p for p in re.findall(r"[a-z0-9]+", comparison_key(carrera)) if p not in _VACIAS]
     return all(p in palabras for p in propias)
 
