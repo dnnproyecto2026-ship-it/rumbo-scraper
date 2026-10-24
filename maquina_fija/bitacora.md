@@ -639,3 +639,12 @@
 - Cadena exportar → verificar UCASAL (ofertas 122/122, materias 668/668) → exportar completa (`Archivo: data/catalogo_depurado.json`).
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UCASAL Filosofía (anexo de la DI-2026-392); lector por posición de palabras para Desarrollo Agrario (UNAHUR).
+
+## 2026-10-24 (79) — UCASAL: Lic. Trabajo Social, 47 materias (anexo DNGU con código)
+- Vigilancia sin novedades (la corrida del lanzador de hoy: Austral, ITBA y Palermo, igual que el 23/10).
+- `plan_ucasal` lee el anexo del Ministerio con "COD / ASIGNATURA / REGIMEN" (`_ucasal_anexo_con_codigo`): el código y el régimen van en el renglón del medio del nombre, con tantos renglones arriba como abajo; así se separa la cola de un nombre de la cabeza del siguiente. Si la cuenta no cierra, si los códigos no van 1, 2, 3… o si un "AÑO" cae dentro de un nombre, no se lee. `con_tildes` deja en mayúsculas los números romanos con dos puntos ("IV: Familia") y las siglas entre paréntesis ("(TIF)"). Pruebas nuevas en `tests/test_planes_sitios.py` y `tests/test_titulo.py`. Tests: 926 OK.
+- Cargada con `planes_documentos --apply UCASAL` (Ing. Informática e Imagen y Sonido sacadas del archivo de hallados): 47 materias (11/12/11/10/3), plan 2022 (IF-2022-01530633). Leídas de vuelta: las 47 literales en el PDF; años cotejados con la tabla.
+- NO cargables (motivo en `relevamiento/planes_sin_cargar.json`, 69 UCASAL sin plan): Filosofía (el anexo de la DI-2026-392 abrevia y corta nombres: "INTERP.", "CONTEMP.", "FILOSOFIA CONTEMPO"); Imagen y Sonido (las siglas ya salen bien, pero el folleto pone "ELEMENTAL" en el renglón de "PENSAMIENTO FILOSÓFICO I").
+- Cadena exportar → verificar UCASAL (ofertas 122/122, materias 715/715) → exportar completa (`Archivo: data/catalogo_depurado.json`). Trabajo Social sale con 47.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UCASAL Producción Animal (plan completo de la facultad); lector por posición de palabras para Desarrollo Agrario (UNAHUR).

@@ -179,6 +179,40 @@ CUATRIM.   SEGUROS PATRIMONIALES I (SEGUROS DE COSAS)
             ("Práctica de Integración: Planes de Eficiencia Energética para Distintos Tipos de Establecimientos", 1),
             ("Seguros Patrimoniales I (Seguros de Cosas)", 1), ("Práctica Profesional", 1)])
 
+    def test_ucasal_anexo_nombre_centrado_en_su_codigo(self):
+        texto = """COD        ASIGNATURA         REGIMEN     HORARIA HORARIA CORRELATIVAS              OBS.
+                                                                        DICTADO
+PRIMER AÑO
+         FUNDAMENTOS DEL
+ 1                             Anual         3      90          -      Presencial
+          TRABAJO SOCIAL
+              PRÁCTICA
+       PROFESIONALIZANTE I:
+ 2                             Anual         2      60          -      Presencial   1*
+        INTRODUCCIÓN A LA
+           INTERVENCIÓN
+ 3           SOCIOLOGÍA        Anual         3      90          -      Presencial
+
+SEGUNDO AÑO
+          PSICOLOGÍA DEL
+ 4     DESARROLLO Y DE LA      Anual         3      90          -      Presencial
+            SUBJETIVIDAD
+                                                     IF-2022-01530633-APN-DNGU#ME
+COD        ASIGNATURA          REGIMEN     HORARIA HORARIA CORRELATIVAS              OBS.
+                                                          35-36- 37-38-39-
+        TALLER DE TRABAJO
+ 5                              Anual         3      90      40- 41- 42-     Presencial   9*
+      INTEGRADOR FINAL (TIF)
+                                                           43-44-45-46-47
+
+TÍTULO: LICENCIADO/A EN TRABAJO SOCIAL"""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Fundamentos del Trabajo Social", 1), ("Práctica Profesionalizante I: Introducción a la Intervención", 1),
+            ("Sociología", 1), ("Psicología del Desarrollo y de la Subjetividad", 2),
+            ("Taller de Trabajo Integrador Final (TIF)", 2)])
+        # A name whose lines do not centre on its code: unread.
+        self.assertEqual(p.plan_ucasal(texto.replace("           INTERVENCIÓN\n", "")), [])
+
     def test_anexo_con_codigo_de_anio_y_nombre_partido(self):
         texto = """                                              PRIMER AÑO
 Código   Asignatura                 Régimen         Horas

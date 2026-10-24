@@ -576,6 +576,8 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
         return []
     if re.search(r"\bCód\.", texto) and "Régimen" in texto:
         return _ucasal_tabla_con_codigo(texto)
+    if re.search(r"(?m)^\s*COD\s+ASIGNATURA\s+REGIMEN", texto):
+        return _ucasal_anexo_con_codigo(texto)
     materias: list[tuple[str, int]] = []
     anio = 0
     if "PLAN DE ESTUDIO POR CARRERA" in texto:
@@ -687,6 +689,64 @@ def _ucasal_tabla_con_codigo(texto: str) -> list[tuple[str, int]]:
         if not cabeza:
             return []
         _agregar(materias, cabeza, anio)
+    return desde_el_primero(materias)
+
+
+def _ucasal_anexo_con_codigo(texto: str) -> list[tuple[str, int]]:
+    """The Ministry's annex of a plan ("COD", "ASIGNATURA", "REGIMEN"): a
+    row per subject, its code and regime on the line in the middle of its
+    name ("PSICOLOGÍA DEL" / "3  DESARROLLO Y DE LA  Anual" / "SUBJETIVIDAD").
+    A name is centred on its code's line, as many of its lines above as
+    below, which tells the tail of one name from the head of the next; a
+    count that does not close leaves the plan unread."""
+    from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+    # The lines of the name column, each a row's code (or None) and its text.
+    renglones: list[tuple[int | None, str]] = []
+    anios: list[tuple[int, int]] = []   # (index of the first line after the heading, year)
+    columna = 0
+    for linea in texto.splitlines():
+        linea = linea.replace("\xa0", " ")
+        encabezado = re.match(r"^\s*COD\s+ASIGNATURA\s+", linea)
+        if encabezado:
+            columna = encabezado.end()
+            continue
+        if re.match(r"^\s*TÍTULO:", linea) and renglones:
+            break
+        ordinal = re.fullmatch(r"\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*", linea)
+        if ordinal:
+            anios.append((len(renglones), _UCASAL_ORDINAL[ordinal.group(1)]))
+            continue
+        if not columna or not anios:
+            continue
+        fila = re.match(rf"^\s*(\d{{1,2}})\s+(.*?)\s*{_UCASAL_REGIMEN}", linea)
+        if fila:
+            renglones.append((int(fila.group(1)), fila.group(2)))
+            continue
+        nombre = linea[:columna].strip()
+        # (The table's heading over two lines, a total, the page's foot.)
+        if nombre and re.search(r"[A-ZÁÉÍÓÚÑ]", nombre) and not re.search(r"\d|CARGA|SEMANAL|DNGU|Página", nombre) \
+                and not linea[columna:].strip().startswith(("HORARIA", "TOTAL", "DICTADO")):
+            renglones.append((None, nombre))
+    codigos = [i for i, (codigo, _) in enumerate(renglones) if codigo is not None]
+    if not codigos or [renglones[i][0] for i in codigos] != list(range(1, len(codigos) + 1)):
+        return []
+    materias: list[tuple[str, int]] = []
+    inicio = 0          # where the current name starts
+    for n, i in enumerate(codigos):
+        cabeza = i - inicio
+        fin = i + 1 + cabeza
+        siguiente = codigos[n + 1] if n + 1 < len(codigos) else len(renglones)
+        if fin > siguiente or any(renglones[j][0] is not None for j in range(inicio, fin) if j != i):
+            return []
+        # (A year's heading falls between two names, never inside one.)
+        if any(inicio < a < fin for a, _ in anios):
+            return []
+        anio = max((a for a in anios if a[0] <= i), default=(0, 0))[1]
+        _agregar(materias, con_tildes(" ".join(t for _, t in renglones[inicio:fin] if t)), anio)
+        inicio = fin
+    if inicio != len(renglones):
+        return []
     return desde_el_primero(materias)
 
 

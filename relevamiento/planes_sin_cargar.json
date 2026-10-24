@@ -244,7 +244,7 @@
   "universidad": "UCASAL",
   "carrera": "Licenciatura en Filosofía",
   "carrera_id": "7b525ca8-1d8c-472a-9b10-4b2ce515cbb2",
-  "motivo": "La página enlaza tres planes (2009, 2025 y la DI-2026-392 de la SSPU); los de alumnos cortan los nombres a 20 letras; falta leer el anexo de la DI 2026.",
+  "motivo": "La página enlaza tres planes (2009, 2025 y la DI-2026-392 de la SSPU); los de alumnos cortan los nombres a 20 letras, y el anexo de la DI 2026 (IF-2026-27871056) abrevia y corta nombres (\"LECTURA E INTERP. DE TEXTOS\", \"TEXTO IV: CONTEMP.\", \"PROBLEMAS DE FILOSOFIA CONTEMPO\"): no se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar//wp-content/uploads/2021/10/100-1-plan.pdf",
    "https://www.ucasal.edu.ar/wp-content/uploads/2026/05/DI-392-2026-LICENCIADO-A-EN-FILOSOFIA-UNIVERSIDAD-CATOLICA-DE-SALTA.pdf",
@@ -316,7 +316,7 @@
   "universidad": "UCASAL",
   "carrera": "Licenciatura en Imagen y Sonido",
   "carrera_id": "fce81cb2-e119-4014-b68b-9b9338bd25e4",
-  "motivo": "El folleto se lee entero, pero sus siglas (TV, AV, EIAS) quedan \"Tv\", \"Av\", \"Eias\" al pasar de mayúsculas: no se carga hasta que el lector conserve las siglas.",
+  "motivo": "Folleto del plan 2007: las siglas ya se conservan, pero el folleto pone \"ELEMENTAL\" (de \"Lengua Inglesa Elemental\") en el renglón de \"PENSAMIENTO FILOSÓFICO I\" y el lector no los separa: no se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-lic-Imagen-y-sonido.pdf"
   ],
@@ -469,16 +469,6 @@
   "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2025/08/PLAN-ESTUDIO-TO-con-modificaciones-para-PPP.pdf"
-  ],
-  "revisado": "2026-10-24"
- },
- {
-  "universidad": "UCASAL",
-  "carrera": "Licenciatura en Trabajo Social",
-  "carrera_id": "d1bbfab5-9acd-4f45-8c35-05fda93a970e",
-  "motivo": "Tabla con nombres partidos en varios renglones (\"FUNDAMENTOS DEL / TRABAJO SOCIAL\"): ningún lector la toma todavía.",
-  "documentos": [
-   "https://www.ucasal.edu.ar/wp-content/uploads/2023/08/Plan-2022-Lic.-en-Trabajo-Social.pdf"
   ],
   "revisado": "2026-10-24"
  },

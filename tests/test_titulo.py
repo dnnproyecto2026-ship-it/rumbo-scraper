@@ -33,6 +33,11 @@ class Titulo(unittest.TestCase):
         html = "<main><p>TÍTULO QUE SE OTORGA:</p><p>CONTADOR PUBLICO NACIONAL</p></main>"
         self.assertEqual(titulo_de_la_pagina(html, "Contador Público Nacional"), "Contador Público Nacional")
 
+    def test_en_mayusculas_conserva_numeros_romanos_y_siglas(self):
+        from rumbo_scraper.parsers.guias_nacionales import con_tildes
+        self.assertEqual(con_tildes("PRÁCTICAS PROFESIONALIZANTES IV: FAMILIA"), "Prácticas Profesionalizantes IV: Familia")
+        self.assertEqual(con_tildes("TALLER DE TRABAJO INTEGRADOR FINAL (TIF)"), "Taller de Trabajo Integrador Final (TIF)")
+
     def test_de_dos_titulos_el_de_la_carrera(self):
         html = ("<main><p>Título: Licenciado en Química</p>"
                 "<p>Título intermedio: Técnico Universitario en Laboratorio</p></main>")
