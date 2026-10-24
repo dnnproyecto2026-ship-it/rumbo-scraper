@@ -738,3 +738,9 @@
 - Humanidades (hum.unsa.edu.ar/carreras/*.pdf, con https): Filosofía, Antropología, Cs. de la Educación y Letras son PDF escaneados sin texto; Historia (Prof. y Lic.) se lee por OCR pero la grilla por año son cajas con nombres partidos; Cs. de la Comunicación trae OCR defectuoso ("£TICA", "OE RADIÓ II") y dos estructuras juntas. Las 10 quedan en `relevamiento/planes_sin_cargar.json` con su motivo. Filosofía, Antropología, Educación y Letras: motivo por falta de texto, no se probó OCR nombre por nombre.
 - No se escribió nada en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNSa: Exactas (Física, Química, Matemática, Sistemas, tecnicaturas; exactas.unsa.edu.ar), Económicas (Contador, Administración, Economía), Salud, Naturales; luego UNR.
+
+## 2026-10-24 (90) — UNSa Económicas: 5 carreras NO cargables (planes escaneados)
+- UNLP Exactas sigue caída (sin respuesta).
+- Económicas (economicas.unsa.edu.ar): Contador Público (Res. CS 439/18, 23 páginas), Tec. Contabilidad (CS 188/21) y el plan enlazado por Lic. Administración, Lic. Economía y Tec. Gestión de Turismo (CS 521/13) son PDF escaneados sin texto. El OCR de la grilla de Contador sale desordenado (columnas mezcladas); los contenidos mínimos tienen nombres limpios pero sin año. Las 5 quedan en `relevamiento/planes_sin_cargar.json`. `planes_escaneados UNSa` no encontró nada (las ofertas apuntan a la página de la facultad, no al PDF).
+- Nada escrito en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNSa: Salud (Enfermería, Nutrición, Medicina), Naturales (Geología, Biológicas, Bromatología), Agronómica (Tec. del Chaco), Exactas (caída). Luego UNR o vigilancia.

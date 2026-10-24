@@ -1278,5 +1278,55 @@
    "https://hum.unsa.edu.ar/carreras/Comunicacion.pdf"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Contador Público Nacional",
+  "carrera_id": "4cf5ae64-aebc-4de8-9d31-a1742db10bf5",
+  "motivo": "El plan oficial (Res. CS 439/18, 23 páginas) es un PDF escaneado sin capa de texto; el OCR de la grilla por año sale desordenado (columnas y nombres mezclados). La sección de contenidos mínimos tiene los nombres limpios pero sin año, que no se puede inferir: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2018/R-CS-2018-0439.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Contabilidad",
+  "carrera_id": "9c5a5d56-df0d-48d0-bc63-175f6b99e4e6",
+  "motivo": "El plan oficial (Res. CS 188/21) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2021/R-CS-2021-0188.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Administración",
+  "carrera_id": "690e195e-3a7f-4687-b0a4-bae6a1aadce4",
+  "motivo": "El plan de las carreras de Económicas enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "a67eb75a-d12e-4e80-b01c-60e5688b55a6",
+  "motivo": "El plan de las carreras de Económicas enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Gestión de Turismo",
+  "carrera_id": "3f9f8725-0472-437d-933a-bc72d159363f",
+  "motivo": "El plan enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
  }
 ]
