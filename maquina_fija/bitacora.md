@@ -767,3 +767,11 @@
 - Las 7 que quedaban sin materias y sin motivo, leídas hoy de sus páginas: Prof. Matemática (Plan 2018, Res. CD 933/17), Prof. Física (Res. CS 306/2015), Prof. Psicología (Plan-profesorado.pdf) y Tec. Adm. de Empresas (programas por año del Campus Virtual): PDF escaneado sin texto. Notariado es de la Escuela de Graduados (posgrado) y Corretaje Inmobiliario y Prof. en Derecho no tienen plan publicado. Motivos en `relevamiento/planes_sin_cargar.json`.
 - Sin datos nuevos en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - UNR queda cerrada (cada oferta sin plan tiene su razón). Siguiente: UNLP Exactas (reintentar) y Psicología Prof./Agrarias (escaneos), después UNT/UNSJ/UNCuyo/UADER o vigilancia.
+
+## 2026-10-24 (95) — UNT: Arquitectura y Urbanismo cargada; Lic. Cs. Biológicas NO cargable
+- UNLP Exactas sigue sin responder (timeout) y Agrarias da 403 (bloqueo, no se evade). Pasé a UNT, que no tenía nada trabajado (57 ofertas sin plan); el lector genérico `planes_documentos` no tomó ninguna.
+- Arquitectura y Urbanismo (FAU): Plan 2008 (único vigente junto al 1979/3 que se extingue), PDF oficial con texto, niveles 1 a 5 → años; 40 materias, Electivas I a VI afuera. Por `planes_manuales` (hoja `data/planes_unt_arquitectura.csv`, cargado_por "lector pdftotext"; los años salen de los encabezados de nivel del PDF). Verificación UNT: materias verificadas con la fuente del PDF.
+- Lic. en Ciencias Biológicas: el PDF de la página es el plan 2000 mod. 2007, anterior; el vigente es mod. 2013 y su detalle da 404. Registrada en `relevamiento/planes_sin_cargar.json`.
+- Contador Público (FACE): PDF de resolución escaneado con OCR ruidoso; no se probó más, queda pendiente.
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNT: Derecho (Abogacía, Escribanía, Procuración), FACET (ingenierías), Psicología, Artes, Educación Física; luego UNSJ/UNCuyo/UADER.

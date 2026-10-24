@@ -1788,5 +1788,15 @@
    "https://www.campusvirtualunr.edu.ar/oferta_academica/tecnicaturas/tecnicatura_administracion_empresas.html"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Ciencias Biológicas",
+  "carrera_id": "cb5cea14-5bed-4d08-962f-09e632015319",
+  "motivo": "El único plan en PDF de la página (Plan 2000 mod. 2007) es el anterior: el vigente es el Plan 2000 mod. 2013 (implementado desde 2014), cuya página de detalle (csnat.unt.edu.ar/carreras/lic-cs-biologicas/...) da 404 y la página solo resume (26 obligatorias, 8 optativas, tesina). Cargar el plan 2007 sería un plan desactualizado: no se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/licenciatura-en-ciencias-biologicas/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]
