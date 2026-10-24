@@ -620,3 +620,86 @@ class PlanUnpaz(unittest.TestCase):
         self.assertEqual(p.plan_unpaz(texto), [
             ("Taller de edición", 1), ("Taller de realización y producción audiovisual I", 1),
             ("Producción operativa integral", 1)])
+
+
+class PlanUnso(unittest.TestCase):
+    # UNSO's plans as ``pdftotext -layout`` gives them (Abogacía, Criminalística,
+    # Desarrollo de Videojuegos, Edición Audiovisual).
+    def test_rows_apart_by_blank_lines(self):
+        texto = "\n".join([
+            "PLAN DE ESTUDIOS",
+            "TECNICATURA UNIVERSITARIA EN CRIMINALÍSTICA",
+            "",
+            " ASIGNATURA                                  HS. TOTALES   HS. TEÓRICAS   HS. PRACTICAS",
+            "",
+            " PRIMER AÑO",
+            "",
+            " PRIMER CUATRIMESTRE",
+            "",
+            " Elementos de Derecho Civil, Comercial y         64             32             32",
+            " Laboral",
+            "",
+            " Taller de búsqueda Jurídica y análisis",
+            "                                                 64             16             48",
+            " Jurisprudencial",
+            "",
+            " Legales y comerciales                                          36             12",
+            "                                                 48",
+            "",
+            " Metodología de la Investigación                 64             32             32",
+            " en Cs. Sociales",
+            " SUBTOTAL                                        256            112            144",
+            "  SEGUNDO CUATRIMESTRE",
+            "",
+            "  Química                                                      64                 32                32",
+            "  TOTAL ANUAL",
+            "",
+            "  Psicología Criminal                                          64                 32                32",
+            "",
+            "  SUBTOTAL                                                    320                 144              176",
+            "",
+            "  TOTAL ANUAL                                                 640                 288              352",
+            "",
+            "  SEGUNDO AÑO",
+            "",
+            "  Balística Forense                                            64                 32                32",
+            "",
+            "  TOTAL ANUAL                                                 512                240               272",
+            "",
+            " Práctica Profesional Supervisada                            100                 25                75",
+            "",
+            " CARGA HORARIA TOTAL DE LA CARRERA                           1764                768               971",
+        ])
+        self.assertEqual(p.plan_unso(texto), [
+            ("Elementos de Derecho Civil, Comercial y Laboral", 1),
+            ("Taller de búsqueda Jurídica y análisis Jurisprudencial", 1),
+            ("Legales y comerciales", 1), ("Metodología de la Investigación en Cs. Sociales", 1),
+            ("Química", 1), ("Psicología Criminal", 1), ("Balística Forense", 2)])
+
+    def test_rows_together_with_the_hours_on_the_last_line(self):
+        texto = "\n".join([
+            "                               Horas       Horas            Horas",
+            "Asignatura                     totales     teóricas         prácticas",
+            "                                Primer Año",
+            "Primer cuatrimestre",
+            "Producción Audiovisual 1                64            32                32",
+            "Software en Edición",
+            "Audiovisual                             64            16                48",
+            "Postproducción Audiovisual",
+            "1                                       64            32                32",
+            "Subtotal                               192            80                112",
+            "Total Anual                            576            272               304",
+        ])
+        self.assertEqual(p.plan_unso(texto), [
+            ("Producción Audiovisual 1", 1), ("Software en Edición Audiovisual", 1),
+            ("Postproducción Audiovisual 1", 1)])
+
+    def test_rows_that_cannot_be_told_apart(self):
+        texto = "\n".join([
+            " PRIMER AÑO",
+            " Química General                             64             32              32",
+            " Ambiente y Territorio",
+            " Biología",
+            " SUBTOTAL                                    256            110             146",
+        ])
+        self.assertEqual(p.plan_unso(texto), [])

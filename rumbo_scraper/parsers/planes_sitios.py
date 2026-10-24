@@ -3158,6 +3158,131 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+_ANIO_UNSO = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\b")
+# The table's head, repeated on each page: its columns' words.
+_CABEZA_UNSO = {"asignatura", "asignaturas", "horas", "hora", "hs", "de", "del", "totales", "teóricas", "teoricas",
+                "prácticas", "practicas", "régimen", "regimen", "carga", "horaria", "total", "interacción",
+                "pedagógica", "trabajo", "autónomo", "estudiante", "créditos", "pre", "profesionales", "modalidad"}
+_TRAMO_UNSO = re.compile(r"(?i)^(?:(?:primer|segundo)\s+cuatrimestre|anual|subtotal\b.*)$")
+# What closes a year: its total, the degree it gives ("TITULO INTERMEDIO  1184 ..."),
+# or a term's heading with figures, the total mislabelled (Psicopedagogía:
+# "SEGUNDO CUATRIMESTRE  720  418  302").
+_CIERRE_UNSO = re.compile(r"(?i)^(?:total|subtotal anual)\b|^(?:t[íi]tulo\b.*|(?:primer|segundo) cuatrimestre)\s\d+(?:\s\d+)*$")
+_FIN_UNSO = re.compile(r"(?i)^(?:carga horaria total|total (?:de horas|carrera)|anexo|correlatividades$)")
+_HORAS_UNSO = re.compile(r"^(\s*)(?:(\S.*?)(?:\s{2,}(?:Cuatrimestral|Anual|Bimestral))?\s{2,})?(\d+(?:\s+\d+)*)\s*$")
+
+
+def plan_unso(texto: str) -> list[tuple[str, int]]:
+    """UNSO's plans (``pdftotext -layout``): a table per year ("PRIMER AÑO",
+    then "PRIMER CUATRIMESTRE"), a subject per row with its hours to the
+    right ("Física   64   32   32", or its term before them: "Costos
+    Cuatrimestral 64"), the rows mostly apart by a blank line. A name too
+    long for its cell takes two lines, the hours on the first, the second or
+    a line of their own between them ("Taller de búsqueda Jurídica y
+    análisis" / "64 16 48" / "Jurisprudencial"); where the rows are not
+    apart, a line without hours goes with the row below it, unless it goes
+    on in small letters ("en Cs. Sociales") or ends the group. A number at
+    the names' column is the name's ("Postproducción Audiovisual" / "1   64
+    32 32"); one at the hours' column below a row with hours fell from it
+    ("Legales y comerciales  36  12" / "48"). A total closes the year
+    ("TOTAL ANUAL", "TOTAL", the degree's line); what follows it without a
+    year of its own (the supervised practice, the final project) is not in
+    a year and is left out, unless a subtotal comes after it (a total out
+    of place: the Criminalística plan). The annex (prerequisites) is not the
+    plan."""
+    lineas = texto.replace("\f", "\n").splitlines()
+
+    def fila_de(linea: str) -> tuple[str | None, int] | None:
+        # A row's name and where its hours begin; a name of figures alone
+        # is a number of the hours ("64   186   250"), or of the name.
+        fila = _HORAS_UNSO.match(linea)
+        if not fila:
+            return None
+        if fila.group(2) and not fila.group(2).isdigit():
+            return fila.group(2), fila.start(3)
+        return (fila.group(2), fila.start(2)) if fila.group(2) else (None, fila.start(3))
+
+    # Where the hours begin: the leftmost hours of a row with its name.
+    columna = min((f[1] for f in map(fila_de, lineas) if f and f[0] and not f[0].isdigit()), default=0)
+    materias: list[tuple[str, int]] = []
+    anio: int | None = None
+    cerrado: int | None = None
+    sueltas: list[str] = []
+    bloque: list[str] = []
+
+    def resolver() -> bool:
+        partes: list[list] = []  # [name, has hours]
+        for linea in bloque:
+            fila = fila_de(linea)
+            if fila and fila[0] and fila[0].isdigit():
+                if fila[1] < columna - 8:
+                    partes.append([fila[0], True])  # a number at the names' column: "1   64  32  32"
+                    continue
+                fila = (None, fila[1])
+            if fila and fila[0] is None and partes and partes[-1][1]:
+                continue  # a number of the row above, fallen below it
+            nombre = (fila[0] or "") if fila else re.sub(r"\s{2,}(?:Cuatrimestral|Anual)\s*$", "", linea)
+            partes.append([re.sub(r"\s+", " ", nombre.strip()), bool(fila)])
+        bloque.clear()
+        # Figures alone: a subtotal's, its word on the line below ("288  152  136" / "SUBTOTAL").
+        if not any(nombre for nombre, _ in partes) or (anio is None and (cerrado is None or not any(h for _, h in partes))):
+            return True
+        nombres: list[str] = []
+        pendiente: list[str] = []
+        for numero, (nombre, horas) in enumerate(partes):
+            if not horas:
+                # The rest of the row just above: in small letters, or the group's last line.
+                if (nombres and not pendiente and partes[numero - 1][1]
+                        and (numero == len(partes) - 1 or re.match(r"[a-záéíóúñ(\d]", nombre))):
+                    nombres[-1] += " " + nombre
+                else:
+                    pendiente.append(nombre)
+                continue
+            nombres.append(" ".join(pendiente + ([nombre] if nombre else [])))
+            pendiente = []
+        if pendiente or not all(nombres):
+            return False
+        for nombre in nombres:
+            # A word the cell broke: "Georreferencia-" / "ción".
+            nombre = re.sub(r"([^\W\d_])- (?=[a-záéíóúñ])", r"\1", nombre)
+            if anio is not None:
+                _agregar(materias, nombre, anio)
+            else:
+                sueltas.append(nombre)
+        return True
+
+    for linea in lineas:
+        limpia = re.sub(r"\s+", " ", linea.strip())
+        if not limpia or re.fullmatch(r"\d+/\d+", limpia):
+            if not resolver():
+                return []
+            continue
+        if _FIN_UNSO.search(limpia):
+            break
+        del_anio = _ANIO_UNSO.match(limpia)
+        cabeza = not re.search(r"\d", limpia) and set(re.findall(r"[^\W\d_]+", limpia.lower())) <= _CABEZA_UNSO
+        if del_anio or cabeza or _TRAMO_UNSO.match(limpia) or _CIERRE_UNSO.match(limpia):
+            if not resolver():
+                return []
+            if del_anio:
+                anio, cerrado = _ORDINALES[del_anio.group(1).lower()], None
+                sueltas.clear()
+            elif _CIERRE_UNSO.match(limpia):
+                if anio is not None:
+                    anio, cerrado = None, anio
+            elif re.match(r"(?i)^subtotal\b", limpia) and cerrado is not None and sueltas:
+                # A subtotal after the total: the rows between were the year's.
+                for nombre in sueltas:
+                    _agregar(materias, nombre, cerrado)
+                sueltas.clear()
+                anio, cerrado = cerrado, None
+            continue
+        bloque.append(linea)
+    if not resolver():
+        return []
+    return desde_el_primero(materias)
+
+
 def plan_fmed_uba(texto: str) -> list[tuple[str, int]]:
     """UBA, Medicina: the plan PDF as ``pdftotext -layout`` gives it, the
     years headed "* 2° AÑO *", each subject numbered at the left margin

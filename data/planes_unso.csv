@@ -1,0 +1,477 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNSO;Profesorado en Educación Inicial;4;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-educacion-inicial.pdf;"1 | Taller de escritura académica
+1 | Psicología General
+1 | Sistema y Política Educativa
+1 | Pedagogía
+1 | Didáctica General
+1 | Filosofía de la Educación
+1 | Didáctica de Nivel Inicial
+1 | Psicología Cognitiva
+1 | Historia de la Educación Argentina
+1 | Seminario: Los Juegos en el Nivel Inicial
+1 | Gestión del Curriculum
+1 | Práctica Profesional I: La observación
+2 | Psicología del Aprendizaje en la Infancia
+2 | Aprendizaje y Tecnología
+2 | Taller de Ciencias en el Nivel Inicial
+2 | Taller de Artes Visuales en el Nivel Inicial
+2 | Ciencias Naturales y su enseñanza en el Nivel Inicial
+2 | Lengua, Literatura y su Enseñanza en el Nivel Inicial
+2 | Matemática y su Enseñanza en el Nivel Inicial
+2 | Ciencias Sociales y su Enseñanza en el Nivel Inicial
+2 | Diseño y Evaluación de Proyectos Educativos Institucionales
+2 | Práctica Profesional II: Instituciones Educativas
+3 | Psicología del Desarrollo
+3 | Seminario de ESI
+3 | Estimulación Temprana
+3 | Atención al Sujeto con Discapacidad
+3 | Administración y Organización Educativa
+3 | Alfabetización inicial
+3 | Taller de Música en el Nivel Inicial
+3 | Taller de Expresión Corporal y Teatro en el Nivel Inicial
+3 | Problemáticas Contemporáneas en el Jardín de Infantes
+3 | Práctica Profesional III: espacios no tradicionales
+4 | Planificación y Evaluación en el Nivel Inicial
+4 | Neurociencias y Aprendizaje
+4 | Elaboración de Material Didáctico en el Nivel Inicial
+4 | Seminario de Inclusión y Diversidad
+4 | Cultura y alfabetización digital
+4 | Educación y Derechos Humanos
+4 | Epistemología e Investigación en Educación
+4 | Taller de Educación Ambiental y para la Salud
+4 | Práctica Profesional VI: práctica en terreno";lector plan_unso;;"41 asignaturas, 4 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;06e9cdd0-8829-48e2-bf31-ee79d82251da
+UNSO;Tecnicatura Universitaria en Desarrollo de Videojuegos;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Tec-desarrollo-videojuegos.pdf;"1 | Fundamentos de la programación I
+1 | Introducción al diseño de juegos
+1 | Introducción al lenguaje visual
+1 | Análisis de los géneros de videojuegos
+1 | Historia de los videojuegos
+1 | Fundamentos de la programación II
+1 | Mecánicas de juego
+1 | Diseño y animación 2D
+1 | Escritura audiovisual
+1 | Inglés técnico
+2 | Motores de videojuegos
+2 | Desarrollo avanzado de videojuegos
+2 | Introducción al arte 3D
+2 | Gestión de proyectos
+2 | Guion de videojuegos
+2 | Programación con motores
+2 | Diseño de niveles
+2 | Plan de negocios
+2 | Sonido y música para videojuegos
+2 | Seminario específico I
+3 | Taller proyectual
+3 | Desarrollo de juegos para dispositivos móviles
+3 | Economía de los videojuegos
+3 | Industria del videojuego
+3 | Control de calidad
+3 | Interfaces y experiencia de usuario
+3 | Legales y comerciales
+3 | Ética profesional
+3 | Seminario específico II";lector plan_unso;;"29 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;1160f193-a015-469c-b24d-13b386627ca4
+UNSO;Tecnicatura Universitaria en Sonido Audiovisual;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan%20de%20estudio%20Tec%20Univ%20en%20Sonido%20Audiovisual.pdf;"1 | Escritura Audiovisual 1
+1 | Producción Audiovisual 1
+1 | Software en Edición de Sonido
+1 | Iluminación y cámara 1
+1 | Montaje 1
+1 | Sonido 1
+1 | Historia del Arte 1
+1 | Proyecto Audiovisual 1
+2 | Producción Audiovisual 2
+2 | Montaje 2
+2 | Sonido 2
+2 | Iluminación y cámara 2
+2 | Acústica
+2 | Escritura Audiovisual 2
+2 | Historia del Arte 2
+2 | Inglés Técnico
+2 | Proyecto Audiovisual 2
+3 | Historia de los Medios
+3 | Postproducción de Sonido 1
+3 | Diseño Sonoro
+3 | Procesos Digitales
+3 | Práctica Profesional
+3 | Postproducción de Sonido 2
+3 | Nociones de Mezcla
+3 | Proyecto Audiovisual 3";lector plan_unso;;"25 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;362ef56f-f911-4e1a-95c2-81c1b21aca90
+UNSO;Abogacía;5;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-abogacia.pdf;"1 | Introducción al Derecho
+1 | Introducción a la Ciencia Política
+1 | Introducción a la Economía
+1 | Expresión oral y escrita
+1 | Introducción a la Sociología
+1 | Derecho Privado
+1 | Fundamentos del Estado
+1 | Historia Argentina Contemporánea
+1 | Introducción al Derecho y Literatura
+1 | Derecho Constitucional
+2 | Teoría General del Derecho
+2 | Obligaciones
+2 | Derecho Penal I (Parte General)
+2 | Fundamentos Matemáticos para Cs. Sociales
+2 | Taller de búsqueda Jurídica y análisis Jurisprudencial
+2 | Contratos I (Parte General)
+2 | Derecho Penal II (Parte Especial)
+2 | Derechos Humanos y Garantías
+2 | Metodología de la Investigación en Cs. Sociales
+2 | Taller de Argumentación Jurídica
+3 | Contratos II (Parte Especial)
+3 | Familia
+3 | Derecho de Daños
+3 | Derecho del Trabajo y la Seguridad Social
+3 | Taller de Redación Jurídica
+3 | Derecho Procesal Privado
+3 | Derecho Judicial
+3 | Derecho Internacional Público y Derecho de la Integración
+3 | Derecho Ambiental y de los Recursos Naturales
+3 | Sucesiones
+4 | Derecho Procesal Penal
+4 | Derechos Reales
+4 | Derecho Comercial
+4 | Análisis Estratégico de Casos
+4 | Taller de Técnicas de Negociación
+4 | Derecho Administrativo
+4 | Sociedades
+4 | Propiedad Intelectual
+4 | Gestión y Derecho
+4 | Taller de Simulación Jurídica y Litigación I
+5 | Derecho Internacional Privado
+5 | Concursos y Quiebras
+5 | Derecho Tributario y Finanzas Públicas
+5 | Práctica Profesional I
+5 | Taller de Simulación Jurídica y Litigación II
+5 | Derecho del Consumidor y del Usuario
+5 | Ética profesional
+5 | Práctica Profesional II / Clínica jurídica
+5 | Taller de Trabajo Final";lector plan_unso;;"49 asignaturas, 5 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;395183ad-a308-463a-be3a-18d42b6c3f4f
+UNSO;Licenciatura en Administración y Desarrollo de Negocios;4;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Lic-Admin-PlandeEstudios.pdf;"1 | Análisis Matemático I
+1 | Introducción a la Economía
+1 | Introducción a la Administración
+1 | Introducción a la Contabilidad
+1 | Expresión oral y escrita
+1 | Análisis Matemático II
+1 | Sistemas Contables
+1 | Derechos Fundamentales y Género
+1 | Administración General
+1 | Historia Económica Argentina
+2 | Estadística aplicada a la Administración
+2 | Gestión Contable
+2 | Macroeconomía
+2 | Administración Empresarial
+2 | Microeconomía
+2 | Derecho Privado
+2 | Comportamiento Organizacional
+2 | Matemática Financiera
+2 | Sistemas Informáticos de la Administración
+2 | Gestión de los Recursos Humanos
+3 | Emprendedorismo
+3 | Costos
+3 | Impuestos
+3 | Administración de la Producción
+3 | Marketing I
+3 | Administración Financiera
+3 | Inglés
+3 | Desarrollo de Negocios I
+3 | Planeamiento Estratégico y Operativo
+3 | Marketing II
+4 | Teoría de la Decisión
+4 | Desarrollo de Negocios II
+4 | Sistemas de Control de Gestión
+4 | Negocios Digitales
+4 | Comercio Internacional
+4 | Elaboración de Proyectos de Negocios
+4 | Dirección de Empresas
+4 | Finanzas Avanzadas
+4 | Derecho Empresarial
+4 | Innovación y Economía del Conocimiento";lector plan_unso;;"40 asignaturas, 4 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;4207cc4d-8822-48b9-a8c3-1b82b99c9ff4
+UNSO;Tecnicatura Universitaria en Gestión Ambiental;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Tec-Gestion-Ambiental-2.pdf;"1 | Fundamentos de gestión ambiental y desarrollo sustentable
+1 | Seminario 1: Análisis y resolución de problemas
+1 | Ambiente y Territorio
+1 | Biología
+1 | Química General
+1 | Ciencia, tecnología y sociedad
+1 | Fundamentos de matemática
+1 | Inglés
+2 | Evaluación de Impacto Ambiental I
+2 | Química Ambiental
+2 | Gestión de Residuos Sólidos Urbanos I
+2 | Metodologías y técnicas de tratamiento de residuos
+2 | Legislación Ambiental
+2 | Contaminación Antrópica I: aire
+2 | Gestión de Residuos Sólidos Urbanos II
+2 | Administración de ecosistemas urbanos I
+2 | Economía General
+3 | Evaluación de Impacto Ambiental II
+3 | Contaminación Urbana, Rural e Industrial
+3 | Contaminación Antrópica II: agua
+3 | Software aplicado y sistemas de información
+3 | Administración de ecosistemas urbanos II
+3 | Contaminación Antrópica III : suelos
+3 | Sistemas de gestión y auditoría ambiental
+3 | Gestión y planificación de energ. renovables";lector plan_unso;;"25 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;448ee76a-7341-4097-ad05-a435766300a5
+UNSO;Licenciatura en Ciberseguridad;;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-correlatividades-lic-ciberseguridad.pdf;"1 | Introducción al Desarrollo de Sistemas
+1 | Fundamentos del Cibercrimen
+1 | Conceptos de Desarrollo de Software
+1 | Fundamentos de Matemática
+1 | Arquitectura de Tecnologías Informáticas
+1 | Fundamentos de Ciberseguridad y Protección de las Infraestructuras Críticas
+2 | Programación orientada a Objetos
+2 | Cálculo Aplicado
+2 | Gestión Integral de la Ciberseguridad
+2 | Base de Datos
+2 | Sistemas de Análisis y Métodos de Diseño
+2 | Ciberdefensa
+3 | Criptografía
+3 | Administración de Redes
+3 | Cibercrimen y Análisis Forense
+3 | Investigación Criminal de Delitos Informáticos
+3 | Programación de Sistemas
+3 | Ingeniería de Redes
+4 | Administración y respuesta a incidentes
+4 | Taller: Hacking ético
+4 | Comunicación estratégica
+4 | Liderazgo de equipos de trabajo y RRHH
+4 | Práctica Profesional Supervisada
+4 | Fraude y protección de datos personales
+4 | Deontología profesional
+4 | Ciberinteligencia
+4 | Diplomacia y RRII en ciberseguridad
+4 | Trabajo Final Integrador";lector plan_unso;;"28 asignaturas, 4 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;74959f03-f752-4321-b383-d7b38bc6cc9d
+UNSO;Licenciatura en Cs Forenses y Criminología;;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-ciencias-forenses-y-criminologia.pdf;"1 | Derechos Humanos y Derecho Constitucional
+1 | Análisis Matemático
+1 | Metodología de la Investigación
+1 | Sociología
+1 | Criminalística I
+1 | Elementos de Derecho Penal
+1 | Físico-Química
+1 | Criminalística II
+1 | Criminología I
+1 | Seminario 1 Informática Forense
+2 | Derecho Penal Parte Especial
+2 | Física
+2 | Introducción a la Psicología
+2 | Elementos de Derecho Civil, Comercial y Laboral
+2 | Seminario 2 Papiloscopía y Rastros
+2 | Derecho Procesal Penal y Garantías Constitucionales
+2 | Química
+2 | Psicología Criminal
+2 | Escena del Crimen
+2 | Medicina Legal
+3 | Balística Forense
+3 | Accidentología
+3 | Documentología I
+3 | Antropología Forense
+3 | Criminología II
+3 | Identidad y Sistemas Biométricos
+3 | Documentología II
+3 | Toxicología
+3 | Introducción a las Políticas Públicas
+3 | Seminario 3 Técnicas Periciales
+4 | Genética Forense
+4 | Estadística Criminal
+4 | Política Criminal
+4 | Género y Criminalidad
+4 | Seminario 4 Estudio de Casos
+4 | Narcocriminalidad
+4 | Prevención del Delito
+4 | Sistemas de Seguridad Pública
+4 | Medios de Comunicación y Criminalidad
+4 | Seminario 5 Sistemas de Georreferenciación y Mapa del Delito";lector plan_unso;;"40 asignaturas, 4 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;836a2765-3bc9-4c3f-9abd-179f4c0fe45d
+UNSO;Tecnicatura Universitaria en Emergencias Médicas;2.5;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-emergencias-medicas.pdf;"1 | Anatomía y Fisiología
+1 | Salud Pública y Sistemas de Salud
+1 | Logística Sanitaria I
+1 | Bioseguridad
+1 | Microbiología y Parasitología
+1 | Física y Química Biológica
+1 | Desastres I
+1 | Transporte Sanitario
+1 | Prácticas I
+2 | Patología de Urgencias
+2 | Comunicación en Emergencias
+2 | Psicología en Emergencias
+2 | Desastres II
+2 | Prácticas II
+2 | Terapéutica en Emergencias
+2 | Logística Sanitaria II
+2 | Desastres III
+2 | Prácticas III
+3 | Gestión y Organización en Emergencias
+3 | Recursos Humanos
+3 | Logística Sanitaria III
+3 | Legislación en Emergencias
+3 | Prácticas IV";lector plan_unso;;"23 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;84e71661-4607-45e1-8ce0-9d8be3ec564f
+UNSO;Licenciatura en Psicopedagogía;4;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-psicopedagogia.pdf;"1 | Psicología General
+1 | Psicopedagogía
+1 | Sistema y política educativa
+1 | Pedagogía
+1 | Didáctica General
+1 | Filosofía de la Educación
+1 | Biología y Neurofisiología del Aprendizaje
+1 | Educación y Derechos Humanos
+1 | Psicología Cognitiva
+1 | Neurociencia y Aprendizaje
+1 | Práctica Profesional I: Inserción al ámbito psicopedagógico
+2 | Psicología del Desarrollo I
+2 | Taller de Dinámicas Grupales
+2 | Teoría e interpretación del proceso diagnóstico I
+2 | Psicología del Aprendizaje en la Infancia
+2 | Aprendizaje y Tecnología
+2 | Práctica Profesional II: ámbito educativo
+2 | Psicología del Desarrollo II
+2 | Psicología del Aprendizaje en la Adolescencia
+2 | Teoría e interpretación del proceso diagnóstico II
+2 | Epistemología e investigación en educación
+2 | Neuropsicología
+2 | Práctica Profesional III: ámbito educativo
+3 | Psicología del Lenguaje
+3 | Clínica y Tratamiento Psicopedagógico I
+3 | Psicopatología
+3 | Atención al sujeto con discapacidad
+3 | Psicopedagogía de la diversidad e inclusión educativa
+3 | Didáctica de la Lengua
+3 | Didáctica de la Matemática
+3 | Clínica y Tratamiento Psicopedagógico II
+3 | Orientación Vocacional Ocupacional
+3 | Práctica Profesional IV: ámbito salud
+4 | Psicopedagogía Institucional
+4 | Psicopedagogía Familiar
+4 | Psicopedagogía Laboral
+4 | Taller de Trabajo Final de Grado I
+4 | Práctica Profesional V: ámbito salud
+4 | Taller de Desarrollo Profesional
+4 | Práctica Profesional VI- Otros ámbitos de intervención: laboral, forense, adultos mayores
+4 | Taller de Trabajo Final de Grado II";lector plan_unso;;"41 asignaturas, 4 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;9348497e-180e-4d29-8a01-25bfa887cfe1
+UNSO;Tecnicatura Universitaria en Criminalística;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-criminalistica.pdf;"1 | Derechos Humanos y Derecho Constitucional
+1 | Análisis Matemático
+1 | Metodología de la Investigación
+1 | Criminalística I
+1 | Elementos de Derecho Penal
+1 | Físico-Química
+1 | Criminalística II
+1 | Seminario 1 Informática Forense
+2 | Derecho Penal Especial
+2 | Física
+2 | Introducción a la Psicología
+2 | Elementos de Derecho Civil, Comercial y Laboral
+2 | Seminario 2 Papiloscopía y Rastros
+2 | Derecho Procesal Penal y Garantías Constitucionales
+2 | Química
+2 | Psicología Criminal
+2 | Escena del Crimen
+2 | Medicina Legal
+3 | Balística Forense
+3 | Accidentología
+3 | Documentología I
+3 | Antropología Forense
+3 | Identidad y Sistemas Biométricos
+3 | Documentología II
+3 | Toxicología
+3 | Seminario 3 Técnicas Periciales";lector plan_unso;;"26 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;a1a8458d-c189-4f32-a5fa-7b867649d882
+UNSO;Licenciatura en Gestión Ambiental;5;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-lic-gestion-ambiental.pdf;"1 | Fundamentos de gestión ambiental y desarrollo sustentable
+1 | Seminario 1: Análisis y resolución de problemas
+1 | Ambiente y Territorio
+1 | Biología
+1 | Química General
+1 | Ciencia, tecnología y sociedad
+1 | Fundamentos de matemática
+1 | Inglés
+2 | Evaluación de Impacto Ambiental I
+2 | Química Ambiental
+2 | Gestión de Residuos Sólidos Urbanos I
+2 | Metodologías y técnicas de tratamiento de residuos
+2 | Legislación Ambiental
+2 | Contaminación Antrópica I: aire
+2 | Gestión de Residuos Sólidos Urbanos II
+2 | Administración de ecosistemas urbanos I
+2 | Economía General
+3 | Evaluación de Impacto Ambiental II
+3 | Contaminación Urbana, Rural e Industrial
+3 | Contaminación Antrópica II: agua
+3 | Software aplicado y sistemas de información
+3 | Administración de ecosistemas urbanos II
+3 | Contaminación Antrópica III : suelos
+3 | Sistemas de gestión y auditoría ambiental
+3 | Gestión y planificación de energ. renovables
+4 | Seminario 2: Desarrollo emprendedor
+4 | Antropología Ambiental
+4 | Estadística
+4 | Comunicación estratégica
+4 | Gestión de Recursos Naturales
+4 | Metodología de la investigación
+4 | Uso del Suelo y Planificación Territorial
+4 | Seminario 3: Actividades mineras
+5 | Formulación y gestión de proyectos
+5 | Gerenciamiento Sustentable de Empresas Públicas y Privadas
+5 | Climatología
+5 | Epistemología y racionalidad ambiental
+5 | Economía Ambiental
+5 | Políticas públicas ambientales
+5 | Seminario 4: Cauciones de Remediación Ambiental";lector plan_unso;;"40 asignaturas, 5 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;cf21d62e-ba70-4236-a478-8ce3265d33c8
+UNSO;Tecnicatura Universitaria en Análisis Contable;4;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Tec-Analisis-contable.pdf;"1 | Análisis Matemático I
+1 | Introducción a la Economía
+1 | Introducción a la Administración
+1 | Introducción a la Contabilidad
+1 | Análisis Matemático II
+1 | Sistemas Contables
+1 | Microeconomía
+1 | Derechos Fundamentales y Género
+2 | Estadística aplicada a la Contabilidad
+2 | Gestión Contable
+2 | Impuestos I
+2 | Derecho Privado
+2 | Derecho del Trabajo y la Seguridad Social
+2 | Impuestos II
+2 | Matemática Financiera
+2 | Historia Económica Argentina
+3 | Derecho Administrativo
+3 | Tributos Locales
+3 | Macroeconomía
+3 | Liquidación de Sueldos y Jornales
+3 | Derecho Tributario y Finanzas Públicas
+3 | Sist. Informáticos aplicados a la Contabilidad
+3 | Gestión de los Recursos Humanos
+3 | Administración Financiera
+3 | Ingles";lector plan_unso;;"25 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;e56d8dbb-6ca8-4d81-8f9c-339be2cceee7
+UNSO;Tecnicatura Universitaria en Gestión Pública;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan-de-estudios-gestion-publica.pdf;"1 | Taller de Lecto Comprensión y Escritura Académica
+1 | Teoría del Estado
+1 | Control y Regulación del Sistema Público
+1 | El Sector Público en Argentina
+1 | Análisis, Diseño y Gestión de Políticas Públicas
+1 | Macroeconomía
+1 | Derecho Administrativo
+1 | Metodología de Análisis de Políticas Públicas I
+2 | Políticas Públicas Comparadas
+2 | Burocracia y Organización Pública
+2 | Economía y Gobierno I
+2 | Metodología de Análisis de Políticas Públicas II
+2 | Instituciones de Gobierno y Procesos Gubernamentales
+2 | Gestión de Recursos Humanos en el Estado
+3 | Economía de Gobierno II
+3 | Taller de Labor Legislativa
+3 | Comunicación de Gobierno
+3 | Sociedad Civil y Políticas Públicas
+3 | Taller de Trabajo Final";lector plan_unso;;"19 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;f533d70a-22f3-45a7-b7ce-0e16f0483f70
+UNSO;Tecnicatura Universitaria en Edición Audiovisual;3;https://www.unso.edu.ar/carreras;Plan de estudios;https://api.unsanisidro.edu.ar/files/carreras/Plan%20de%20estudio%20Tec%20Univ%20en%20Edicion%20Audiovisual.pdf;"1 | Escritura Audiovisual 1
+1 | Producción Audiovisual 1
+1 | Software en Edición Audiovisual
+1 | Iluminación y cámara 1
+1 | Montaje 1
+1 | Sonido 1
+1 | Historia del Arte 1
+1 | Proyecto Audiovisual 1
+2 | Producción Audiovisual 2
+2 | Montaje 2
+2 | Sonido 2
+2 | Iluminación y cámara 2
+2 | Software de Composición
+2 | Escritura Audiovisual 2
+2 | Historia del Arte 2
+2 | Inglés Técnico
+2 | Proyecto Audiovisual 2
+3 | Historia de los Medios
+3 | Nociones de Colorimetría
+3 | Diseño Sonoro
+3 | Postproducción Audiovisual 1
+3 | Práctica Profesional
+3 | Postproducción Audiovisual 2
+3 | Montaje Documental
+3 | Proyecto Audiovisual 3";lector plan_unso;;"25 asignaturas, 3 años; sin electivas, sin PPS ni trabajo final fuera de año";Universidad Nacional Raúl Scalabrini Ortiz;fce43994-5930-4c44-b7d1-0b7fa02e017f

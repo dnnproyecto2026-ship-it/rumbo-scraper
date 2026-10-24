@@ -442,3 +442,12 @@
 - **No publicada:** Tec. en Administración y Gestión Universitaria no está en `unpaz.edu.ar/carreras` ni en el buscador del sitio.
 - Cadena exportar→verificar UNPAZ (ofertas 44/48, 4 fuente caída; materias 571/571, sin "sin fuente" ni "no lo dice")→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNSO (16), resto de UNO/UNAHUR/UNTREF.
+
+## 2026-10-24 (58) — UNSO: 15 planes con `plan_unso`
+- La base no tenía URL en ninguna oferta de UNSO. El sitio (`unso.edu.ar`, Angular) lee todo de `api.unsanisidro.edu.ar`: `/resumenes` (lista) y `/getPublicacion?tipo=3&id=…` (ficha), que enlaza "Plan de estudios" en `/files/carreras/…pdf`. Los PDF "Acercá la documentación" son instructivos de inscripción, no planes. `unsanisidro.edu.ar` es el dominio propio de UNSO (campus, SIU, mails): agregado a `OTROS_DOMINIOS` de `verificacion`.
+- **Lector nuevo `plan_unso`** (`parsers/planes_sitios.py`, con 3 pruebas): tabla por año/cuatrimestre con horas a la derecha, nombres partidos en 2 renglones (horas arriba, abajo o en medio), número caído al renglón de abajo, total fuera de lugar (Criminalística), filas sin separar (Edición/Sonido, "Postproducción Audiovisual" / "1  64"). Devuelve nada si un grupo de filas no se puede separar.
+- Cargadas por `planes_manuales` (hoja `data/planes_unso.csv`, "lector plan_unso", 15/15 aceptadas, `--apply`; 10 filas al azar cotejadas con el PDF): 476 materias con año (ver lista en estado.md). Afuera: electivas, y PPS/Trabajo final que el plan pone después del total anual, sin año.
+- **NO cargable:** Lic. en Enfermería: el PDF ("Lic. en Enfermería Universitaria") trae solo 3 años y cierra en 2334 h; no es el plan entero.
+- **Para revisar:** Tec. Análisis Contable figura con 4 años en la base y el plan tiene 3. Faltan en la base 4 CCC que UNSO publica (Instrumentación Quirúrgica, Gestión Educativa, Gestión Pública, Psicopedagogía), con plan legible salvo Gestión Pública CCC (palabras pegadas en el PDF).
+- Cadena exportar→verificar UNSO (ofertas 15/16; materias 476/476)→exportar completa (`Archivo: data/catalogo_depurado.json`). La exportación llama "Profesorado de Educación Inicial" a la carrera que UNSO y la base llaman "en": alias agregado en `data/unso_planes.json` (local); esa oferta queda "no lo dice" por el nombre. Sin credenciales de producción ni de GitHub.
+- Siguiente: resto de UNO/UNAHUR/UNTREF; cargar las 4 CCC de UNSO (re-correr la guía o `agregar_carrera`).
