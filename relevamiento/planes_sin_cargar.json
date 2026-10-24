@@ -1598,5 +1598,125 @@
    "https://unr.edu.ar/tecnicaturas/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Civil",
+  "carrera_id": "1110c273-7c5e-4613-9a82-98223215d48a",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Mecánica",
+  "carrera_id": "3b897121-cf70-4794-b4b4-9a25c89bf25d",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 26).",
+  "documentos": [
+   "https://fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_375_2014_CS_Plan_2014__Ingenieria_Mecanica_1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Eléctrica",
+  "carrera_id": "81a760f9-17e2-486a-857d-f84c9c5ce49e",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "90b685b7-8989-4508-9457-36ddb3c24356",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Agrimensura",
+  "carrera_id": "91a93579-9c23-43cd-9aa1-ffb8dbf28408",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 26).",
+  "documentos": [
+   "https://fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_374_2014_CS_Plan_2014__Agrimensura.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Matemática",
+  "carrera_id": "3cb03b6a-32ec-4b15-b5e0-26a0172f1bb9",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Física",
+  "carrera_id": "bbcabf08-05a1-43b2-ab19-2631c6d5c38f",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Ciencias de la Computación",
+  "carrera_id": "b7d3736c-0b9c-4ef2-b37e-80621746e334",
+  "motivo": "El PDF legible es del plan 2010 y la página vigente dice plan 2024 (PDF escaneado): un plan viejo no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Química",
+  "carrera_id": "7afb4b9f-549a-459c-8c8e-a2b1a2127b0a",
+  "motivo": "La página de la FCByF publica dos planes (uno sin correlativas y «Plan de Estudios 2018») con materias y cargas distintas, sin decir cuál rige; pendiente de que una persona confirme el vigente (bitácora 33).",
+  "documentos": [
+   "https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Fonoaudiología",
+  "carrera_id": "a93b6270-2782-46d1-899c-034eaf5afda1",
+  "motivo": "El plan 2024 de fcm.unr.edu.ar se publica solo como descarga de Google Drive, fuera del dominio de la UNR; el cargador lo rechaza (bitácora 36).",
+  "documentos": [
+   "https://fcm.unr.edu.ar/fonoaudiologia-plan-2024/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Interpretación",
+  "carrera_id": "2acd2895-ce0d-487d-9804-2e20f2da75fa",
+  "motivo": "Nombre genérico de una lista vieja: Humanidades hoy publica una carrera por instrumento, que ya tienen plan; revisar si sobra en el catálogo (bitácora 38).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Interpretación",
+  "carrera_id": "d8a2549e-bcbd-47c2-9578-877163d5a3e1",
+  "motivo": "Nombre genérico de una lista vieja: Humanidades hoy publica una carrera por instrumento, que ya tienen plan; revisar si sobra en el catálogo (bitácora 38).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

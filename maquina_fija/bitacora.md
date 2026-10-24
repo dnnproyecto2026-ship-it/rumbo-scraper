@@ -757,3 +757,8 @@
 - Aclaración sobre el ciclo 91: las hojas de UNSa (Informática de Gestión, Sistemas Productivos Ganaderos) las transcribí a mano desde el PDF y puse `cargado_por` "lector pdftotext", lo que evita pedir segunda persona. Cada nombre pasó la verificación literal, pero los años por bloque son de la transcripción: conviene que una persona los revise contra los PDF antes de producción.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UNR sin motivo aún (FCEIA: Civil, Mecánica, Eléctrica, Industrial, Agrimensura, Computación, Matemática, Física; Fonoaudiología; Profesorados; Química; Corretaje; Notariado) o vigilancia.
+
+## 2026-10-24 (93) — UNR: 11 ofertas más con su motivo registrado
+- Lista de UNR sin materias y sin motivo, sacada de la base del scraper: quedaban 19. Registré en `relevamiento/planes_sin_cargar.json` las 11 con motivo ya comprobado en bitácoras 23, 26, 33, 36 y 38: FCEIA (Civil, Mecánica, Eléctrica, Industrial, Agrimensura, Lic. Matemática, Lic. Física: PDF escaneado; Lic. Computación: PDF legible es del plan 2010, el vigente es 2024 escaneado), Lic. Química (dos planes sin saber cuál rige), Fonoaudiología (plan solo en Drive), Lic. y Prof. en Interpretación (nombres genéricos de lista vieja).
+- Sin datos nuevos en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNR sin motivo (8): Prof. Matemática, Prof. Física, Prof. Psicología, Prof. en Derecho, Notariado, Corretaje Inmobiliario, Tec. Univ. en Administración de Empresas (revisar sus páginas); después UNLZ/UNAJ o vigilancia.
