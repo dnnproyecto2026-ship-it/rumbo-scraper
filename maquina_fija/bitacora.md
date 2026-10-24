@@ -695,3 +695,17 @@
 - Firecrawl sin créditos: la fuente se buscó recorriendo el sitio con `Visitante`.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente UNLP: Exactas (Farmacia, Matemática, Física Médica, Óptica, Alimentos, Química; sitio con timeout antes), Naturales (Biología por orientación), Periodismo (Lic. y Profesorado).
+
+## 2026-10-24 (85) — UNLP Naturales: Lic. Biología, 4 orientaciones (92 materias)
+- Vigilancia sin novedades (la corrida del lanzador de hoy llegó a UCEMA, sin cambios en los conteos).
+- UNLP Exactas sigue caída: `www.exactas.unlp.edu.ar` timeout, `exactas.unlp.edu.ar` 502. Reintentar en otro ciclo.
+- UNLP Naturales (fcnym.unlp.edu.ar) por `planes_manuales` (hoja `data/planes_unlp_naturales.csv`), cada orientación desde su página "Plan de estudios" (tabla por año), cotejada con el PDF de la Dirección de Enseñanza enlazado ahí:
+  - Or. Botánica (plan 1980): 19 (5/5/5/4); el PDF trae promedios 2021-2025, el plan sigue vigente.
+  - Or. Ecología (1980 mod. 2015): 25 (5/5/6/5/4).
+  - Or. Zoología (1980): 20 (5/5/5/3/2).
+  - Or. Paleontología (1987 mod. 2015): 28 (5/6/6/6/5).
+  - Afuera: Prueba de Idioma y las materias optativas sin nombre ("Materia Optativa", ver reglamento). "Física General" por "Física General (Taller) o (Convencional)"; el PDF de Paleontología dice "Física 1", la página "Física General".
+- Leídas de vuelta: 19 / 25 / 20 / 28, conteos por año iguales a los PDF.
+- Cadena exportar → verificar UNLP (materias 2845/2855; los 10 no_lo_dice de antes, ninguno de Biología) → exportar completa (`Archivo: data/catalogo_depurado.json`).
+- Sin credenciales de producción ni de GitHub.
+- Siguiente UNLP: Artes (cada orientación de Música, Artes Plásticas y Audiovisuales es una carrera en la base: buscar el plan de cada una), Exactas (reintentar), Periodismo (Lic. y Profesorado).

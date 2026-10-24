@@ -1,0 +1,93 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Licenciatura en Biología Or. Botánica;5.0;;;https://www.fcnym.unlp.edu.ar/grado/carreras/licenciatura-en-biologia-orientacion-botanica/licenciatura-en-biologia-orientacion-botanica;"1 | Matemática
+1 | Química General
+1 | Introducción a la Botánica
+1 | Zoología General
+1 | Fundamentos de Geología
+2 | Química Orgánica
+2 | Estadística
+2 | Introducción a la Taxonomía
+2 | Morfología Vegetal
+2 | Física General
+3 | Ecología General
+3 | Botánica Sistemática I
+3 | Botánica Sistemática II
+3 | Antropología General
+3 | Paleobotánica
+4 | Genética
+4 | Fisiología Vegetal
+4 | Biogeografía
+4 | Botánica Aplicada";IA Claude;;"Plan 1980 (página de la carrera; el PDF Plan-de-Botanica-2019 trae el mismo plan con promedios 2021-2025). Afuera: Prueba de Idioma y las 5 materias optativas (4.º y 5.º año).";UNLP;52953b94-f1b9-4b6f-9cf8-b936ed618bed
+UNLP;Licenciatura en Biología Or. Ecología;5.0;;;https://www.fcnym.unlp.edu.ar/grado/carreras/licenciatura-en-biologia-orientacion-ecologia/plan-de-estudios-1980-modificado-2015/;"1 | Matemática
+1 | Química General
+1 | Zoología General
+1 | Introducción a la Botánica
+1 | Fundamentos de Geología
+2 | Química Orgánica
+2 | Estadística
+2 | Introducción a la Taxonomía
+2 | Física General
+2 | Morfología Vegetal
+3 | Ecología General
+3 | Botánica Sistemática I
+3 | Histología y Embriología Animal
+3 | Zoología Invertebrados I
+3 | Genética
+3 | Lógica y Metodología de las Ciencias
+4 | Zoología Invertebrados II (Artrópodos)
+4 | Zoología III (Vertebrados)
+4 | Botánica Sistemática II
+4 | Fisiología Vegetal
+4 | Ecología de Poblaciones
+5 | Biogeografía
+5 | Protección y Conservación de la Naturaleza
+5 | Ecología de Comunidades y Sistemas
+5 | Fisiología Animal";IA Claude;;Plan 1980 modificado 2015 (página y PDF Plan-de-Ecologia-2019-mod). Afuera: Prueba de Idioma y la materia optativa de 5.º.;UNLP;6beacdbc-19cd-4469-904b-bcb4e611bdf4
+UNLP;Licenciatura en Biología Or. Zoología;5.0;;;https://www.fcnym.unlp.edu.ar/grado/carreras/licenciatura-en-biologia-orientacion-zoologia/plan-de-estudios/;"1 | Matemática
+1 | Química General
+1 | Zoología General
+1 | Introducción a la Botánica
+1 | Fundamentos de Geología
+2 | Química Orgánica
+2 | Estadística
+2 | Introducción a la Taxonomía
+2 | Física General
+2 | Histología y Embriología Animal
+3 | Ecología General
+3 | Química Biológica
+3 | Zoología Invertebrados I
+3 | Zoología III (Vertebrados)
+3 | Antropología General
+4 | Genética
+4 | Anatomía Comparada
+4 | Zoología Invertebrados II (Artrópodos)
+5 | Fisiología Animal
+5 | Paleozoología";IA Claude;;Plan 1980 (página y PDF Plan-de-zoologia-2019). Afuera: Prueba de Idioma y las 5 materias optativas (2 de 4.º, 3 de 5.º).;UNLP;ccd4d16d-093c-4423-a562-f33e6424b7d6
+UNLP;Licenciatura en Biología Or. Paleontología;5.0;;;https://www.fcnym.unlp.edu.ar/grado/carreras/licenciatura-en-biologia-orientacion-paleontologia/plan-de-estudios-1987-modificado-2015/;"1 | Matemática
+1 | Química General
+1 | Introducción a la Botánica
+1 | Zoología General
+1 | Fundamentos de Geología
+2 | Fundamentos de Paleontología
+2 | Estadística
+2 | Introducción a la Taxonomía
+2 | Morfología Vegetal
+2 | Física General
+2 | Ecología General
+3 | Zoología Invertebrados I
+3 | Botánica Sistemática II
+3 | Rocas Sedimentarias
+3 | Zoología III (Vertebrados)
+3 | Geología Estructural
+3 | Lógica y Metodología de las Ciencias
+4 | Anatomía Comparada
+4 | Paleobotánica
+4 | Paleontología de Invertebrados
+4 | Levantamiento Geológico
+4 | Micropaleontología
+4 | Bioquímica General
+5 | Geología Histórica
+5 | Paleontología de Vertebrados
+5 | Biogeografía
+5 | Evolución
+5 | Paleoecología";IA Claude;;Plan 1987 modificado 2015 (página y PDF Plan-de-Paleontologia-2019). Afuera: Prueba de Idioma y la materia optativa de 5.º.;UNLP;1bb5f38f-c4ad-414f-a774-865ee4f14370
