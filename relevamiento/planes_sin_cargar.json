@@ -1328,5 +1328,105 @@
    "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Medicina",
+  "carrera_id": "33bbbe6e-8159-4ede-9ce8-940837b1d914",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/2016-12-13-16-04-27/noticias"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Enfermería",
+  "carrera_id": "f41b54a7-8b44-4e31-832f-9ca12fecf7fe",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/enfermeria"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Enfermería",
+  "carrera_id": "d70c3b77-09c6-4858-a537-ac9747d83114",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/licenciatura-en-enfermeria-plan-2018/plan-de-estudio"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Nutrición",
+  "carrera_id": "f5208e93-cc04-419f-9de0-99e7c49eb9ca",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/2013-10-29-12-49-32/2015-03-11-14-38-45"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería en Perforaciones",
+  "carrera_id": "df7b9732-ab1f-4656-b6f2-d1ef729cbc86",
+  "motivo": "El sitio de la facultad (natura.unsa.edu.ar) no responde (timeout) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://natura.unsa.edu.ar/web/index.php/carreras/sede-regional-tartagal/ingenieria-en-perforaciones"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Perforaciones",
+  "carrera_id": "081d07ad-4d86-4880-bb9a-dc5db03d3fa8",
+  "motivo": "El sitio de la facultad (natura.unsa.edu.ar) no responde (timeout) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://natura.unsa.edu.ar/web/index.php/carreras/sede-regional-tartagal/tecnicatura-universitaria-en-perforaciones"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Recursos Forestales",
+  "carrera_id": "5e3db9c3-ec8e-4f2f-8495-2a91194b8c6b",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/tecnicatura-universitaria-en-recursos-forestales"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería en Recursos Naturales y Medio Ambiente",
+  "carrera_id": "58cf235f-1388-4372-bc0b-bd525bfb64db",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/ingenieria-en-recursos-naturales-y-medio-ambiente"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Administración de Empresas Agropecuarias",
+  "carrera_id": "bf5fcc4f-6b60-4ad3-8bd0-f969276deaca",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/tecnicatura-universitaria-en-administracion-de-empresas-agropecuarias"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Laboratorio de Análisis Clínicos y Microbiológicos",
+  "carrera_id": "9413316c-24b8-45cc-989f-fa4c3abdd506",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencias-de-la-salud/tecnicatura-universitaria-en-laboratorio-de-analisis-clinicos-y-microbiologicos"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

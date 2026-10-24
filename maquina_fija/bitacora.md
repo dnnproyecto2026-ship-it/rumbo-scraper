@@ -744,3 +744,9 @@
 - Económicas (economicas.unsa.edu.ar): Contador Público (Res. CS 439/18, 23 páginas), Tec. Contabilidad (CS 188/21) y el plan enlazado por Lic. Administración, Lic. Economía y Tec. Gestión de Turismo (CS 521/13) son PDF escaneados sin texto. El OCR de la grilla de Contador sale desordenado (columnas mezcladas); los contenidos mínimos tienen nombres limpios pero sin año. Las 5 quedan en `relevamiento/planes_sin_cargar.json`. `planes_escaneados UNSa` no encontró nada (las ofertas apuntan a la página de la facultad, no al PDF).
 - Nada escrito en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNSa: Salud (Enfermería, Nutrición, Medicina), Naturales (Geología, Biológicas, Bromatología), Agronómica (Tec. del Chaco), Exactas (caída). Luego UNR o vigilancia.
+
+## 2026-10-24 (91) — UNSa: Tec. Informática de Gestión (16) y Tec. Sistemas Productivos Ganaderos (18); 10 NO cargables
+- Planes en PDF con texto (unsa.edu.ar y sedesur.unsa.edu.ar) por `planes_manuales` (hoja `data/planes_unsa_exactas_sede_sur.csv`); años por bloques de la tabla, cada nombre verificado literalmente. Leídas de vuelta: 6/5/5 y 6/6/6, iguales a los PDF. Verificación UNSa: materias 846/846.
+- NO cargables (motivo en `relevamiento/planes_sin_cargar.json`): Salud (Medicina, Enfermería, Lic. Enfermería, Nutrición; fsalud.unsa.edu.ar da 404 y muestra un panel XAMPP), Naturales Tartagal (natura.unsa.edu.ar, timeout) y sroweb.unsa.edu.ar (sin DNS): 6 carreras.
+- Cadena exportar → verificar UNSa → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente: UNSa Exactas (caída), reintentar sitios caídos; luego UNR (Medicina, Humanidades, Psicología…) o vigilancia.

@@ -1,0 +1,35 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNSa;Tecnicatura en Informática de Gestión;3;;;https://www.unsa.edu.ar/wp-content/uploads/2022/04/exactas-tecunivinfogestion.pdf;"1 | Matemática
+1 | Computación
+1 | Laboratorio de Ofimática I
+1 | Elementos de Contabilidad
+1 | Programación
+1 | Inglés
+2 | Organización y Planeamiento Empresarial
+2 | Administración de Empresas
+2 | Laboratorio de Ofimática II
+2 | Estadística
+2 | Instalación y Organización de la Computadora
+3 | Administración de la Información
+3 | Laboratorio de Ofimática III
+3 | Seguridad y Protección de la Información
+3 | Gestión Empresarial
+3 | Laboratorio de Ofimática IV";lector pdftotext (máquina fija);;"Transcrito del PDF oficial (texto) y verificado nombre por nombre por planes_manuales; años por bloques de la tabla (Plan 2007, CS 294/12; 16 materias)";Universidad Nacional de Salta;d61cd1b9-386b-4a50-8eb5-831a13c324c2
+UNSa;Tecnicatura Universitaria en Sistemas Productivos Ganaderos;3;;;https://sedesur.unsa.edu.ar/wp-content/uploads/2020/12/Incumbencias-de-la-Tecnicatura.1.pdf;"1 | Observación y Análisis de los Sistemas Productivos Ganaderos
+1 | Elementos de Matemática
+1 | Biología General
+1 | Clima y Suelos
+1 | Elementos de Física
+1 | Botánica aplicada
+2 | Ecología de pastizales y producción de forrajes
+2 | Principios de genética y mejoramiento animal
+2 | Elementos de Anatomía y Fisiología Animal
+2 | Nutrición animal: Monogástricos
+2 | Nutrición Animal: Poligástricos
+2 | Administración de sistemas ganaderos
+3 | Instalaciones pecuarias y maquinarias usadas en sistemas ganaderos intensivos y extensivos
+3 | Manejo de Sistemas Ganaderos: Bovinos de carne
+3 | Elementos de reproducción y sanidad Animal
+3 | Manejo de Sistemas Ganaderos: Bovinos de leche
+3 | Manejo de Sistemas ganaderos: Cerdos
+3 | Seminario de Integración";lector pdftotext (máquina fija);;"Transcrito del PDF oficial (texto) y verificado nombre por nombre por planes_manuales; años por bloques de la tabla (18 materias)";Universidad Nacional de Salta;68ef8b40-be2b-4229-a019-3f3fd255d174
