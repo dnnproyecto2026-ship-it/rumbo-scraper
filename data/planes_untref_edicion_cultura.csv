@@ -1,0 +1,57 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNTREF;Tecnicatura en Edición;2.5;;;https://materiales.untrefvirtual.edu.ar/resoluciones/lic_y_tec/edicion_RM1199-21.pdf;"1 | Semiología
+1 | Historia del Libro, la Lectura y la Edición
+1 | Historia del Arte
+1 | Cultura Contemporánea
+1 | Gramática
+1 | Edición I
+1 | Introducción al Diseño y Arte Editorial
+1 | Cuestiones de Sociología, Economía y Política
+2 | Corrección de Estilo
+2 | Edición II
+2 | Taller de Edición I
+2 | Problemas de Historia del Siglo XX
+2 | Inglés Nivel I
+2 | Edición Digital
+2 | Taller de Edición II
+2 | Introducción a la Problemática del Mundo Contemporáneo
+2 | Derecho de Autor
+3 | Inglés Nivel II
+3 | Gestión y Producción de Proyectos Editoriales
+3 | Marketing y Comunicación de Proyectos Editoriales
+3 | Políticas Entorno al Libro y la Lectura";lector planes_manuales;;"Anexo de la RM 1199/21 (IF-2020-45472282): 21 asignaturas en 5 cuatrimestres, año por cuatrimestre (1.º-2.º=1.º, 3.º-4.º=2.º, 5.º=3.º). La página untrefvirtual.edu.ar/carrera/113 copia el OCR de la resolución CS (""Edición 11"", ""lntroducción""): por eso se usa la RM, que tiene texto.";Universidad Nacional de Tres de Febrero;1581b141-7207-4778-8252-1ff818cb8a1a
+UNTREF;Licenciatura en Políticas y Administración de la Cultura;4;;;https://materiales.untrefvirtual.edu.ar/resoluciones/lic_y_tec/pol_y_admin_de_la_cultura_RCS009-22.pdf;"1 | Gestión de proyectos y producciones culturales
+1 | Cultura contemporánea
+1 | La organización de los poderes públicos y la administración de la cultura
+1 | Cuestiones de sociología, economía y política
+1 | Inglés nivel I
+1 | Economía de la cultura
+1 | Legislación cultural
+1 | Historia de la cultura occidental
+1 | Metodología de la investigación
+2 | Sociología de la cultura
+2 | Administración de las empresas culturales
+2 | Administración de los recursos humanos
+2 | Las industrias culturales
+2 | Teoría de la organización I (artes visuales)
+2 | Marketing cultural
+2 | El financiamiento de la cultura
+2 | Industrias Culturales I (El cine)
+3 | Teoría de la organización II (artes performáticas)
+3 | Industrias Culturales II (la televisión)
+3 | Industrias Culturales III (los libros)
+3 | Industrias Culturales IV (los discos)
+3 | Políticas culturales
+3 | Introducción a la teoría de la organización y la cultura
+3 | Historia de las políticas culturales en Latinoamérica
+3 | Introducción a los estudios culturales
+3 | Inglés nivel II
+4 | Las identidades nacionales y la ciudadanía cultural
+4 | La cultura como recurso y la globalización
+4 | Organismos internacionales y la cooperación internacional
+4 | El gerenciamiento de las empresas culturales
+4 | Control de gestión
+4 | Teoría contable
+4 | El patrimonio cultural: gestión y promoción
+4 | Taller de elaboración del trabajo final
+4 | Inglés nivel III";lector planes_manuales;;"Punto 9 de la RCS 009/22 (plan con año I-IV y cuatrimestre), igual a la nómina del anexo de la RM 2587/23: 35 asignaturas; afuera Trabajo Final (otros requisitos). La página carrera/35 repite ""Inglés Nivel II"" donde el plan dice Inglés nivel III.";Universidad Nacional de Tres de Febrero;3ccaacd6-9b74-478f-95a9-47a74aaf0f76

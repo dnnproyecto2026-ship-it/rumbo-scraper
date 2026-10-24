@@ -68,10 +68,6 @@ class UnaMateria(unittest.TestCase):
             with self.subTest(linea=linea):
                 self.assertEqual(nombre_de_la_materia(linea), materia)
 
-
-if __name__ == "__main__":
-    unittest.main()
-
     def test_lo_que_rodea_al_plan_en_el_documento_no_sale(self):
         for linea in (
             "clorenzano@untref.edu.ar",
@@ -98,6 +94,12 @@ if __name__ == "__main__":
         self.assertEqual(nombre_de_la_materia("Desarrollo de proyectos culturales, audiovisuales y "
                                               "editoriales"),
                          "Desarrollo de proyectos culturales, audiovisuales y editoriales")
+
+    def test_editorial_es_de_la_materia_salvo_que_siga_la_editorial(self):
+        for nombre in ("Introducción al Diseño y Arte Editorial", "Diseño Editorial", "Taller Editorial I",
+                       "Industrias Culturales I Editorial"):
+            self.assertEqual(nombre_de_la_materia(nombre), nombre)
+        self.assertIsNone(nombre_de_la_materia("Historia argentina. Buenos Aires: Editorial Paidós"))
 
 
 class PlanesAmontonados(unittest.TestCase):
@@ -132,3 +134,7 @@ class SinPlanesRepartidos(unittest.TestCase):
                     for m in materias]
         quedan = {m["carrera_o_programa"] for m in sin_planes_repartidos(materias)}
         self.assertEqual(quedan, {"Maestría en X Bs As", "Maestría en X Rosario"})
+
+
+if __name__ == "__main__":
+    unittest.main()
