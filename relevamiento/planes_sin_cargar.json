@@ -1178,5 +1178,105 @@
    "https://ing.unsa.edu.ar/ingenieria-quimica"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "28f78947-3c1a-493c-ab3b-fb2a53a29ea1",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Filosofia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Filosofia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "c7ffa224-131a-4f94-bcd4-3e3af5f2e08a",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Filosofia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Filosofia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Antropología",
+  "carrera_id": "56fe1725-c38f-4e3f-aa21-37b412166b54",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Antropologia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Antropologia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Ciencias de la Educación",
+  "carrera_id": "6fb27d5d-5e43-420f-a0da-88ba164774c0",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Educacion.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Educacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado Ciencias de la Educación",
+  "carrera_id": "bdd653f6-1dd6-4e42-95a5-e7c000db1482",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Educacion.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Educacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "b2723e99-263b-4f7d-866a-9506f6248b12",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Letras.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Letras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Letras",
+  "carrera_id": "c482a463-fa0a-4e3d-89c0-b2a942e767ec",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Letras.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Letras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Historia",
+  "carrera_id": "b3ff0262-8f46-4d4d-a2ca-85ab8e798bc9",
+  "motivo": "El plan oficial (Res. CS 225/11, hum.unsa.edu.ar/carreras/Historia.pdf) es un PDF escaneado sin capa de texto; el reparto por año es una grilla de cajas con nombres partidos en renglones y el OCR la mezcla (Licenciatura): no se puede verificar cada nombre literalmente, no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Historia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Historia",
+  "carrera_id": "d198b5b3-83e0-44e5-8900-08b08ae1a470",
+  "motivo": "El plan oficial (Res. CS 225/11, hum.unsa.edu.ar/carreras/Historia.pdf) es un PDF escaneado sin capa de texto; el reparto por año es una grilla de cajas con nombres partidos en renglones y el OCR la mezcla (Profesorado): no se puede verificar cada nombre literalmente, no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Historia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Ciencias de la Comunicación",
+  "carrera_id": "420bcb57-205c-4d26-a5e6-20a143c7c751",
+  "motivo": "El PDF de la carrera (Res. CS 182/09) es un escaneo con texto de OCR defectuoso ('£TICA', 'OE RADIÓ II', 'LACOMUNiCACIÓN') y junta dos estructuras curriculares; los nombres no se pueden cotejar literalmente: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Comunicacion.pdf"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

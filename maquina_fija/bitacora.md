@@ -732,3 +732,9 @@
 - Ing. Química NO cargable: la página trae contenidos por área, sin año; la grilla del plan (aps.ing.unsa.edu.ar) no responde. Motivo en `relevamiento/planes_sin_cargar.json`.
 - Cadena exportar → verificar UNSa → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente: UNSa Humanidades (Letras, Historia, Filosofía, Antropología, Cs. de la Educación; hum.unsa.edu.ar), Salud (Enfermería, Nutrición), Exactas; luego UNR.
+
+## 2026-10-24 (89) — UNSa Humanidades: 10 carreras NO cargables (motivo registrado)
+- UNLP Exactas no se reintentó en este ciclo; sigo con UNSa.
+- Humanidades (hum.unsa.edu.ar/carreras/*.pdf, con https): Filosofía, Antropología, Cs. de la Educación y Letras son PDF escaneados sin texto; Historia (Prof. y Lic.) se lee por OCR pero la grilla por año son cajas con nombres partidos; Cs. de la Comunicación trae OCR defectuoso ("£TICA", "OE RADIÓ II") y dos estructuras juntas. Las 10 quedan en `relevamiento/planes_sin_cargar.json` con su motivo. Filosofía, Antropología, Educación y Letras: motivo por falta de texto, no se probó OCR nombre por nombre.
+- No se escribió nada en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente UNSa: Exactas (Física, Química, Matemática, Sistemas, tecnicaturas; exactas.unsa.edu.ar), Económicas (Contador, Administración, Economía), Salud, Naturales; luego UNR.
