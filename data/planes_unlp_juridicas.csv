@@ -1,0 +1,39 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Abogacía;5.0;;;https://www.jursoc.unlp.edu.ar/documentos/alumnos/notas_modelo/plan6.pdf;"1 | Introducción al Estudio de las Ciencias Sociales
+1 | Introducción al Derecho
+1 | Historia Constitucional
+1 | Introducción a la Sociología
+1 | Introducción al Pensamiento Científico
+1 | Derecho Romano
+1 | Derecho Político
+2 | Derecho Privado I - Civil
+2 | Derecho Privado II- Civil
+2 | Derecho Penal I
+2 | Derecho Constitucional
+2 | Derecho Humanos
+2 | Teoría del Conflicto
+3 | Derecho Privado IV - Comercial
+3 | Derecho Privado III- Civil
+3 | Derecho Procesal I
+3 | Economía Política
+3 | Derecho Penal II
+3 | Derecho Público, Provincial y Municipal
+3 | Derecho Internacional Publico
+4 | Derecho Administrativo I
+4 | Derecho Privado VI - Comercial
+4 | Derecho Privado V - Civil
+4 | Derecho Procesal II
+4 | Derecho Social del Trabajo
+4 | Mediación y Medios de Resolución de Conflictos
+4 | Derecho Agrario
+4 | Filosofía del Derecho
+5 | Derecho Administrativo II
+5 | Derecho de Familia
+5 | Derecho de la Navegación
+5 | Derecho Colectivo del Trabajo y Seg. Social
+5 | Derecho de Minería y Energía
+5 | Sociología Jurídica
+5 | Derecho Internacional Privado
+5 | Derecho de las Sucesiones
+5 | Derecho Notarial y Registral
+5 | Finanzas y Derecho Financiero";IA Claude;;"Plan 6 (Res. CD 313/15), columna ""Año"" por bloques. Afuera, sin año en el plan: Taller de lecto-comprensión en Idioma I y II y Seminario (""de 2° a 5° año""), el bloque de Formación Práctica (Práctica Supervisada Pre-profesional, Adaptaciones Profesionales Penales y Civiles) y la Orientación Profesional electiva. Grafía del PDF (""Derecho Humanos"", ""Internacional Publico"").";UNLP;705e4a9f-9413-4e58-a0b6-bd7e70a298c9

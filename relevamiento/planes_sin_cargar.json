@@ -768,5 +768,25 @@
    "https://www.fcaglp.unlp.edu.ar/index.php/alumnos/materias-y-programas/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Escribanía",
+  "carrera_id": "0cd2f066-6e2f-4ce5-be3e-3969da8aa9b7",
+  "motivo": "El plan 6 de Escribanía (tabla de la Facultad de Ciencias Jurídicas) abrevia nombres en mayúsculas sin tildes (\"DER.PUB.PROV.Y MUNICIPAL\", \"ADAP.PROF.PRAC.PENALES\", \"T. DE LECTO-COMPRESION IDIOMA I\"); Seminario y Práctica Notarial sin año. La página dice que es Abogacía más la Práctica Notarial, pero eso no deja tomar los nombres de otro documento: no se carga (bitácora 84).",
+  "documentos": [
+   "https://www.jursoc.unlp.edu.ar/documentos/institucional/carreras/plan6ESCRIBANO.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Técnico Superior Universitario de Martillero público y Corredor",
+  "carrera_id": "dd218a5b-c530-4242-ba27-639407722802",
+  "motivo": "La página de carreras de la Facultad de Ciencias Jurídicas describe el título pero no enlaza un plan de estudios (bitácora 84).",
+  "documentos": [
+   "https://www.jursoc.unlp.edu.ar/index.php/estudiantes/informacion/carreras"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

@@ -687,3 +687,11 @@
 - Leídas de vuelta de la base: 46 / 28 / 25 / 0. Cadena exportar → verificar UNLP (materias 2715/2725) → exportar completa (`Archivo: data/catalogo_depurado.json`); salen 46, 28 y 25.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente UNLP: Jurídicas (Abogacía, Escribanía, Martillero), Exactas (Farmacia, Matemática, Física Médica, tecnicaturas; sitio con timeout antes), Naturales (Biología por orientación).
+
+## 2026-10-24 (84) — UNLP Jurídicas: Abogacía, 38 materias (plan 6); Escribanía y Martillero NO cargables
+- Vigilancia sin novedades (la corrida del lanzador de hoy llegó a UCA, igual que el 23/10).
+- Abogacía por `planes_manuales` (hoja `data/planes_unlp_juridicas.csv`): 38 materias (7/6/7/8/10) del plan 6 (Res. CD 313/15) de jursoc.unlp.edu.ar, columna "Año" por bloques cotejada con la imagen del PDF. Afuera, porque el plan no les da año: los 2 talleres de idioma y el Seminario ("de 2° a 5° año"), el bloque de Formación Práctica (Práctica Supervisada, Adaptaciones Penales y Civiles) y la orientación electiva. Grafía del PDF ("Derecho Humanos", "Internacional Publico"). Leídas de vuelta: 38.
+- NO cargables (motivo en `relevamiento/planes_sin_cargar.json`): Escribanía (plan 6 con nombres abreviados en mayúsculas, "DER.PUB.PROV.Y MUNICIPAL"); Martillero (la página no enlaza plan). Lic. Gestión de Recursos para Inst. Universitarias: el único PDF es la tecnicatura 2004, no la licenciatura.
+- Firecrawl sin créditos: la fuente se buscó recorriendo el sitio con `Visitante`.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente UNLP: Exactas (Farmacia, Matemática, Física Médica, Óptica, Alimentos, Química; sitio con timeout antes), Naturales (Biología por orientación), Periodismo (Lic. y Profesorado).
