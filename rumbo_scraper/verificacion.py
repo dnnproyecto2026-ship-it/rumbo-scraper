@@ -149,7 +149,19 @@ def dice(fuente_plana: str, nombre: str | None) -> bool:
     fuente = f" {fuente_plana} "
     if any(f" {forma} " in fuente for forma in formas):
         return True
-    return _dice_con_cortes(fuente, nombre) or _dice_entre_paginas(fuente, nombre)
+    return (_dice_con_romano_leido(fuente, nombre) or _dice_con_cortes(fuente, nombre)
+            or _dice_entre_paginas(fuente, nombre))
+
+
+# A closing roman numeral the OCR read as digits or "l" ("Física I" scanned
+# as "Física 1", "Procesos biotecnológicos II" as "lI", FCQ-UNC's Ord. 6/2018):
+# only the numeral's own token, whole, after the rest of the name.
+def _dice_con_romano_leido(fuente: str, nombre: str) -> bool:
+    final = re.fullmatch(r"(.+) (i{1,3})", nombre)
+    if not final:
+        return False
+    numeral = "".join("[il1]" for _ in final[2])
+    return re.search(rf" {re.escape(final[1])} {numeral} ", fuente) is not None
 
 
 # A long name read by OCR or from a PDF with cuts inside its words ("dela",

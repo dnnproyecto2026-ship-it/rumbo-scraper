@@ -667,3 +667,13 @@
 - Cadena exportar → verificar UNAHUR (materias 988 verificadas; 27 no_lo_dice viejos de otras carreras siguen) → exportar completa (`Archivo: data/catalogo_depurado.json`). Desarrollo Agrario sale con 38.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: elegir desde la base ofertas sin plan de UNC / UNR / UNLP; la próxima verificación completa revisará los "no_lo_dice" viejos de todo el catálogo.
+
+## 2026-10-24 (82) — UNC Químicas: Lic. Biotecnología, 41 materias (Ord. HCD 6/2018)
+- Vigilancia sin novedades (la corrida del lanzador de hoy: Austral, ITBA, Palermo, UADE, UAI y UB, igual que el 23/10).
+- `planes_escaneados UNR` (OCR de los PDF escaneados de FCEIA, Psicología, etc.): 0 planes. Nada nuevo en UNR.
+- UNC Químicas (`fcq.unc.edu.ar`): Lic. Biotecnología cargada por `planes_manuales` (hoja `data/planes_unc_quimicas.csv`): 41 materias (8/8/10/10/5), tablas por cuatrimestre de la Ord. HCD 6/2018, año = cuatrimestre/2; el plan ampliado 2025 trae las mismas. Afuera: Ciclo de Nivelación, Módulo de Inglés, electivas. Cotejadas una por una con las páginas 8-11 del PDF; leídas de vuelta de la base.
+- El PDF es un escaneo con OCR que lee la "I" romana final como "1" ("Física 1"): `verificacion.dice` ahora acepta un numeral romano final de "I" escrito como "1"/"l" en la fuente (`_dice_con_romano_leido`; "Física 11" o "Física 2" siguen sin valer). Prueba en `tests/test_verificacion.py`. Tests: 932 OK.
+- NO cargables (motivo en `relevamiento/planes_sin_cargar.json`): Bioquímica y Farmacia (Ord. HCD 05/2014, escaneo con OCR roto "Qufmica"; Bioquímica además con orientaciones desde el 9.º cuatrimestre) y Lic. Química (por ciclos, abreviada, bitácora 12).
+- Cadena exportar → verificar UNC (materias 1689/1751) → exportar completa (`Archivo: data/catalogo_depurado.json`). Biotecnología sale con 41.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UNC restante (FCM, FAUD, Agropecuarias, Psicología bloqueadas por Anubis; Gestión Universitaria y Prof. Cs. Económicas en el Digesto); UNLP (62 sin plan en la base).

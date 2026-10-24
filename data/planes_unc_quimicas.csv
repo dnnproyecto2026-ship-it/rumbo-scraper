@@ -1,0 +1,42 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNC;Licenciatura en Biotecnología;5.0;;;https://www.fcq.unc.edu.ar/wp-content/uploads/carreras/Ord6_2018_Plan_Estudios.pdf;"1 | Química General I
+1 | Física I
+1 | Matemática I
+1 | Laboratorio I
+1 | Química General II
+1 | Física II
+1 | Matemática II
+1 | Laboratorio II
+2 | Química Orgánica I
+2 | Química Inorgánica
+2 | Química Física
+2 | Laboratorio III
+2 | Química Orgánica II
+2 | Química Biológica General
+2 | Química Analítica General
+2 | Laboratorio IV
+3 | Biología celular y molecular
+3 | Genética
+3 | Microbiología
+3 | Métodos analíticos
+3 | Métodos estadísticos
+3 | Biotecnología
+3 | Fundamentos de fisiología vegetal y animal
+3 | Bioinformática y biología computacional
+3 | Higiene y seguridad laboral
+3 | Biomateriales
+4 | Biofísica Química
+4 | Proteínas recombinantes
+4 | Procesos biotecnológicos I
+4 | Genética molecular avanzada
+4 | Nanobiotecnología
+4 | Procesos biotecnológicos II
+4 | Inmunología aplicada a la biotecnología
+4 | Biotecnología ambiental
+4 | Biotecnología vegetal
+4 | Ética y legislación en biotecnología
+5 | Proyectos en plantas biotecnológicas
+5 | Economía y gestión
+5 | Fármacos biotecnológicos
+5 | Practicanato Preparatorio
+5 | Practicanato Profesional";IA Claude;;"Ord. HCD 6/2018, tablas por cuatrimestre; año = cuatrimestre/2. Afuera: Ciclo de Nivelación, Módulo de Inglés, electivas.";UNC;a225c3e0-b7f5-4700-b959-adde0b49e1b5

@@ -728,5 +728,35 @@
    "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-Estudios-de-la-Lic-en-Gestion-del-Mantenimiento-con-titulo-intermedio-RCS-381_2024.pdf"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Bioquímica",
+  "carrera_id": "76a477e3-5fd2-484d-b8e3-32f1524e32a0",
+  "motivo": "La Ord. HCD 05/2014 (texto ordenado, común a Bioquímica y Farmacia) es un escaneo con OCR roto (\"Qufmica\", \"Ineluye\") y desde el 9.º cuatrimestre Bioquímica se abre en orientaciones: no se carga.",
+  "documentos": [
+   "https://www.fcq.unc.edu.ar/wp-content/uploads/carreras/ORD_5_2014.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Farmacia",
+  "carrera_id": "03c3dab5-1f70-4ca2-8a2f-a5c58c31ed3b",
+  "motivo": "La Ord. HCD 05/2014 (texto ordenado, común a Bioquímica y Farmacia) es un escaneo con OCR roto (\"Qufmica\", \"Ineluye\"): los nombres no se pueden cotejar literalmente. No se carga.",
+  "documentos": [
+   "https://www.fcq.unc.edu.ar/wp-content/uploads/carreras/ORD_5_2014.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Licenciatura en Química",
+  "carrera_id": "fd3a33ce-b161-4f26-963b-bb21315e2f59",
+  "motivo": "El plan ampliado agrupa por ciclo (básico/intermedio/superior), no por año, y abrevia nombres (bitácora 12): no se carga.",
+  "documentos": [
+   "https://fcq.unc.edu.ar/wp-content/uploads/carreras/Plan-Lic-Quimica-ampliado.pdf"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

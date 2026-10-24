@@ -177,6 +177,15 @@ class NombreConCortes(unittest.TestCase):
         self.assertFalse(v.dice(v.plano("matematica discretas aplicadas"), "Matemática Discreta Avanzada"))
         self.assertFalse(v.dice(v.plano("introduccion a la biologia celular molecular"), "Introducción a la Biología Molecular"))
 
+    def test_a_closing_roman_numeral_read_as_a_digit_is_found(self):
+        # FCQ-UNC's Ord. 6/2018: the scan prints "Física I", its OCR "Física 1".
+        fuente = v.plano("Física 1 71 4,7 Laboratorio 1 74 4,8 Procesos biotecnológicos lI 70")
+        for nombre in ("Física I", "Laboratorio I", "Procesos biotecnológicos II"):
+            self.assertTrue(v.dice(fuente, nombre), nombre)
+        self.assertFalse(v.dice(fuente, "Física II"))
+        self.assertFalse(v.dice(v.plano("Física 11"), "Física I"))
+        self.assertFalse(v.dice(v.plano("Física 2"), "Física II"))
+
 
 class PlanEnDrive(unittest.TestCase):
     def test_plan_en_drive_enlazado_por_la_pagina(self):
