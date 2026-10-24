@@ -584,3 +584,11 @@
 - Cadena exportar → verificar USAL (ofertas 142/142; las materias de folleto quedan "sin_fuente" porque son una imagen) → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 3 carreras salen con su plan.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: las 11 "Etica" de USAL contra sus folletos; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
+
+## 2026-10-24 (73) — USAL: la "É" de "Ética" en los planes de folleto
+- Las 11 materias de USAL que empezaban con "Etica" venían de los folletos leídos el 01/10 y el 14/10. Las 11 imágenes del caché están cotejadas a ojo: 10 dicen "Ética", y el folleto de Sociología imprime "Etica" sin tilde, así que ese nombre queda como está.
+- Nuevo `planes_folletos --tildes [--apply]`: relee los folletos de las carreras que ya tienen plan. Solo renombra una materia si la lectura de hoy da el mismo nombre con "É" y en el mismo año. Prueba nueva en `tests/test_planes_folletos.py`.
+- Corregidas 10, con su año: Ética Profesional en Com. Internacional (Francia), Periodismo, Relaciones Públicas y Publicidad (4.º), y en Administración, Musicoterapia y Cs. de la Comunicación (3.º); Ética en Nutrición y Sistemas de Información (4.º); Ética y Deontología en Veterinaria (3.º).
+- Tests: 919 OK. Cadena exportar → verificar USAL (ofertas 142/142) → exportar completa (`Archivo: data/catalogo_depurado.json`).
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: Geografía (Compl.) de UNTREF (el verificador tiene que unir un renglón cortado por el pie de página); UNAHUR Viverismo.
