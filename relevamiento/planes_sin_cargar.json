@@ -1128,5 +1128,45 @@
    "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Comunicación Social",
+  "carrera_id": "0b735e6b-45dd-4b06-8161-b053630879ff",
+  "motivo": "El plan 2017 (PDF de 66 páginas) arma la carrera por ciclos y niveles (ciclo inicial, ciclo I, ciclo II) con electivas y optativas, y comparte el tronco con la Licenciatura; no dice en qué año se cursa cada materia: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/profesorado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura Universitaria en Comunicación Popular",
+  "carrera_id": "c05bf89c-57fb-4c82-bb88-04f09112a581",
+  "motivo": "El plan 2017 organiza las materias en bimestre inicial y tres ciclos, con opciones obligatorio-electivas dentro de cada ciclo y dos optativas; ninguna lleva año: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/comunicacion-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Comunicación Social con Orientación Periodismo, Producción de contenidos y Gestión de Medios",
+  "carrera_id": "eb3fb293-31c8-4f9f-b0ec-2e55218dce3c",
+  "motivo": "La página enlaza un solo plan 2017 (y el 1998) para la Licenciatura con sus orientaciones; ciclo básico por niveles y ciclo superior con bandeja de optativas por orientación, sin año por materia: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/licenciatura/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Comunicación Social con Orientación Planificación y Gestión de la Comunicación en Organizaciones",
+  "carrera_id": "cf7a8053-5052-4b9a-8fe4-762a067865e5",
+  "motivo": "Misma página y mismo plan que la otra orientación de la Licenciatura (orientaciones mezcladas, ciclos sin año por materia): no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/licenciatura/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

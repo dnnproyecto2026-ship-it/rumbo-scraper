@@ -719,3 +719,9 @@
 - No se escribió ningún dato en la base: no hizo falta exportar. Tests: 932 OK.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente UNLP: Exactas (reintentar), Periodismo (Lic., Profesorado, Com. Popular).
+
+## 2026-10-24 (87) — UNLP Periodismo: Profesorado, Com. Popular y Lic. (2 orientaciones) NO cargables
+- UNLP Exactas sigue caída (`www.exactas.unlp.edu.ar` y `exactas.unlp.edu.ar` sin respuesta).
+- Periodismo (perio.unlp.edu.ar), plan 2017 de cada carrera leído del PDF: todos arman las materias por ciclos/niveles con electivas y optativas, sin año por materia (el Profesorado comparte el tronco con la Licenciatura; la Lic. trae dos orientaciones en un mismo plan). 4 carreras registradas con su motivo en `relevamiento/planes_sin_cargar.json`. No se escribió nada en la base. Tests: 932 OK.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente UNLP: Exactas (reintentar); Psicología Profesorado y Agrarias (PDF escaneado). Con UNLP casi cerrada, pasar a UNR (Medicina, Humanidades, Agronómica…) o a vigilancia.
