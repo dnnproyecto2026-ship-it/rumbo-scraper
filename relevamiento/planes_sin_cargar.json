@@ -1798,5 +1798,15 @@
    "https://csnat.unt.edu.ar/licenciatura-en-ciencias-biologicas/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Informática",
+  "carrera_id": "9dca7d4f-d079-4923-9d95-2e9fe06023e6",
+  "motivo": "El plan (Modificación 2009, FACET) se publica en módulos I a X, sin año: pasar módulos a años sería inferirlo y el reglamento de correlativas vigente (RES FACET DDAC 17056/2025) tampoco trae años. No se carga.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/licinformatica/plan-de-estudio/"
+  ],
+  "revisado": "2026-10-25"
  }
 ]

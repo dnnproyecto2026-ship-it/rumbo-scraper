@@ -1,0 +1,43 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería en Informática;5;;;https://www.facet.unt.edu.ar/ingenieriainformatica/wp-content/uploads/sites/75/2020/08/Plan-de-Estudios-INGENIERÍA-EN-INFORMÁTICA.pdf;"1 | Álgebra y Geometría Analítica
+1 | Cálculo I
+1 | Física I
+1 | Fundamentos de Química General
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Sistemas de Representación
+2 | Cálculo III
+2 | Elementos de Computación y Lógica
+2 | Física III
+2 | Laboratorio de Software I
+2 | Cálculo IV
+2 | Probabilidad y Estadística
+2 | Laboratorio de Software II
+2 | Programación
+3 | Algoritmos y Estructuras de Datos I
+3 | Arquitectura y Organización de Computadoras I
+3 | Taller de Lenguajes I
+3 | Matemática Discreta
+3 | Métodos Numéricos
+3 | Algoritmos y Estructuras de Datos II
+3 | Bases de Datos I
+3 | Paradigmas de Programación
+3 | Taller de Lenguajes II
+4 | Comunicaciones I
+4 | Bases de Datos II
+4 | Ingeniería de Software I
+4 | Sistemas Operativos I
+4 | Arquitectura y Organización de Computadoras II
+4 | Comunicaciones II
+4 | Ingeniería de Software II
+4 | Administración de Sistemas Operativos I
+4 | Sistemas Operativos II
+5 | Administración de Proyectos
+5 | Sistemas de Información
+5 | Conceptos de Lenguajes
+5 | Computación Científica
+5 | Administración de Sistemas Operativos II
+5 | Legislación y Organizaciones
+5 | Gestión ambiental";lector pdftotext (máquina fija);;"Plan de Estudios oficial de FACET (PDF con texto); años por encabezado; Certificación de inglés, Práctica Profesional Supervisada y Proyecto Final (exigencias adicionales) no incluidas";Universidad Nacional de Tucumán;92619e44-f114-4327-a141-6f72a3c22264

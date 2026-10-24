@@ -775,3 +775,9 @@
 - Contador Público (FACE): PDF de resolución escaneado con OCR ruidoso; no se probó más, queda pendiente.
 - Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNT: Derecho (Abogacía, Escribanía, Procuración), FACET (ingenierías), Psicología, Artes, Educación Física; luego UNSJ/UNCuyo/UADER.
+
+## 2026-10-25 (96) — UNT: Ing. en Informática cargada; Lic. en Informática NO cargable
+- Ing. en Informática (FACET): Plan de Estudios oficial (PDF con texto), 42 materias en 5 años por encabezado; por `planes_manuales` (hoja `data/planes_unt_informatica.csv`, cargado_por "lector pdftotext"). Dos nombres partidos en dos renglones en el PDF ("Arquitectura y Organización de Computadoras I/II") los agregué a mano, literales. Exigencias adicionales (inglés, PPS, Proyecto Final) afuera. Muestra de 5 filas contra el PDF: OK. Verificación UNT: materias "verificado".
+- Lic. en Informática: plan Modificación 2009 en módulos I–X, sin año (ni la resolución de correlativas 17056/2025): no se infiere. Registrada en `relevamiento/planes_sin_cargar.json`.
+- Pendiente UNT: Programador Universitario e Ing. en Computación (FACET, sin leer), resto de ingenierías, Derecho, Psicología, Artes, Educación Física; Contador Público (escaneo ruidoso).
+- Tests: 932 OK. Sin credenciales de producción ni de GitHub.
