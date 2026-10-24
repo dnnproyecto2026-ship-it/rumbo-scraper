@@ -30,6 +30,17 @@ class VerificacionTest(unittest.TestCase):
     def test_una_palabra_partida_al_final_del_renglon_se_une(self):
         self.assertTrue(v.dice(v.plano("Química de los Alimen- tos"), "Química de los Alimentos"))
 
+    def test_un_nombre_cortado_por_el_fin_de_pagina_se_une(self):
+        # UNTREF's annex of the RM 1134/20: the row's name runs on to page 2.
+        fuente = v.plano("Seminario de Investigación Geografía IF-2020-36779914-APN-DNGYFU#MECCYT Página 1 de 2 "
+                         "Carga Carga Modalidad Cod Asignatura Régimen Horaria Correlativas Obs 167 Integrada "
+                         "Cuatrimestral 8 128 Urbana")
+        self.assertTrue(v.dice(fuente, "Seminario de Investigación Integrada"))
+        self.assertFalse(v.dice(fuente, "Seminario de Investigación Cuantitativa"))
+        # Without a page's end between them, the two parts are not one name.
+        self.assertFalse(v.dice(v.plano("Seminario de Investigación Geografía 167 Integrada"),
+                                "Seminario de Investigación Integrada"))
+
     def test_el_texto_incluye_los_datos_de_los_scripts(self):
         html = ('<html><body><h1>Plan</h1><script>{"materia":"Introducci\\u00f3n a la '
                 'Programaci\\u00f3n"}</script></body></html>')

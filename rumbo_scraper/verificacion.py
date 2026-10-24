@@ -149,7 +149,7 @@ def dice(fuente_plana: str, nombre: str | None) -> bool:
     fuente = f" {fuente_plana} "
     if any(f" {forma} " in fuente for forma in formas):
         return True
-    return _dice_con_cortes(fuente, nombre)
+    return _dice_con_cortes(fuente, nombre) or _dice_entre_paginas(fuente, nombre)
 
 
 # A long name read by OCR or from a PDF with cuts inside its words ("dela",
@@ -165,6 +165,26 @@ def _dice_con_cortes(fuente: str, nombre: str) -> bool:
         return False
     patron = " ?".join("[il1]" if letra in "i1" else re.escape(letra) for letra in letras)
     return re.search(rf"(?<![a-z0-9]){patron}(?![a-z0-9])", fuente) is not None
+
+
+# A table row cut by the page's end: the name's head is the last thing the
+# page prints, a few cells before its footer ("Pagina 1 de 2"), and its tail
+# the first cell after the next page's header ("Seminario de Investigacion" /
+# "167 Integrada", UNTREF's annex of the RM 1134/20).
+_PAGINA = r"pagina \d+ de \d+"
+
+
+def _dice_entre_paginas(fuente: str, nombre: str) -> bool:
+    palabras = nombre.split()
+    if len(re.sub(r"[^a-z0-9]", "", nombre)) < _MIN_LETRAS_CON_CORTES:
+        return False
+    for corte in range(1, len(palabras)):
+        cabeza, cola = " ".join(palabras[:corte]), " ".join(palabras[corte:])
+        if len(cola.split()[0]) < 4 or cola.split()[0] in _VACIAS:
+            continue
+        if re.search(rf" {re.escape(cabeza)} (?:\S+ ){{0,12}}{_PAGINA} (?:\S+ ){{0,25}}{re.escape(cola)} ", fuente):
+            return True
+    return False
 
 
 _VACIAS = frozenset(

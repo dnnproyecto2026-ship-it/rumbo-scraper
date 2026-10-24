@@ -592,3 +592,11 @@
 - Tests: 919 OK. Cadena exportar → verificar USAL (ofertas 142/142) → exportar completa (`Archivo: data/catalogo_depurado.json`).
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: Geografía (Compl.) de UNTREF (el verificador tiene que unir un renglón cortado por el pie de página); UNAHUR Viverismo.
+
+## 2026-10-24 (74) — UNTREF: Lic. Geografía (Complementación), 15 materias
+- `verificacion.dice` ahora encuentra un nombre que el fin de página corta en dos: la cabeza unas palabras antes del pie ("Página 1 de 2") y la cola enseguida después de la cabecera de la página siguiente ("Seminario de Investigación" / "167 Integrada"). Solo para nombres de 15 letras o más, y con un pie de página entre las dos partes. Prueba nueva en `tests/test_verificacion.py`.
+- `planes_manuales` toma "(Complementación)" en el nombre de la carrera como ciclo, igual que "(CCC)". El anexo de la RM 1134/20 la llama "ciclo de complementación curricular". Prueba en `tests/test_planes_manuales.py`.
+- Cargada con `planes_manuales data/planes_untref_ccc.csv --apply`: 15 materias. Años: cuatrimestres 1.º–2.º → 1.º, 3.º–4.º → 2.º. Leídas de vuelta de la base y cotejadas con la tabla del anexo. Afuera: Idioma Extranjero I y TFA (otros requisitos) y Trabajo Final (5.º cuatrimestre).
+- Tests: 920 OK. Cadena exportar → verificar UNTREF → exportar completa (`Archivo: data/catalogo_depurado.json`). La carrera no sale en el catálogo exportado porque el exportador deja afuera los ciclos (`_UN_CICLO`), igual que las CCC del ciclo 68. Queda en la base del scraper.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UNAHUR Viverismo / Periurbana / Agronómica (ningún lector los toma); UCASAL (registrar el motivo de cada carrera).
