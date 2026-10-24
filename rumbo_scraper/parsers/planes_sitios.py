@@ -5896,7 +5896,9 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
     follow ("(*) Asignaturas optativas") or another bold heading once the
     subjects began ("Temáticas ofrecidas para el seminario optativo") end
     it; an optional subject ("(optativa)") is a choice, and the alternative
-    formative paths (TFA) are activities, not subjects."""
+    formative paths (TFA) are activities, not subjects. A block with no
+    dash nor list (Instrumentación Quirúrgica's) has a paragraph per
+    subject under each term, up to "OTROS REQUERIMIENTOS"."""
     soup = BeautifulSoup(html or "", "html.parser")
     bloque = next((g for g in soup.select("div.carreras-grid")
                    if re.match(r"(?i)plan de estudios?$", _texto(g.select_one(".carreras-tit")) or "")), None)
@@ -5910,7 +5912,9 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
             return
         _agregar(materias, re.sub(r"\s*\(\*+\)\s*$", "", nombre), anio)
 
-    for elemento in contenido.find_all(["p", "div", "ul"], recursive=False) if contenido else []:
+    elementos = contenido.find_all(["p", "div", "ul"], recursive=False) if contenido else []
+    sin_guiones = not any(e.name == "ul" or re.match(r"^[-–•]\s", _texto(e) or "") for e in elementos)
+    for elemento in elementos:
         texto = _texto(elemento)
         if elemento.name == "ul":
             for item in elemento.find_all("li"):
@@ -5928,6 +5932,14 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
             anio = anio_de(texto)
             continue
         if re.match(r"^[-–•]\s", texto):
+            agregar(texto)
+            continue
+        if re.match(r"(?i)otros requ(?:isitos|erimientos)\b", texto):
+            break
+        # (A plain paragraph is a subject only in a block of plain paragraphs,
+        # and not a bold heading nor a sentence.)
+        if sin_guiones and anio and not elemento.find(["b", "strong"]) and len(texto) < 120 \
+                and not texto.endswith("."):
             agregar(texto)
             continue
         if materias:
@@ -5949,12 +5961,15 @@ def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
     la" sits as near the row above), so each row takes, in order, the next
     lines whose middle is the row's own; the last row of a page may end on
     its own line, its cell going on over the page, and a page's first rows
-    are of the term the page before ended in. A line no row takes
-    gives nothing. "OTROS REQUISITOS" (the languages, of no term) ends it;
+    are of the term the page before ended in. The lines under a page's last
+    row, one below the other, start the name of the next page's first row
+    ("Seminario de Investigación" / "167 Integrada", Geografía's
+    complementation). Any other line no row takes gives nothing. "OTROS REQUISITOS" (the languages, of no term) ends it;
     choices and the formative paths (TFA) are not subjects."""
     materias: list[tuple[str, int]] = []
-    # (A term goes on over the page.)
+    # (A term goes on over the page, and so may a name.)
     anterior = None
+    arrastre: list[tuple[float, str]] = []
     for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
         palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
                     for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
@@ -5964,15 +5979,22 @@ def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
             continue
         regimen = min(x for x, _ in regimenes)
         lineas: dict[float, list[tuple[float, str]]] = {}
+        enteras: dict[float, list[tuple[float, str]]] = {}
         for x0, y0, x1, y1, t in palabras:
+            enteras.setdefault(round((y0 + y1) / 2, 1), []).append((x0, t))
             # The name's column: left of the term, and not the code ("217/25" / "9").
             if x1 <= regimen + 1 and not (x0 < cabeza - 10 and re.fullmatch(r"[\d/]+", t)):
                 lineas.setdefault(round((y0 + y1) / 2, 1), []).append((x0, t))
+        # A term's heading may run past the names' column (a table without
+        # codes, Resolución de Conflictos'): it is read on its whole line.
+        for y, l in enteras.items():
+            if y in lineas and _CUATRIMESTRE_UNTREF.match(" ".join(t for _, t in sorted(l))):
+                lineas[y] = l
         textos = sorted((y, " ".join(t for _, t in sorted(l))) for y, l in lineas.items())
         fin = next((y for y, t in textos if _FIN_DEL_ANEXO_UNTREF.match(t)), math.inf)
         filas = sorted(y for _, y in regimenes if y < fin)
         if not filas:
-            return materias
+            return [] if arrastre else materias
         titulos, nombres = [], []
         for y, texto in textos:
             cuatrimestre = _CUATRIMESTRE_UNTREF.match(texto)
@@ -5996,17 +6018,21 @@ def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
                 n = next((n for n in range(1, seguidas + 1) if abs(nombres[n - 1][0] - fila) < 1.5), None)
             if n is None:
                 return []
-            tomadas = nombres[:n]
+            tomadas = arrastre + nombres[:n]
+            arrastre = []
             del nombres[:n]
             nombre = " ".join(t for _, t in tomadas)
             if not re.match(r"(?i)trayectos? formativos? alternativos?|seminario electivo", nombre):
                 _agregar(materias, nombre, anio)
+        if nombres and fin == math.inf and nombres[0][0] > filas[-1] + 1.5 \
+                and all(10 < b[0] - a[0] < 13 for a, b in zip(nombres, nombres[1:])):
+            arrastre, nombres = nombres, []
         if nombres:
             return []
         if fin < math.inf:
             break
         anterior = titulos[-1][1] if titulos else anterior
-    return materias
+    return [] if arrastre else materias
 
 
 plan_untref_anexo.cajas = True  # type: ignore[attr-defined]

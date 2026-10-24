@@ -274,6 +274,18 @@ class PlanUntrefTests(unittest.TestCase):
                 '<p><strong>Temáticas ofrecidas</strong></p><p>- Etnografía</p></div></div></div></div>')
         self.assertEqual(plan_untref(html), [("Gramática I", 1), ("Gramática II", 2)])
 
+    def test_parrafos_sin_guion(self) -> None:
+        # Instrumentación Quirúrgica's: a paragraph per subject, no dash; the
+        # requirements of no term close it.
+        from rumbo_scraper.parsers.planes_sitios import plan_untref
+        html = ('<div class="carreras-grid"><div class="carreras-tit"><p><strong>Plan de estudios</strong></p></div>'
+                '<div class="col"><div class="block"><div class="content-block">'
+                '<p><b>PRIMER CUATRIMESTRE</b></p><p>Metodología de la Investigación</p><p><br/></p>'
+                '<p><b>TERCER CUATRIMESTRE</b></p><p>Salud Comunitaria</p><p>Taller de Tesis I</p>'
+                '<p>OTROS REQUERIMIENTOS</p><p>Inglés I</p></div></div></div></div>')
+        self.assertEqual(plan_untref(html), [("Metodología de la Investigación", 1), ("Salud Comunitaria", 2),
+                                             ("Taller de Tesis I", 2)])
+
     def test_resolucion_de_conflictos_es_materia(self) -> None:
         # "Resolución CS 12/20" is the plan's act; "Resolución de Conflictos
         # Institucionales" (Lic. en Gestión Educativa) a subject.
@@ -336,6 +348,25 @@ class PlanUntrefAnexoTests(unittest.TestCase):
             (108, 210.2, "OTROS"), (146, 210.2, "REQUISITOS"))
         self.assertEqual(plan_untref_anexo(primera + segunda),
                          [("Asignatura UNAHUR", 3), ("Proyecto integrador", 3)])
+
+    def test_un_nombre_que_sigue_en_la_pagina_siguiente(self) -> None:
+        # UNTREF's Geografía (complementation): "Seminario de Investigación"
+        # under the page's last row, its code and "Integrada" over the page.
+        from rumbo_scraper.parsers.planes_sitios import plan_untref_anexo
+        primera = self._pagina(
+            (111, 331.8, "COD"), (163, 331.8, "ASIGNATURA"),
+            (107, 667.8, "CUARTO"), (150, 667.8, "CUATRIMESTRE"),
+            (111, 690.5, "686"), (160, 690.5, "Teledetección"), (248, 690.5, "Cuatrimestral"),
+            (140, 735, "Seminario"), (198, 735, "de"), (160, 746.5, "Investigación"))
+        segunda = self._pagina(
+            (111, 169, "COD"), (163, 169, "ASIGNATURA"),
+            (111, 187.5, "167"), (165, 187.5, "Integrada"), (248, 187.5, "Cuatrimestral"),
+            (107, 210.2, "OTROS"), (150, 210.2, "REQUISITOS"),
+            (152, 227.2, "Idioma"), (248, 227.2, "Cuatrimestral"))
+        self.assertEqual(plan_untref_anexo(primera + segunda),
+                         [("Teledetección", 2), ("Seminario de Investigación Integrada", 2)])
+        # Without a page to go on, the line is no row's.
+        self.assertEqual(plan_untref_anexo(primera), [])
 
 
 class PlanUnoCodigosTests(unittest.TestCase):
