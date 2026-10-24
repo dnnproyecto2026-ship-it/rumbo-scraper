@@ -762,3 +762,8 @@
 - Lista de UNR sin materias y sin motivo, sacada de la base del scraper: quedaban 19. Registré en `relevamiento/planes_sin_cargar.json` las 11 con motivo ya comprobado en bitácoras 23, 26, 33, 36 y 38: FCEIA (Civil, Mecánica, Eléctrica, Industrial, Agrimensura, Lic. Matemática, Lic. Física: PDF escaneado; Lic. Computación: PDF legible es del plan 2010, el vigente es 2024 escaneado), Lic. Química (dos planes sin saber cuál rige), Fonoaudiología (plan solo en Drive), Lic. y Prof. en Interpretación (nombres genéricos de lista vieja).
 - Sin datos nuevos en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente UNR sin motivo (8): Prof. Matemática, Prof. Física, Prof. Psicología, Prof. en Derecho, Notariado, Corretaje Inmobiliario, Tec. Univ. en Administración de Empresas (revisar sus páginas); después UNLZ/UNAJ o vigilancia.
+
+## 2026-10-24 (94) — UNR cerrada: las últimas 7 ofertas con su motivo registrado
+- Las 7 que quedaban sin materias y sin motivo, leídas hoy de sus páginas: Prof. Matemática (Plan 2018, Res. CD 933/17), Prof. Física (Res. CS 306/2015), Prof. Psicología (Plan-profesorado.pdf) y Tec. Adm. de Empresas (programas por año del Campus Virtual): PDF escaneado sin texto. Notariado es de la Escuela de Graduados (posgrado) y Corretaje Inmobiliario y Prof. en Derecho no tienen plan publicado. Motivos en `relevamiento/planes_sin_cargar.json`.
+- Sin datos nuevos en la base: sin exportación. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- UNR queda cerrada (cada oferta sin plan tiene su razón). Siguiente: UNLP Exactas (reintentar) y Psicología Prof./Agrarias (escaneos), después UNT/UNSJ/UNCuyo/UADER o vigilancia.

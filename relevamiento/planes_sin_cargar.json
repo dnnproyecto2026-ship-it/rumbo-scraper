@@ -1718,5 +1718,75 @@
    "https://fhumyar.unr.edu.ar/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Notariado",
+  "carrera_id": "bf07d5ed-9d89-4cfd-b94d-458ceae06f19",
+  "motivo": "Es una carrera de la Escuela de Graduados (posgrado, Res. Ministerio 151/96): la página solo trae inscripción y requisitos, sin plan de estudios publicado.",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-de-graduados/carreras_posgrado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Corretaje Inmobiliario",
+  "carrera_id": "2d4ea6d6-ac31-4a00-adf9-2e12e71a675d",
+  "motivo": "La página de la facultad solo trae las fechas y pasos de ingreso; el plan de estudios no está publicado (solo el reglamento de cursado, CD 448/2023).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/portfolio-item/ingreso-2024-corretaje-inmobiliario/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Derecho",
+  "carrera_id": "8a7a1ebb-dd7d-4563-8c2f-30f5303d8c6a",
+  "motivo": "La página de Carreras de Grado de la facultad no publica un plan para este profesorado; solo está listado en el índice de profesorados de la UNR.",
+  "documentos": [
+   "https://unr.edu.ar/profesorados-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Matemática",
+  "carrera_id": "25020378-f829-4aa2-a806-d6041a2c10f1",
+  "motivo": "El plan vigente (Plan 2018, Res. CD 933/17) está en un PDF escaneado sin texto; el texto legible de la resolución no trae las materias: no se carga.",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/es/profesorado-de-matem%C3%A1tica.html"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Física",
+  "carrera_id": "beed7494-9071-499f-ae0d-eab76ba27376",
+  "motivo": "El plan (Res. CS 306/2015) es un PDF escaneado sin texto: no se carga.",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/es/profesorado-en-f%C3%ADsica.html"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Psicología",
+  "carrera_id": "d722aad0-a4cf-4569-bab3-d5785a3c23b6",
+  "motivo": "El plan (Plan-profesorado.pdf, 33 páginas) es un PDF escaneado sin texto: no se carga.",
+  "documentos": [
+   "https://fpsico.unr.edu.ar/carreras/profesorado-en-psicologia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Administración de Empresas",
+  "carrera_id": "c2f248a0-b0e2-4d9e-8aa7-a92d971291c5",
+  "motivo": "El Campus Virtual solo publica un programa por año en PDF escaneado sin texto (tercer año en dos orientaciones, uno de ellos con el archivo dañado): no hay lista de materias legible.",
+  "documentos": [
+   "https://www.campusvirtualunr.edu.ar/oferta_academica/tecnicaturas/tecnicatura_administracion_empresas.html"
+  ],
+  "revisado": "2026-10-24"
  }
 ]
