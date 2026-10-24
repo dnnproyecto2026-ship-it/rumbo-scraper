@@ -416,6 +416,8 @@ _DOCUMENTOS_PROPIOS += (("unsada.edu.ar", planes_sitios.plan_unsada),)
 _DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 # UNTREF's career pages: the "Plan de estudios" block, by year or by term.
 _PLANES_EN_LA_PAGINA += (("untref.edu.ar", planes_sitios.plan_untref),)
+# Its "Programas para descargar": the Ministry's annex, each name centred on its row.
+_DOCUMENTOS_PROPIOS += (("untref.edu.ar", planes_sitios.plan_untref_anexo),)
 # UNLP Veterinarias' plan sheet: rows "Obligatoria Cuatrimestral 70 horas" under each year.
 _DOCUMENTOS_PROPIOS += (("fcv.unlp.edu.ar", planes_sitios.plan_fcv_unlp),)
 _PLANES_SIN_SU_NOMBRE = ("fcv.unlp.edu.ar",)

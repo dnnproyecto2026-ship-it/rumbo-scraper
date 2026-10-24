@@ -274,6 +274,54 @@ class PlanUntrefTests(unittest.TestCase):
                 '<p><strong>Temáticas ofrecidas</strong></p><p>- Etnografía</p></div></div></div></div>')
         self.assertEqual(plan_untref(html), [("Gramática I", 1), ("Gramática II", 2)])
 
+    def test_resolucion_de_conflictos_es_materia(self) -> None:
+        # "Resolución CS 12/20" is the plan's act; "Resolución de Conflictos
+        # Institucionales" (Lic. en Gestión Educativa) a subject.
+        from rumbo_scraper.parsers.planes_sitios import _NO_ES_MATERIA
+        self.assertTrue(_NO_ES_MATERIA.search("Resolución CS 12/20"))
+        self.assertFalse(_NO_ES_MATERIA.search("Resolución de Conflictos Institucionales"))
+
+
+class PlanUntrefAnexoTests(unittest.TestCase):
+    @staticmethod
+    def _pagina(*palabras: tuple[float, float, str]) -> str:
+        # (left edge, middle of its line, word): a word 8 points high.
+        return "<page>" + "".join(
+            f'<word xMin="{x}" yMin="{y - 4}" xMax="{x + 6 * len(t)}" yMax="{y + 4}">{t}</word>'
+            for x, y, t in palabras) + "</page>"
+
+    def test_cada_fila_toma_los_renglones_centrados_en_ella(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_untref_anexo
+        primera = self._pagina(
+            (111, 230, "COD"), (163, 230, "ASIGNATURA"), (256, 230, "REGIMEN"),
+            (107, 260, "PRIMER"), (150, 260, "CUATRIMESTRE"),
+            (165, 271.2, "Geografía"), (248, 271.2, "Cuatrimestral"),
+            # "Introducción a la" is as near this row as the next: it is the next's.
+            (157, 282.5, "Introducción"), (230, 282.5, "a"), (237, 282.5, "la"),
+            (111, 293.8, "592"), (141, 293.8, "Problemática"), (248, 293.8, "Cuatrimestral"),
+            (157, 305.1, "Contemporáneo"),
+            (107, 320, "TERCER"), (150, 320, "CUATRIMESTRE"),
+            (140, 330, "Sistemas"), (111, 335.6, "164"), (248, 335.6, "Cuatrimestral"), (165, 341.3, "Geográfica"),
+            # The page ends inside this row's cell.
+            (135, 360, "Didáctica"), (111, 371.3, "1548"), (168, 371.3, "Curriculum"),
+            (248, 371.3, "Cuatrimestral"), (400, 371.3, "Ciencias"))
+        segunda = self._pagina(
+            (111, 169, "COD"), (163, 169, "ASIGNATURA"), (400, 183, "Sociales"),
+            (140, 204.5, "Prácticas"), (111, 210.2, "1547"), (248, 210.2, "Cuatrimestral"), (155, 215.8, "II"),
+            (107, 244, "OTROS"), (150, 244, "REQUISITOS"),
+            (152, 261, "Idioma"), (248, 261, "Cuatrimestral"))
+        self.assertEqual(plan_untref_anexo(primera + segunda), [
+            ("Geografía", 1), ("Introducción a la Problemática Contemporáneo", 1),
+            ("Sistemas Geográfica", 2), ("Didáctica Curriculum", 2), ("Prácticas II", 2)])
+
+    def test_un_renglon_que_no_cierra_no_da_nada(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_untref_anexo
+        pagina = self._pagina(
+            (163, 230, "ASIGNATURA"), (107, 260, "PRIMER"), (150, 260, "CUATRIMESTRE"),
+            (165, 271.2, "Geografía"), (248, 271.2, "Cuatrimestral"), (165, 277, "Suelta"),
+            (165, 300, "Cartografía"), (248, 300, "Cuatrimestral"))
+        self.assertEqual(plan_untref_anexo(pagina), [])
+
 
 class PlanUnahurTablaTests(unittest.TestCase):
     def test_nombre_centrado_en_su_fila(self) -> None:

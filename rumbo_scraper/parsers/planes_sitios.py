@@ -20,6 +20,7 @@ import math
 import re
 import unicodedata
 from collections import Counter
+from html import unescape
 
 from bs4 import BeautifulSoup, Tag
 
@@ -33,7 +34,7 @@ _ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*\.?\s*(?:er|ro|do|to|vo|mo|[°ºo])?\
 # Not subjects: an elective's slot, a heading that ends in a colon.
 _NO_ES_MATERIA = re.compile(
     r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
-    r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
+    r"|:$|^resoluci[óo]n(?!\s+de\s+(?:conflictos|problemas))|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
     # A row's kind alone (Barceló's "Práctica", "Seminario", "Taller" column).
     r"|^(?:pr[áa]ctica|seminario|taller)$"
     # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
@@ -5710,6 +5711,82 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
         if materias:
             break
     return materias
+
+
+_PALABRA_CON_CAJA = re.compile(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]+)</word>')
+_FIN_DEL_ANEXO_UNTREF = re.compile(r"(?i)^(?:otros requisitos|observaciones)\b")
+
+
+def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
+    """UNTREF's plans as the Ministry's annex prints them (``-bbox-layout``):
+    a table "COD  ASIGNATURA  REGIMEN ..." under "PRIMER CUATRIMESTRE" ...
+    headings, each row's name centred on its row and wrapped over as many
+    lines as it needs, above and below the line of its code and its
+    "Cuatrimestral" ("Introducción a la" / "592 Problemática del Mundo" /
+    "Contemporáneo"). Nearness cannot tell whose a line is ("Introducción a
+    la" sits as near the row above), so each row takes, in order, the next
+    lines whose middle is the row's own; the last row of a page may end on
+    its own line, its cell going on over the page, and a page's first rows
+    are of the term the page before ended in. A line no row takes
+    gives nothing. "OTROS REQUISITOS" (the languages, of no term) ends it;
+    choices and the formative paths (TFA) are not subjects."""
+    materias: list[tuple[str, int]] = []
+    # (A term goes on over the page.)
+    anterior = None
+    for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
+        palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
+                    for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
+        cabeza = next((x0 for x0, _, _, _, t in palabras if t == "ASIGNATURA"), None)
+        regimenes = [(x0, (y0 + y1) / 2) for x0, y0, _, y1, t in palabras if t in ("Cuatrimestral", "Anual")]
+        if cabeza is None or not regimenes:
+            continue
+        regimen = min(x for x, _ in regimenes)
+        lineas: dict[float, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            # The name's column: left of the term, and not the code ("217/25" / "9").
+            if x1 <= regimen + 1 and not (x0 < cabeza - 10 and re.fullmatch(r"[\d/]+", t)):
+                lineas.setdefault(round((y0 + y1) / 2, 1), []).append((x0, t))
+        textos = sorted((y, " ".join(t for _, t in sorted(l))) for y, l in lineas.items())
+        fin = next((y for y, t in textos if _FIN_DEL_ANEXO_UNTREF.match(t)), math.inf)
+        filas = sorted(y for _, y in regimenes if y < fin)
+        if not filas:
+            return materias
+        titulos, nombres = [], []
+        for y, texto in textos:
+            cuatrimestre = _CUATRIMESTRE_UNTREF.match(texto)
+            if cuatrimestre:
+                titulos.append((y, (_NUMERO_DEL_CUATRIMESTRE[cuatrimestre.group(1).lower()] + 1) // 2))
+            # (The header above the first row, and the degree a part leads to.)
+            elif filas[0] - 30 < y < fin and not re.match(r"(?i)t[íi]tulos?:|carga horaria", texto):
+                nombres.append((y, texto))
+        for fila in filas:
+            anio = next((a for y, a in reversed(titulos) if y < fila), anterior)
+            if anio is None:
+                return []
+            # Lines one below the other, from the first not taken.
+            seguidas = 1
+            while seguidas < len(nombres) and 10 < nombres[seguidas][0] - nombres[seguidas - 1][0] < 13:
+                seguidas += 1
+            n = next((n for n in range(1, seguidas + 1)
+                      if abs(sum(y for y, _ in nombres[:n]) / n - fila) < 1.5), None) if nombres else None
+            if n is None and nombres and fila == filas[-1]:
+                n = next((n for n in range(1, seguidas + 1) if abs(nombres[n - 1][0] - fila) < 1.5), None)
+            if n is None:
+                return []
+            tomadas = nombres[:n]
+            del nombres[:n]
+            nombre = " ".join(t for _, t in tomadas)
+            if not re.match(r"(?i)trayectos? formativos? alternativos?|seminario electivo", nombre):
+                _agregar(materias, nombre, anio)
+        if nombres:
+            return []
+        if fin < math.inf:
+            break
+        anterior = titulos[-1][1] if titulos else anterior
+    return materias
+
+
+plan_untref_anexo.cajas = True  # type: ignore[attr-defined]
 
 
 _FILA_FCV = re.compile(r"^(?P<antes>.*?)\s{2,}(?:Obligatoria|Optativa)\s+(?:Cuatrimestral|Anual|Bimestral)\s+\d+\s*horas")
