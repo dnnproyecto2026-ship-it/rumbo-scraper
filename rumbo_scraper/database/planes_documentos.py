@@ -359,7 +359,7 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
                        # UNPAZ's career brochures: a table per year.
                        ("unpaz.edu.ar", planes_sitios.plan_unpaz),
-                       ("uno.edu.ar", planes_sitios.plan_uno),
+                       ("uno.edu.ar", planes_sitios.plan_uno_todos),
                        # UNRC Económicas: the current plans' PDFs (its pages list the old ones).
                        ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc),
                        # Mendoza's IUCE and IUAS: their career brochures.

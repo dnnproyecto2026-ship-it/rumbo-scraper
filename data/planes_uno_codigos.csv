@@ -1,0 +1,272 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNO;Abogacía;5;;;https://www.uno.edu.ar/images/contenidos/Abogacia-Plan%20de%20Estudios.pdf;"1 | Introducción al Derecho
+1 | Derecho Constitucional
+1 | Derecho Político
+1 | Historia del Derecho
+1 | Análisis y Producción del Discurso
+1 | Derecho Civil I Parte general
+1 | Pensamiento Nacional y Latinoamericano Siglos XIX – XX
+1 | Economía Política
+1 | Problemática Regional
+2 | Derecho Penal I Parte General
+2 | Derecho Administrativo I
+2 | Derecho Civil II Obligaciones
+2 | Derecho Comercial I
+2 | Universidad, Ciencia y Sociedad
+2 | Acceso a la Justicia y a los Derechos en Contexto de Vulnerabilidad
+2 | Filosofía del Derecho
+2 | Métodos de Resolución de Conflictos
+2 | Derecho del Trabajo y la Seguridad Social
+3 | Derecho Comercial II
+3 | Derecho Civil III Contratos
+3 | Derecho Penal Especial
+3 | Derecho Financiero y Tributario
+3 | Derecho Administrativo II
+3 | Derecho Público, Provincial y Municipal
+3 | Derecho Procesal Laboral
+3 | Derecho Procesal Penal
+3 | Derecho Civil IV Reales
+4 | Derecho Internacional Público
+4 | Derecho Procesal Civil
+4 | Práctica Profesional Supervisada I
+4 | Análisis Jurisprudencial Argentino y Comparado
+4 | Derecho Civil V Familia y Sucesiones
+4 | Derecho Ambiental de los Recursos Naturales
+4 | Práctica Profesional Supervisada II
+5 | Ética Profesional
+5 | Metodología de la Investigación
+5 | Derecho Internacional Privado
+5 | Derecho del Usuario y del Consumidor
+5 | Práctica Profesional Supervisada III
+5 | Derecho de la Navegación, Marítimo, Fluvial y Aéreo
+5 | Sociología Jurídica
+5 | Derecho Notarial y Registral
+5 | Derechos Humanos y Garantías
+5 | Práctica Profesional Supervisada IV";lector plan_uno_codigos;;"3 páginas, 47 asignaturas numeradas por año (1.º–5.º); afuera Electiva, Optativa I y II";Universidad Nacional del Oeste;695bb7e3-6491-4048-a939-414191a36bd6
+UNO;Tecnicatura Universitaria en Acompañamiento Terapéutico;3;;;https://www.uno.edu.ar/images/documentos/escuelas/Acomp%20Terapeutico%20-%20Plan%20de%20Estudios.pdf;"1 | Acompañamiento Terapéutico: Historia y Campo de Acción
+1 | Bioética y Marco Jurídico
+1 | Análisis y Producción del Discurso
+1 | Fundamentos de la Psicología
+1 | Discapacidad I
+1 | Teoría de Grupo e Intervención Comunitaria
+2 | Atención del Niño y del Adolescente
+2 | Salud Mental
+2 | Discapacidad II
+2 | Psicología del Desarrollo Integral
+2 | Trastornos Cognitivos
+2 | Problemática Regional
+2 | PPS I - Técnicas de Acompañamiento Integral I
+3 | Atención del Adulto y del Anciano
+3 | Universidad, Ciencia y Sociedad
+3 | Cuidados Paliativos
+3 | Familia y Discapacidad
+3 | PPS II - Técnicas de Acompañamiento Integral II";lector plan_uno_codigos;;"21 asignaturas con código, 1.º–3.º año; afuera Electiva, Optativa I y II; certificación interna de Diplomado no es materia";Universidad Nacional del Oeste;2cb56ee2-efab-405e-9c15-8abc84156789
+UNO;Ingeniería Ambiental;5;;;https://www.uno.edu.ar/images/documentos/escuelas/Ing.%20Ambiental%20-Plan%20de%20Estudios%202026.pdf;"1 | Análisis y Producción del Discurso
+1 | Análisis Matemático I
+1 | Universidad, Ciencia y Sociedad
+1 | Problemática Regional
+1 | Química General para Ingenieros
+1 | Álgebra y Geometría Analítica
+1 | Física I
+2 | Fundamentos de Informática B
+2 | Química Inorgánica para Ingenieros
+2 | Análisis Matemático II
+2 | Sistemas de Representación B
+2 | Física II
+2 | Termodinámica de Procesos
+2 | Fundamentos de Química Orgánica
+3 | Fenómenos de Transporte
+3 | Balances de Masa y Energía
+3 | Cálculo Numérico
+3 | Fisicoquímica B
+3 | Operaciones Unitarias I
+3 | Química Analítica Instrumental
+3 | Seguridad en el Trabajo y Gestión Ambiental
+3 | Probabilidad y Control Estadístico de Procesos
+4 | Operaciones Unitarias II
+4 | Toxicología Ambiental
+4 | Ecología y Química Ambiental
+4 | Hidrología e Hidráulica aplicadas
+4 | Geología, Geomorfología y Suelos
+4 | Contaminación Atmosférica
+4 | Contaminación de suelos
+4 | Microbiología y Biotecnología
+4 | Residuos Sólidos
+5 | Proyecto Final de Ingeniería Ambiental A
+5 | Organización Industrial
+5 | Economía
+5 | Principios de Ingeniería Sanitaria
+5 | Gestión y Evaluación Ambiental
+5 | Proyecto Final de Ingeniería Ambiental B
+5 | Legislación y Ejercicio Profesional de la Ingeniería
+5 | Evaluación de Proyectos
+5 | Optativa A
+5 | Optativa B
+5 | Práctica Profesional Supervisada (Res. CS 42/2014)";lector plan_uno_codigos;;"Plan 2026, 43 asignaturas numeradas; afuera Electiva, Optativa A y B; la capa 'CICLO INICIAL Hs 2432' superpuesta no es materia";Universidad Nacional del Oeste;9d112d01-0b3d-4f50-891a-78d8eb988f6a
+UNO;Ingeniería en Energía;5;;;https://www.uno.edu.ar/images/documentos/escuelas/Ing.%20en%20Energia%20-%20Plan%20de%20Estudios_2026.pdf;"1 | Análisis y Producción del Discurso
+1 | Análisis Matemático I
+1 | Universidad, Ciencia y Sociedad
+1 | Problemática Regional
+1 | Química General para Ingenieros
+1 | Álgebra y Geometría Analítica
+1 | Física I
+2 | Fundamentos de Informática B
+2 | Química Inorgánica para Ingenieros
+2 | Análisis Matemático II
+2 | Sistemas de Representación B
+2 | Física II
+2 | Termodinámica de Procesos
+2 | Fundamentos de Química Orgánica
+3 | Fenómenos de Transporte
+3 | Balances de Masa y Energía
+3 | Química Analítica Instrumental
+3 | Operaciones Unitarias I
+3 | Operaciones Unitarias II
+3 | Seguridad en el Trabajo y Gestión Ambiental
+3 | Probabilidad y Control Estadístico de Procesos
+4 | Cálculo Numérico
+4 | Exploración y Producción Petrolera - (Upstream)
+4 | Análisis Matemático III
+4 | Electrotecnia y Máquinas Eléctricas
+4 | Generación Eléctrica
+4 | Transporte y Distribucción de Energía Eléctrica
+4 | Instalaciones de superficie y refinación - (Downstream)
+4 | Energías Renovables A
+4 | Energías Renovables B
+5 | Proyecto Final de Ingeniería en Energía A
+5 | Recursos Energéticos, Ambiente y Eficiencia
+5 | Legislación y Ejercicio Profesional de la Ingeniería
+5 | Economía
+5 | Transporte y Distribución de Combustibles
+5 | Proyecto Final de Ingeniería en Energía B
+5 | Evaluación de Proyecto
+5 | Legislación y Planeamiento Energético
+5 | Optativa A
+5 | Optativa B
+5 | Práctica Profesional Supervisada";lector plan_uno_codigos;;"Plan 2026, 42 asignaturas numeradas; afuera Electiva, Optativa A y B; 'Distribucción' como lo escribe el plan";Universidad Nacional del Oeste;a1ee6cb3-ed96-4f87-81e4-8fd306ae8b97
+UNO;Profesorado Universitario en Informática;4;;;https://www.uno.edu.ar/images/documentos/escuelas/Prof.Informatica%20-%20actualizado.pdf;"1 | Análisis y Producción del Discurso
+1 | Herramientas Informáticas I
+1 | Pedagogía General
+1 | Seminario de Problemática Regional
+1 | Introducción a la Informática
+1 | Didáctica General
+1 | Álgebra y Geometría Analítica
+1 | Matemática Discreta
+1 | Didáctica de la Informática I
+1 | Psicología Educacional
+1 | Práctica Profesional Supervisada I
+2 | Historia de la Educación Argentina y Latinoamericana
+2 | Arquitectura de Computadores I
+2 | Las Instituciones Educativas: Perspectivas Teóricas para su Análisis
+2 | Teoría de Sistemas y Organizaciones
+2 | Seminario de Universidad, Ciencia y Sociedad
+2 | Filosofía Social de la Educación
+2 | Algoritmos y Estructura de Datos
+2 | Comunicación y Redes I
+2 | Práctica Profesional Supervisada II
+3 | Didáctica de la Informática II
+3 | Ingeniería de Software I
+3 | Programación Web I
+3 | Análisis Matemático I
+3 | Nuevos Escenarios de la Socialización en la Educación Secundaria y Superior
+3 | Probabilidad y Estadística
+3 | Ingeniería de Software II
+3 | Programación con Objetos I
+3 | Sistemas Operativos I
+3 | Práctica Profesional Supervisada III
+4 | Diseño y Evaluación de Proyectos Educativos
+4 | Introducción a los Sistemas Expertos
+4 | Entornos Colaborativos: Groupware
+4 | Metodología de la Investigación
+4 | Comunicación y Redes II
+4 | Entornos Colaborativos de Enseñanza
+4 | Aspectos Legales y Sociales de la Informática
+4 | Taller de ESI
+4 | Ciberseguridad
+4 | Práctica Profesional Supervisada IV";lector plan_uno_codigos;;"41 asignaturas numeradas, 1.º–4.º año; afuera Electiva (*) e Inglés I/II (otros requisitos, sin año)";Universidad Nacional del Oeste;721fe747-ed0c-4226-a2c3-2d01855b12c1
+UNO;Tecnicatura Universitaria en Investigación Criminal;2.5;;;https://www.uno.edu.ar/images/documentos/escuelas/Investigacion%20Criminal%20-%20Plan%20de%20Estudios_.pdf;"1 | Derecho Penal I (Parte General)
+1 | Criminalística I
+1 | Análisis y Producción del Discurso
+1 | Taller de Investigación Criminal I
+1 | Derecho Procesal Penal
+1 | Problemática Regional
+1 | Género, Derecho Penal e Investigación
+2 | Investigación y Derechos Humanos
+2 | Seguridad Pública e Investigación Criminal
+2 | Universidad, Ciencia y Sociedad
+2 | Derecho Penal Especial
+2 | Taller de Investigación Criminal II
+2 | Criminalística II
+2 | Litigación oral
+2 | Criminología
+3 | Clínica de casos
+3 | Investigación en Sistemas Comparados
+3 | Práctica Profesional Supervisada";lector plan_uno_codigos;;"19 asignaturas con código, cuatrimestres 1–5; afuera Electiva (**)";Universidad Nacional del Oeste;d7e9904e-a7e4-4a46-91b9-4997c95db9a3
+UNO;Licenciatura en Informática;5;;;https://www.uno.edu.ar/images/documentos/escuelas/Plan-de-Estudios-Lic-en-Informatica-2022.pdf;"1 | Tecnología Aplicada
+1 | Algebra y Geometría Analítica
+1 | Algoritmo y Estructura de Datos
+1 | Teoría de Sistemas y Organizaciones
+1 | Problemática Regional
+1 | Arquitectura de Computadores I
+1 | Programación con Objetos I
+1 | Análisis y Producción del Discurso
+1 | Matemática Discreta
+2 | Análisis Matemático I
+2 | Programación con Objetos II
+2 | Arquitectura de Computadores II
+2 | Lenguajes Formales
+2 | Universidad, Ciencia y Sociedad
+2 | Ingeniería de Software I
+2 | Probabilidad y Estadística
+2 | Sistemas Operativos I
+2 | Base de Datos I
+2 | Comunicación y Redes I
+3 | Análisis Matemático II
+3 | Base de Datos II
+3 | Comunicación y Redes II
+3 | Ingeniería de Software II
+3 | Interfaces de Usuario y Tecnologías Web
+3 | Programación con Objetos III
+3 | Matemática Aplicada
+3 | Explotación de Datos
+3 | Taller de Redes
+3 | Sistemas Operativos II
+4 | Dirección y Evaluación de Proyectos Informáticos
+4 | Arquitectura de Software
+4 | Modelos, Simulación y Teoría de la Decisión
+4 | Metodología de la Investigación
+4 | Paradigmas de Programación
+4 | Lenguajes de Programación
+4 | Infraestructura de Sistemas
+4 | Desarrollo de Compiladores
+4 | Inteligencia Artificial
+4 | Práctica Profesional
+5 | Aspectos Legales y Sociales de la Informática
+5 | Ingeniería de Software III
+5 | Sistemas de Tiempo Real y Misión Crítica
+5 | Economía I
+5 | Seguridad y Auditoría
+5 | Teoría de la Computación
+5 | Administración y Gestión de las Organizaciones
+5 | Economía II
+5 | Trabajo Final";lector plan_uno_codigos;;"Plan 2022, 51 asignaturas con código, 1.º–5.º año (Analista en Informática al 3.º); afuera Electiva, Optativa I y II";Universidad Nacional del Oeste;e5b9e6f9-44b8-4ddc-984e-bb448a00ba76
+UNO;Licenciatura en Matemática;2;;;https://www.uno.edu.ar/images/documentos/escuelas/Plan-de-Estudios-Matematica.pdf;"1 | Análisis Vectorial
+1 | Seminario Análisis y Producción del Discurso
+1 | Probabilidad y Estadística
+1 | Computacional I
+1 | Álgebra I
+1 | Álgebra II
+1 | Seminario Universidad, Ciencia y Sociedad
+1 | Geometría Diferencial
+1 | Computacional II
+1 | Estadística
+2 | Seminario Problemática Regional
+2 | Análisis de Variable Compleja
+2 | Cálculo Avanzado
+2 | Computacional III
+2 | Metodología de Investigación
+2 | Computacional IV
+2 | Ecuaciones Diferenciales
+2 | Topología
+2 | Análisis Funcional
+2 | Taller Tésis";lector plan_uno;;"Ciclo de 2 años, 20 asignaturas por cuatrimestre (1–4); afuera Trabajo Final (sin cuatrimestre)";Universidad Nacional del Oeste;d387fb1f-2729-4788-9bd9-b4818ac222cc

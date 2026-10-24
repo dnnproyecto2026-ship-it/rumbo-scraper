@@ -338,6 +338,42 @@ class PlanUntrefAnexoTests(unittest.TestCase):
                          [("Asignatura UNAHUR", 3), ("Proyecto integrador", 3)])
 
 
+class PlanUnoCodigosTests(unittest.TestCase):
+    _pagina = staticmethod(PlanUntrefAnexoTests._pagina)
+
+    def _primera(self, *mas: tuple[float, float, str]) -> str:
+        return self._pagina(
+            (300, 280, "1º"), (320, 280, "AÑO"),
+            (30, 300, "CÓDIGO"), (120, 300, "ASIGNATURA"), (220, 300, "SEMANAL"),
+            # The name wraps over and under its code's line.
+            (90, 325, "Acompañamiento"), (30, 329, "03082"), (225, 325, "4"), (90, 333, "Historia"),
+            # Above it.
+            (90, 352, "Bioética"), (30, 355, "02062"), (225, 352, "4"),
+            # Beside it, its first line above.
+            (90, 375, "Teoría"), (30, 383, "03084"), (90, 383, "Comunitaria"), (225, 380, "4"),
+            *mas)
+
+    def test_cada_renglon_es_del_codigo_mas_cercano(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos
+        segunda = self._pagina(
+            (300, 40, "2º"), (320, 40, "AÑO"),
+            (30, 60, "CÓDIGO"), (120, 60, "ASIGNATURA"), (220, 60, "SEMANAL"),
+            (30, 80, "03090"), (90, 80, "Salud"), (130, 80, "Mental"), (225, 80, "4"),
+            # A note under the table is not read.
+            (90, 140, "Correlatividades"))
+        self.assertEqual(plan_uno_codigos(self._primera() + segunda), [
+            ("Acompañamiento Historia", 1), ("Bioética", 1), ("Teoría Comunitaria", 1), ("Salud Mental", 2)])
+
+    def test_una_fila_sin_codigo_no_da_nada(self) -> None:
+        # Redes' "Electiva": it would join the row above.
+        from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos
+        self.assertEqual(plan_uno_codigos(self._primera((90, 398, "Electiva"), (225, 398, "4"))), [])
+
+    def test_un_renglon_entre_dos_filas_no_da_nada(self) -> None:
+        from rumbo_scraper.parsers.planes_sitios import plan_uno_codigos
+        self.assertEqual(plan_uno_codigos(self._primera((90, 342, "Suelta"))), [])
+
+
 class PlanUnahurTablaTests(unittest.TestCase):
     def test_nombre_centrado_en_su_fila(self) -> None:
         from rumbo_scraper.parsers.planes_sitios import plan_unahur_tabla

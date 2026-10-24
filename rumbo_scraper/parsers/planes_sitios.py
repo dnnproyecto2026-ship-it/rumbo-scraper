@@ -3353,6 +3353,131 @@ def plan_uno(ruta: str) -> list[tuple[str, int]]:
 plan_uno.ruta = True
 
 
+# "1º AÑO", "Primer Año -Ciclo Inicial-", "CICLO I - 1º AÑO": a year's heading, a line of its own.
+_ANIO_UNO = re.compile(r"(?i)^(?:ciclo [\wíé ]+?\s*[-–]\s*)?(?:(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o"
+                       r"|(\d)\s*[º°]\s*a[ñn]o)(?:\s*-\s*ciclo [\wíé]+\s*-)?$")
+# A row's code: "02069", "02-001", "02 001", "-----------" (an elective's).
+_CODIGO_UNO = re.compile(r"\d{4,5}|\d{2}-\d{2,3}|-{3,}")
+# Lines in the name's column that are not a subject's: the year's hours, the
+# intermediate title ("Título obtenido: ANALISTA ..."), a layer laid over
+# the table ("CICLO INICIAL  Hs  2432").
+_NO_ES_FILA_UNO = re.compile(r"(?i)^(?:sub)?total\b|^horas totales$|^certificaci[óo]n\b|^plan de estudios$|^t[íi]tulo\b"
+                             r"|carga horaria total|^ciclo inicial$|^obtenido:|^[\d\s*°º/–-]+$|^c$")
+
+
+def plan_uno_codigos(cajas: str) -> list[tuple[str, int]]:
+    """UNO's plan PDFs whose table has a code per row (``-bbox-layout``):
+    "CÓDIGO  ASIGNATURA" (or "MATERIA") under "1º AÑO" / "Primer Año"
+    headings. A name too long for its cell wraps above, beside and below its
+    code's line ("Teoría de Grupo e Intervención" / "03084 Comunitaria";
+    "Acceso a la Justicia y a los Derechos" / "02080" / "en Contexto de
+    Vulnerabilidad"), so each line of the name's column is the nearest
+    code's; a line about as near two codes, or far from all of them inside
+    the table, gives nothing. The column right of the names has one value per
+    row (its "c", "1°" or hours): a row without its code (Redes' "Electiva")
+    would join the row above, so a count that differs gives nothing. Notes
+    above or below the table are not read."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
+        palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
+                    for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
+        renglones: dict[int, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            renglones.setdefault(round((y0 + y1) / 2), []).append((x0, t))
+        titulos = []
+        for y, renglon in sorted(renglones.items()):
+            titulo = _ANIO_UNO.match(" ".join(t for _, t in sorted(renglon)))
+            if titulo:
+                titulos.append((y, _ORDINALES[titulo.group(1).lower()] if titulo.group(1) else int(titulo.group(2))))
+        cabeza = next(((x0, x1, (y0 + y1) / 2) for x0, y0, x1, y1, t in palabras if t in ("ASIGNATURA", "MATERIA")), None)
+        if cabeza is None:
+            # (A year's heading on a page with no table: a layout this does not read.)
+            if titulos:
+                return []
+            continue
+        hx0, hx1, hy = cabeza
+        siguiente = min(((x0, x1) for x0, y0, x1, y1, t in palabras
+                         if abs((y0 + y1) / 2 - hy) < 8 and x0 > hx1 and t.isupper()), default=None)
+        if siguiente is None:
+            return []
+        # The codes, left of the names ("02 001" is two words).
+        izquierda_de: dict[int, list[tuple[float, float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            if x1 < hx0 and y0 > hy - 15:
+                izquierda_de.setdefault(round((y0 + y1) / 2), []).append((x0, x1, t))
+        filas = []
+        for y, renglon in sorted(izquierda_de.items()):
+            renglon.sort()
+            if re.search(r"(?<!\d)\d{2} \d{3}(?!\d)", " ".join(t for _, _, t in renglon)):
+                filas.append((y, max(x1 for _, x1, _ in renglon)))
+                continue
+            codigos = [x1 for _, x1, t in renglon if _CODIGO_UNO.fullmatch(t)]
+            if codigos:
+                filas.append((y, codigos[-1]))
+        if not filas:
+            continue
+        izquierda = max(x for _, x in filas) + 1
+        arriba, abajo = filas[0][0] - 16, filas[-1][0] + 16
+        valores = sorted((y0 + y1) / 2 for x0, y0, x1, y1, t in palabras
+                         if siguiente[0] - 8 <= (x0 + x1) / 2 <= siguiente[1] + 8 and arriba <= (y0 + y1) / 2 <= abajo
+                         and re.fullmatch(r"\d+[°º*]?|[cx]|Anual|Semestral|Cuatrimestr(?:e|al)", t))
+        # (One row's "1º Cuatrimestre" is one value.)
+        valores = [v for i, v in enumerate(valores) if i == 0 or v - valores[i - 1] > 4]
+        if (len(valores) != len(filas)
+                or len({min(range(len(filas)), key=lambda i: abs(filas[i][0] - v)) for v in valores}) != len(filas)):
+            return []
+        lineas: dict[int, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            # (A term's "1º" that reaches into the name's column is not the name's.)
+            if x0 > izquierda and x1 < siguiente[0] - 1 and (y0 + y1) / 2 > hy + 5 and not re.fullmatch(r"\d+[°º]", t):
+                lineas.setdefault(round((y0 + y1) / 2), []).append((x0, t))
+        juntas: list[tuple[int, list[tuple[float, str]]]] = []
+        for y in sorted(lineas):
+            if juntas and y - juntas[-1][0] < 2.5:
+                juntas[-1][1].extend(lineas[y])
+            else:
+                juntas.append((y, list(lineas[y])))
+        partes: list[list[tuple[int, str]]] = [[] for _ in filas]
+        for y, linea in juntas:
+            texto = " ".join(t for _, t in sorted(linea))
+            if not arriba <= y <= abajo or _ANIO_UNO.match(texto) or _NO_ES_FILA_UNO.search(texto):
+                continue
+            cerca = sorted((abs(y - fy), i) for i, (fy, _) in enumerate(filas))
+            if cerca[0][0] > 16:
+                # (A note between a year's last row and the next year's table.)
+                previa = max((fy for fy, _ in filas if fy < y), default=-1)
+                if any(previa < ty < y for ty, _ in titulos):
+                    continue
+                return []
+            if len(cerca) > 1 and cerca[0][0] > 0.6 * cerca[1][0]:
+                return []
+            partes[cerca[0][1]].append((y, texto))
+        for (fy, _), parte in zip(filas, partes):
+            anio_de_la_fila = next((a for ty, a in reversed(titulos) if ty < fy), anio)
+            if anio_de_la_fila is None or not parte:
+                return []
+            _agregar(materias, " ".join(t for _, t in sorted(parte)), anio_de_la_fila)
+        if titulos:
+            anio = titulos[-1][1]
+    return desde_el_primero(materias)
+
+
+plan_uno_codigos.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_uno_todos(ruta: str) -> list[tuple[str, int]]:
+    """UNO: the tables pdfplumber reads whole (Matemática), then the coded
+    rows by position."""
+    import subprocess
+
+    return plan_uno(ruta) or plan_uno_codigos(
+        subprocess.run(["pdftotext", "-bbox-layout", ruta, "-"], capture_output=True, text=True, timeout=60).stdout)
+
+
+plan_uno_todos.ruta = True
+
+
 def plan_eco_unrc(ruta: str) -> list[tuple[str, int]]:
     """UNRC Económicas: its current plans are PDFs of minimum contents (its
     pages still list the old plan, "No vigente"), read as pdfplumber's
