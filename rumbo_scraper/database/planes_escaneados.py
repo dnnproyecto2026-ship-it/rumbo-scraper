@@ -47,7 +47,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         propio = texto_propio(archivo)
         return propio if len(propio.strip()) >= SIN_TEXTO else ocr.texto(archivo)[:20000]
 
-    def leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None]]:
+    def leer_documento(archivo: Path, documento: str, carrera: str = "") -> list[tuple[str, int | None]]:
         if len(texto_propio(archivo).strip()) >= SIN_TEXTO:
             return []
         escaneados.add(documento)

@@ -625,6 +625,13 @@ def _veredictos_que_siguen(anterior: dict[str, Any] | None,
             and (fila["estado"] == v.NO_LO_DICE or fila.get("como_la_dice_la_fuente"))]
 
 
+def _contradichas_antes(anterior: dict[str, Any] | None) -> list[dict[str, Any]]:
+    """The subjects an earlier run found their plan did not say, as the
+    export's subjects, to be checked again."""
+    return [{"nombre_materia": fila["materia"], "carrera_o_programa": fila["carrera"]}
+            for fila in (anterior or {}).get("materias") or [] if fila["estado"] == v.NO_LO_DICE]
+
+
 def resumen(universidad: dict[str, Any]) -> str:
     partes = []
     for tipo in ("ofertas", "materias", "docentes"):
@@ -652,11 +659,22 @@ def main() -> None:
     def una(datos: dict[str, Any]) -> None:
         ficha = datos["universidades"][0]
         inicio = time.monotonic()
+        # A subject the export left out because its plan did not say it is
+        # checked again: the plan read anew (its copy in the cache renewed)
+        # may say it now, and the verdict would otherwise stand for good.
+        # Only the plan saying it clears it: a plan not found this time
+        # leaves it out still.
+        antes = _contradichas_antes((anterior.get("universidades") or {}).get(ficha["nombre_oficial"]))
+        datos = {**datos, "materias": list(datos.get("materias") or []) + antes}
         try:
             hallado = verificar_universidad(datos, planes)
         except Exception as error:  # a university that fails leaves the rest
             print(f"{ficha.get('nombre_corto'):9} | error: {error!r}", flush=True)
             return
+        de_antes = {(m["carrera_o_programa"], m["nombre_materia"]) for m in antes}
+        for fila in hallado["materias"]:
+            if (fila["carrera"], fila["materia"]) in de_antes and fila["estado"] != v.VERIFICADO:
+                fila["estado"] = v.NO_LO_DICE
         print(f"{ficha.get('nombre_corto'):9} | {time.monotonic() - inicio:5.0f}s | "
               f"{resumen(hallado)}", flush=True)
         with escritura:

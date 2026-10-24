@@ -3866,6 +3866,79 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
             or plan_unahur_numerado(texto_con_columnas))
 
 
+# "1er año", "2° Año", "3° AÑO": a year's row of a table, alone in it.
+_ANIO_UNAHUR_CELDA = re.compile(r"(?i)^(\d)\s*(?:er|do|ro|to|[°º])?\s*año$")
+
+
+def plan_unahur_celdas(filas: list[list[str]]) -> list[tuple[str, int]]:
+    """UNAHUR's plans whose table is drawn cell by cell (Desarrollo
+    Agrario's, EXP. 898/23), read as rows of cells (``plan_unahur_tablas``):
+    the plan starts at the row headed "Código" and "Asignatura"; a row with
+    a year alone in it ("1er año", "2° Año") opens that year, one with a
+    term alone ("1er cuatrimestre") is passed over, and each subject's row
+    has its number in the code's column, 1, 2, 3 on to the end, and its name
+    whole in its cell (a wrapped name is one cell). The plan ends at the
+    first row that is none of these (the next table, its credits). A number
+    out of order, a year out of order or a row without its name gives
+    nothing."""
+    columnas = None
+    anios: list[int] = []
+    numeros: list[int] = []
+    materias: list[tuple[str, int]] = []
+    for fila in filas:
+        celdas = [" ".join((c or "").split()) for c in fila]
+        if columnas is None:
+            claves = [c.lower() for c in celdas]
+            if "código" in claves and "asignatura" in claves:
+                columnas = claves.index("código"), claves.index("asignatura")
+            continue
+        llenas = [c for c in celdas if c]
+        if len(llenas) == 1 and (anual := _ANIO_UNAHUR_CELDA.match(llenas[0])):
+            anios.append(int(anual.group(1)))
+            continue
+        if len(llenas) == 1 and _CUATRIMESTRE_UNAHUR.match(llenas[0]):
+            continue
+        codigo = celdas[columnas[0]] if columnas[0] < len(celdas) else ""
+        if not re.fullmatch(r"\d{1,2}", codigo):
+            break
+        nombre = celdas[columnas[1]] if columnas[1] < len(celdas) else ""
+        if not anios or not nombre:
+            return []
+        numeros.append(int(codigo))
+        _agregar(materias, nombre, anios[-1])
+    if not numeros or numeros != list(range(1, len(numeros) + 1)) or anios != list(range(1, len(anios) + 1)):
+        return []
+    return desde_el_primero(materias)
+
+
+def plan_unahur_tablas(ruta: str) -> list[tuple[str, int]]:
+    """The rows of a PDF's drawn tables (``pdfplumber``), page after page,
+    for ``plan_unahur_celdas``: each cell's text read from its own box, the
+    words parted where pdfplumber's table text runs them together."""
+    import pdfplumber
+
+    filas: list[list[str]] = []
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.find_tables():
+                for fila in tabla.rows:
+                    filas.append([pagina.crop(celda).extract_text(x_tolerance=1) if celda else ""
+                                  for celda in fila.cells])
+    return plan_unahur_celdas(filas)
+
+
+def plan_unahur_documento(ruta: str) -> list[tuple[str, int]]:
+    """UNAHUR's documents: the readers of its layouts' text
+    (``plan_unahur_todos``), else of a table drawn cell by cell."""
+    import subprocess
+
+    texto = subprocess.run(["pdftotext", "-layout", ruta, "-"], capture_output=True, text=True, timeout=60).stdout
+    return plan_unahur_todos(texto) or plan_unahur_tablas(ruta)
+
+
+plan_unahur_documento.ruta = True  # type: ignore[attr-defined]
+
+
 _CUATRIMESTRE_UNAHUR = re.compile(r"(?i)^\s*(\d{1,2})\s*(?:er|do|ro|to|vo|mo|no|°|º)?\.?\s*cuatrimestre\s*$")
 _ANIO_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(\d)\s*[°º]\s*año\s*$")
 # "7   Análisis matemático I   cuatrimestral   6   96 ...", "3  Anatomo-Fisiología I  C  4  64",

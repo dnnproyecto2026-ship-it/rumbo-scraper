@@ -657,3 +657,13 @@
 - Cadena exportar → verificar UCASAL (ofertas 122/122, materias 760/760) → exportar completa (`Archivo: data/catalogo_depurado.json`).
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: lector por posición de palabras para Desarrollo Agrario (UNAHUR); UCASAL: los 3 PDF escaneados (OCR).
+
+## 2026-10-24 (81) — UNAHUR: Lic. Desarrollo Agrario, 38 materias (tabla leída celda por celda)
+- Vigilancia sin novedades (la corrida del lanzador de hoy: Austral, ITBA, Palermo, UADE y UAI, igual que el 23/10).
+- UCASAL, los 3 PDF escaneados: NO cargables. Prof. Campo Disciplinar y Prof. Primaria son planes del Dpto. de Alumnos (nombres abreviados); Prof. Psicología es un folleto escaneado limpio, pero el OCR pierde los rótulos "3° AÑO" / "4° AÑO" (blanco sobre rojo). Motivos en `relevamiento/planes_sin_cargar.json`. `planes_escaneados` estaba roto (`_leer_documento` ahora recibe la carrera): arreglado.
+- Lector nuevo `plan_unahur_celdas` / `plan_unahur_tablas`: la tabla dibujada de pdfplumber, cada celda leída de su propio recuadro (un nombre partido en renglones es una celda). Arranca en "Código / Asignatura", año por fila sola ("1er año", "2° Año"), números 1..n y años 1..n o nada. `plan_unahur_documento` prueba primero los lectores de texto de UNAHUR. Pruebas nuevas en `tests/test_planes_sitios.py`.
+- Cargada con `planes_documentos --apply` (Diseño Industrial sacada del archivo de hallados, sigue NO cargable): 38 materias (11/10/8/9), EXP. 898/23. Leídas de vuelta: las 38 en la tabla del PDF (2 partidas en el texto, enteras en su celda); años cotejados.
+- `verificar_catalogo`: un "no_lo_dice" viejo quedaba para siempre (el export saca la materia y la corrida siguiente ya no la ve). Ahora esas materias se vuelven a mirar y solo salen si el plan las dice. La caché del verificador de este PDF (24/09, palabras pegadas) borrada y releída. Prueba en `tests/test_verificacion.py`. Tests: 931 OK.
+- Cadena exportar → verificar UNAHUR (materias 988 verificadas; 27 no_lo_dice viejos de otras carreras siguen) → exportar completa (`Archivo: data/catalogo_depurado.json`). Desarrollo Agrario sale con 38.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: elegir desde la base ofertas sin plan de UNC / UNR / UNLP; la próxima verificación completa revisará los "no_lo_dice" viejos de todo el catálogo.

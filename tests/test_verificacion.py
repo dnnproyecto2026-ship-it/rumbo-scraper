@@ -138,6 +138,17 @@ class VerificacionTest(unittest.TestCase):
         self.assertEqual([f["materia"] for f in _veredictos_que_siguen(anterior, hallado)],
                          ["norma.htm Ley", "Agroecología CFB"])
 
+    def test_lo_que_el_plan_no_decia_se_vuelve_a_mirar(self):
+        from rumbo_scraper.database.verificar_catalogo import _contradichas_antes
+
+        anterior = {"materias": [
+            {"carrera": "Desarrollo Agrario", "materia": "Química general", "estado": "no_lo_dice", "fuente": None},
+            {"carrera": "Desarrollo Agrario", "materia": "Biología", "estado": "verificado", "fuente": "x"},
+        ]}
+        self.assertEqual(_contradichas_antes(anterior), [
+            {"nombre_materia": "Química general", "carrera_o_programa": "Desarrollo Agrario"}])
+        self.assertEqual(_contradichas_antes(None), [])
+
 
 class NombreConGuion(unittest.TestCase):
     def test_a_name_broken_at_its_hyphen_is_found(self):

@@ -504,7 +504,7 @@
   "universidad": "UCASAL",
   "carrera": "Profesorado Univ. en Campo Disciplinar según Titulación de Base",
   "carrera_id": "7c033891-48e8-461c-9a8f-64f98bf15711",
-  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "motivo": "PDF escaneado del Departamento de Alumnos: corta cada nombre (\"PRÁCT.I AN.CONTEXTOS\", \"FILOS. EDUCAC.\") y es un ciclo de complementación. No se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2023/04/plan-de-estudio-de-profesorado-en-campo-240.pdf"
   ],
@@ -524,7 +524,7 @@
   "universidad": "UCASAL",
   "carrera": "Profesorado Universitario en Educación Primaria",
   "carrera_id": "54a8b150-af13-4d92-8bb0-de0a861ba67e",
-  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "motivo": "PDF escaneado del Departamento de Alumnos: corta cada nombre (\"DID. CS. NAT.I\", \"TALL.ED.ARTÍSTICA I\"). No se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/Plan-2021.pdf"
   ],
@@ -564,7 +564,7 @@
   "universidad": "UCASAL",
   "carrera": "Profesorado en Psicología",
   "carrera_id": "740a8099-e8a7-42c6-9e7b-65e23b6ef958",
-  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "motivo": "Folleto escaneado: el OCR (tesseract) no lee los rótulos \"3° AÑO\" y \"4° AÑO\" (blanco sobre rojo) y deforma nombres (\"PsicoLOGÍA\", \"PRÁCTICA lil\"); sin los años no se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2026/03/Plan-Artes-y-Ciencias-Prof-Psicologia-presencial-1.pdf"
   ],
@@ -675,16 +675,6 @@
   "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
   "documentos": [
    "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-Estudio-tecnicatura-en-operaciones-mineras.pdf"
-  ],
-  "revisado": "2026-10-24"
- },
- {
-  "universidad": "UNAHUR",
-  "carrera": "Licenciatura en Desarrollo Agrario",
-  "carrera_id": "26a86bc4-93c6-416a-b599-d9b5270c6298",
-  "motivo": "La tabla parte los nombres unas veces arriba de la fila y otras alrededor, sin renglón en blanco entre filas: sin la posición de las palabras no se sabe a qué fila va cada pedazo. No se carga.",
-  "documentos": [
-   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-estudios-Licenciatura-en-Desarrollo-Agrario-EXP.-898-23.pdf"
   ],
   "revisado": "2026-10-24"
  },

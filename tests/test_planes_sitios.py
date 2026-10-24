@@ -912,3 +912,37 @@ class PlanUnso(unittest.TestCase):
             " SUBTOTAL                                    256            110             146",
         ])
         self.assertEqual(p.plan_unso(texto), [])
+
+
+class PlanUnahurCeldas(unittest.TestCase):
+    FILAS = [
+        ["Licenciatura en Desarrollo Agrario", None, None, None],
+        ["Código", "Asignatura", "Campo", "Correlatividad"],
+        ["1er año", None, None, None],
+        ["1er cuatrimestre", None, None, None],
+        ["1", "Introducción al desarrollo\nagrario", "CFE", "-"],
+        ["2", "UNAHUR I (asignatura\nelectiva)", "CFC", "-"],
+        ["2° Año", None, None, None],
+        ["3ercuatrimestre", None, None, None],
+        ["3", "Química general", "CFB", "1"],
+        ["Ateneo de casos de estudio", "5", None, None],
+        ["4", "Ajena", "CFB", "-"],
+    ]
+
+    def test_each_row_its_cell_and_the_year_above(self):
+        self.assertEqual(p.plan_unahur_celdas(self.FILAS), [
+            ("Introducción al desarrollo agrario", 1), ("UNAHUR I (asignatura electiva)", 1),
+            ("Química general", 2)])
+
+    def test_a_number_or_a_year_out_of_order_gives_nothing(self):
+        filas = [list(f) for f in self.FILAS]
+        filas[8][0] = "4"
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
+        filas = [list(f) for f in self.FILAS]
+        filas[6][0] = "3° Año"
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
+
+    def test_a_row_without_its_name_gives_nothing(self):
+        filas = [list(f) for f in self.FILAS]
+        filas[5][1] = None
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
