@@ -3080,14 +3080,14 @@ def plan_forestales_unam(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
-_FILA_UNPAZ = re.compile(r"^(\s*)(\d{2})\s{2,}(\S.*?)(?:\s{2,}(?:Anual|Cuatrimestral|Bimestral|Semestral|Trimestral)\b.*)?$")
+_FILA_UNPAZ = re.compile(r"^(\s*)(\d{2}|\d{4})\s{2,}(\S.*?)(?:\s{2,}(?:Anual|Cuatrimestral|Bimestral|Semestral|Trimestral)\b.*)?$")
 
 
 def plan_unpaz(texto: str) -> list[tuple[str, int]]:
     """UNPAZ's career brochures (``pdftotext -layout``): one table per year,
     each under its header ("Código  Asignatura  Régimen  Horas  Correlatividad")
     with the year's name beside it ("Primer año", wherever the table's
-    middle falls, or just over the header), each subject its two-digit code,
+    middle falls, or just over the header), each subject its code (two digits, or four: "6001"),
     its name and its term; a name too long for its cell goes on in the line
     right below, at the name's column ("Introducción a los Procedimientos" /
     "de Quirófano"). The options of an elective slot ("35 Optativa 1" over
@@ -3102,6 +3102,10 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
     for numero, linea in enumerate(lineas):
         limpia = linea.strip()
         if re.search(r"C[óo]digo\s+Asignatura", linea):
+            # The year may head the header's own line ("Tercer año   Código   Asignatura").
+            delante = re.match(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\s+C[óo]digo", limpia)
+            if delante:
+                pendiente = _ORDINALES[delante.group(1).lower()]
             actual = {"anios": set() if pendiente is None else {pendiente}, "filas": []}
             bloques.append(actual)
             pendiente, seguida = None, False
@@ -3131,8 +3135,11 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
             actual["filas"].append([len(fila.group(1)) + len(fila.group(2)), nombre])
             seguida = True
             continue
-        # The rest of a name, right below it at its column.
+        # The rest of a name, right below it at its column; a stray
+        # prerequisite far right ("producción audiovisual I      -") is not
+        # part of it.
         sangria = len(linea) - len(linea.lstrip())
+        limpia = re.sub(r"\s{2,}[\d\s-]+$", "", limpia)
         if (seguida and re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", limpia)
                 and actual["filas"][-1][0] < sangria <= actual["filas"][-1][0] + 12
                 and not re.search(r"\s{2,}", limpia)):

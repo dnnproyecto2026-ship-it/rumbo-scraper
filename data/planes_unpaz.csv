@@ -1,0 +1,217 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNPAZ;Licenciatura en Enfermería;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-11-23%20Licenciatura%20en%20Enfermer%C3%ADa_plan%20A4.pdf;"1 | Introducción a la Enfermería
+1 | Enfermería en cuidados de salud de la mujer
+1 | Anatomía y Fisiología aplicadas al cuidado de Enfermería
+1 | Antropología de la salud
+1 | Introducción a la Psicología
+1 | Física y Química aplicada a la Enfermería
+1 | Deontología, salud y derechos humanos
+2 | Enfermería en el cuidado materno infantil
+2 | Microbiología y Parasitología
+2 | Farmacología en Enfermería
+2 | Introducción a la Sociología de la salud
+2 | Taller de Inglés I
+2 | Enfermería en cuidados de niños, niñas y adolescentes
+2 | Enfermería comunitaria
+2 | Alimentación, dietoterapia, nutrición y salud
+2 | Epidemiología
+2 | Taller de informática de la salud
+3 | Enfermería en salud mental comunitaria
+3 | Enfermería en el cuidado del adulto
+3 | Filosofía del cuidado I
+3 | Introducción a la gestión de los servicios de enfermería hospitalarios y comunitarios
+3 | Enfermería en el cuidado del adulto mayor
+3 | Introducción a la investigación en Enfermería
+3 | Práctica integrada I
+4 | Enfermería en salud colectiva
+4 | Enfermería en cuidados críticos de niños y niñas
+4 | Investigación aplicada al campo de la salud
+4 | Sociología de la salud
+4 | Enfermería en cuidados críticos de adultos
+4 | Bioética y desarrollo profesional
+5 | Taller de investigación aplicada al campo de la salud
+5 | Ciencia y tecnología en el campo de la Enfermería
+5 | Educación y comunicación en el campo de la salud
+5 | Gestión de los servicios de enfermería en escenarios comunitarios
+5 | Gestión de los servicios de enfermería hospitalarios
+5 | Práctica integrada II
+5 | Filosofía del cuidado II";lector plan_unpaz;;"PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar; afuera Electiva 1 y 2";Universidad Nacional de José C. Paz;a39b0720-3ecb-4a0a-8ad2-8f572ba4fcb8
+UNPAZ;Licenciatura en Gestión Gubernamental;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-10-06%20Lic%20Gesti%C3%B3n%20Gubernamental_plan%20A4.pdf;"1 | Organización y Funcionamiento del Estado
+1 | Introducción a la Economía
+1 | Introducción al Derecho Argentino
+1 | Taller de Informática I
+1 | Historia Económica y Social Argentina
+1 | Gobierno y Gestión de las Organizaciones
+1 | Derecho Administrativo I
+1 | Taller de Informática II
+2 | Economía y Política Económica
+2 | Elementos de Ciencia Política
+2 | Contabilidad Pública
+2 | Derecho Administrativo II
+2 | El Expediente Administrativo en la Práctica I
+2 | Finanzas Públicas
+2 | Sistemas de Administración y Gestión Pública I
+2 | Derecho Público Provincial y Municipal
+3 | Estadística
+3 | Sistemas de Administración y Gestión Pública II
+3 | Sistemas y Tecnologías de la Información en el Sector Público I
+3 | Formulación y Evaluación de Proyectos
+3 | Empleo Público
+3 | Sistemas y Tecnologías de la Información en el Sector Público II
+3 | Taller de Sistemas de Gestión Documental Electrónica
+3 | Práctica Preprofesional I
+4 | Planificación en el Sector Público
+4 | Financiamiento del Estado
+4 | Políticas Públicas
+4 | Servicios Públicos
+4 | El Expediente Administrativo en la Práctica II
+4 | Políticas Públicas y Niveles de Gestión Gubernamental
+4 | Comunicación Gubernamental
+4 | Práctica Preprofesional II
+5 | Cooperación Internacional
+5 | Problemáticas del Gobierno Local
+5 | Transparencia, Ética Pública y Acceso a la Información
+5 | Taller de Práctica Integradora";lector plan_unpaz;;"PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar; afuera Optativa I-III";Universidad Nacional de José C. Paz;6c5b0453-1736-41b8-964d-bd7b5393acbe
+UNPAZ;Licenciatura en Producción y Gestión Audiovisual;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/Plan-de-estudio-Licenciatura-en-Produccio%CC%81n-y-Gestio%CC%81n-Audiovisual.pdf;"1 | Historia de la cultura I
+1 | La tecnología y sus usos
+1 | Literatura y pensamiento
+1 | Introducción al medio audiovisual
+1 | Introducción a los medios de comunicación
+2 | Historia de la cultura II
+2 | Historia del cine
+2 | Pensamiento social argentino y latinoamericano
+2 | Producción periodística
+2 | Taller de edición
+2 | Taller de realización y producción audiovisual I
+2 | Producción operativa integral
+2 | Teorías de la comunicación y de la imagen
+2 | Taller de radio expandida I
+2 | Guión
+3 | Taller de realización y producción audiovisual II
+3 | Historia de la industria audiovisual argentina
+3 | Fundamentos de la programación
+3 | Taller de radio expandida II
+3 | Producción de investigación
+3 | Taller de realización y producción audiovisual III
+3 | Desarrollo de proyectos audiovisuales I
+3 | Comunicación comunitaria, popular y alternativa
+3 | Introducción a los medios sociales
+3 | Laboratorio de formatos I
+4 | Laboratorio de formatos II
+4 | Desarrollo de proyectos audiovisuales II
+4 | Economía de la cultura
+4 | Estado y ciudadanía
+4 | Problemas de sociología audiovisual
+4 | Legislación cultural, laboral y de la propiedad intelectual
+4 | Gestión y planificación de medios públicos
+4 | Taller de diseño y animación 2D
+4 | Gestión integral de medios ciudadanos y comunitarios
+4 | Archivos y preservación audiovisual
+5 | Taller de realización y producción audiovisual IV
+5 | Marketing digital
+5 | Inglés I
+5 | Metodología de la investigación I
+5 | Problemas de la gestión audiovisual
+5 | Inglés II
+5 | Metodología de la investigación II";lector plan_unpaz;;PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar;Universidad Nacional de José C. Paz;de90795c-7dfe-4d0b-9a35-5d4d8c5ecab1
+UNPAZ;Licenciatura en Gestión de Tecnologías de la Información;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-11-23%20Planesdeestudioa4LGTI_1.pdf;"1 | Análisis Matemático I
+1 | Arquitectura de Computadoras I
+1 | Introducción a la Programación
+1 | Estructuras Discretas
+1 | Ciencia, Tecnología y Sociedad
+1 | Análisis Matemático II
+1 | Álgebra y Geometría Analítica
+1 | Algoritmos y Programación
+1 | Arquitectura de Computadoras II
+1 | Inglés I
+2 | Sistemas Operativos I
+2 | Economía General
+2 | Inglés II
+2 | Ingeniería de Software I
+2 | Paradigmas de Programación
+2 | Sistemas Operativos II
+2 | Laboratorio de Programación y Lenguajes
+2 | Programación Orientada a Objetos
+2 | Base de Datos I
+2 | Administración I
+3 | Probabilidad y Estadísticas
+3 | Comunicaciones y Redes
+3 | Ingeniería de Software II
+3 | Administración II
+3 | Laboratorio de Software
+3 | Base de Datos II
+3 | Contabilidad I
+3 | Trabajo de Campo
+4 | Investigación Operativa
+4 | Arquitectura Web
+4 | Seguridad Informática
+4 | Administración de Recursos Humanos
+4 | Contabilidad Avanzada
+4 | Sistemas Inteligentes
+4 | Gestión de la Tecnología
+4 | Comercialización
+4 | Planificación Financiera y Proyecto de Inversión
+5 | Gestión de Proyectos
+5 | Inteligencia de los Negocios
+5 | Dirección Estratégica
+5 | Trabajo Final de Grado";lector plan_unpaz;;"PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar; afuera Optativa I y II";Universidad Nacional de José C. Paz;f81210fe-7a0e-440e-87be-05a7b135a75f
+UNPAZ;Licenciatura en Trabajo Social;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-10-06%20Lic%20Trabajo%20Social_plan%20A4.pdf;"1 | Trabajo Social I
+1 | Antropología Social y Cultural
+1 | Procesos Sociohistóricos Mundiales y Locales
+1 | Legislación Social y Derechos Humanos
+1 | Psicología General y Evolutiva
+1 | Sociología General y Contemporánea
+1 | Práctica de Trabajo Social I
+2 | Trabajo Social II
+2 | Práctica de Trabajo Social II
+2 | Teoría y Técnicas Grupales
+2 | Estado y Políticas Sociales
+2 | Problemática de la Niñez
+2 | Economía General
+2 | Elementos de Derecho de Familia
+3 | Trabajo Social III
+3 | Práctica de Trabajo Social III
+3 | Psicología Institucional
+3 | Seguridad Social
+3 | Problemática de la Pobreza
+3 | Problemática de la Familia, la Mujer y el Envejecimiento
+4 | Trabajo Social IV
+4 | Práctica de Trabajo Social IV
+4 | Empleo, Territorio y Desarrollo Local
+4 | Organización y Administración de Servicios
+4 | Educación Social
+4 | Comunicación Social y Medios
+5 | Trabajo Social V
+5 | Práctica de Trabajo Social V
+5 | Metodología de la Investigación Social
+5 | Salud Pública
+5 | Gestión Pública
+5 | Taller Final de Graduación";lector plan_unpaz;;"PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar; afuera Seminario Optativo I y II";Universidad Nacional de José C. Paz;b48503f8-6493-46a3-9e68-43957a07062c
+UNPAZ;Licenciatura en Producción de Bioimágenes;5;;;https://www.unpaz.edu.ar/sites/default/files/inline-files/2021-10-06%20Licenciatura%20en%20Producci%C3%B3n%20de%20Bioim%C3%A1genes%20plan%20A4.pdf;"1 | Fundamentos de Radiología y Enfermería Radiológica
+1 | Anatomía y Fisiología
+1 | Psicología Institucional y Evolutiva
+1 | Elementos de Física y Química
+1 | Deontología
+1 | Seminario de Informática
+2 | Técnicas Radiológicas I
+2 | Inmunización
+2 | Seminario de Inglés Técnico
+2 | Antropología Social y Cultural
+2 | Farmacología
+2 | Microbiología y Parasitología
+3 | Técnicas Radiológicas II
+3 | Epidemiología
+3 | Bioestadística y Demografía
+3 | Bioética y Radiología Legal y Forense
+3 | Gestión en Servicios de Radiología Hospitalarios y Comunitarios
+4 | Resonancia Magnética Nuclear
+4 | Tomografía Computada
+4 | Administración de RRHH
+4 | Diagnóstico Mamario
+4 | Radioterapia
+4 | Seminario de Problemática Social en la Salud
+5 | Promoción de la Salud
+5 | Liderazgo y Administración
+5 | Pedagogía y Docencia
+5 | Sistemas de Salud
+5 | Trabajo Final Integrador";lector plan_unpaz;;PDF 'Plan de estudio' de la página de la carrera en unpaz.edu.ar;Universidad Nacional de José C. Paz;aa42ed1a-b05a-4017-8a2a-8f9716efd7a1

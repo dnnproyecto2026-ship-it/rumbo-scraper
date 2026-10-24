@@ -604,3 +604,19 @@ class PlanUpDyc(unittest.TestCase):
         self.assertEqual(plan_up_dyc(html), [
             ("Diseño de Interiores I", 1), ("Taller de Interiores I", 1),
             ("Cultura II", 4), ("Trabajo Final de Grado (Proyecto de Graduación)", 4)])
+
+
+class PlanUnpaz(unittest.TestCase):
+    def test_a_stray_prerequisite_beside_the_rest_of_a_name(self):
+        # Producción y Gestión Audiovisual: the "-" far right is no part of the name.
+        texto = "\n".join([
+            "                                      Código     Asignatura                                        Régimen                 Semanales",
+            "             Primer año",
+            "                                      10         Taller de edición                                 Cuatrimestral           4hs                 04",
+            "                                      11         Taller de realización y                           Cuatrimestral           4hs                 04-10",
+            "                                                 producción audiovisual I                                                                      -",
+            "                                      12         Producción operativa integral                     Cuatrimestral           4hs                 04",
+        ])
+        self.assertEqual(p.plan_unpaz(texto), [
+            ("Taller de edición", 1), ("Taller de realización y producción audiovisual I", 1),
+            ("Producción operativa integral", 1)])
