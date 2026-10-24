@@ -1,0 +1,26 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Programador Universitario;3;;;https://www.facet.unt.edu.ar/programadoruniversitario/plan-de-estudios/;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica
+1 | Elementos de Computación y Lógica
+1 | Laboratorio I
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Programación
+1 | Laboratorio II
+2 | Algoritmos y Estructuras de Datos
+2 | Arquitectura y Organización de Computadoras
+2 | Métodos Numéricos I
+2 | Taller de Lenguajes I
+2 | Probabilidad y Estadística
+2 | Paradigmas de Programación
+2 | Conceptos de Bases de Datos I
+2 | Taller de Lenguajes II
+3 | Análisis y Diseño de Sistemas de Información
+3 | Comunicaciones I
+3 | Sistemas Operativos
+3 | Conceptos de Bases de Datos II
+3 | Proyecto Final
+3 | Ingeniería de Software
+3 | Comunicaciones II
+3 | Sistemas Abiertos
+3 | Taller de Legislación y Organizaciones";lector pdftotext (máquina fija);;"Plan HCS 1926/96 mod. HCS 307/04, tabla de módulos I a VI de la página oficial; la página dice 6 cuatrimestres, dos por año (I-II=1, III-IV=2, V-VI=3). Proyecto Final (anual y continuación) va una sola vez.";Universidad Nacional de Tucumán;77427123-e083-428a-9603-93bb3ae709ae

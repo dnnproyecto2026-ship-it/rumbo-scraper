@@ -1808,5 +1808,15 @@
    "https://www.facet.unt.edu.ar/licinformatica/plan-de-estudio/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Ingeniería Mecánica",
+  "carrera_id": "4b620a72-38c7-41a6-ba92-1c03ecbcd814",
+  "motivo": "Los PDF del plan en la página de la carrera son una traducción al inglés (cuadro por módulos y contenidos de asignaturas en inglés) y un escaneo de 31 páginas sin texto: no hay lista oficial en español que se pueda comprobar nombre por nombre.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/ingmecanica/plan-de-estudios/"
+  ],
+  "revisado": "2026-10-25"
  }
 ]

@@ -781,3 +781,11 @@
 - Lic. en Informática: plan Modificación 2009 en módulos I–X, sin año (ni la resolución de correlativas 17056/2025): no se infiere. Registrada en `relevamiento/planes_sin_cargar.json`.
 - Pendiente UNT: Programador Universitario e Ing. en Computación (FACET, sin leer), resto de ingenierías, Derecho, Psicología, Artes, Educación Física; Contador Público (escaneo ruidoso).
 - Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (97) — UNT: Programador Universitario cargado; Ing. Mecánica NO cargable
+- Programador Universitario (FACET): tabla de módulos I–VI de la página oficial del plan (la página dice 6 cuatrimestres, dos por año → módulos a años); 25 materias, Proyecto Final una vez. Por `planes_manuales` (hoja `data/planes_unt_programador.csv`, cargado_por "lector pdftotext (máquina fija)"). Leído de vuelta: 8/8/9 por año. Verificación UNT: 25/25 verificado.
+- Ing. Química ya estaba cargada (38 materias con año, iguales al PDF Plan 1993 mod. 2004 que releí): el catálogo exportado anterior estaba viejo, no hay nada que hacer.
+- Ing. Mecánica: PDF en inglés (traducción) y escaneo de 31 páginas sin texto. Registrada en `relevamiento/planes_sin_cargar.json`.
+- Descartado: un módulo para completar años (innecesario).
+- Pendiente UNT en la base sin materias: Ing. en Computación, Industrial, Electrónica, Eléctrica, Civil, Biomédica, Azucarera, Agrimensura (FACET: slugs de sitio no encontrados), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
