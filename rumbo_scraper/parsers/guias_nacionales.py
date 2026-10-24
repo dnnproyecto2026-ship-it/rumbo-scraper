@@ -495,6 +495,10 @@ def con_tildes(nombre: str) -> str:
     palabras = []
     for i, palabra in enumerate(clean_text(nombre).split()):
         base = vocabulario.get(comparison_key(palabra), palabra.lower())
+        # (The first word between brackets too: "(Seguros de Cosas)".)
+        abre = re.match(r"^\(+", base)
+        if abre and base[abre.end():] not in _MINUSCULAS:
+            base = base[:abre.end()] + base[abre.end():abre.end() + 1].upper() + base[abre.end() + 1:]
         palabras.append(base if i and base in _MINUSCULAS else base[:1].upper() + base[1:])
     return " ".join(palabras)
 

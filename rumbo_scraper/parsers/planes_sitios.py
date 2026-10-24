@@ -559,7 +559,12 @@ def plan_tabla_por_columna(html: str) -> list[tuple[str, int]]:
 #   then "05 0000   FILOSOFÍA   3   1 Sem" per subject.
 # Its "PLAN DE ESTUDIO Y CORRELATIVIDADES DETALLADAS" cuts every name at
 # twenty letters ("TÉC.Y ESTRAT.DE ESTU"): not read.
-_UCASAL_PERIODO = re.compile(r"^(?:ANUAL|\d\s*°\s*SEM\.?)\s+")
+_UCASAL_PERIODO = re.compile(r"^(?:ANUAL|\d\s*°\s*(?:SEM|CUAT)\.?|CUATRIM\.?)\s+")
+# A brochure that lists electives in a column of their own ("PAISAJE I
+# ... ELECTIVA") is a menu, and its lines run two names together.
+_UCASAL_COLUMNA_ELECTIVA = re.compile(r"\S\s{3,}(?:ELECTIVA|OPTATIVA)\s*$")
+# "PATOLOGÌA QUIRÙRGICA": accents Spanish does not write.
+_UCASAL_ACENTO_GRAVE = re.compile(r"[ÀÈÌÒÙàèìòù]")
 _UCASAL_FILA = re.compile(r"^\d{2}\s+\d{4}\s+(.+?)\s{2,}\d+\s+(?:\d\s*)?(?:Sem|Anual|ANUAL)")
 _UCASAL_ABREVIADA = re.compile(r"[º°]|\w\.(?=\s*\w)|\w\.$")
 _UCASAL_NO_ES = re.compile(r"(?i)^(prueba de suficiencia|plan de estudio|carrera|modalidad|plan\s+\d)|@|ucasal\.edu")
@@ -590,8 +595,11 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
         return desde_el_primero(materias)
     # Each page repeats the heading ("CARRERA (46) LICENCIATURA" over "EN
     # CRIMINALÍSTICA") up to its first year.
+    renglones: list[tuple[str, int]] = []
     encabezado = False
     for linea in texto.splitlines():
+        if _UCASAL_COLUMNA_ELECTIVA.search(linea):
+            return []
         linea = clean_text(linea)
         # (Some brochures print the number: "4 AÑO".)
         rotulo = re.fullmatch(r"(?:(\d)\s*)?AÑO", linea)
@@ -605,11 +613,51 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
             continue
         # Some brochures copy the students' office's short names ("Dº PROC
         # CIVIL I", "PSIC.DESARR.NIÑO Y A"): such a plan is not read at all.
-        if _UCASAL_ABREVIADA.search(nombre) or len(nombre) == 20:
+        if _UCASAL_ABREVIADA.search(nombre) or _UCASAL_ACENTO_GRAVE.search(nombre):
             return []
         if nombre.isupper():
-            _agregar(materias, nombre, anio)
+            # (A footnote's number: "PRÁCTICA PROFESIONAL (1)".)
+            renglones.append((re.sub(r"\s*\(\d\)$", "", nombre), anio))
+    # Names cut at twenty letters leave none longer: a plan whose longest
+    # name is twenty is taken for cut ("ESTADÍSTICA APLICADA" is whole in a
+    # brochure that also prints longer ones).
+    if renglones and max(len(nombre) for nombre, _ in renglones) == 20:
+        return []
+    from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+    for nombre, anio in _ucasal_unir_partidos(renglones):
+        # (Its short names in capitals too: "ÉTICA".)
+        _agregar(materias, con_tildes(nombre), anio)
     return desde_el_primero(materias)
+
+
+_UCASAL_NUMERAL = re.compile(r"\s+(?:I{1,3}|IV|VI{0,3}|IX|X)$")
+
+
+def _ucasal_unir_partidos(renglones: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """A name the brochure wraps onto a second line, joined: where the first
+    ends in a comma or a word that does not end a name ("... ENERGÉTICA PARA"
+    over "DISTINTOS TIPOS DE ..."), or where the two make the next of a
+    series the plan has ("ADMINISTRACIÓN" over "FINANCIERA II", with
+    "ADMINISTRACIÓN FINANCIERA I")."""
+    series = Counter(_UCASAL_NUMERAL.sub("", nombre) for nombre, _ in renglones
+                     if _UCASAL_NUMERAL.search(nombre))
+    unidos: list[tuple[str, int]] = []
+    i = 0
+    while i < len(renglones):
+        nombre, anio = renglones[i]
+        if i + 1 < len(renglones):
+            cola, anio_cola = renglones[i + 1]
+            junto = f"{nombre} {cola}"
+            sigue = bool(re.search(r",$|\s(?:DE|DEL|LA|LAS|LOS|EL|Y|E|EN|A|AL|CON|PARA|POR)$", nombre))
+            if anio_cola == anio and (sigue or (len(cola.split()) <= 3 and _UCASAL_NUMERAL.search(cola)
+                                                and series[_UCASAL_NUMERAL.sub("", junto)])):
+                unidos.append((junto, anio))
+                i += 2
+                continue
+        unidos.append((nombre, anio))
+        i += 1
+    return unidos
 
 
 def _plan_en_lista(html: str) -> list[tuple[str, int]]:

@@ -157,6 +157,27 @@ ANUAL     QUÍMICA LEGAL"""
     def test_ucasal_nombres_abreviados_o_cortados_no_se_leen(self):
         self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
         self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [])
+        # Twenty letters at most: cut; one longer name and twenty is a whole name.
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   ESTADÍSTICA APLICADA\n          FILOSOFÍA"), [])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   ESTADÍSTICA APLICADA\n          PRINCIPIOS DE ECONOMÍA POLÍTICA"),
+                         [("Estadística Aplicada", 1), ("Principios de Economía Política", 1)])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   PATOLOGÌA QUIRÙRGICA\n          FILOSOFÍA"), [])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   FILOSOFÍA\n          PAISAJE I                         ELECTIVA"), [])
+
+    def test_ucasal_folleto_une_los_nombres_partidos(self):
+        texto = """  AÑO
+1° CUAT.   ADMINISTRACIÓN FINANCIERA I
+           ÉTICA
+2° CUAT.   ADMINISTRACIÓN
+           FINANCIERA II
+           PRÁCTICA DE INTEGRACIÓN: PLANES DE EFICIENCIA ENERGÉTICA PARA
+           DISTINTOS TIPOS DE ESTABLECIMIENTOS
+CUATRIM.   SEGUROS PATRIMONIALES I (SEGUROS DE COSAS)
+           PRÁCTICA PROFESIONAL (1)"""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Administración Financiera I", 1), ("Ética", 1), ("Administración Financiera II", 1),
+            ("Práctica de Integración: Planes de Eficiencia Energética para Distintos Tipos de Establecimientos", 1),
+            ("Seguros Patrimoniales I (Seguros de Cosas)", 1), ("Práctica Profesional", 1)])
 
     def test_anexo_con_codigo_de_anio_y_nombre_partido(self):
         texto = """                                              PRIMER AÑO

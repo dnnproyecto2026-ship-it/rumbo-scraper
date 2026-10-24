@@ -1,0 +1,721 @@
+[
+ {
+  "universidad": "UCASAL",
+  "carrera": "Abogacía",
+  "carrera_id": "47ec10db-5a52-4c96-99ff-d1033f495786",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-Abogacia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Arquitectura",
+  "carrera_id": "232f5b5f-801f-4461-ae3c-52bb0652a1fb",
+  "motivo": "El folleto trae el menú de electivas en una segunda columna y renglones con dos materias pegadas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-Arquitectura-2.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ciencias Veterinarias",
+  "carrera_id": "3bd9493a-6e21-44c7-9818-2adaf86a704a",
+  "motivo": "El folleto imprime acentos graves (\"PATOLOGÌA QUIRÙRGICA\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-cs-veterinarias.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Contador Público",
+  "carrera_id": "657e032a-9441-4afd-ad3c-73dce7e0b668",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/PLAN-CONTADOR.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Corredor Inmobiliario y Martillero Público",
+  "carrera_id": "8f9e37db-e2dc-4882-9d0b-32ddf1f53d96",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/244-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Escribanía",
+  "carrera_id": "04c96035-a4a8-4f21-bf09-4bff3cb0b007",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/11/Plan-de-Estudios-Correlativas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Guía Universitario de Turismo",
+  "carrera_id": "a782b84d-721c-462c-8861-bdc25891a2fc",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/175-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería Civil",
+  "carrera_id": "b304b8f2-74e6-48ee-9fda-05322b96b647",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/18-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "f90abf35-3b51-40c7-a779-1130a666cb35",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/04/Ingenieria-Industrial.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Industrial-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería en Informática",
+  "carrera_id": "6585bb20-2895-439f-9e5a-0dcca0d1b36f",
+  "motivo": "El folleto legible es el plan 2015; la página publica un \"NUEVO PLAN\" en el formato del Departamento de Alumnos (nombres cortados a 20 letras): no se carga el viejo.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-ing-en-informatica.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Informatica-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería en Telecomunicaciones",
+  "carrera_id": "4b71ea43-e2bb-4efc-9e21-f215f101b7c3",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/10/Plan-Telecomunicaciones-2026-2-1.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Telecomunicaciones-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Administración Agropecuaria",
+  "carrera_id": "50c69f05-fd91-4bfc-849f-0752b3664678",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/LAA-2021-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Administración de Negocios Digitales",
+  "carrera_id": "a05cbbe6-440d-444d-899d-6d838d04f05e",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/02/Carrera-250.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Artes Musicales",
+  "carrera_id": "2ded3927-0747-4959-a64f-a78ee23a7110",
+  "motivo": "El plan de alumnos repite una materia por instrumento (\"Instrumento Principal I (Oboe)\"): es una elección, no la secuencia del plan; no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-estudios-LIC-EN-ARTES-MUSICALES-Todas-las-materias.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Ciencia de Datos",
+  "carrera_id": "154f5697-fbed-426a-94ca-2e808e477b50",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Lic_-en-Ciencia-de-Datos_plan-de-estudios-con-correlativ-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Ciencias Políticas",
+  "carrera_id": "c696f142-0009-46c4-96e8-aa4e3fe0e91e",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/04/Plan-Estudios-Cs-Politicas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Comercio Internacional",
+  "carrera_id": "7da8a44d-d050-437b-ab6a-f3e5cb825ffe",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Estudio-LIc-Com-Int-2019-cambios.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Comunicación",
+  "carrera_id": "a2a8867c-6942-4752-9d7e-35aa47ba6fd7",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Comunicacion-Plan-de-Estudio-2025-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Corretaje, Tasación y Administración de Consorcios (Ciclo de Complementación Curricular)",
+  "carrera_id": "93b347ab-c3d8-4c60-a000-cb6860ad925d",
+  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo. Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/04/PLAN-DE-ESTUDIO-LICENCIATURA-EN-CORRETAJE-TASACION-Y-ADMINISTRACION-DE-CONSORCIOS-2.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Criminología",
+  "carrera_id": "d0d1a55a-5cc1-4381-99fd-1617d549df48",
+  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/05/PLAN-DE-ESTUDIOS-LIC.-EN-CRIMINOLOGIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Diseño de Interiores",
+  "carrera_id": "2730d6dc-0019-4087-9dc0-9ced553ff1ce",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-lic-diseno-de-interiores.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Diseño de la Comunicación Visual",
+  "carrera_id": "0cce3291-aed4-431a-89a5-5f336b673601",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/07/Infografia-Lic.-en-Diseno-de-la-Comunicacion-Visual-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "4417785c-e499-4cf3-bde7-cfee91165b12",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Plan-De-Estudio-LE-2025.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Educación Física",
+  "carrera_id": "f2530a1b-abeb-4319-ac75-728122203cc7",
+  "motivo": "La página de la carrera no enlaza ningún plan.",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Entrenamiento Deportivo (Ciclo de Complementación Curricular)",
+  "carrera_id": "45354d80-2cd3-4fe7-a627-b7cef00ba4cb",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/LICENCIATURA-EN-ENTRENAMIENTO-DEPORTIVO-CICLO-DE-COMPLEMENTACION-CURRICULAR-modalidad-a-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "7b525ca8-1d8c-472a-9b10-4b2ce515cbb2",
+  "motivo": "La página enlaza tres planes (2009, 2025 y la DI-2026-392 de la SSPU); los de alumnos cortan los nombres a 20 letras; falta leer el anexo de la DI 2026.",
+  "documentos": [
+   "https://www.ucasal.edu.ar//wp-content/uploads/2021/10/100-1-plan.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/05/DI-392-2026-LICENCIADO-A-EN-FILOSOFIA-UNIVERSIDAD-CATOLICA-DE-SALTA.pdf",
+   "https://www.ucasal.edu.ar//wp-content/uploads/2021/10/100-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Finanzas",
+  "carrera_id": "774a8e2e-cdad-464f-b68e-7bb359cf0b39",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/plan-de-finanzas-con-correlativas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Fonoaudiología",
+  "carrera_id": "f0fcfe84-1481-4e79-889e-d7a3b20f9bca",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-FONOAUDIOLOGIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Fonoaudiología (sede Jujuy)",
+  "carrera_id": "99bccac9-4d2f-4b50-9654-77c5511874b2",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/342-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Gerontología Social",
+  "carrera_id": "bf79e1da-4e0b-44d5-8cf1-d1c0b1670503",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Infografia-Lic-en-Gerontologia-Social.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Gestión Educativa (Ciclo de Complementación Curricular)",
+  "carrera_id": "846b5a26-a806-44bd-b4d1-d72fcae6e5a9",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/05/Plan-de-estudio-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Higiene y Seguridad en el Trabajo",
+  "carrera_id": "5d2819de-eff8-4c23-95d9-d26356ef16ef",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/03/Plan-de-Estudio-2022-HyS-Presencial-Correlatividades.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Imagen y Sonido",
+  "carrera_id": "fce81cb2-e119-4014-b68b-9b9338bd25e4",
+  "motivo": "El folleto se lee entero, pero sus siglas (TV, AV, EIAS) quedan \"Tv\", \"Av\", \"Eias\" al pasar de mayúsculas: no se carga hasta que el lector conserve las siglas.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-lic-Imagen-y-sonido.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Kinesiología y Fisioterapia",
+  "carrera_id": "a7e9e39f-115b-4017-961d-3db74fd344a5",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-KINESIOLOGIA-Y-FISIOTERAPIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Lenguajes Expresivos (Ciclo de Complementación Curricular)",
+  "carrera_id": "688f5bbf-03a0-4964-90f9-30e28885e1f0",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/LICENCIATURA-EN-LENGUAJES-EXPRESIVOS.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Periodismo",
+  "carrera_id": "ed18be83-5d36-478c-a93d-0bdae360b0f7",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Periodismo-Plan-de-Estudio-2024.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Producción Animal",
+  "carrera_id": "2db1fec5-0ffb-4d45-94f7-fac690b6661a",
+  "motivo": "El documento es el plan completo de la facultad (43 mil caracteres, con contenidos): ningún lector lo toma todavía.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-Estudios-LPA-PRESENCIAL.doc.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Producción de Bioimágenes (Ciclo de Complementación Curricular)",
+  "carrera_id": "15748fac-54e3-4998-94a8-37a19732a306",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos. Además: PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/11/RR_1295-2015.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Psicomotricidad",
+  "carrera_id": "d3a5be84-b376-4d31-bbef-dbdf6d8380cf",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-PSICOMOTRICIDAD.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Psicopedagogía",
+  "carrera_id": "bf660c10-dfdb-4067-a4d3-6d7107a9dafa",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-psicopedagogia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Publicidad",
+  "carrera_id": "7697c78d-792c-4222-9c38-8c2bb0a26171",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Publicidad-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Realización Audiovisual",
+  "carrera_id": "0cbcf6bc-c23a-47ea-a928-79b423900f0b",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Realizacion-Audiovisual-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Recreación y Ocio Educativo (Ciclo de Complementación Curricular)",
+  "carrera_id": "a1040d78-eca4-4433-a31c-b8fa4f0d7cb4",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/08/Lic-en-Recreacion-y-Ocio-Educativo-ultima-actualizacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Relaciones Internacionales",
+  "carrera_id": "79a00090-e598-43e9-a124-7861634a38d8",
+  "motivo": "Tabla con código, nombre completo y régimen (\"1  Filosofía I  Semestral\"): ningún lector la toma todavía; cargable con un lector nuevo.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/PLAN-DE-ESTUDIOS-LIC.-EN-RRII-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Seguridad (Ciclo de Complementación Curricular)",
+  "carrera_id": "be2d5366-7a0f-4099-8ce5-1e3c256d00ef",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos. Además: El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/196-7-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Teología",
+  "carrera_id": "30c22466-cb76-4b7a-83e4-083d32d0ae1d",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-estudio.-Lic-en-teologia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Terapia Ocupacional",
+  "carrera_id": "b567b274-a80c-459e-b8a2-c2b20fdd5272",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-TERAPIA-OCUPACIONAL.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Terapia Ocupacional (sede Jujuy)",
+  "carrera_id": "5e3a247c-72ca-4a73-8060-6e4b7db3e55d",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/08/PLAN-ESTUDIO-TO-con-modificaciones-para-PPP.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Trabajo Social",
+  "carrera_id": "d1bbfab5-9acd-4f45-8c35-05fda93a970e",
+  "motivo": "Tabla con nombres partidos en varios renglones (\"FUNDAMENTOS DEL / TRABAJO SOCIAL\"): ningún lector la toma todavía.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/08/Plan-2022-Lic.-en-Trabajo-Social.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Turismo",
+  "carrera_id": "689edf0f-6294-4a80-838f-3e01195d9f4b",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-Estudios-Licenciatura-en-Turismo-2019.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Perito en Accidentología",
+  "carrera_id": "411ec996-336a-47b0-b292-875fe2294bfb",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/68-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Procuración",
+  "carrera_id": "5999db83-27cc-4d9c-b63b-59a5c8ff2821",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2024/09/PLAN-DE-ESTUDIOS-Y-CORRELATIVAS-PROCURACION.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Producción y Dirección para Radio y Televisión",
+  "carrera_id": "93d1e0e8-811d-4e94-a709-f63ef46cbdbe",
+  "motivo": "La página de la carrera no responde (sin contenido el 24/10).",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Univ. en Campo Disciplinar según Titulación de Base",
+  "carrera_id": "7c033891-48e8-461c-9a8f-64f98bf15711",
+  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/04/plan-de-estudio-de-profesorado-en-campo-240.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Universitario en Educación Inicial",
+  "carrera_id": "eb151ab2-e660-4cdb-9e56-6e4012cc821f",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/47-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Universitario en Educación Primaria",
+  "carrera_id": "54a8b150-af13-4d92-8bb0-de0a861ba67e",
+  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/Plan-2021.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "de0f2bae-378a-4cfc-995f-cf87416b38b2",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/31-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "5deab40a-1644-49fb-92ce-9c679407e72c",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/PROFESORADO-EN-FILOSOFIA-Plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Inglés",
+  "carrera_id": "b084857c-f026-46fe-9dde-213d4ba403bb",
+  "motivo": "El folleto imprime \"LEGISLACIÒN\" (acento grave) y \"LINGUÍSTICA\": no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-profesorado-ingles.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Psicología",
+  "carrera_id": "740a8099-e8a7-42c6-9e7b-65e23b6ef958",
+  "motivo": "PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/03/Plan-Artes-y-Ciencias-Prof-Psicologia-presencial-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Actividad Física y Fitness",
+  "carrera_id": "022c4a92-7b4a-41e0-896a-89e43d715d61",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/238-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Administración Universitaria",
+  "carrera_id": "38348007-a764-4145-9574-86bafe54939e",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/03/Plan-de-Estudio-ECO-tecnicatura-en-administracion-y-gestion-presencial.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Gestión de Calidad",
+  "carrera_id": "c7cead11-d98a-4d6b-b18c-1d3953a21378",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/05/Calidad-Distancia-Plan_2018.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Podología",
+  "carrera_id": "2a754ead-28a0-475c-9880-c7cff48bcf26",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/TEC.-EN-PODOLOGIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Producción de Bioimágenes",
+  "carrera_id": "822b88c8-5247-48a5-af59-5d5501d84cc5",
+  "motivo": "La página de la carrera no enlaza ningún plan.",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Producción de Bioimágenes (sede Jujuy)",
+  "carrera_id": "efd16924-043a-4e75-8546-f65b250628d7",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/232-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Secretariado Ejecutivo",
+  "carrera_id": "a3f0429e-ac32-4180-8694-37d29966a607",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/08/SECRETARIADO.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Seguridad Informática",
+  "carrera_id": "e27b083a-ffa9-4e4e-9566-222652d30e5c",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-Estudio-tecnicatura-en-seguridad-informatica-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Administración y Gestión Judicial",
+  "carrera_id": "1ac78fac-cb4e-4404-96f9-247ad3137b52",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/04/Plan-Estudios-Tecnicatura-Adm-y-Ges-Judicial.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Higiene y Seguridad en el Trabajo",
+  "carrera_id": "837bfb68-3466-4c34-9f23-621332d2e4ee",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/03/Plan-de-Estudio-2022-HyS-Presencial-Correlatividades.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Operaciones Mineras e Industriales",
+  "carrera_id": "d897e4c8-cf11-464b-bcd7-dc7078a12cb4",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-Estudio-tecnicatura-en-operaciones-mineras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Traductorado Público en Inglés",
+  "carrera_id": "5581e9c8-0afe-465f-846f-7a3b3d3cf941",
+  "motivo": "El folleto se lee (59 materias) pero planes_documentos no lo acepta como plan entero de la carrera: revisar por qué.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-traductor.pdf"
+  ],
+  "revisado": "2026-10-24"
+ }
+]

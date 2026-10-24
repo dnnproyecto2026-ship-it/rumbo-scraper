@@ -600,3 +600,13 @@
 - Tests: 920 OK. Cadena exportar → verificar UNTREF → exportar completa (`Archivo: data/catalogo_depurado.json`). La carrera no sale en el catálogo exportado porque el exportador deja afuera los ciclos (`_UN_CICLO`), igual que las CCC del ciclo 68. Queda en la base del scraper.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UNAHUR Viverismo / Periurbana / Agronómica (ningún lector los toma); UCASAL (registrar el motivo de cada carrera).
+
+## 2026-10-24 (75) — UCASAL: 8 planes desde el folleto y el motivo de cada carrera sin plan
+- De 86 carreras de UCASAL, 6 tenían plan. Releídas las 86 páginas y sus PDF de "PLAN DE ESTUDIO".
+- `plan_ucasal` tiraba folletos enteros con nombres completos: tomaba cualquier nombre de exactamente 20 letras por cortado ("DERECHO COMERCIAL II", "PRÁCTICA PROFESIONAL"). Ahora un folleto se toma por cortado solo si ningún nombre pasa de 20 letras. Además: lee "1° CUAT." y "CUATRIM.", une un nombre partido en dos renglones (si el primero termina en coma o "PARA", o si juntos siguen una serie del plan: "ADMINISTRACIÓN" / "FINANCIERA II"), saca la nota "(1)", y no toma un folleto con acentos graves ("PATOLOGÌA") ni con un menú de electivas en otra columna. `con_tildes` pone mayúscula tras "(" ("(Seguros de Cosas)"). Pruebas nuevas en `tests/test_planes_sitios.py`. Tests: 921 OK.
+- Cargadas con `planes_documentos --apply UCASAL` (321 materias, todas presentes literal en su PDF; años contados por los rótulos "AÑO"): Administración de Empresas (49), Recursos Humanos (42), Criminalística (36), Relaciones Públicas e Institucionales (40), Diseño Gráfico (41), Diseño Industrial (42; el folleto imprime "Diseño de Produtos V", cargado tal cual), Gestión Eficiente de la Energía (42), Tec. Gestión de Bancos (29).
+- Leídas y NO cargadas: Ing. Informática (el folleto es el plan 2015; la página publica un plan nuevo con nombres cortados) e Imagen y Sonido (las siglas TV, AV, EIAS quedarían "Tv", "Av", "Eias").
+- Las 72 que siguen sin plan tienen su motivo en `relevamiento/planes_sin_cargar.json` (registro nuevo, por carrera): 35 plan de Alumnos cortado a 20 letras, 6 grillas abreviadas, 6 folletos abreviados, 6 ciclos, 3 escaneados, 3 tablas con nombre completo que ningún lector toma, y casos sueltos.
+- Cadena exportar → verificar UCASAL (ofertas 122/122, materias 569/569) → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 8 carreras salen con su plan.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: lector para las tablas de UCASAL con código y nombre completo (Relaciones Internacionales, Criminología); UNAHUR Viverismo / Periurbana / Agronómica.
