@@ -506,3 +506,9 @@
 - Cargada por `planes_manuales` (hoja `data/planes_untref_presenciales.csv`, vista previa OK y `--apply`; cotejada con la página): Lic. Cs. de la Educación, 13 materias, años 1–2 (afuera Trabajo Final).
 - Cadena exportar→verificar UNTREF→exportar completa (`Archivo: data/catalogo_depurado.json`; UNTREF exporta 44 carreras y 2065 materias, Cs. de la Educación con 2 años y 13). Sin credenciales de producción ni de GitHub.
 - Siguiente: correr `completar_duraciones --corregir` por otras universidades con ciclos (vista previa, revisar cada una); UNAHUR Viverismo (lector por posición de palabras).
+
+## 2026-10-24 (66) — `completar_duraciones --corregir` en GBA, UNQ, UNR, UNLP
+- Vista previa en UNSO, UNAHUR, UNPAZ, UNO, UNAJ, UNLZ, UNR y UNLP: ninguna duración contradicha ni nueva.
+- UNQ: la vista previa bajaba Prof. Comunicación Social, Historia y Cs. Sociales de 4,5 a 2. Las páginas dicen "duración de 4 ½ años", y "2 (dos) años" es la de cada ciclo ("los que tienen respectivamente una duración"). Error del lector: NFKD deja "½" como "1⁄2" y no lo leía. Arreglado en `parsers/duracion.py` (con prueba; tests 897 OK). Repetida la vista previa, queda solo Lic. Geografía (CCC) → 2,5 ("posee una duración de 2 (dos) años y medio"), aplicada.
+- Cadena exportar→verificar UNQ (ofertas 102/102, materias 321/321)→exportar completa (`Archivo: data/catalogo_depurado.json`). La CCC de Geografía no sale en la exportación (ciclo). Sin credenciales de producción ni de GitHub.
+- Siguiente: UNAHUR Viverismo (lector por posición de palabras); resto de UNTREF (Edición, Políticas y Adm. de la Cultura).
