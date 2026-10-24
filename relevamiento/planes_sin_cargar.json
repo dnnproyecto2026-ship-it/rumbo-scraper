@@ -1168,5 +1168,15 @@
    "https://perio.unlp.edu.ar/academica/carreras/licenciatura/"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería Química",
+  "carrera_id": "3bee7bf1-1850-4624-84e6-b319c730ec60",
+  "motivo": "La página de la carrera (ing.unsa.edu.ar) trae los contenidos sintéticos por área (básica, tecnologías), sin año por materia; la grilla del plan por año (aps.ing.unsa.edu.ar, pidplan=11) no responde: no se carga.",
+  "documentos": [
+   "https://ing.unsa.edu.ar/ingenieria-quimica"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

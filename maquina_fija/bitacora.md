@@ -725,3 +725,10 @@
 - Periodismo (perio.unlp.edu.ar), plan 2017 de cada carrera leído del PDF: todos arman las materias por ciclos/niveles con electivas y optativas, sin año por materia (el Profesorado comparte el tronco con la Licenciatura; la Lic. trae dos orientaciones en un mismo plan). 4 carreras registradas con su motivo en `relevamiento/planes_sin_cargar.json`. No se escribió nada en la base. Tests: 932 OK.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente UNLP: Exactas (reintentar); Psicología Profesorado y Agrarias (PDF escaneado). Con UNLP casi cerrada, pasar a UNR (Medicina, Humanidades, Agronómica…) o a vigilancia.
+
+## 2026-10-24 (88) — UNSa Ingeniería Industrial (39 materias); Ing. Química NO cargable
+- UNLP Exactas sigue caída (sin respuesta). Pasé a UNSa (Salta): 25 ofertas sin plan.
+- Ing. Industrial por `planes_manuales` (hoja `data/planes_unsa_ingenieria.csv`): 39 materias (6/8/9/9/7) de la lista numerada por año de ing.unsa.edu.ar (Res. 0447-CS-2014). Afuera: Seminarios Electivos y Práctica Profesional de Fábrica (requisitos sin año). Leídas de vuelta: 39. Verificación UNSa: materias 812/812.
+- Ing. Química NO cargable: la página trae contenidos por área, sin año; la grilla del plan (aps.ing.unsa.edu.ar) no responde. Motivo en `relevamiento/planes_sin_cargar.json`.
+- Cadena exportar → verificar UNSa → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Siguiente: UNSa Humanidades (Letras, Historia, Filosofía, Antropología, Cs. de la Educación; hum.unsa.edu.ar), Salud (Enfermería, Nutrición), Exactas; luego UNR.
