@@ -789,3 +789,8 @@
 - Descartado: un módulo para completar años (innecesario).
 - Pendiente UNT en la base sin materias: Ing. en Computación, Industrial, Electrónica, Eléctrica, Civil, Biomédica, Azucarera, Agrimensura (FACET: slugs de sitio no encontrados), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
 - Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (98) — UNT: Ing. en Computación cargada
+- Ing. en Computación (FACET): tabla oficial del Plan 2005 modificado (HTML de la página, módulos I a X → 5 años, dos módulos por año); 40 materias, Trabajo de Graduación incluido, exigencias adicionales (inglés, PPS) afuera. Por `planes_manuales` (hoja `data/planes_unt_computacion.csv`, cargado_por "lector html (máquina fija)"). Vista previa y carga: 40/40 verificadas contra la página. "Estruturas de Datos y Algoritmos" va con la ortografía literal de la página.
+- Pendiente UNT sin materias: Industrial, Electrónica, Eléctrica, Civil, Biomédica, Azucarera, Agrimensura (FACET: las páginas existen en la guía, mismo formato probable), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
+- Tests: 932 OK. Sin credenciales de producción ni de GitHub.
