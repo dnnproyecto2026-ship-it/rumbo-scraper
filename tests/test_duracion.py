@@ -34,6 +34,15 @@ class Duracion(unittest.TestCase):
             "Condiciones de ingreso Título de nivel superior correspondiente a una carrera con una "
             "duración mínima de 3 años y 1400 horas. Plan de estudios* Primer cuatrimestre"), {2.5})
 
+    def test_la_duracion_de_cada_ciclo_no_es_la_de_la_carrera(self):
+        # UNQ's profesorados.
+        self.assertEqual(duraciones_en(
+            "La carrera de Profesorado de Historia tiene una duración de 4 ½ años (cuatro y medio), "
+            "con una organización curricular en Ciclos de Formación; siendo 3 (tres) los ciclos que "
+            "la componen: un Ciclo Introductorio que tiene una duración de un cuatrimestre; un Ciclo "
+            "Inicial que se corresponde con la Diplomatura en Ciencias Sociales y un Ciclo Superior, "
+            "los que tienen respectivamente una duración de 2 (dos) años."), {4.5})
+
     def test_fuera_de_rango_no_es_una_duracion(self):
         self.assertEqual(duraciones_en("Duración: 1 año"), set())
         self.assertEqual(duraciones_en("Duración: 12 años"), set())

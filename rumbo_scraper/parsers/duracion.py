@@ -27,15 +27,19 @@ _PALABRAS = {
     "catorce": 14,
 }
 _NUMERO = r"(\d{1,2}(?:[.,]\d)?|" + "|".join(_PALABRAS) + r")"
-_MEDIO = r"(?:\s*(?:y\s+medio|½|1/2))?"
+# "4 ½ años" reaches here as "4 1⁄2" (NFKD, fraction slash).
+_MEDIO = r"(?:\s*(?:y\s+medio|½|1[/⁄]2))?"
 _UNIDAD = r"(anos|ano|cuatrimestres|cuatrim|semestres)"
 # UNTREF heads the paragraph "Duración y título: Cuatro cuatrimestres ...".
 _CALIFICA = (r"(?:\s+(?:teorica|estimada|total|minima|prevista|aproximada|real|y\s+titulo|de\s+la\s+carrera"
              r"|del\s+plan(?:\s+de\s+estudios?)?))*")
 
 # "Duración: 5 años", "duración de la carrera es de 4 años y medio".
+# "Ciclo Inicial y Ciclo Superior, los que tienen respectivamente una
+# duración de 2 (dos) años" (UNQ's profesorados) is each cycle's, not the
+# career's.
 _DURACION_ES = re.compile(
-    r"duracion" + _CALIFICA + r"\s*(?:es\s+de|de|:|es|=)?\s*(?:\(|\s)*" + _NUMERO + r"(" + _MEDIO
+    r"(?<!respectivamente una )duracion" + _CALIFICA + r"\s*(?:es\s+de|de|:|es|=)?\s*(?:\(|\s)*" + _NUMERO + r"(" + _MEDIO
     + r")\s*" + _UNIDAD + r"(\s+y\s+medio)?")
 # "5 años de duración", and a card's figure over its label ("3 años
 # Duración 23 Materias", UNLZ's Derecho; "5 cuatrim. Duración").
