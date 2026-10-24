@@ -3506,62 +3506,81 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
 
 
 _CUATRIMESTRE_UNAHUR = re.compile(r"(?i)^\s*(\d{1,2})\s*(?:er|do|ro|to|vo|mo|no|°|º)?\.?\s*cuatrimestre\s*$")
-# "7   Análisis matemático I   cuatrimestral   6   96 ...", or the number
-# alone when the name wraps around the row ("3      cuatrimestral  2  32").
-_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral|anual)\b")
-_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total)\b")
+_ANIO_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(\d)\s*[°º]\s*año\s*$")
+# "7   Análisis matemático I   cuatrimestral   6   96 ...", "3  Anatomo-Fisiología I  C  4  64",
+# or the number alone when the name wraps around the row ("3   cuatrimestral  2  32",
+# "29   20 (6)   100 ...").
+_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral\b|anual\b|C\s|\d)")
+_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total|total\b)")
+# Between the rows: a cycle's heading, or the intermediate title and its
+# hours ("Enfermero/a Universitario/a   1977   1356 ...").
+_ENTRE_FILAS_UNAHUR = re.compile(r"(?i)^\s*(?:(?:primer|segundo|tercer)\s+ciclo\s*$|\S+/a\b)")
 
 
 def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
-    """UNAHUR's tecnicaturas' brochures (Energía Eléctrica, Metalurgia): a
-    table "Código  Asignatura  Régimen ..." under term headings ("1er.
-    cuatrimestre", "3° Cuatrimestre"), each row numbered in order. A name too
-    long for its cell is centred on its row: its first line above the
-    number, the rest below ("Nuevos Entornos y Lenguajes: la" / "3
-    cuatrimestral 2 32" / "producción del conocimiento ..."). Two terms make
-    a year. A line no row can take, or a number out of order, gives
-    nothing; the plan ends at its "Créditos" or "Carga horaria total". A
-    Roman figure typed as lower-case Ls ("Metalurgia ll") is the figure."""
+    """UNAHUR's tables numbered row by row (the tecnicaturas' brochures,
+    Energía Eléctrica and Metalurgia; Enfermería's RCS 385/2024): under term
+    headings ("1er. cuatrimestre", two to a year) or year headings ("1°
+    Año"). A name too long for its cell is centred on its row, as many lines
+    above as below it ("Nuevos Entornos y Lenguajes: la" / "3
+    cuatrimestral 2 32" / "producción del conocimiento ..."; "Deontología y
+    aspectos legales" / "27 del ejercicio profesional de la C 2 32" /
+    "Enfermería"); of a wrapped line, the first column is the name's
+    ("Práctica pre- Profesional   Mensual"). A line no row takes, one
+    starting in lower case above a row, or a number out of order gives
+    nothing; the plan ends at its "Créditos", "Carga horaria total" or
+    "TOTAL". Credit slots ("Créditos ACA") are not subjects. A Roman figure
+    typed as lower-case Ls ("Metalurgia ll") is the figure."""
     filas: list[dict[str, Any]] = []
-    cuatrimestre = None
+    anio = None
     arriba: list[str] = []
     abierta = None
     for linea in (texto_con_columnas or "").splitlines():
-        if not linea.strip():
-            abierta = None
+        if not linea.strip() or re.fullmatch(r"\s*\d{1,3}\s*", linea):
             continue
-        termino = _CUATRIMESTRE_UNAHUR.match(linea)
-        if termino:
+        termino, anual = _CUATRIMESTRE_UNAHUR.match(linea), _ANIO_UNAHUR_NUMERADO.match(linea)
+        if termino or anual:
             if arriba:
                 return []
-            cuatrimestre, abierta = int(termino.group(1)), None
+            anio = (int(termino.group(1)) + 1) // 2 if termino else int(anual.group(1))
+            abierta = None
             continue
-        if cuatrimestre is None:
+        if anio is None:
             continue
         if _FIN_UNAHUR_NUMERADO.match(linea):
             break
+        if _ENTRE_FILAS_UNAHUR.match(linea) and not _FILA_UNAHUR_NUMERADA.match(linea):
+            if arriba:
+                return []
+            abierta = None
+            continue
         fila = _FILA_UNAHUR_NUMERADA.match(linea)
         if fila:
-            nombre = clean_text(fila.group(2) or "")
-            if nombre and arriba:
+            if arriba and arriba[0][:1].islower():
                 return []
-            filas.append({"n": int(fila.group(1)), "anio": (cuatrimestre + 1) // 2,
+            nombre = clean_text(fila.group(2) or "")
+            # (Of a row whose cell is empty, what was read is its length or hours.)
+            if re.fullmatch(r"(?i)c|anual|mensual|cuatrimestral|\d.*", nombre):
+                nombre = ""
+            filas.append({"n": int(fila.group(1)), "anio": anio, "debajo": len(arriba),
                           "partes": arriba + ([nombre] if nombre else [])})
-            # (Only a row whose cell was empty goes on below.)
-            abierta = None if nombre else filas[-1]
+            abierta = filas[-1] if arriba else None
             arriba = []
             continue
-        if abierta is not None:
-            abierta["partes"].append(clean_text(linea))
+        parte = clean_text(re.split(r"\s{2,}", linea.strip())[0])
+        if abierta is not None and abierta["debajo"]:
+            abierta["partes"].append(parte)
+            abierta["debajo"] -= 1
         else:
-            arriba.append(clean_text(linea))
+            arriba.append(parte)
     numeros = [f["n"] for f in filas]
     if arriba or not filas or numeros != list(range(1, len(numeros) + 1)) or not all(f["partes"] for f in filas):
         return []
     materias: list[tuple[str, int]] = []
     for f in filas:
         nombre = re.sub(r"\s(l{1,3})$", lambda m: " " + "I" * len(m.group(1)), " ".join(f["partes"]))
-        _agregar(materias, nombre, f["anio"])
+        if not re.match(r"(?i)cr[ée]ditos\b", nombre):
+            _agregar(materias, nombre, f["anio"])
     return desde_el_primero(materias)
 
 

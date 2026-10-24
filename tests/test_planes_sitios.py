@@ -602,6 +602,34 @@ class PlanUnahurNumerado(unittest.TestCase):
         self.assertEqual(p.plan_unahur_numerado(texto), [])
         self.assertEqual(p.plan_unahur_numerado(self.TEXTO.replace("4       Química", "7       Química")), [])
 
+    def test_years_and_a_named_row_centred_between_lines(self):
+        # Enfermería's RCS 385/2024, abridged.
+        texto = "\n".join([
+            "                                                           Primer Ciclo",
+            "                                                              1° Año",
+            "       Introducción a la Salud",
+            " 1                                                 C            4          64        64        86    150    6",
+            "       Comunitaria",
+            " 2     Créditos ACA                                C           2           32        32        68    100    4",
+            "                                                              2° Año",
+            "     Deontología y aspectos legales",
+            " 3   del ejercicio profesional de la        C         2        32        32                68       100     4",
+            "     Enfermería",
+            "     Práctica pre- Profesional          Mensual",
+            " 4                                                  20 (6)    100                100       125      225     9",
+            "     Supervisada I                        (5)",
+            "              Enfermero/a Universitario/a                    1977      1356      621      2523     4500    180",
+            "                                                  Segundo Ciclo",
+            "                                                     3° Año",
+            "                                                                 11",
+            " 5   Ética y Desarrollo Profesional         C         2        32        32                43        75     3",
+            "                    TOTAL DE HORAS                            3357     2268      1089     4143     7500    300",
+        ])
+        self.assertEqual(p.plan_unahur_numerado(texto), [
+            ("Introducción a la Salud Comunitaria", 1),
+            ("Deontología y aspectos legales del ejercicio profesional de la Enfermería", 2),
+            ("Práctica pre- Profesional Supervisada I", 2), ("Ética y Desarrollo Profesional", 3)])
+
 
 class PlanTablasPorAnio(unittest.TestCase):
     HTML = ("<html><head><title>Contador Público – Facultad</title></head><body><article>"

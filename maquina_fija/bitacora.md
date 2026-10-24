@@ -475,3 +475,10 @@
 - **Siguen NO cargables:** Viverismo (nombres partidos debajo de filas con nombre y columna de campo; `plan_por_columnas` pega las palabras: "Introducciónal viverismo"), Periurbana (texto con ligaduras rotas "Biologıá", columnas mezcladas), Agronómica, Desarrollo Agrario y Tecnología de los Alimentos (ningún lector los toma; la resolución RES-1372-17 de Alimentos es escaneo). Sin revisar: Enfermería (RCS 385/2024).
 - Cadena exportar→verificar UNAHUR (ofertas 52/52, materias 833/833)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguiente: UNAHUR Enfermería y Viverismo (lector por posición de palabras); resto de UNO.
+
+## 2026-10-24 (62) — UNAHUR: Lic. Enfermería con `plan_unahur_numerado`
+- El plan (RCS 385/2024, EXP. 999/2024, punto 8 "Estructura del plan de estudio") es una tabla numerada por año ("1° Año"), con nombres centrados también en filas que tienen nombre ("Deontología y aspectos legales" / "27 del ejercicio profesional de la" / "Enfermería") y renglones de ciclo y del título intermedio entre filas.
+- `plan_unahur_numerado` generalizado (con prueba nueva): títulos de año además de cuatrimestre; cada fila toma abajo tantos renglones como tiene arriba; de un renglón partido solo cuenta la primera columna ("Práctica pre- Profesional   Mensual"); saltea "Primer/Segundo Ciclo", el título intermedio ("Enfermero/a Universitario/a  1977 …") y el número de página; corta en "TOTAL"; "Créditos ACA" no es materia. Energía Eléctrica y Metalurgia dan exactamente lo ya cargado. Tests: 891 OK.
+- Cargada por `planes_manuales` (hoja `data/planes_unahur_enfermeria.csv`, vista previa OK y `--apply`; cotejada renglón por renglón con la tabla y 6 filas al azar de la base): 39 materias, años 1–5 (afuera los 3 "Créditos ACA"). "Práctica pre- Profesional" queda como lo escribe el plan.
+- Cadena exportar→verificar UNAHUR (ofertas 52/52, materias 872/872)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
+- Siguiente: UNAHUR Viverismo (lector por posición de palabras); resto de UNO.
