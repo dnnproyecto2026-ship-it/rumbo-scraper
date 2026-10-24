@@ -29,7 +29,9 @@ _PALABRAS = {
 _NUMERO = r"(\d{1,2}(?:[.,]\d)?|" + "|".join(_PALABRAS) + r")"
 _MEDIO = r"(?:\s*(?:y\s+medio|½|1/2))?"
 _UNIDAD = r"(anos|ano|cuatrimestres|cuatrim|semestres)"
-_CALIFICA = r"(?:\s+(?:teorica|estimada|total|minima|prevista|aproximada|real|de\s+la\s+carrera|del\s+plan(?:\s+de\s+estudios?)?))*"
+# UNTREF heads the paragraph "Duración y título: Cuatro cuatrimestres ...".
+_CALIFICA = (r"(?:\s+(?:teorica|estimada|total|minima|prevista|aproximada|real|y\s+titulo|de\s+la\s+carrera"
+             r"|del\s+plan(?:\s+de\s+estudios?)?))*")
 
 # "Duración: 5 años", "duración de la carrera es de 4 años y medio".
 _DURACION_ES = re.compile(
@@ -37,8 +39,15 @@ _DURACION_ES = re.compile(
     + r")\s*" + _UNIDAD + r"(\s+y\s+medio)?")
 # "5 años de duración", and a card's figure over its label ("3 años
 # Duración 23 Materias", UNLZ's Derecho; "5 cuatrim. Duración").
+# "de no menos de 4 años de duración" is the title an applicant needs.
 _ANIOS_DE_DURACION = re.compile(
-    _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD + r"\.?(\s+y\s+medio)?\s+(?:de\s+)?duracion\b")
+    r"(?<!menos de )" + _NUMERO + r"(" + _MEDIO + r")\s*" + _UNIDAD
+    + r"\.?(\s+y\s+medio)?\s+(?:de\s+)?duracion\b")
+# What a cycle's applicant must hold ("Condiciones de ingreso: título ...
+# correspondiente a una carrera con una duración mínima de 3 años") is not
+# the cycle's duration; the paragraph ends where the plan begins.
+_INGRESO = re.compile(r"(?:condiciones|requisitos)(?: generales)? de (?:ingreso|admision)"
+                      r"(?:(?!plan de estudio).){0,600}")
 
 
 def _valor(numero: str, medio: str, unidad: str, medio_despues: str | None) -> float | None:
@@ -54,6 +63,11 @@ def _valor(numero: str, medio: str, unidad: str, medio_despues: str | None) -> f
 def duraciones_en(texto: str) -> set[float]:
     # "3 (tres) años", "5 (CINCO) años": the brackets repeat the figure.
     plano = comparison_key(clean_text(re.sub(r"(\d)\s*\([^)\d]{2,20}\)", r"\1", texto or "")))
+    # "dos (2) años y medio (5 cuatrimestres) de duración": the brackets
+    # repeat the figure, and the years in terms.
+    plano = re.sub(r"\b(" + "|".join(_PALABRAS) + r")\s*\(\d{1,2}\)", r"\1", plano)
+    plano = re.sub(r"\b(anos|medio)\s*\(\d{1,2} (?:cuatrimestres|semestres)\)", r"\1", plano)
+    plano = _INGRESO.sub(" ", plano)
     halladas = set()
     for patron in (_DURACION_ES, _ANIOS_DE_DURACION):
         for match in patron.finditer(plano):

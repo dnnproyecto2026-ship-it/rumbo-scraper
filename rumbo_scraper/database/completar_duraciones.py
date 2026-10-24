@@ -7,7 +7,10 @@ page states one duration, and only if the page is the career's own
 (`es_la_pagina_de`): the UBA's careers point at their faculty's list, and a
 list states many durations.
 
-Nothing is overwritten: only careers with no duration are touched. The
+Nothing is overwritten: only careers with no duration are touched, unless
+``--corregir`` is given; then a stored duration the career's own page
+contradicts by two years or more is replaced too (UNTREF's Ciencias de la
+Educación, stored as four years, is a cycle of "cuatro cuatrimestres"). The
 preview keeps what it found in ``data/duraciones_halladas.json``;
 ``--apply`` writes from that file, reading nothing again.
 """
@@ -16,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import time
 from collections import Counter
 from pathlib import Path
@@ -87,7 +91,7 @@ def desde_los_planes(client: Any, solo: set[str] = frozenset()) -> list[dict[str
 HALLADAS = Path("data/duraciones_halladas.json")
 
 
-def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
+def leer(client: Any, solo: set[str] = frozenset(), corregir: bool = False) -> list[dict[str, Any]]:
     from rumbo_scraper.database.supabase import select_all
 
     universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))
@@ -101,24 +105,35 @@ def leer(client: Any, solo: set[str] = frozenset()) -> list[dict[str, Any]]:
         if oferta["url_oficial"] and oferta["carrera_id"] in url_de:
             url_de[oferta["carrera_id"]] = oferta["url_oficial"]
 
+    # A page that gives a part of the career ("el ciclo de tecnicatura ...
+    # dos años; el ciclo de licenciatura ... dos años más", UNTREF's
+    # Administración Pública) is not believed over a plan with later years.
+    ultimo_anio: dict[str, int] = {}
+    if corregir:
+        for materia in select_all(client.table("materias").select("carrera_id,anio_cursada")):
+            if materia["carrera_id"] in url_de and materia["anio_cursada"]:
+                ultimo_anio[materia["carrera_id"]] = max(ultimo_anio.get(materia["carrera_id"], 0),
+                                                         materia["anio_cursada"])
     halladas = []
     with Visitante(timeout=25) as visitante:
         for carrera in carreras:
             url = url_de.get(carrera["id"])
-            if carrera["duracion_anios"] or not url or _NO_ES_SU_PAGINA.search(url):
+            guardada = carrera["duracion_anios"]
+            if (guardada and not corregir) or not url or _NO_ES_SU_PAGINA.search(url):
                 continue
             html = visitante.get(url)
             time.sleep(PAUSA)
             if not es_la_pagina_de(html, carrera["nombre_carrera"]):
                 continue
             duracion = duracion_de_la_pagina(html)
-            if duracion is None:
+            if duracion is None or (guardada and (abs(float(guardada) - duracion) < 2
+                                                  or ultimo_anio.get(carrera["id"], 0) > math.ceil(duracion))):
                 continue
             corto = universidades[carrera["universidad_id"]].get("nombre_corto") or ""
-            print(f"{corto:9} | {carrera['nombre_carrera'][:55]:55} | {duracion}", flush=True)
+            print(f"{corto:9} | {carrera['nombre_carrera'][:55]:55} | {guardada} → {duracion}", flush=True)
             halladas.append({"carrera_id": carrera["id"], "universidad": corto,
                              "carrera": carrera["nombre_carrera"], "duracion": duracion,
-                             "url": url})
+                             "antes": guardada, "url": url})
     return halladas
 
 
@@ -129,6 +144,8 @@ def main() -> None:
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas si se omite")
     parser.add_argument("--desde-el-plan", action="store_true",
                         help="La duración que da el plan de estudios, no la página")
+    parser.add_argument("--corregir", action="store_true",
+                        help="También la duración guardada que la página contradice por dos años o más")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
@@ -138,9 +155,12 @@ def main() -> None:
         for h in halladas:
             cambio = client.table("carreras").update({"duracion_anios": h["duracion"]}).eq(
                 "id", h["carrera_id"])
-            # Only a duration the plan contradicts by two years is replaced.
+            # Only a duration the plan or page contradicts by two years is
+            # replaced, and only if it is still the one the preview saw.
             if h.get("antes") is None:
                 cambio = cambio.is_("duracion_anios", "null")
+            else:
+                cambio = cambio.eq("duracion_anios", h["antes"])
             cambio.execute()
         print(f"Carreras con duración: {len(halladas)}")
         return
@@ -150,7 +170,7 @@ def main() -> None:
         for h in halladas:
             print(f"{h['universidad']:9} | {h['carrera'][:55]:55} | {h['antes']} → {h['duracion']}")
     else:
-        halladas = leer(client, set(args.universidades))
+        halladas = leer(client, set(args.universidades), args.corregir)
     HALLADAS.write_text(json.dumps(halladas, ensure_ascii=False, indent=1) + "\n")
     print(f"Con duración: {len(halladas)} {dict(Counter(h['universidad'] for h in halladas))}"
           f" — vista previa en {HALLADAS}", flush=True)

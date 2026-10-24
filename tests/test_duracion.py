@@ -15,6 +15,7 @@ class Duracion(unittest.TestCase):
             ("Una carrera de 4 años de duración", 4),
             ("Duración teórica: 3,5 años", 3.5),
             ("DURACIÓN 6 AÑOS", 6),
+            ("Duración y título Cuatro cuatrimestres, con un ritmo ideal de tres-cuatro asignaturas", 2),
         ):
             with self.subTest(texto=texto):
                 self.assertEqual(duraciones_en(texto), {anios})
@@ -22,6 +23,16 @@ class Duracion(unittest.TestCase):
     def test_un_numero_suelto_no_es_la_duracion(self):
         self.assertEqual(duraciones_en("Acreditada por 3 años por la CONEAU. 50 años de historia."),
                          set())
+
+    def test_el_titulo_que_pide_el_ingreso_no_es_la_duracion(self):
+        # UNTREF's cycles: the applicant's previous degree states its own.
+        self.assertEqual(duraciones_en(
+            "Duración y título Cuatro cuatrimestres. Condiciones de ingreso: título de profesor "
+            "de no menos de cuatro años de duración. Plan de estudios"), {2})
+        self.assertEqual(duraciones_en(
+            "Duración y título Es una carrera de dos (2) años y medio (5 cuatrimestres) de duración. "
+            "Condiciones de ingreso Título de nivel superior correspondiente a una carrera con una "
+            "duración mínima de 3 años y 1400 horas. Plan de estudios* Primer cuatrimestre"), {2.5})
 
     def test_fuera_de_rango_no_es_una_duracion(self):
         self.assertEqual(duraciones_en("Duración: 1 año"), set())

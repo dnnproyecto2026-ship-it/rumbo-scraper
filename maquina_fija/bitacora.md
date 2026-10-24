@@ -498,3 +498,11 @@
 - Cadena exportar→verificar UNO (ofertas 45/45, materias 511/511)→exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub.
 - Siguen sin plan en UNO: Enfermería (sin códigos), Odontología (PDF gráfico), Arquitectura, Ing. Química, Tec. Administración.
 - Siguiente: UNAHUR Viverismo (lector por posición de palabras); resto de UNTREF (corregir duración de Cs. de la Educación).
+
+## 2026-10-24 (65) — UNTREF: duraciones de los ciclos y Lic. Cs. de la Educación
+- La base tenía Cs. de la Educación en 4 años; la página dice "Duración y título: Cuatro cuatrimestres" y pide título de profesor (es un ciclo). `planes_manuales` rechazaba la hoja por eso ("faltan años").
+- `parsers/duracion.py` (2 pruebas): entiende el rótulo "Duración y título"; "dos (2) años y medio (5 cuatrimestres)"; no cuenta el título que pide el ingreso ("de no menos de cuatro años de duración", el párrafo "Condiciones de ingreso" hasta "Plan de estudios"). `completar_duraciones --corregir`: también reemplaza una duración guardada que la página contradice por 2 años o más, salvo que el plan cargado tenga materias en un año posterior (Adm. Pública: la página da 2+2 años por tramo, queda en 4); `--apply` solo pisa si sigue la duración que vio la vista previa. Tests: 896 OK.
+- Aplicado a UNTREF (vista previa revisada página por página): Cs. de la Educación 4→2; Historia (CCC), Instrumentación Quirúrgica (CCC), Gestión del Deporte (CCC), Gestión Educativa: 2; Geografía (Compl.): 2,5. Resolución de Conflictos sigue sin duración (la página no la dice).
+- Cargada por `planes_manuales` (hoja `data/planes_untref_presenciales.csv`, vista previa OK y `--apply`; cotejada con la página): Lic. Cs. de la Educación, 13 materias, años 1–2 (afuera Trabajo Final).
+- Cadena exportar→verificar UNTREF→exportar completa (`Archivo: data/catalogo_depurado.json`; UNTREF exporta 44 carreras y 2065 materias, Cs. de la Educación con 2 años y 13). Sin credenciales de producción ni de GitHub.
+- Siguiente: correr `completar_duraciones --corregir` por otras universidades con ciclos (vista previa, revisar cada una); UNAHUR Viverismo (lector por posición de palabras).
