@@ -5,14 +5,15 @@ from rumbo_scraper.parsers.folleto_usal import plan_del_folleto
 CABECERA = "level\tpage_num\tblock_num\tpar_num\tline_num\tword_num\tleft\ttop\twidth\theight\tconf\ttext"
 
 
-def tsv(lineas: list[tuple[int, int, str]]) -> str:
-    """Each line as tesseract gives it: (left, top, text), one word after
-    another, every line its own."""
+def tsv(lineas: list[tuple]) -> str:
+    """Each line as tesseract gives it: (left, top, text[, height]), one
+    word after another, every line its own."""
     filas = [CABECERA]
-    for numero, (izquierda, arriba, texto) in enumerate(lineas, start=1):
+    for numero, (izquierda, arriba, texto, *alto) in enumerate(lineas, start=1):
         x = izquierda
+        alto = alto[0] if alto else 20
         for palabra in texto.split():
-            filas.append(f"5\t1\t1\t1\t{numero}\t1\t{x}\t{arriba}\t{len(palabra) * 10}\t20\t90\t{palabra}")
+            filas.append(f"5\t1\t1\t1\t{numero}\t1\t{x}\t{arriba}\t{len(palabra) * 10}\t{alto}\t90\t{palabra}")
             x += len(palabra) * 10 + 10
     return "\n".join(filas)
 
@@ -68,6 +69,39 @@ class FolletoUsal(unittest.TestCase):
 
     def test_pocas_materias_no_son_un_plan(self):
         self.assertEqual(plan_del_folleto(folleto(PRIMERO[:4], []), "Arquitectura"), [])
+
+
+class FolletoActuario(unittest.TestCase):
+    """The degree's name drawn large between two years of the left column,
+    the duration's letter read as "e]" or "[el", and a capital "É" read
+    without its accent (FolletoGradoActuario, FolletoGradoMartillero)."""
+
+    def setUp(self):
+        izquierda = [(10, 30 * i, t) for i, t in enumerate(
+            ["Primer Año", "Matemática | Cc", "Matemática II [e", "Filosofía e", "Sociología Cc",
+             "Teología e]", "Contabilidad [el", "Segundo Año", "Estadística | Cc", "Estadística || e",
+             "Electiva | e", "Microeconomía <", "Trabajo Integrador Final - TIF C"])]
+        izquierda.append((10, 400, "Actuario", 77))
+        derecha = [(600, 30 * i, t) for i, t in enumerate(
+            ["Tercer Año", "Electiva |! Cc", "Estadística 111 [e", "Idioma (Optativa 11) €",
+             "Cuarto Año", "Etica profesional [el", "Electiva 11 C", "C: Cuatrimestral"])]
+        self.plan = plan_del_folleto(tsv(izquierda + derecha), "Actuario")
+
+    def test_el_nombre_del_titulo_no_es_materia(self):
+        self.assertNotIn("Actuario", [n for n, _ in self.plan])
+        self.assertEqual(len(self.plan), 16)
+
+    def test_restos_de_la_duracion(self):
+        self.assertIn(("Teología", 1), self.plan)
+        self.assertIn(("Contabilidad", 1), self.plan)
+        self.assertIn(("Microeconomía", 2), self.plan)
+        self.assertIn(("Trabajo Integrador Final - TIF", 2), self.plan)
+
+    def test_numerales_y_tilde(self):
+        self.assertIn(("Electiva III", 4), self.plan)
+        self.assertIn(("Estadística III", 3), self.plan)
+        self.assertIn(("Idioma (Optativa II)", 3), self.plan)
+        self.assertIn(("Ética profesional", 4), self.plan)
 
 
 if __name__ == "__main__":

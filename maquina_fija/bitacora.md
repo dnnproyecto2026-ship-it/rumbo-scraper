@@ -569,3 +569,18 @@
 - Tests: 914 OK. Cadena exportar → verificar UCEMA (ofertas 27/27, materias 577/577) → exportar completa (`Archivo: data/catalogo_depurado.json`). UCEMA queda con 15 carreras, todas con título, duración y plan.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: planes de las 6 carreras nuevas de USAL; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
+
+## 2026-10-24 (72) — USAL: planes de Actuario, Agronomía y Martillero desde el folleto
+- Las 6 carreras nuevas de USAL (ciclo 69) no tenían plan. `planes_folletos USAL` no tomaba ninguno: el lector OCR (`parsers/folleto_usal.py`) tiraba cada folleto entero por restos de la letra de duración ("e]", "[el", "<"), el nombre del título dibujado grande en medio de la columna ("Actuario", "Ingeniero Agrónomo") y "Idioma (Optativa 11)".
+- Cambios en el lector: no toma palabras de más de 2,5 veces la altura mediana (el título mide 73–85 px y las materias ≤ 37 px); saca esos restos de duración; lee el numeral entre paréntesis; devuelve la "É" que tesseract pierde ("Etica" → "Ética"); un guion no cuenta como letra suelta ("Trabajo Integrador Final - TIF"). Prueba nueva en `tests/test_folleto_usal.py`. Tests: 917 OK.
+- Cargadas con `planes_folletos --apply` (los 111 nombres y años cotejados uno por uno con la imagen del folleto):
+  - Actuario: 43 materias (1.º–4.º).
+  - Agronomía: 46 materias (1.º–5.º).
+  - Martillero y Corredor Universitario: 22 materias (1.º–3.º; "Tasación y Venta de Bienes III" sale como II del OCR y la renumeración de la serie lo corrige).
+- No cargables:
+  - Corrector Literario: tesseract mezcla las dos columnas del folleto ("TERCERANÑO", renglones de dos materias). El lector lo descarta.
+  - Notariado (CCC) e Higiene y Seguridad (CCC): son ciclos de complementación, que `planes_folletos` saltea por diseño.
+- En la base ya hay 11 materias de USAL que empiezan con "Etica" (cargadas antes, probablemente la misma pérdida del OCR). No se tocaron: hay que cotejarlas con sus folletos.
+- Cadena exportar → verificar USAL (ofertas 142/142; las materias de folleto quedan "sin_fuente" porque son una imagen) → exportar completa (`Archivo: data/catalogo_depurado.json`). Las 3 carreras salen con su plan.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: las 11 "Etica" de USAL contra sus folletos; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
