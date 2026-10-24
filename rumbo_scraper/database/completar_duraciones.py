@@ -34,6 +34,31 @@ from rumbo_scraper.spiders.visitante import Visitante
 PAUSA = 0.8
 
 
+# --- A university whose pages state the duration their own way --------------
+#
+# USAL writes it in brackets beside the degree ("(2 años y 1 cuatrimestre)"),
+# which its own parser reads and `parsers.duracion` does not: the careers its
+# index added later (Martillero, the Higiene cycle) have no duration but on
+# that page. The university's reader is asked only when the general one has
+# no answer.
+
+def _usal(html: str) -> float | None:
+    from rumbo_scraper.parsers.usal import duration_years, parse_facts
+    return duration_years(parse_facts(html).get("duracion"))
+
+
+LECTORES_PROPIOS = {"USAL": _usal}
+
+
+def duracion_leida(html: str, universidad: str) -> float | None:
+    """The duration the page states, read by the general reader or, failing
+    it, by the university's own."""
+    duracion = duracion_de_la_pagina(html)
+    if duracion is None and universidad in LECTORES_PROPIOS:
+        duracion = LECTORES_PROPIOS[universidad](html)
+    return duracion
+
+
 # --- The duration its plan of studies gives a grado career -----------------
 #
 # A plan that lists every year from the first to the Nth, the last a full
@@ -125,11 +150,11 @@ def leer(client: Any, solo: set[str] = frozenset(), corregir: bool = False) -> l
             time.sleep(PAUSA)
             if not es_la_pagina_de(html, carrera["nombre_carrera"]):
                 continue
-            duracion = duracion_de_la_pagina(html)
+            corto = universidades[carrera["universidad_id"]].get("nombre_corto") or ""
+            duracion = duracion_leida(html, corto)
             if duracion is None or (guardada and (abs(float(guardada) - duracion) < 2
                                                   or ultimo_anio.get(carrera["id"], 0) > math.ceil(duracion))):
                 continue
-            corto = universidades[carrera["universidad_id"]].get("nombre_corto") or ""
             print(f"{corto:9} | {carrera['nombre_carrera'][:55]:55} | {guardada} → {duracion}", flush=True)
             halladas.append({"carrera_id": carrera["id"], "universidad": corto,
                              "carrera": carrera["nombre_carrera"], "duracion": duracion,
