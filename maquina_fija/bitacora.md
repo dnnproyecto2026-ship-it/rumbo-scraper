@@ -709,3 +709,13 @@
 - Cadena exportar → verificar UNLP (materias 2845/2855; los 10 no_lo_dice de antes, ninguno de Biología) → exportar completa (`Archivo: data/catalogo_depurado.json`).
 - Sin credenciales de producción ni de GitHub.
 - Siguiente UNLP: Artes (cada orientación de Música, Artes Plásticas y Audiovisuales es una carrera en la base: buscar el plan de cada una), Exactas (reintentar), Periodismo (Lic. y Profesorado).
+
+## 2026-10-24 (86) — UNLP Artes: 34 sin plan, NO cargables (motivo registrado)
+- UNLP Exactas sigue caída (`www.exactas.unlp.edu.ar` sin respuesta en 30 s).
+- Artes (fba.unlp.edu.ar): 11 carreras ya tenían plan (Diseño Industrial, Multimedial, Comunicación Visual, Sonido, Historia de las Artes, etc.). Las 34 restantes no se cargan, cada una con su motivo en `relevamiento/planes_sin_cargar.json`:
+  - 14 de Música y 14 de Artes Plásticas (Prof. y Lic. × 7 cada una): Música comparte una sola lista para Prof. y Lic. (pasantía, trabajo final y didáctica juntos); Plásticas trae una lista común de 7 orientaciones y el plan de cada una es una imagen PNG.
+  - 4 de Audiovisuales (cuatro orientaciones de 4.º y 5.º mezcladas en la página).
+  - 2 tecnicaturas (Música Popular, Fotografía): la página en www2.fba.unlp.edu.ar no devuelve contenido.
+- No se escribió ningún dato en la base: no hizo falta exportar. Tests: 932 OK.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente UNLP: Exactas (reintentar), Periodismo (Lic., Profesorado, Com. Popular).

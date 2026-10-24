@@ -788,5 +788,345 @@
    "https://www.jursoc.unlp.edu.ar/index.php/estudiantes/informacion/carreras"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Escultura",
+  "carrera_id": "0245d4a0-d13c-44e6-938f-17f16d6f7ec4",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Música Popular",
+  "carrera_id": "05bd4b63-f8ef-4975-8f53-c0fcd85ffee4",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/musica-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Cerámica",
+  "carrera_id": "09ca4ff5-14ab-431c-88a2-5e77ad735d85",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Grabado",
+  "carrera_id": "1bd9d4aa-ffdc-4a70-a712-f66f134058d0",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Pintura",
+  "carrera_id": "20eef274-4eb5-4a10-a71c-e431d63fe15d",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Música Popular",
+  "carrera_id": "2c8911ea-df42-4002-9e98-671f475d2b20",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/musica-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Piano",
+  "carrera_id": "329b0a05-d910-4b45-b69f-ec8d8d46f0ab",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/piano/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Guitarra",
+  "carrera_id": "37fb5b3e-4908-4571-b9f5-18b654f20395",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/guitarra/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura en Música Popular",
+  "carrera_id": "48dfa92f-82b1-4c46-8388-ff82d24426f3",
+  "motivo": "La página de la carrera (www2.fba.unlp.edu.ar) no devuelve contenido: no hay plan que leer.",
+  "documentos": [
+   "https://www2.fba.unlp.edu.ar/musica/tecnicatura/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Escultura",
+  "carrera_id": "505d3ca0-0ccc-410b-a75f-471138b9c674",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura Universitaria en Fotografía",
+  "carrera_id": "5cf78d62-aefd-491b-a688-718a10e3716f",
+  "motivo": "La página de la carrera (www2.fba.unlp.edu.ar) no devuelve contenido: no hay plan que leer.",
+  "documentos": [
+   "https://www2.fba.unlp.edu.ar/artesvisuales/fotografia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Guitarra",
+  "carrera_id": "5eaa6d9f-1d5c-4dd6-8747-007db425be05",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/guitarra/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Dirección Orquestal",
+  "carrera_id": "648086e9-fe28-497b-86fd-544883e188a7",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-orquestal/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Dirección Coral",
+  "carrera_id": "659ec15f-0804-47c7-9d35-654e02505632",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-coral/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Dirección de Fotografía",
+  "carrera_id": "8233d6bc-49b1-4c1b-b10b-f0232015bdc7",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Teoría y Crítica",
+  "carrera_id": "9771852d-0e1f-4618-8d2f-496c4f5aaf0b",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Dirección Orquestal",
+  "carrera_id": "a13f17e8-7cd0-4763-adc5-45fe52e26756",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-orquestal/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Muralismo",
+  "carrera_id": "afb09ad8-8841-460d-b9e8-32a2a5a8a9f5",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Dibujo",
+  "carrera_id": "afd22529-8b46-4735-973f-46fbac655210",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Composición",
+  "carrera_id": "b2ee1652-f440-4d03-b3c0-f68ec522a2a5",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/composicion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Educación Musical",
+  "carrera_id": "b7e062d5-f55c-4c8d-b137-d8d0fb660ce8",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/educacion-musical/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Pintura",
+  "carrera_id": "ba1f54b9-01b6-49f9-8f73-d7212e553aac",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Composición",
+  "carrera_id": "c1861f86-40d0-43b7-946b-36d6ff9e8328",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/composicion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Grabado",
+  "carrera_id": "c23de4dc-768a-4d15-9f5d-766491264323",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Escenografía",
+  "carrera_id": "ca29b71f-57ab-4851-a917-1f4dcfe21a38",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Muralismo",
+  "carrera_id": "cd986463-dac2-492e-a72d-f2c92ef6d2ca",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Cerámica",
+  "carrera_id": "de478ef0-4ef5-46cd-8b9f-80521e9a5c41",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Educación Musical",
+  "carrera_id": "f2a635c1-0a95-47ec-a353-99ca262508d8",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/educacion-musical/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Piano",
+  "carrera_id": "f478f9a4-b478-4870-ab68-cd8bdc689a65",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/piano/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Dibujo",
+  "carrera_id": "f47e1301-6992-459d-858f-5ded7fc9a31d",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Guión",
+  "carrera_id": "f5596045-0b7a-49c9-9a46-625e9686c7d4",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Dirección Coral",
+  "carrera_id": "f5cf8bef-e177-4ba1-84bf-fd1a40e43938",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-coral/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Escenografía",
+  "carrera_id": "f8378bc1-22cb-43a9-be38-ee83d2f464d4",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Realización",
+  "carrera_id": "fa0f30ef-9356-45dc-9e89-9e73dfea5e67",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]
