@@ -1428,5 +1428,175 @@
    "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencias-de-la-salud/tecnicatura-universitaria-en-laboratorio-de-analisis-clinicos-y-microbiologicos"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Abogacía",
+  "carrera_id": "cceb6c9a-9a31-4da6-a7f0-3d74a8c9c678",
+  "motivo": "El plan enlazado (PLAN_2012-1.pdf, Res. CS 447/2011) es un escaneo sin texto con OCR ruidoso, y la misma página publica un plan de transición 2011-2015 (Res. CD 728/18): el plan 2012 puede no ser el vigente (bitácora 25).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-academica/carreras-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Derecho",
+  "carrera_id": "44d9dd1c-4f20-4170-90e2-5613a60696ae",
+  "motivo": "El plan enlazado (PLAN_2012-1.pdf, Res. CS 447/2011) es un escaneo sin texto con OCR ruidoso, y la misma página publica un plan de transición 2011-2015 (Res. CD 728/18): el plan 2012 puede no ser el vigente (bitácora 25).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-academica/carreras-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Medicina",
+  "carrera_id": "3f500804-8b95-4b9a-8faa-899c173a6bce",
+  "motivo": "El plan (Res. CS 158/2001, fcm.unr.edu.ar) es un mapa curricular por áreas y ciclos vitales, sin materias por año; además hay una resolución posterior (CS-31-24) sin revisar (bitácora 31).",
+  "documentos": [
+   "https://fcm.unr.edu.ar/medicina-informacion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Psicología",
+  "carrera_id": "d01b7141-dc4a-4ba4-af07-44b86a33ffc6",
+  "motivo": "El plan 2014 (Res. CS 437) es un PDF escaneado sin texto; la página de la carrera solo trae las asignaturas por área y sus contenidos mínimos, sin año por materia (bitácora 31, releído en el ciclo 92).",
+  "documentos": [
+   "https://fpsico.unr.edu.ar/carreras/psicologia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Arquitectura",
+  "carrera_id": "10fc5802-df2e-418d-bfa6-c318b5048c26",
+  "motivo": "La facultad está cambiando el plan (grilla «preliminar» aprobada por el Consejo Directivo); un plan en transición no se carga hasta que haya uno vigente (bitácora 30).",
+  "documentos": [
+   "https://fapyd.unr.edu.ar/arquitectura/plan-de-estudios/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ciencia de Datos",
+  "carrera_id": "0a1810cb-4279-4073-909e-d6c66503a7cf",
+  "motivo": "La tabla de la página («en construcción») está vacía y el plan 2024 está solo en Google Drive; la página muestra 5 años y el catálogo dice 4 (bitácora 43).",
+  "documentos": [
+   "https://www.fcecon.unr.edu.ar/carreras/grado/licenciatura-en-ciencia-de-datos-pagina-en-construccion"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "fc254c94-9e5e-48bc-947b-dd2e15f66b2c",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/licenciatura-en-letras/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Bellas Artes",
+  "carrera_id": "750416d4-d45c-46cd-a6db-0059a7080a44",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/licenciatura-en-bellas-artes/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Bellas Artes",
+  "carrera_id": "c175f731-37b7-4657-88da-b4b41878649f",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/profesorado-en-bellas-artes/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Química",
+  "carrera_id": "51bc077a-6995-477b-8036-070cfc0b1483",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Plásticos y Elastómeros",
+  "carrera_id": "d68638a3-87d7-4427-ae40-4339f4c7c2dd",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Sistemas Electrónicos",
+  "carrera_id": "3aff0414-b90f-4635-96ec-232be574c42f",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Construcciones",
+  "carrera_id": "50d1c786-3571-4401-8ac0-e18898a5eb6a",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Mecatrónica",
+  "carrera_id": "e4906dee-4f29-4f1d-b07c-4908812f98d7",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Óptica",
+  "carrera_id": "f7e115d5-4069-4683-9876-ebf3b44dcd56",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Óptica y Contactología",
+  "carrera_id": "08d0f808-b307-4232-8069-bb7e3a21b392",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Analista Universitario en Sistemas",
+  "carrera_id": "8d7af041-7b2d-4453-a427-44aff906b64c",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

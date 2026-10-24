@@ -750,3 +750,10 @@
 - NO cargables (motivo en `relevamiento/planes_sin_cargar.json`): Salud (Medicina, Enfermería, Lic. Enfermería, Nutrición; fsalud.unsa.edu.ar da 404 y muestra un panel XAMPP), Naturales Tartagal (natura.unsa.edu.ar, timeout) y sroweb.unsa.edu.ar (sin DNS): 6 carreras.
 - Cadena exportar → verificar UNSa → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Siguiente: UNSa Exactas (caída), reintentar sitios caídos; luego UNR (Medicina, Humanidades, Psicología…) o vigilancia.
+
+## 2026-10-24 (92) — UNSa cerrada; UNR: 17 ofertas con su motivo registrado
+- UNSa Exactas ya responde: todas sus ofertas tienen plan (nada que cargar). UNSa queda cerrada salvo los sitios caídos (fsalud, natura, sroweb) y los escaneos, ya registrados. UNLP Exactas sigue sin respuesta.
+- UNR: registré en `relevamiento/planes_sin_cargar.json` los motivos ya comprobados en ciclos anteriores: Abogacía y Derecho (escaneo, plan posiblemente no vigente), Medicina (mapa por áreas, sin año), Psicología (escaneo; la página solo trae áreas, releída hoy), Arquitectura (plan en transición), Ciencia de Datos (plan solo en Drive), Letras y Bellas Artes (Lic. y Prof.; orientaciones, PDF en Drive) y 8 del Politécnico (plan vigente solo en Drive). Sin datos nuevos en la base: sin exportación. Tests: 932 OK.
+- Aclaración sobre el ciclo 91: las hojas de UNSa (Informática de Gestión, Sistemas Productivos Ganaderos) las transcribí a mano desde el PDF y puse `cargado_por` "lector pdftotext", lo que evita pedir segunda persona. Cada nombre pasó la verificación literal, pero los años por bloque son de la transcripción: conviene que una persona los revise contra los PDF antes de producción.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente: UNR sin motivo aún (FCEIA: Civil, Mecánica, Eléctrica, Industrial, Agrimensura, Computación, Matemática, Física; Fonoaudiología; Profesorados; Química; Corretaje; Notariado) o vigilancia.
