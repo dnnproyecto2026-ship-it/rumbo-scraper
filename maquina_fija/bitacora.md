@@ -543,3 +543,17 @@
 - Cadena exportar → verificar USAL (ofertas 142/142) → exportar. Salen 4 de las 6; las 2 CCC no, por diseño. Sin credenciales de producción ni de GitHub.
 - Pendiente: Martillero (2,5) y Higiene CCC (2) siguen sin duración en la base. La próxima corrida de USAL ya las lee con el parser arreglado; hay que pasarlas a la base. Corrector Literario no tiene duración en la página: solo dice "Título Intermedio: 2 años y 1 cuatrimestre". Ninguna de las 6 tiene plan.
 - Siguiente: planes de las 6 nuevas de USAL; Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
+
+## 2026-10-24 (70) — USAL: duraciones que da la página entre paréntesis
+- `completar_duraciones USAL` no encontraba nada. Las páginas de USAL ponen la duración entre paréntesis, al lado del título ("(2 años y 1 cuatrimestre)"). `parsers.usal` lee ese formato y `parsers.duracion` no.
+- Cambio: `completar_duraciones` ahora consulta el lector propio de la universidad (`LECTORES_PROPIOS`, por ahora solo USAL) cuando el lector general no da nada. Prueba nueva en `tests/test_duracion_leida.py`. Tests: 909 OK.
+- Vista previa: 6 duraciones, cada una cotejada con el texto de su página. Aplicadas con `--apply`:
+  - Martillero: 2,5
+  - Higiene y Seguridad (CCC): 2
+  - Organización de Eventos: 2,5
+  - Corrección de Textos Digitales: 2,5
+  - Yoga: 2,5
+  - Arquitectura: 5
+- Corrector Literario sigue sin duración: la página solo da la del título intermedio.
+- Cadena exportar → verificar USAL (ofertas 142/142) → exportar completa (`Archivo: data/catalogo_depurado.json`). Sin credenciales de producción ni de GitHub; commit c67d1be queda local.
+- Siguiente: planes de las 6 carreras nuevas de USAL; UCEMA (la vigilancia del 23/10 da 17 carreras contra 16); Geografía (Compl.) de UNTREF; UNAHUR Viverismo.
