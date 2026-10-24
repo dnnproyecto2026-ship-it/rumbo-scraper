@@ -1,0 +1,47 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Microbiología;5.0;;;https://www.fcv.unlp.edu.ar/wp-content/uploads/2024/03/PLAN-DE-ESTUDIOS-2023.pdf;"1 | Biología General
+1 | Química I
+1 | Algebra
+1 | Física
+1 | Biología Celular y Molecular
+1 | Anatomía e Histología Básica
+1 | Química Biológica
+1 | Calculo
+1 | Química II
+2 | Fisiología General
+2 | Genética General y Microbiana
+2 | Patología General
+2 | Microbiología General
+2 | Inmunología General y Molecular
+2 | Bacteriología General
+2 | Sistema Científico y Tecnológico
+2 | Inglés Técnico
+2 | Bioinformática
+2 | Bioestadística
+3 | Parasitología General
+3 | Micología General
+3 | Virología General
+3 | Epidemiologia
+3 | Farmacología y Toxicología Aplicada a la Microbiología
+3 | Análisis Inmunológicos Aplicados a la Microbiología
+3 | Herramientas de Ingeniería Genética
+3 | Análisis Genéticos Aplicados a la Microbiología
+3 | Laboratorio Clínico Comparado
+3 | Técnicas de Muestreo
+4 | Ingeniería Genética Aplicada
+4 | Microbiología Clínica Humana I
+4 | Microbiología Clínica Animal
+4 | Inmunoprofilaxis e Inmunoterapia
+4 | Animales de Laboratorio
+4 | Bioprocesos
+4 | Microbiología Clínica Humana II
+4 | Microbiología y Tecnología de los Alimentos
+4 | Producción de Biológicos
+4 | Microbiología Ambiental
+5 | Microbiología de las Enfermedades Infecciosas
+5 | Microbiología Aplicada a la Inocuidad de los Alimentos
+5 | Gestión y Acreditación de Laboratorio
+5 | Gestión de Plagas y Biorremediación
+5 | Prevención y Control de Enfermedades Zoonóticas
+5 | Gestión de Calidad
+5 | Bioética y Legislación";IA Claude;;"Plan 2023 (FCV), tabla por año y cuatrimestre; nombres con la grafía del PDF (Algebra, Calculo, Epidemiologia). Afuera: Horas de optativas y la práctica preprofesional (el PDF dice ""PÁCTICA"").";UNLP;e3ae5975-7179-486d-8f52-3bf532bcde01

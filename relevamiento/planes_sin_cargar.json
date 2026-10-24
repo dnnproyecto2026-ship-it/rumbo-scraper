@@ -758,5 +758,15 @@
    "https://fcq.unc.edu.ar/wp-content/uploads/carreras/Plan-Lic-Quimica-ampliado.pdf"
   ],
   "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Astronomía",
+  "carrera_id": "4d511747-50b0-4903-9d06-4b90f320afaf",
+  "motivo": "La lista por año de la FCAG nombra solo 1.º a 3.º; 4.º y 5.º son optativas por puntos, seminario y tesis: no se sabe el plan entero. Las 74 materias que tenía eran las de Astronomía, Geofísica y Meteorología mezcladas con rótulos de la página (\"Facultad de ciencias\"); borradas (bitácora 83).",
+  "documentos": [
+   "https://www.fcaglp.unlp.edu.ar/index.php/alumnos/materias-y-programas/"
+  ],
+  "revisado": "2026-10-24"
  }
 ]

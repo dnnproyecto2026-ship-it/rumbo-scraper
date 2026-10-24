@@ -1,0 +1,54 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Geofísica;5.0;;;https://www.fcaglp.unlp.edu.ar/index.php/alumnos/materias-y-programas/;"1 | Análisis Matemático I
+1 | Algebra
+1 | Fundamentos de Geología
+1 | Geofísica General
+2 | Referenciación en Geofísica
+2 | Análisis Numérico y Programación
+2 | Análisis Matemático II
+2 | Física General I
+2 | Matemáticas Especiales I
+2 | Física General II
+3 | Geología Estructural
+3 | Matemáticas Especiales II
+3 | Física General III
+3 | Estadística Aplicada
+3 | Geodesia
+3 | Mecánica del Continuo
+3 | Análisis de Señales en Geofísica
+4 | Sismología
+4 | Geomagnetismo y Aeronomía
+4 | Gravimetría
+4 | Física de la Atmósfera y Meteorología
+4 | Física del Interior Terrestre
+4 | Geología Argentina y Aplicada
+5 | Métodos Sísmicos de Prospección
+5 | Métodos Potenciales de Prospección
+5 | Métodos Eléctricos de Prospección
+5 | Instrumental Geofísico y Electrónico
+5 | Seminario";IA Claude;;"Lista por año de ""Materias y programas"" (FCAG). Afuera: Tesis de Grado y Examen de Inglés. La página de la carrera dice 34 materias; la lista trae 28 más tesis y examen.";UNLP;e2035608-aff8-461f-988a-96f3e645e4a2
+UNLP;Licenciatura en Meteorología y Ciencias de la Atmósfera;5.0;;;https://www.fcaglp.unlp.edu.ar/index.php/alumnos/materias-y-programas/;"1 | Análisis Matemático I
+1 | Algebra
+1 | Introducción a las Ciencias Atmosféricas
+1 | Física General I
+2 | Análisis Matemático II
+2 | Física General II
+2 | Termodinámica de la Atmósfera
+2 | Estadística Aplicada
+2 | Introducción a la Dinámica de la Atmósfera
+2 | Introducción a la Química
+3 | Climatología I
+3 | Instrumentos y Observación
+3 | Micrometeorología y Turbulencia Atmosférica
+3 | Meteorología Dinámica
+3 | Meteorología Sinóptica
+3 | Laboratorio de Previsión del Tiempo
+4 | Inglés I
+4 | Física General III
+4 | Matemática Avanzada
+4 | Climatología II
+4 | Meteorología Sinóptica Dinámica
+4 | Química y Contaminación Atmosférica
+4 | Computación
+5 | Inglés II
+5 | Mesometeorología";IA Claude;;"Lista por año de ""Materias y programas"" (FCAG). Afuera: Optativa I, II y III y Tesis de Grado.";UNLP;196c0662-02ff-423c-8d2d-339d21a332ba

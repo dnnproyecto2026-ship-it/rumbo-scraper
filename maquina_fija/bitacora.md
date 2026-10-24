@@ -677,3 +677,13 @@
 - Cadena exportar → verificar UNC (materias 1689/1751) → exportar completa (`Archivo: data/catalogo_depurado.json`). Biotecnología sale con 41.
 - Sin credenciales de producción ni de GitHub.
 - Siguiente: UNC restante (FCM, FAUD, Agropecuarias, Psicología bloqueadas por Anubis; Gestión Universitaria y Prof. Cs. Económicas en el Digesto); UNLP (62 sin plan en la base).
+
+## 2026-10-24 (83) — UNLP: Microbiología (46), Geofísica (28), Meteorología (25); Astronomía limpiada
+- Vigilancia sin novedades (la corrida del lanzador de hoy llegó a UBA, igual que el 23/10).
+- `planes_documentos UNLP`: 0 planes. Las 3 de a mano, por `planes_manuales`:
+  - Microbiología (Veterinarias, hoja `data/planes_unlp_microbiologia.csv`): 46 materias (9/10/10/10/7) del "Plan de estudios 2023" de fcv.unlp.edu.ar, tabla por año y cuatrimestre; grafía del PDF ("Algebra", "Calculo", "Epidemiologia"). Afuera: horas de optativas y la práctica preprofesional (el PDF dice "PÁCTICA"). Cada celda cotejada con el PDF.
+  - Geofísica (28: 4/6/7/6/5) y Lic. Meteorología y Cs. de la Atmósfera (25: 4/6/6/7/2) desde la lista por año de "Materias y programas" de fcaglp.unlp.edu.ar (hoja `data/planes_unlp_fcag.csv`). Afuera: tesis, examen de inglés, optativas. Ojo: la página de Geofísica dice "34 materias"; la lista trae 28 + tesis + examen.
+- **Limpieza:** Lic. Astronomía tenía 74 materias: las de las 3 carreras de la FCAG juntas más rótulos ("Facultad de ciencias", "Astronómicas y geofísicas"). Borradas; copia en `data/unlp_astronomia_materias_retiradas_2026-10-24.json` (local). NO cargable: la lista nombra solo 1.º a 3.º (4.º y 5.º optativas por puntos); motivo en `relevamiento/planes_sin_cargar.json`. **En producción puede estar el plan mezclado: la importación de UNLP tiene que borrarlo.**
+- Leídas de vuelta de la base: 46 / 28 / 25 / 0. Cadena exportar → verificar UNLP (materias 2715/2725) → exportar completa (`Archivo: data/catalogo_depurado.json`); salen 46, 28 y 25.
+- Sin credenciales de producción ni de GitHub.
+- Siguiente UNLP: Jurídicas (Abogacía, Escribanía, Martillero), Exactas (Farmacia, Matemática, Física Médica, tecnicaturas; sitio con timeout antes), Naturales (Biología por orientación).
