@@ -941,3 +941,8 @@
 ## 2026-10-25 (126) — UADER: 64 carreras sin plan registradas como no cargables
 - Las fichas de `ingresantes.uader.edu.ar/node/N` enlazan el plan casi siempre a Google Drive (75 de 76 enlaces); el único enlace a la universidad (`fcyt.uader.edu.ar`, Prof. Educación Tecnológica) dio 504. Drive no es el dominio oficial, así que `planes_manuales` no lo acepta. Registradas las 64 carreras sin plan en `relevamiento/planes_sin_cargar.json` con motivo. Sin datos nuevos: no hace falta exportar.
 - Pendiente: reintentar `fcyt.uader.edu.ar` en otra rotación (puede tener planes en su dominio). Siguiente: UNJu/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (127) — UNSJ caída; UNMdP sin planes nuevos por el lector general
+- `unsj.edu.ar` (y `ffha.unsj.edu.ar`) no resuelven (DNS, curl exit 6; el resto de los sitios responde): 49 carreras de UNSJ sin plan quedan pendientes hasta que el sitio vuelva. `uncuyo.edu.ar` responde 410.
+- `planes_documentos UNMdP` (vista previa): 0 planes nuevos. Nada cargado ni cambiado en datos; no hace falta exportar. Tests: 932 OK.
+- Siguiente: reintentar UNSJ; UNaM/UNNE/USPT (responden 200) con lectores propios. Sin credenciales de producción ni de GitHub.
