@@ -1280,3 +1280,7 @@
 ## 2026-10-26 (210) — Verificación del ciclo 209 en curso; nada nuevo
 - `verificar_catalogo` (PID 2173975, cadena PID 2173141) sigue corriendo; no lancé otra exportación/verificación ni cambié código. `unsj.edu.ar` y `uncuyo.edu.ar` sin respuesta, `www.artes.unt.edu.ar` 503, `fcyt.uader.edu.ar` 200. Vigilancia del lanzador: usal (00:47) 78→80 carreras, aún sin revisar; uces/udesa/umsa menores.
 - Pendiente: confirmar `Archivo: ...` de la cadena 209; revisar usal (+2 carreras) en el próximo ciclo; el resto igual que ciclo 209. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (211) — usal revisada: sin carreras nuevas
+- `load_usal --input data/vigilancia/usal_completo.json --solo-nuevas` (vista previa) no lista ninguna carrera nueva: el 78→80 de la vigilancia repite el mismo desfase de baseline desde el 23/10 y las 80 ya están en la base. Nada cargado.
+- La cadena 209 (PID 2173141, `verificar_catalogo` PID 2173975) sigue corriendo; no lancé otra. Pendiente: confirmar `Archivo: ...`; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
