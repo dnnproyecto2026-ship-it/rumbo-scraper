@@ -832,3 +832,9 @@
 - Psicología (Facultad de Psicología): tabla HTML oficial de la página de la carrera (Plan 2012, 5 años); 39 materias obligatorias (9/8/7/8/7), PPS incluidas; las 5 optativas (sin año) afuera. Por `planes_manuales` (hoja `data/planes_unt_psicologia.csv`, cargado_por "lector html (máquina fija)"): 39/39 verificadas.
 - Pendiente UNT sin materias: Profesorado de Psicología, Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
 - Cadena exportar → verificar UNT → exportar OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (106) — UNT: Tec. Univ. en Acompañamiento Terapéutico cargada
+- Tec. Univ. en Acompañamiento Terapéutico (Facultad de Psicología): tabla HTML oficial de la página de la carrera (3 años, 5/6/4); 15 materias obligatorias, Práctica Final Supervisada y Trabajo Final Integrador incluidos. Por `planes_manuales` (hoja `data/planes_unt_acompanamiento.csv`, cargado_por "lector html (máquina fija)"): 15/15 verificadas; leído de vuelta de la base.
+- Profesorado de Psicología NO cargado: la página lo presenta como Ciclo de Complementación Curricular de 660 hs (2 años, 6 obligatorias + 3 optativas) y el catálogo lo tiene como grado de 4 años; hay que corregir la duración/tipo antes de cargar el plan.
+- Pendiente UNT sin materias: Prof. Psicología (arriba), Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
+- Cadena exportar → verificar UNT → exportar OK. Sin credenciales de producción ni de GitHub.

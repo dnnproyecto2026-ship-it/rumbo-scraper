@@ -1,0 +1,16 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Tecnicatura Universitaria en Acompañamiento Terapéutico;3;;;https://www.psicologia.unt.edu.ar/oferta-academica/tecnicatura-universitaria-acompanamiento-terapeutico/;"1|Psicología General
+1|Psicofisiología (AT)
+1|Introducción al Acompañante Terapéutico
+1|Psicología del Curso Vital
+1|Introducción a la Salud Pública
+2|Psicopatología I (AT)
+2|Neurobiología (AT)
+2|Teoría, Técnica y Ámbitos de abordajes del Acompañamiento Terapéutico
+2|Ética, Deontología y Legislación Profesional del Acompañante Terapéutico
+2|Intervenciones Clínicas del Acompañamiento Terapéutico
+2|Problemáticas Psicosociales
+3|Psicopatología II (AT)
+3|Atención y Cuidados del Adulto Mayor
+3|Práctica Final Supervisada (PFS)
+3|Trabajo Final Integrador (TIF)";lector html (máquina fija);;"Tabla oficial de la página de la carrera (3 años, 5/6/4); todas obligatorias, incluidas Práctica Final Supervisada y Trabajo Final Integrador";Universidad Nacional de Tucumán;bb333d2b-53a1-44d3-bbde-cfeb6f0e2c95
