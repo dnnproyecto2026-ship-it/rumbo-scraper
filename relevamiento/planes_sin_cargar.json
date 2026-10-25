@@ -2000,5 +2000,37 @@
    "https://fau.unt.edu.ar/fau/wp-content/uploads/2025/10/DipticoFAU-TUDIT-2026.pdf"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado de Educación Primaria",
+  "carrera_id": "64da8c66-0bff-4275-ab70-8306fa14b2c7",
+  "motivo": "El plan se publica solo como imagen JPG (cuadro por campo de formación y año, sin texto). El OCR del repo confirma los nombres pero mezcla las columnas y pierde el año de cada materia, así que el año no lo comprueba el código; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. No se carga hasta que una persona lo copie y revise.",
+  "documentos": [
+   "https://elvs-tuc.infd.edu.ar/sitio/profesorado-de-educacion-primaria/",
+   "https://elvs-tuc.infd.edu.ar/sitio/wp-content/uploads/2020/06/plan-de-estudio-primaria-.jpg"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado de Educación Inicial",
+  "carrera_id": "d0d5795d-d40b-423e-b766-0969737dfb30",
+  "motivo": "El plan se publica solo como imagen JPG (cuadro por campo de formación y año, sin texto). El OCR del repo confirma los nombres pero mezcla las columnas y pierde el año de cada materia, así que el año no lo comprueba el código; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. No se carga hasta que una persona lo copie y revise.",
+  "documentos": [
+   "https://elvs-tuc.infd.edu.ar/sitio/profesorado-de-educacion-inicial/",
+   "https://elvs-tuc.infd.edu.ar/sitio/wp-content/uploads/2021/05/plan-de-estudio-EInicial.jpg"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitario en Comunicación",
+  "carrera_id": "d5188513-1a7f-4de4-8a4e-8022cd9d0f97",
+  "motivo": "Es el título intermedio (3 años) de la Lic. en Ciencias de la Comunicación; el folleto oficial de filo.unt.edu.ar no trae un plan propio de la tecnicatura y repartir las materias de la licenciatura sería inferirlo.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_comunicacion_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
  }
 ]

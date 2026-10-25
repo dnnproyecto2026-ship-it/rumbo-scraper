@@ -932,3 +932,8 @@
 - Páginas oficiales en `unt.edu.ar/expount/.../instituto-tecnico/` con "Programa" por año explícito (3 años). Controles Automáticos Industriales 15 (5/5/5), Electricidad Industrial 15 (5/5/5), Diseño Industrial 13 (5/4/4). Afuera: "Electiva" y "Taller" (genéricas, Diseño Industrial); se quitó el punto final de "Tecnología de Soporte al Diseño Industrial.". Por `planes_manuales` (hoja `data/planes_unt_instituto_tecnico.csv`, "lector html (máquina fija)"): 43/43 verificadas; el export las trae (15/15/13).
 - Exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Pendiente UNT: Primaria/Inicial (sitio infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física.
+
+## 2026-10-25 (125) — UNT: Prof. Educación Primaria/Inicial y Tec. en Comunicación registradas como no cargables
+- Liceo Sarmiento (`elvs-tuc.infd.edu.ar`): el plan de ambos profesorados es solo una imagen JPG (cuadro por campo y año). El OCR del repo lee los nombres pero mezcla columnas y pierde el año; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. Registradas con motivo en `relevamiento/planes_sin_cargar.json`.
+- Tec. Universitario en Comunicación: sin plan propio en el folleto de Filo; registrada con motivo. Sin datos nuevos: no hace falta exportar.
+- Pendiente UNT: solo lo ya registrado (Artes 503 bloqueada: Prof. Artes Visuales, Intérprete Dramático, Tec. Actuación; Contador, Economía, Administración, Medicina, Veterinaria, Letras/Inglés, Ed. Física, Derecho, Arqueología, etc., cada una con motivo). UNT queda cerrada salvo reintentar Artes. Siguiente: UADER/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
