@@ -1,0 +1,17 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Tecnicatura Universitaria en Tecnología Azucarera e Industrias Derivadas;3;;;https://www.facet.unt.edu.ar/tecnicatura-azucarera/wp-content/uploads/sites/80/2023/10/PLAN-DE-ESTUDIOS-TEC-UNIV-EN-TECNOLOGIA-AZUCARERA.pdf;"1|Matemáticas
+1|Física
+1|Química General
+1|Control Químico
+1|Materia Prima
+1|Termodinámica Técnica
+2|Molienda Gen. y Dis. de Vapor
+2|Seguridad Industrial
+2|Operador de PC
+2|Industrias Derivadas
+2|Práctica Industrial I
+3|Tecnología Azucarera
+3|Práctica Industrial II
+3|Alcoholes
+3|Costo de Producción
+3|Administración de la Producción";lector pdftotext (máquina fija);;"Plan de estudio oficial (PDF de la página de la carrera), tres años con dos cuatrimestres; tildes agregadas al texto en mayúsculas del PDF";Universidad Nacional de Tucumán;fb3e1a33-c86a-4ce4-bf0b-5d9ec5a73b35

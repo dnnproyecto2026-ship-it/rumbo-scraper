@@ -816,3 +816,8 @@
 - Agrimensura (FACET): listado oficial `/agrimensura/asignaturas-por-modulos/` (módulos I a X agrupados por año explícito); 44 materias (9/8/10/10/7), Electivas I a III incluidas, horas y códigos afuera. Por `planes_manuales` (hoja `data/planes_unt_agrimensura.csv`, cargado_por "lector html (máquina fija)"): 44/44 verificadas.
 - Ing. Civil: la portada `/ingenieria-civil/` es una página suelta sin enlace a plan ni menú de carrera; no hay documento que comprobar. Pendiente (sin plan publicado en el sitio).
 - Verificación UNT corrida. Sin credenciales de producción ni de GitHub. Tests: 932 OK.
+
+## 2026-10-25 (103) — UNT: Tec. Universitaria en Tecnología Azucarera e Industrias Derivadas cargada
+- Plan de estudio oficial (PDF de `/tecnicatura-azucarera/`, texto limpio): 3 años, 16 materias (6/5/5), horas, códigos y correlativas afuera. Por `planes_manuales` (hoja `data/planes_unt_tec_azucarera.csv`, cargado_por "lector pdftotext (máquina fija)"): 16/16 verificadas; leído de vuelta de la base: 16 con año. Tildes agregadas al texto en mayúsculas del PDF; "Molienda Gen. y Dis. de Vapor" literal.
+- Pendiente UNT sin materias: Ing. Civil (sin plan enlazado), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
+- Cadena exportar → verificar UNT → exportar lanzada. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
