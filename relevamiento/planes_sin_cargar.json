@@ -1938,5 +1938,13 @@
    "https://faz.unt.edu.ar/idehost/wp-content/uploads/2024/02/Plan-de-estudio-2018DOC280319-Veterinaria-Rectif-8.pdf"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Medicina",
+  "carrera_id": "ab1d6d25-c95d-40c0-8b31-01f035445da3",
+  "motivo": "La base tenía 26 renglones sin año y con nombres cortados en varias líneas (\"RADIOLOGÍA, DIAGNÓSTICO / POR IMÁGENES Y TERAPIA / RADIANTE I\", \"MÓDULO\" suelto) para una carrera de 7 años: no era un plan comprobable y se borró. No se encontró todavía un documento oficial con las materias por año de la Facultad de Medicina; hay que ubicarlo (la oferta no tiene enlace oficial) antes de volver a cargarla.",
+  "documentos": [],
+  "revisado": "2026-10-25"
  }
 ]
