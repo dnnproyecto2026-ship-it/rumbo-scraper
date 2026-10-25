@@ -1263,3 +1263,7 @@
 ## 2026-10-26 (206) — Verificación del ciclo 204 sigue corriendo; nada nuevo
 - `verificar_catalogo` (PID 2120443) sigue activo tras 2h35; después viene `exportar_catalogo` en el mismo bash. No lancé otra exportación/verificación ni cambié código.
 - Pendiente: igual que ciclo 205 (confirmar `Archivo: ...`; UNSJ, UNCuyo caídos, UNT Artes 503). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (207) — Verificación del ciclo 204 sigue corriendo; nada nuevo
+- `verificar_catalogo` (PID 2120443) sigue activo tras 2h40; después viene `exportar_catalogo`. No lancé otra exportación/verificación ni cambié código. `unsj.edu.ar`, `uncuyo.edu.ar` y `fcyt.uader.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador: entradas nuevas de uca (carreras 80→81), ucema, uces (materias +1): cambios menores, para revisar en una pasada de vigilancia.
+- Pendiente: igual que ciclo 206. Sin credenciales de producción ni de GitHub.
