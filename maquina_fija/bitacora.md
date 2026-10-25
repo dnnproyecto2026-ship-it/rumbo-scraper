@@ -843,3 +843,7 @@
 - Lic. en Informática (FACET): tabla HTML oficial de `/licinformatica/plan-de-estudio/` (modificación 2009, módulos I a X → 5 años); 37 materias (8/6/7/8/8), Laboratorio I y II, Optativas I y II, Proyecto de Software y Tesis incluidos; Inglés I y II (exigencia adicional) afuera. Por `planes_manuales` (hoja `data/planes_unt_lic_informatica.csv`, cargado_por "lector html (máquina fija)"): 37/37 verificadas.
 - Pendiente UNT sin materias: Prof. Psicología (ver 106), Ing. Industrial y Civil (FACET), Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental, Contador Público/Economía/Administración (FACE), Filo, Medicina, Agronomía/Veterinaria, Instituto Técnico y Música.
 - Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (108) — UNT: Ed. Física, Contador, Administración y Economía NO cargables
+- Prof. Educación Física (FACDEF, Plan 2000): la página lista materias por categoría sin año; no se infiere. Contador Público (FACE): el plan 2018 es un escaneo con OCR ilegible. Lic. Administración y Lic. Economía (FACE): la página no publica el plan. Las 4 registradas con motivo en `relevamiento/planes_sin_cargar.json`.
+- Sin datos nuevos en la base; no hace falta exportar. Pendiente UNT: Artes (sitio con 503), Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Filo, Medicina, Agronomía/Veterinaria, Instituto Técnico y Música. Tests: 932 OK.

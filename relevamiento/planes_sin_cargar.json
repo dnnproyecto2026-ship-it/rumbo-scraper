@@ -1858,5 +1858,45 @@
    "https://derecho.unt.edu.ar/carreras-de-grado-procuracion/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "6cd0e47a-f1d9-4bb8-bff2-47a889500ac3",
+  "motivo": "La página oficial de la Facultad de Educación Física (Plan 2000) lista las materias por categorías (obligatorias, deportes, orientaciones, talleres, niveles de inglés) sin año de cursada: asignar años sería inferirlo. No se carga.",
+  "documentos": [
+   "https://www.facdef.unt.edu.ar/profesorado.html"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Contador Público",
+  "carrera_id": "9dab70c6-a1bc-43d9-9e41-89b0d7e9386c",
+  "motivo": "El plan 2018 (Res. HCS) solo se publica como PDF escaneado de 3.800 líneas con OCR ilegible (columnas y renglones mezclados): no se puede comprobar cada nombre contra el documento. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/archivos-publicaciones/Plan_de_estudio_2018_con_modif.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Administración",
+  "carrera_id": "fc8c847f-119f-4fba-81c2-d41b4f482006",
+  "motivo": "La página de la carrera en face.unt.edu.ar solo da la cantidad de materias (34) y la duración; no enlaza ni publica el plan de estudios. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/carreras/licenciatura-en-administracion/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "8e5d9c55-bc9f-480d-bde6-4f3d052a8b5b",
+  "motivo": "La página de la carrera en face.unt.edu.ar no enlaza ni publica el plan de estudios. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/carreras/licenciatura-en-economia/"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
