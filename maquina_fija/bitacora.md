@@ -1276,3 +1276,7 @@
 - La corrida de vigilancia de uca (80→81) trajo una carrera nueva: Lic. en Inteligencia Artificial y Big Data (Fac. de Humanidades y Cs. Económicas, 4 años, 51 materias, 12/13/13/13 por año). Única diferencia con el baseline. Cargada con `load_uca --input data/vigilancia/uca_completo.json --apply` (solo la base del scraper; el loader hace upsert). Las materias salen del spider (página renderizada con JS), no se pueden cotejar con HTML crudo con curl.
 - Exportación→verificación→exportación lanzada en segundo plano (PID 2173141, log /tmp/ciclo209_cadena.log). Falta confirmar que cierre con `Archivo: ...`.
 - Pendiente: igual que ciclo 208 (UNSJ, UNCuyo caídos; UNT Artes 503; UADER FCyT 200). Vigilancia de uces/udesa/umsa: cambios menores sin revisar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (210) — Verificación del ciclo 209 en curso; nada nuevo
+- `verificar_catalogo` (PID 2173975, cadena PID 2173141) sigue corriendo; no lancé otra exportación/verificación ni cambié código. `unsj.edu.ar` y `uncuyo.edu.ar` sin respuesta, `www.artes.unt.edu.ar` 503, `fcyt.uader.edu.ar` 200. Vigilancia del lanzador: usal (00:47) 78→80 carreras, aún sin revisar; uces/udesa/umsa menores.
+- Pendiente: confirmar `Archivo: ...` de la cadena 209; revisar usal (+2 carreras) en el próximo ciclo; el resto igual que ciclo 209. Sin credenciales de producción ni de GitHub.
