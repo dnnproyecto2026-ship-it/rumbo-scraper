@@ -918,3 +918,7 @@
 ## 2026-10-25 (121) — UNT Tec. Univ. en Medios Audiovisuales NO cargable
 - La tecnicatura (3 años) es el tramo inicial del plan de la Lic. en Cinematografía; el sitio de la Escuela de Cine solo tiene la lista de cátedras con docentes y orientaciones desde 2.º, sin plan propio de la tecnicatura. Registrada con motivo en `relevamiento/planes_sin_cargar.json`. Sin datos nuevos: no hace falta exportar.
 - Pendiente UNT: Música (4 profesorados), Indumentaria y Textil (`fau.unt.edu.ar`), Instituto Técnico (3 tecnicaturas en `unt.edu.ar/expount`), Primaria/Inicial (sitio infd), Artes (503). Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (122) — UNT Tec. Univ. en Diseño de Indumentaria y Textil NO cargable
+- `fau.unt.edu.ar`: la página solo trae áreas y régimen (36 materias, 1860 hs, 3 años); la única lista es el díptico PDF 2026 con pares "I y II" (Taller de Diseño, Moldería, Materiales Textiles, Técnicas de Producción) y "Gestión Empresarial" sin año. Repartir pares y ubicar esa materia sería inferir. Registrada con motivo en `relevamiento/planes_sin_cargar.json`. Sin datos nuevos: no hace falta exportar.
+- Pendiente UNT: Música (4 profesorados; `ismunt.unt.edu.ar`), Instituto Técnico (3 tecnicaturas en `unt.edu.ar/expount`), Primaria/Inicial (sitio infd), Artes (503), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Tests: 932 OK. Sin credenciales de producción ni de GitHub.

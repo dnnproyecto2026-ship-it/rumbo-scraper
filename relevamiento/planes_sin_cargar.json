@@ -1989,5 +1989,16 @@
    "https://www.escueladecine.unt.edu.ar/plan-de-estudio/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitaria en Diseño de Indumentaria y Textil",
+  "carrera_id": "ce512130-d48a-46f2-a4c0-c2dcbcf87198",
+  "motivo": "La página de la FAU solo describe las 4 áreas y el régimen (36 materias, 1860 hs); la única lista de materias es el díptico PDF 2026, un folleto con columnas por año donde las materias vienen en pares ('Taller de Diseño I y II', 'Moldería Base I y II') que no se pueden comprobar una por una, y 'Gestión Empresarial' (área de Gestión) no aparece en ninguna columna de año. Repartir los pares y ubicar esa materia sería inferir: no se carga hasta que la facultad publique el plan completo.",
+  "documentos": [
+   "https://fau.unt.edu.ar/fau/tecnicatura-universitaria-en-diseno-de-indumentaria-y-textil/",
+   "https://fau.unt.edu.ar/fau/wp-content/uploads/2025/10/DipticoFAU-TUDIT-2026.pdf"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
