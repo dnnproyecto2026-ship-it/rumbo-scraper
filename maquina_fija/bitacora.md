@@ -954,3 +954,7 @@
 ## 2026-10-25 (129) — USPT sin planes nuevos por el lector general
 - `planes_documentos USPT` (vista previa): 0 planes nuevos. Nada cargado ni cambiado en datos; no hace falta exportar.
 - Pendiente: USPT (45), UNNE (63) y UNaM (70) necesitan lectores propios por sitio; reintentar UNSJ, fcyt.uader y UNCuyo. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (130) — USPT: lector de planes escaneados sin resultado; UNSJ, fcyt.uader y UNCuyo siguen caídas
+- `planes_escaneados USPT` (vista previa): 0 planes. Los planes de USPT en `api.uspt.edu.ar` son PDFs escaneados que el OCR no deja verificar contra materias ya publicadas. `unsj.edu.ar` y `fcyt.uader.edu.ar` siguen sin responder (curl 000); `uncuyo.edu.ar` 410. Nada cargado ni cambiado en datos; no hace falta exportar. Tests: 932 OK.
+- Pendiente: USPT (45) sin plan legible por OCR; UNNE (63) y UNaM (70) necesitan lectores propios por facultad; reintentar UNSJ, fcyt.uader y UNCuyo. Sin credenciales de producción ni de GitHub.

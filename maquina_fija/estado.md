@@ -63,3 +63,4 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - UADER (ciclo 126): 64 sin plan registradas (planes solo en Drive); reintentar fcyt.uader.edu.ar (504). Siguiente: UNJu/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE.
 - UNT (ciclo 125): Primaria/Inicial (imagen) y Tec. Comunicación registradas NO cargables; UNT cerrada salvo reintentar Artes (503). Siguiente: UADER/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE.
 - UNT (ciclo 124): Música e Instituto Técnico (3 tecnicaturas) hechas. Pendiente UNT: Primaria/Inicial (infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Producción: sin credenciales; "listo para cargar" cuando las haya. Push a GitHub: sin credenciales (commit local en `maquina-fija`).
+- USPT (ciclo 130): planes escaneados por OCR dan 0; planes solo como PDF escaneado en api.uspt.edu.ar.
