@@ -847,3 +847,11 @@
 ## 2026-10-25 (108) — UNT: Ed. Física, Contador, Administración y Economía NO cargables
 - Prof. Educación Física (FACDEF, Plan 2000): la página lista materias por categoría sin año; no se infiere. Contador Público (FACE): el plan 2018 es un escaneo con OCR ilegible. Lic. Administración y Lic. Economía (FACE): la página no publica el plan. Las 4 registradas con motivo en `relevamiento/planes_sin_cargar.json`.
 - Sin datos nuevos en la base; no hace falta exportar. Pendiente UNT: Artes (sitio con 503), Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Filo, Medicina, Agronomía/Veterinaria, Instituto Técnico y Música. Tests: 932 OK.
+
+## 2026-10-25 (109) — UNT Filosofía y Letras: Cs. de la Educación (Prof. y Lic.) y Cs. de la Comunicación
+- Folletos oficiales 2026 de `filo.unt.edu.ar` (tabla por año, un plan por título). Por `planes_manuales` (hoja `data/planes_unt_filo_educ_comunic.csv`, cargado_por "lector folleto pdf (máquina fija)"): Prof. Cs. de la Educación 33, Lic. Cs. de la Educación 34, Lic. Cs. de la Comunicación 38 (105 verificadas contra el PDF y leídas de vuelta de la base, con año). Afuera las optativas genéricas ("Optativa de Formación General", "Optativa del Departamento", "Optativas de Cs. de la Comunicación"), que son menús sin nombre.
+- NO cargables, registradas en `relevamiento/planes_sin_cargar.json`: Prof. y Lic. en Letras (Ciclo Superior en una columna sin año, con bolsas de electivas) y Lic. en Inglés (tres orientaciones juntas).
+- Lic. en Física ya tiene 30 materias en la base (años 1–4, de la página de programas); falta 5.º año (3 optativas, 1 tesis…, 5 renglones) y `planes_manuales` solo toma carreras sin materias: queda así, anotado.
+- Tec. Univ. en Comunicación (título intermedio, 3 años): el folleto no trae plan propio; no se cargó.
+- Pendiente UNT: Medicina (26 materias en base, revisar), Agronomía/Veterinaria/Zootecnia, Música, Instituto Técnico, Artes (503), Diseño de Iluminación (PDF), Física Ambiental, Odontología/Kinesiología/Enfermería Univ., Arqueología/Cs. Biológicas (csnat), Diseño de Indumentaria (FAU), Ing. Industrial y Civil.
+- Sin credenciales de producción ni de GitHub.

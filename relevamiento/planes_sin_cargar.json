@@ -1898,5 +1898,35 @@
    "https://face.unt.edu.ar/web/carreras/licenciatura-en-economia/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado en Letras",
+  "carrera_id": "8dab72d0-9d42-4d96-a5b4-6c77a2fdafc6",
+  "motivo": "El folleto oficial pone el Ciclo Superior en una sola columna sin año (con bolsas de electivas y optativas); no se infiere el año de cada materia. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_letras_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "724deb62-e45f-4c12-a0a6-1a6844fe3d35",
+  "motivo": "El folleto oficial pone el Ciclo Superior en una sola columna sin año (con bolsas de electivas, optativas y Tesis); no se infiere el año de cada materia. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_letras_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Inglés",
+  "carrera_id": "67108db5-65b9-46b8-8a54-dad2e422a0cb",
+  "motivo": "El folleto oficial trae tres orientaciones (Lingüística, Historia, Literatura) con planes distintos y la carrera es una sola; cargarlas juntas mezclaría orientaciones. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_ingles_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
