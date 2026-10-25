@@ -862,3 +862,8 @@
 - Medicina Veterinaria (Plan 2018): escaneo con malla ilegible por OCR; registrada en `relevamiento/planes_sin_cargar.json`.
 - Cadena exportar → verificar UNT → exportar lanzada. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Pendiente UNT: Medicina, Odontología, Bioquímica/Farmacia, Música, Instituto Técnico, Artes (503), Diseño de Iluminación, Física Ambiental, Naturales.
+
+## 2026-10-25 (111) — UNT Odontología: año de 5.º corregido; las dos tecnicaturas ya estaban bien
+- Odontología, Tec. Asistencia Dental y Tec. Prótesis Dental ya tenían todas sus materias en la base (30/24/20), iguales a la tabla oficial de `odontologia.unt.edu.ar/carreras/*` (Res. 3527/09). Error: en Odontología las 7 materias de 5.º (incl. Práctica Final Obligatoria) estaban en 4.º (13 en 4.º) porque la fila de encabezado de la página está rota ("programas/5º Año"). Corregido `anio_cursada` solo en esas 7 filas: ahora 4/7/6/6/7, como la tabla.
+- Aviso para ciclos siguientes: "sin materias" en el export no se mide con `materias` de la carrera en `catalogo_depurado.json`; consultar la tabla `materias` por `carrera_id` (columnas `nombre_materia`, `anio_cursada`). Revisar el año de las demás carreras UNT/otras con 4.º o último año muy cargado.
+- Pendiente UNT: Medicina (26 en base, revisar), Bioquímica/Farmacia, Música, Instituto Técnico, Naturales, Artes (503), Diseño de Iluminación, Física Ambiental. Exportar → verificar UNT → exportar en curso. Sin credenciales de producción ni de GitHub.
