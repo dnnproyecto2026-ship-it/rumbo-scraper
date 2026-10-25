@@ -962,3 +962,7 @@
 ## 2026-10-25 (131) — Sin trabajo accionable; UNSJ, fcyt.uader y UNCuyo siguen caídas
 - Reintento: `unsj.edu.ar` y `fcyt.uader.edu.ar` sin respuesta (curl 000), `uncuyo.edu.ar` 410. Vigilancia del lanzador sin cambios nuevos respecto de la rotación anterior (los "CAYÓ" de ub, uba, udesa, austral, palermo se repiten igual en dos días: revisar antes de confiar en esos spiders). Nada cargado; no hace falta exportar. Tests: 932 OK.
 - Pendiente: UNSJ (49), UNNE (63), UNaM (70), USPT (45) y UNCuyo; lectores propios por sitio o esperar que vuelvan. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (132) — Sin trabajo accionable; sitios siguen caídos
+- Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador sin entradas nuevas. Nada cargado ni cambiado en datos.
+- Pendiente: UNSJ (49), UNNE (63), UNaM (70), USPT (45), UNCuyo y UNT Artes; lectores propios por sitio o esperar que vuelvan. Sin credenciales de producción ni de GitHub.
