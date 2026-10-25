@@ -1,0 +1,45 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Civil;5.5;;;https://www.facet.unt.edu.ar/cic/carrera/plan-de-estudio/;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica
+1 | Física I
+1 | Sistemas de Representación
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Fundamentos de Química General
+2 | Cálculo III
+2 | Física III
+2 | Diseño Asistido
+2 | Mecánica Técnica
+2 | Cálculo IV
+2 | Probabilidad y Estadística
+2 | Geología Básica
+2 | Estabilidad I
+3 | Estabilidad II
+3 | Estudio de Materiales I
+3 | Mecánica de los Fluidos
+3 | Topografía y Geodesia
+3 | Estabilidad III
+3 | Estudio de Materiales II
+3 | Hidráulica Básica
+3 | Mecánica de los Suelos
+4 | Estabilidad IV
+4 | Hormigón I
+4 | Hidrología
+4 | Diseño Geométrico Vial
+4 | Hormigón II
+4 | Obras Básicas Viales
+4 | Hidráulica Aplicada I
+4 | Cimentaciones
+5 | Construcciones Sismorresistentes
+5 | Estructuras Metálicas y de Madera
+5 | Hidráulica Aplicada II
+5 | Diseño y Construcción de Pavimentos
+5 | Arquitectura y Urbanismo
+5 | Instalaciones Complementarias de Edificios
+5 | Derecho y Ciencias Sociales en Ingeniería
+5 | Economía y Evaluación de Proyectos
+5 | Organización y Conducción de Obras
+6 | Proyecto Final
+6 | Práctica Profesional Supervisada";lector html (máquina fija);;"Plan 2005 (Res. HCS 2016/01 y ME 1232/01); Cuadro 3 por módulos I a XI (semestrales): año = (módulo+1)//2, XI = 6.º. 44 asignaturas; Idioma Inglés (prueba de suficiencia) afuera.";Universidad Nacional de Tucumán;d42e0e92-c439-49de-9c88-4abe738f77c1

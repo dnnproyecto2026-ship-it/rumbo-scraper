@@ -873,3 +873,8 @@
 - Falta ubicar el documento oficial de la Facultad de Medicina con las materias por año (la oferta no tiene enlace oficial). La búsqueda web no estuvo disponible (Firecrawl sin créditos); queda para un ciclo con otra vía de localización.
 - Exportación OK (`Archivo: data/catalogo_depurado.json`). Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Pendiente UNT: Medicina (ubicar fuente), Bioquímica/Farmacia (ya con 36/36), Música, Instituto Técnico, Naturales, Artes (503), Diseño de Iluminación, Física Ambiental.
+
+## 2026-10-25 (113) — UNT FACET: Ingeniería Civil cargada
+- Ing. Civil (5,5 años): Plan 2005 en la página oficial `facet.unt.edu.ar/cic/carrera/plan-de-estudio/` (el enlace de la ficha FACET lleva al sitio de la carrera). Cuadro 3 da cada asignatura con su módulo semestral I a XI; año = (módulo+1)//2, XI = 6.º. 44 asignaturas (9/8/8/8/9/2), coincide con el total del Cuadro 1; nombres completos de la sección 9. Idioma Inglés (prueba de suficiencia) afuera. Por `planes_manuales` (hoja `data/planes_unt_civil.csv`, "lector html (máquina fija)"): 44/44 verificadas, leídas de vuelta con año.
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Pendiente UNT: Ing. Industrial (registrada, cinco páginas por año), Medicina (ubicar fuente), Música (4 profesorados), Artes Visuales, Cinematografía, Actuación/Intérprete Dramático, Kinesiología, Enfermería Univ., Biológicas, Arqueología, Física Ambiental, Diseño de Iluminación, Instituto Técnico (3 tecnicaturas), Primaria/Inicial.
