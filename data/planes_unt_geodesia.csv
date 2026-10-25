@@ -1,0 +1,47 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Geodésica y Geofísica;5;;;https://www.facet.unt.edu.ar/geodesia-geofisica/plan-de-estudios/;"1 | Algebra y Geometria Analitica
+1 | Calculo I
+1 | Fisica I
+1 | Sistemas de Representacion
+1 | Fundamentos de Quimica Genera
+1 | Fisica II
+1 | Informatica
+1 | Calculo II
+1 | Elementos de Algebra Lineal
+2 | Geografia Fisica y Geomorfologia
+2 | Calculo III
+2 | Fisica III
+2 | Laboratorio de Fisica III
+2 | Topografia I
+2 | Calculo IV
+2 | Probabilidad y Estadistica
+2 | Topografia II
+2 | Dibujo Cartografico
+3 | Teoria de Errores y Compensacion
+3 | Geologia General
+3 | Vias de Comunicacion
+3 | Geodesia y Astronomia de Posicion
+3 | Cartografia
+3 | Ingenieria Legal
+3 | Hidraulica
+3 | Higiene y Seguridad Laboral
+3 | Fotogrametria
+4 | Geodesia Geometrica
+4 | Geofisica General
+4 | Geologia Estructura
+4 | Fotogrametria Analitica y Digital I
+4 | Calculo Geodesico Avanzado
+4 | Prospeccion Sismica
+4 | Sistemas de Informacion Geografico
+4 | Geotecnia
+4 | Sensores Remotos
+5 | Geodesia Fisica
+5 | Prospeccion Gravimetrica y Magnetica
+5 | Fotogrametria Analitica y Digital II
+5 | Economía
+5 | Levantamiento Territorial
+5 | Prospeccion Geoelectrica
+5 | Tecnologia Satelital y Geodinamica
+5 | Urbanismo y Gestion Ambiental
+5 | Proyecto Final
+5 | Asignatura Electiva";lector html (máquina fija);;"Tabla oficial por módulos 1 a 10 (dos por año); nombres literales de la página (mayúsculas, 'GENERA', 'ESTRUCTURA'); PPS, examen de inglés y las dos opciones de electiva (Hidrogeología, Topografía III) afuera.";Universidad Nacional de Tucumán;2f12f16f-fdb7-4376-acac-686809b5c4a8

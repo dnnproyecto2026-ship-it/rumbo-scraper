@@ -821,3 +821,9 @@
 - Plan de estudio oficial (PDF de `/tecnicatura-azucarera/`, texto limpio): 3 años, 16 materias (6/5/5), horas, códigos y correlativas afuera. Por `planes_manuales` (hoja `data/planes_unt_tec_azucarera.csv`, cargado_por "lector pdftotext (máquina fija)"): 16/16 verificadas; leído de vuelta de la base: 16 con año. Tildes agregadas al texto en mayúsculas del PDF; "Molienda Gen. y Dis. de Vapor" literal.
 - Pendiente UNT sin materias: Ing. Civil (sin plan enlazado), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
 - Cadena exportar → verificar UNT → exportar lanzada. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (104) — UNT: Ing. Geodésica y Geofísica cargada; Derecho NO cargable
+- Ing. Geodésica y Geofísica (FACET): tabla HTML oficial de `/geodesia-geofisica/plan-de-estudios/` (módulos 1 a 10, dos por año → 5 años); 46 materias (9/9/9/9/10), nombres literales de la página; PPS, examen de inglés y las dos opciones de electiva afuera. Por `planes_manuales` (hoja `data/planes_unt_geodesia.csv`, cargado_por "lector html (máquina fija)"): 46/46 verificadas; leído de vuelta de la base.
+- Abogacía, Escribanía y Procuración (Derecho): la página de cada carrera no publica el plan; el único PDF es la correlatividad de Notariado sin años. Registradas en `relevamiento/planes_sin_cargar.json`.
+- Pendiente UNT sin materias: Psicología, Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.

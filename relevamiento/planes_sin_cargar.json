@@ -1828,5 +1828,35 @@
    "https://www.facet.unt.edu.ar/ingindustrial/plan-de-estudio/"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Abogacía",
+  "carrera_id": "b2944e56-5ba3-4e0d-be44-ef88ce4365fb",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-abogacia/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Escribanía",
+  "carrera_id": "8a5cec2f-f817-4395-a3a7-f02ea344e43f",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-escribania/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Procuración",
+  "carrera_id": "2c532338-58b8-43b2-a16f-f93a02d3bf79",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-procuracion/"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
