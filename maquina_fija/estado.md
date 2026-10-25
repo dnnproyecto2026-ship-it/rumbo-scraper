@@ -64,3 +64,5 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - UNT (ciclo 125): Primaria/Inicial (imagen) y Tec. Comunicación registradas NO cargables; UNT cerrada salvo reintentar Artes (503). Siguiente: UADER/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE.
 - UNT (ciclo 124): Música e Instituto Técnico (3 tecnicaturas) hechas. Pendiente UNT: Primaria/Inicial (infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Producción: sin credenciales; "listo para cargar" cuando las haya. Push a GitHub: sin credenciales (commit local en `maquina-fija`).
 - USPT (ciclo 130): planes escaneados por OCR dan 0; planes solo como PDF escaneado en api.uspt.edu.ar.
+
+- UADER FCyT (ciclo 204): sitio volvió. Prof. Educación Tecnológica cargado en la base del scraper (40 materias). Lic. Producción Agropecuaria y Lic. Automatización y Control rechazadas por plan incompleto. `verificar_catalogo` (PID 2120443) + `exportar_catalogo` en curso desde 2026-10-25 ~19:50; confirmar que termine con `Archivo:` (log `/tmp/export_uader2.log`) y si no, re-correr exportar → verificar → exportar. Listo para cargar a producción cuando haya credenciales (UADER).

@@ -1250,3 +1250,8 @@
 ## 2026-10-25 (203) — Sin trabajo accionable; sitios siguen caídos
 - Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador sin entradas nuevas (última: uba 18:31, ya conocida). Nada cargado.
 - Pendiente: igual que ciclo 202 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (204) — UADER FCyT volvió; Prof. Educación Tecnológica cargado
+- `fcyt.uader.edu.ar` responde 200. El lector `plan_fcyt_uader` toma 3 carreras de las 64 sin plan (las demás no tienen página de plan en FCyT o su nombre no coincide): Prof. Educación Tecnológica cargado (40 materias, 4 años, verificado contra la página); Lic. Producción Agropecuaria (11) y Lic. Automatización y Control (56) rechazadas por `planes_manuales` ("no parece el plan completo"), quedan sin plan. Planilla: `data/planes_uader_fcyt.csv`.
+- Cargado solo en la base del scraper. Exportación/verificación en curso al escribir esto. Sin credenciales de producción ni de GitHub.
+- Pendiente: las otras carreras de FCyT (Sistemas, Biología, Física, etc.) no figuran como sin plan en la base de UADER o no coinciden por nombre; revisar el cruce de nombres. UNSJ, UNCuyo caídos; UNT Artes 503.
