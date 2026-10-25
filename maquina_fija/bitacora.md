@@ -905,3 +905,7 @@
 - Lic. en Cinematografía (Escuela de Cine): la página y el PDF "Plan 2025" son listas de cátedras con docentes, con seis orientaciones repetidas en 2.º y 3.º y "Asignatura por orientación" en 4.º; registrada en `relevamiento/planes_sin_cargar.json`.
 - Exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Pendiente UNT: Prof. en Artes Visuales (probar misma página), Música (4 profesorados; `ismunt.unt.edu.ar`, `licenciatura-en-musica-2` no responde), Intérprete Dramático/Actuación Teatral/Prof. Teatro, Diseño de Iluminación, Medios Audiovisuales, Indumentaria y Textil, Instituto Técnico (3 tecnicaturas), Primaria/Inicial, Física Ambiental, Comunicación (Tec.), Diseño Industrial (Tec.).
+
+## 2026-10-25 (119) — UNT Artes: www.artes.unt.edu.ar bloquea la lectura
+- Al ir por Prof. en Artes Visuales y Teatro, `www.artes.unt.edu.ar` (incluida la página de Lic. Artes Visuales que se leyó en el ciclo 118) responde 503 "Your access to this site has been limited by the site owner" con el cliente del repo. Es un bloqueo del sitio: no se evade (ni otro cliente ni user agent). Nada cargado ni cambiado en datos.
+- Pendiente UNT: Prof. Artes Visuales y Teatro (reintentar el sitio en otro ciclo), Música (`ismunt.unt.edu.ar`), Diseño de Iluminación, Medios Audiovisuales, Indumentaria y Textil, Instituto Técnico (3 tecnicaturas), Primaria/Inicial, Física Ambiental, Comunicación (Tec.), Diseño Industrial (Tec.). Tests: 932 OK. Sin credenciales de producción ni de GitHub.
