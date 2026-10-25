@@ -2032,5 +2032,611 @@
    "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_comunicacion_2026.pdf"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Accidentología Vial",
+  "carrera_id": "0699269a-f395-4750-98f0-c4a2f9421cfd",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/49"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Canto Popular",
+  "carrera_id": "07958c85-ae3b-46f5-9329-a52c956f0db7",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/90"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Psicogerontología",
+  "carrera_id": "089f1ad5-f9c3-4acf-885d-3d9b9589fe6f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/106"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Psicología",
+  "carrera_id": "167c9a26-5a16-4d62-84bb-9bf7f65b5317",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/96"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Laboratorio",
+  "carrera_id": "174f1cde-4484-48fe-8357-b3a64916e46c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/33"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Psicología",
+  "carrera_id": "17b7e47a-ad7d-43d0-80e9-dd20d67ebf86",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Enfermería",
+  "carrera_id": "18d54e40-0913-44c2-91a9-bf5e35c74352",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/28"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Teatro",
+  "carrera_id": "1a8d6246-1f2a-42bd-abdb-6fe20859b99c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "1e64312a-f111-426c-8262-459b602ffa1d",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Cerámica",
+  "carrera_id": "21825512-2aff-463b-956f-9dfa573856dd",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/101"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Instrumento",
+  "carrera_id": "2b2c98c4-643a-4f20-ad8f-43162e05a680",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/77"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Canto Lírico",
+  "carrera_id": "314bffa2-1ecd-48a0-8c6d-8a153eaecd55",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/68"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Grabado",
+  "carrera_id": "33faca5f-528d-4cab-9691-510ab542e8e0",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/103"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Historia",
+  "carrera_id": "3edcfd92-4580-4355-81b4-57b9d3bcbdda",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Administración Pública",
+  "carrera_id": "4679bf35-4048-4dc0-a18c-668c34da428e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/20"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Podología Universitaria",
+  "carrera_id": "46c1e0a7-694e-4ab2-a453-d8574e1fcf50",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/38"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Higiene y Salud Animal",
+  "carrera_id": "4ae1c8b8-9272-4105-be0e-3a7141a97e42",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/36"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Artes Visuales",
+  "carrera_id": "50d83934-ada7-4936-bfa0-c0f1dccc27e6",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Inicial",
+  "carrera_id": "529a7714-5cc5-4e7c-8463-4a40eb2d8ab1",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Actividad Física y Deporte",
+  "carrera_id": "52f5a2d3-1bd7-465b-b05b-573a45c81d66",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/34"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Pintura",
+  "carrera_id": "53525acf-be82-4043-8254-52d605f0ea46",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/105"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Producción de Bioimágenes",
+  "carrera_id": "5d2f65ac-48d8-4e46-920d-00fb4b412807",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/39"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Acompañamiento Terapéutico",
+  "carrera_id": "60885b71-f816-4683-80b5-759804579096",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/99"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Turismo",
+  "carrera_id": "63309835-2761-46f0-9f94-afcd9424d402",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/17"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Portugués",
+  "carrera_id": "635ec6da-c238-4aa6-baf2-3b4e816160a0",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Primaria",
+  "carrera_id": "67131093-fc01-4796-83ea-56557a8a804c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Administración de Empresas",
+  "carrera_id": "678a8a59-ad5b-43ea-b355-c691396b18b8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/19"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Higiene y Seguridad Laboral",
+  "carrera_id": "71e6f65e-4b44-4d7a-8303-dc85e6cfaaf3",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/30"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Actividad Física y Deporte",
+  "carrera_id": "7313aac5-70f2-4da9-919d-ed6419ed630a",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/161"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Geografía",
+  "carrera_id": "735b3a41-0308-4247-9039-8adb076e5d5f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Artes Visuales",
+  "carrera_id": "76090d7f-ddae-4724-a712-2303089f20c6",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/88"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Escultura",
+  "carrera_id": "7a9822a6-d043-48e9-8585-42cdd066e4d3",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/102"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Archivología",
+  "carrera_id": "7e9934f2-56cf-4d6d-90df-ebe6b7512a10",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/21"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Inglés",
+  "carrera_id": "7fd888ba-035c-4758-aef2-51080a098e5b",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Geografía",
+  "carrera_id": "80bb59f4-9407-40f0-ab97-29496d6b6949",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/93"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Canto Lírico",
+  "carrera_id": "81cfa14b-21a6-496f-adb0-7cd7fc9023ae",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/100"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Higiene y Seguridad Laboral",
+  "carrera_id": "828896d9-8dfe-4f63-bf0c-e99f341becb9",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/37"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Enfermería Universitaria",
+  "carrera_id": "83ee6dcc-6de6-4fdf-992d-526f3f76e883",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/35"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Interpretación Instrumental (Guitarra)",
+  "carrera_id": "8c84df8f-7b6e-497e-b11b-6b34bf8dc04f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/95"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Podología",
+  "carrera_id": "8d0937aa-2990-413f-a183-20baa49a3ec8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/177"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Ciencias Sociales",
+  "carrera_id": "8d60e845-6e11-40d7-97b2-a71ea8bd05c8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/69"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Producción Agropecuaria",
+  "carrera_id": "8ea6497b-818b-4132-b60e-4bffa78425c2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/47"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Traductorado en Italiano",
+  "carrera_id": "9704c672-a1ad-4114-9c24-56a6952e687e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/98"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Producción de Bioimágenes",
+  "carrera_id": "a0027de1-f39d-4d6e-bf38-022de65f117d",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/31"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Prótesis Dental",
+  "carrera_id": "ad106814-af3d-4c5f-a772-4448eb4da129",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/40"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Producción Porcina",
+  "carrera_id": "ad6ba744-b81b-41e7-8bad-e7f4bc5d6d74",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/60"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Instrumentista Musical",
+  "carrera_id": "ad99c848-bcb7-412b-b65e-6919dd9b154e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/104"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Historia",
+  "carrera_id": "ae205d13-7839-428a-ad95-c7540b01878f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/94"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Tecnológica",
+  "carrera_id": "b8fb52ab-2458-4964-aca5-b2bf615964da",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Traductorado en Francés",
+  "carrera_id": "ba09444b-700a-4c1d-a051-407e5af12c57",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/97"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Seguridad Pública",
+  "carrera_id": "bb2dfa82-ce70-4d15-bc6e-a563fd5d54e2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/170"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Canto Lírico",
+  "carrera_id": "bb3a284c-e096-4311-83e1-309cf970cbec",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/89"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Ciencias Sociales",
+  "carrera_id": "be888b56-7828-4511-b858-54aca101b5b2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/91"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Italiano",
+  "carrera_id": "c1dd4e1f-3271-420b-ace3-0a6b7c901a17",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Guía de Turismo",
+  "carrera_id": "ca78c1e9-e183-4804-ac14-68c2b094ab7f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/18"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "d1455df0-1552-4095-9513-2fa7068cc7a9",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Especial",
+  "carrera_id": "d453cfc3-e80a-4ae6-9ba8-94d5317fcb20",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Automatización y Control de Procesos Industriales",
+  "carrera_id": "d99d2111-1288-4d5d-879c-cc1564bfe183",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/43"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Música",
+  "carrera_id": "dbff70fb-bbaa-4aeb-8530-2629bef58f76",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Bibliotecología",
+  "carrera_id": "e52459b1-5625-495f-8816-ca5bc0089360",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/11"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "f1c762c0-24c6-4ace-8f90-c5628116223c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/92"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Francés",
+  "carrera_id": "f90bdba7-2682-4858-af94-fa306dd9f1e1",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Archivología",
+  "carrera_id": "fd7d2d12-2160-433d-a64b-3ccefde6da35",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/10"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Lengua y Literatura",
+  "carrera_id": "fe6002af-e249-427d-97d7-4eb176664325",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
  }
 ]

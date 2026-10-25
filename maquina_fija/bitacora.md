@@ -937,3 +937,7 @@
 - Liceo Sarmiento (`elvs-tuc.infd.edu.ar`): el plan de ambos profesorados es solo una imagen JPG (cuadro por campo y año). El OCR del repo lee los nombres pero mezcla columnas y pierde el año; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. Registradas con motivo en `relevamiento/planes_sin_cargar.json`.
 - Tec. Universitario en Comunicación: sin plan propio en el folleto de Filo; registrada con motivo. Sin datos nuevos: no hace falta exportar.
 - Pendiente UNT: solo lo ya registrado (Artes 503 bloqueada: Prof. Artes Visuales, Intérprete Dramático, Tec. Actuación; Contador, Economía, Administración, Medicina, Veterinaria, Letras/Inglés, Ed. Física, Derecho, Arqueología, etc., cada una con motivo). UNT queda cerrada salvo reintentar Artes. Siguiente: UADER/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (126) — UADER: 64 carreras sin plan registradas como no cargables
+- Las fichas de `ingresantes.uader.edu.ar/node/N` enlazan el plan casi siempre a Google Drive (75 de 76 enlaces); el único enlace a la universidad (`fcyt.uader.edu.ar`, Prof. Educación Tecnológica) dio 504. Drive no es el dominio oficial, así que `planes_manuales` no lo acepta. Registradas las 64 carreras sin plan en `relevamiento/planes_sin_cargar.json` con motivo. Sin datos nuevos: no hace falta exportar.
+- Pendiente: reintentar `fcyt.uader.edu.ar` en otra rotación (puede tener planes en su dominio). Siguiente: UNJu/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE. Sin credenciales de producción ni de GitHub.
