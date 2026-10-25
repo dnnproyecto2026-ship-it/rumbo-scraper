@@ -57,6 +57,7 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - El relevamiento de universidades está casi completo (136 cargadas); el trabajo grande son los planes faltantes.
 - `relevamiento/terciarios.json` no tiene campo de estado: es un índice nombre → CUE.
 - UTDT: Maestría en Finanzas ya no publica su lista de materias (corrida 22/10); no re-importar UTDT desde esa corrida sin conservar las 88 del baseline.
+- USPT (ciclo 129): lector general da 0 planes; necesita lector propio.
 - UNNE/UNaM (ciclo 128): lector general `planes_documentos` da 0 planes; hace falta lector propio por facultad. UNSJ y fcyt.uader.edu.ar siguen caídas. Siguiente: USPT, luego lectores por facultad de UNNE/UNaM.
 - UNSJ (ciclo 127): sitio caído (DNS), reintentar; UNMdP sin planes nuevos por el lector general; UNCuyo 410. Siguiente UNaM/UNNE/USPT.
 - UADER (ciclo 126): 64 sin plan registradas (planes solo en Drive); reintentar fcyt.uader.edu.ar (504). Siguiente: UNJu/UNSJ/UNCuyo/USPT/UNMdP/UNaM/UNNE.
