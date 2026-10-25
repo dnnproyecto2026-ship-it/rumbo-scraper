@@ -827,3 +827,8 @@
 - Abogacía, Escribanía y Procuración (Derecho): la página de cada carrera no publica el plan; el único PDF es la correlatividad de Notariado sin años. Registradas en `relevamiento/planes_sin_cargar.json`.
 - Pendiente UNT sin materias: Psicología, Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
 - Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (105) — UNT: Psicología cargada
+- Psicología (Facultad de Psicología): tabla HTML oficial de la página de la carrera (Plan 2012, 5 años); 39 materias obligatorias (9/8/7/8/7), PPS incluidas; las 5 optativas (sin año) afuera. Por `planes_manuales` (hoja `data/planes_unt_psicologia.csv`, cargado_por "lector html (máquina fija)"): 39/39 verificadas.
+- Pendiente UNT sin materias: Profesorado de Psicología, Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
+- Cadena exportar → verificar UNT → exportar OK. Sin credenciales de producción ni de GitHub.
