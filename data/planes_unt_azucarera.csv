@@ -1,0 +1,39 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Azucarera;5;;;https://www.facet.unt.edu.ar/ingenieria-azucarera/wp-content/uploads/sites/79/2021/11/Plan-de-Estudios-INGENIERIA-AZUCARERA.pdf;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica
+1 | Física I
+1 | Sistemas de Representación
+1 | Cálculo II
+1 | Elementos de Algebra Lineal
+1 | Física II
+1 | Fundamentos de Química General
+1 | Informática
+2 | Cálculo III
+2 | Física III
+2 | Química General e Inorgánica
+2 | Introducción a la Ingeniería Azucarera
+2 | Cálculo IV
+2 | Probabilidad y Estadística
+2 | Química Orgánica I
+2 | Química Analítica I
+3 | Química Orgánica II
+3 | Química Analítica II
+3 | Nociones de Agronomía y Materia Prima
+3 | Introducción a Máquinas Azucareras I
+3 | Termodinámica
+3 | Química Azucarera
+3 | Electrotecnia y Máquinas Eléctricas
+4 | Procesos Azucareros
+4 | Introducción a Máquinas Azucareras II
+4 | Ingeniería Legal
+4 | Alcoholes y Derivados
+4 | Tecnología Azucarera I
+4 | Maquinarias Azucareras I
+5 | Maquinarias Azucareras II
+5 | Tecnología Azucarera II
+5 | Sistemas de Control
+5 | Organización Industrial
+5 | Industrias Derivadas
+5 | Economía Industrial
+5 | Control Químico
+5 | Higiene y Seguridad Industrial";lector pdftotext (máquina fija);;Plan de Estudios oficial (PDF, 38 asignaturas, módulos I a X con dos módulos por año). Exigencias adicionales afuera.;Universidad Nacional de Tucumán;47d7e10c-a0e6-435f-8af7-b8b266f13906

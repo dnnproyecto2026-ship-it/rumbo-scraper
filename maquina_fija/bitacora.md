@@ -805,3 +805,9 @@
 - Ing. Electrónica (FACET): tabla HTML oficial de `/ingelectronica/plan-de-estudios/` (Plan 1991, modificación 2004, módulos I a X → 5 años); 41 materias (9/8/8/8/8 por año), Electivas I a V y Trabajo de Graduación incluidos, inglés y PPS afuera. Por `planes_manuales` (hoja `data/planes_unt_electronica.csv`, cargado_por "lector html (máquina fija)"): 41/41 verificadas contra la página.
 - Civil, Biomédica y Azucarera: los slugs `/ingenieria-civil/`, `/ingenieria-biomedica/`, `/ingenieria-azucarerafacet/` responden, pero no tienen `/plan-de-estudios/` (404); queda buscar el enlace del plan en cada portada (y Agrimensura).
 - Cadena exportar → verificar UNT → exportar. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (101) — UNT: Ing. Biomédica e Ing. Azucarera cargadas
+- Ing. Biomédica (FACET): tabla HTML oficial de `/ingbiomedica/plan-de-estudios/` (Plan Modificación 2006, módulos I a X → 5 años); 39 materias, Optativas 1 y 2 y Proyecto de Graduación incluidos; Idioma Inglés, Cátedra Abierta y PPS (exigencias adicionales) afuera. Por `planes_manuales` (hoja `data/planes_unt_biomedica.csv`, cargado_por "lector html (máquina fija)"), 39/39 verificadas.
+- Ing. Azucarera (FACET): PDF oficial del plan (`/ingenieria-azucarera/wp-content/uploads/sites/79/2021/11/Plan-de-Estudios-INGENIERIA-AZUCARERA.pdf`), 38 asignaturas (coincide con el total que declara el PDF), módulos I a X con dos por año; hoja `data/planes_unt_azucarera.csv`, 38/38 verificadas.
+- Pendiente UNT sin materias: Ing. Civil (su portada no enlaza el plan; buscar), Agrimensura, Tec. Azucarera (3 años), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
