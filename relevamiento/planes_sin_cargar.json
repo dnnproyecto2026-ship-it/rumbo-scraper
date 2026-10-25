@@ -1968,5 +1968,15 @@
    "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._Res_Minist_1227-99.pdf"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Enfermería",
+  "carrera_id": "55ee5be1-8c73-4a1e-8899-2040ee943eaa",
+  "motivo": "La base tiene 29 materias abreviadas del Plan 1989; el plan vigente (2017, 5 años) está en https://www.eue.unt.edu.ar/index.php/oferta-academica/licenfermeria/plan-2017.html y se lee bien, pero planes_manuales solo toma carreras sin materias. Falta decidir si se reemplaza el plan viejo (borrar las 29 y cargar las 51 del 2017).",
+  "documentos": [
+   "https://www.eue.unt.edu.ar/index.php/oferta-academica/licenfermeria/plan-2017.html"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
