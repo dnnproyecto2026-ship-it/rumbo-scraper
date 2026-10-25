@@ -1255,3 +1255,7 @@
 - `fcyt.uader.edu.ar` responde 200. El lector `plan_fcyt_uader` toma 3 carreras de las 64 sin plan (las demás no tienen página de plan en FCyT o su nombre no coincide): Prof. Educación Tecnológica cargado (40 materias, 4 años, verificado contra la página); Lic. Producción Agropecuaria (11) y Lic. Automatización y Control (56) rechazadas por `planes_manuales` ("no parece el plan completo"), quedan sin plan. Planilla: `data/planes_uader_fcyt.csv`.
 - Cargado solo en la base del scraper. Exportación/verificación en curso al escribir esto. Sin credenciales de producción ni de GitHub.
 - Pendiente: las otras carreras de FCyT (Sistemas, Biología, Física, etc.) no figuran como sin plan en la base de UADER o no coinciden por nombre; revisar el cruce de nombres. UNSJ, UNCuyo caídos; UNT Artes 503.
+
+## 2026-10-26 (205) — Verificación del ciclo 204 sigue corriendo; nada nuevo
+- `verificar_catalogo` (PID 2120443, lanzado el 25/10) sigue activo tras 2h28 de reloj; seguido por `exportar_catalogo` en el mismo bash. No lancé otra exportación/verificación. `unsj.edu.ar` y `uncuyo.edu.ar` sin respuesta, `www.artes.unt.edu.ar` 503, `fcyt.uader.edu.ar` 200 (ya aprovechado en 204).
+- Pendiente: confirmar que termine con `Archivo: ...`; el resto igual que ciclo 204. Sin credenciales de producción ni de GitHub.
