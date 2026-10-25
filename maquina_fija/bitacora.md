@@ -855,3 +855,10 @@
 - Tec. Univ. en Comunicación (título intermedio, 3 años): el folleto no trae plan propio; no se cargó.
 - Pendiente UNT: Medicina (26 materias en base, revisar), Agronomía/Veterinaria/Zootecnia, Música, Instituto Técnico, Artes (503), Diseño de Iluminación (PDF), Física Ambiental, Odontología/Kinesiología/Enfermería Univ., Arqueología/Cs. Biológicas (csnat), Diseño de Indumentaria (FAU), Ing. Industrial y Civil.
 - Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (110) — UNT Agronomía, Zootecnia y Veterinaria: Ing. Agronómica y Zootecnista cargadas; Veterinaria NO cargable
+- Ing. Agronómica: Plan 2024 (Res. DGAC 20125/2024, PDF con texto, cuadro por año); 52 materias, Optativas 1–3 y "Principios de Nutrición y Alimentación Animal" (cortado en dos renglones) afuera. Por `planes_manuales` (hoja `data/planes_unt_agronomia.csv`, "lector pdftotext (máquina fija)"): 52/52 verificadas, leídas de vuelta de la base con año. Ojo: la carrera tiene también Plan 2003 y plan de transición; se cargó el 2024 (vigente).
+- Ing. Zootecnista: Res. 2436/2011 (escaneo), contenidos mínimos numerados por año; 42 materias por OCR (hoja `data/planes_unt_zootecnia.csv`, "lector OCR (máquina fija)"): 42/42 verificadas por el verificador literal, leídas de vuelta. Prácticas/optativas/trabajo final afuera (no numeradas). La verificación con OCR tarda ~25 min.
+- Medicina Veterinaria (Plan 2018): escaneo con malla ilegible por OCR; registrada en `relevamiento/planes_sin_cargar.json`.
+- Cadena exportar → verificar UNT → exportar lanzada. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Pendiente UNT: Medicina, Odontología, Bioquímica/Farmacia, Música, Instituto Técnico, Artes (503), Diseño de Iluminación, Física Ambiental, Naturales.

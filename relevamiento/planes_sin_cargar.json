@@ -1928,5 +1928,15 @@
    "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_ingles_2026.pdf"
   ],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Medicina Veterinaria",
+  "carrera_id": "7d2931c2-96ec-49ea-b481-e123e45baacc",
+  "motivo": "El Plan 2018 es un escaneo: la malla curricular (cuadro por módulo y ciclo) sale desordenada por OCR y el resto del documento son programas por asignatura sin año; no se carga.",
+  "documentos": [
+   "https://faz.unt.edu.ar/idehost/wp-content/uploads/2024/02/Plan-de-estudio-2018DOC280319-Veterinaria-Rectif-8.pdf"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
