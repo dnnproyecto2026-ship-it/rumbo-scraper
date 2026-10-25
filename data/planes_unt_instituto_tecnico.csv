@@ -1,0 +1,44 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Tecnicatura Superior Controles Automáticos Industriales;3;;;http://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-tecnico/tecnico-superior-controles-automaticos-industriales/;"1 | Física Aplicada
+1 | Matemática Aplicada
+1 | Electrotecnia
+1 | Instalaciones Eléctricas Domiciliarias
+1 | Taller De Instalaciones Eléctricas Domiciliarias
+2 | Máquinas Eléctricas
+2 | Automatización I
+2 | Sistemas De Control
+2 | Herramientas Informáticas
+2 | Electrónica
+3 | Sistemas De Representación
+3 | Automatización II
+3 | Organización Y Gestión
+3 | Higiene Y Seguridad Industrial
+3 | Proyecto Final";lector html (máquina fija);;;;f622e074-946b-442a-a307-66efa0daeb50
+UNT;Tecnicatura Superior Electricidad Industrial;3;;;http://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-tecnico/tecnico-superior-electricidad-industrial/;"1 | Física Aplicada
+1 | Matemática Aplicada
+1 | Electrotecnia
+1 | Instalaciones Eléctricas Domiciliarias
+1 | Taller De Instalaciones Eléctricas Domiciliarias
+2 | Máquinas Eléctricas
+2 | Mediciones Eléctricas
+2 | Instalaciones Eléctricas Industriales
+2 | Herramientas Informáticas
+2 | Taller De Instalaciones Eléctricas Industriales
+3 | Sistemas De Representación
+3 | Conversión De La Energía
+3 | Organización y Gestión
+3 | Higiene Y Seguridad Industrial
+3 | Proyecto Final Electricistas";lector html (máquina fija);;;;5b92bd2a-a369-4c92-a223-01eadfa9a3fc
+UNT;Tecnicatura Superior en Diseño Industrial;3;;;http://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-tecnico/tecnico-superior-en-diseno-industrial/;"1 | Expresión Artística
+1 | Diseño Asistido I
+1 | Física Aplicada
+1 | Matemática Aplicada
+1 | Materiales y Procesos Industriales
+2 | Fabricación Automática
+2 | Sistemas Mecánicos
+2 | Diseño Asistido II
+2 | Estética y Diseño Industrial
+3 | Metodología del Diseño y Proyecto Final
+3 | Gestión Económica y Empresarial del Diseño
+3 | Diseño y Fabricación
+3 | Tecnología de Soporte al Diseño Industrial";lector html (máquina fija);;;;fd79058b-0b20-49d8-8018-213dbd49d884

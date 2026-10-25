@@ -927,3 +927,8 @@
 - Páginas oficiales en `unt.edu.ar/expount/.../instituto-superior-de-musica/` (las URLs con http redirigen a https; la lista por año es explícita "Primer Año"…"Cuarto Año"). Educación Musical 44 materias (11/11/12/10), Dirección Coral 45 (11/11/13/10), Instrumento 46 (12/12/12/10). Afuera: Optativa I–IV (genéricas); "Residencia" repetida en Instrumento se carga una vez. Ortografía literal ("Lationamericana"). Por `planes_manuales` (hoja `data/planes_unt_musica.csv`, "lector html (máquina fija)"): 135/135 verificadas, leídas de vuelta con año.
 - Exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
 - Pendiente UNT: Instituto Técnico (3 tecnicaturas en `unt.edu.ar/expount`), Primaria/Inicial (sitio infd), Artes (503), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física.
+
+## 2026-10-25 (124) — UNT Instituto Técnico: 3 tecnicaturas superiores cargadas
+- Páginas oficiales en `unt.edu.ar/expount/.../instituto-tecnico/` con "Programa" por año explícito (3 años). Controles Automáticos Industriales 15 (5/5/5), Electricidad Industrial 15 (5/5/5), Diseño Industrial 13 (5/4/4). Afuera: "Electiva" y "Taller" (genéricas, Diseño Industrial); se quitó el punto final de "Tecnología de Soporte al Diseño Industrial.". Por `planes_manuales` (hoja `data/planes_unt_instituto_tecnico.csv`, "lector html (máquina fija)"): 43/43 verificadas; el export las trae (15/15/13).
+- Exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Pendiente UNT: Primaria/Inicial (sitio infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física.

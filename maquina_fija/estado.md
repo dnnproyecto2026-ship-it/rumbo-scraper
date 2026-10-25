@@ -57,4 +57,4 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - El relevamiento de universidades está casi completo (136 cargadas); el trabajo grande son los planes faltantes.
 - `relevamiento/terciarios.json` no tiene campo de estado: es un índice nombre → CUE.
 - UTDT: Maestría en Finanzas ya no publica su lista de materias (corrida 22/10); no re-importar UTDT desde esa corrida sin conservar las 88 del baseline.
-- UNT (ciclo 123): Música (3 profesorados) hecha. Pendiente UNT: Instituto Técnico (3 tecnicaturas), Primaria/Inicial (infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Producción: sin credenciales; "listo para cargar" cuando las haya. Push a GitHub: sin credenciales (commit local en `maquina-fija`).
+- UNT (ciclo 124): Música e Instituto Técnico (3 tecnicaturas) hechas. Pendiente UNT: Primaria/Inicial (infd), Artes (503, bloqueada), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Producción: sin credenciales; "listo para cargar" cuando las haya. Push a GitHub: sin credenciales (commit local en `maquina-fija`).
