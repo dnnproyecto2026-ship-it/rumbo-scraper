@@ -1267,3 +1267,7 @@
 ## 2026-10-26 (207) — Verificación del ciclo 204 sigue corriendo; nada nuevo
 - `verificar_catalogo` (PID 2120443) sigue activo tras 2h40; después viene `exportar_catalogo`. No lancé otra exportación/verificación ni cambié código. `unsj.edu.ar`, `uncuyo.edu.ar` y `fcyt.uader.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador: entradas nuevas de uca (carreras 80→81), ucema, uces (materias +1): cambios menores, para revisar en una pasada de vigilancia.
 - Pendiente: igual que ciclo 206. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (208) — Verificación del ciclo 204 terminada
+- `verificar_catalogo` (PID 2120443) ya no corre: `verificaciones.json` quedó a las 00:24 y `catalogo_depurado.json` se re-exportó a las 00:28 (JSON válido). Tests: 932 OK. `unsj.edu.ar`, `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503; `fcyt.uader.edu.ar` 200.
+- Pendiente: igual que ciclo 207 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes caídos; vigilancia menor de uca/uces/udesa para una pasada). Sin credenciales de producción ni de GitHub.
