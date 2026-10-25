@@ -922,3 +922,8 @@
 ## 2026-10-25 (122) — UNT Tec. Univ. en Diseño de Indumentaria y Textil NO cargable
 - `fau.unt.edu.ar`: la página solo trae áreas y régimen (36 materias, 1860 hs, 3 años); la única lista es el díptico PDF 2026 con pares "I y II" (Taller de Diseño, Moldería, Materiales Textiles, Técnicas de Producción) y "Gestión Empresarial" sin año. Repartir pares y ubicar esa materia sería inferir. Registrada con motivo en `relevamiento/planes_sin_cargar.json`. Sin datos nuevos: no hace falta exportar.
 - Pendiente UNT: Música (4 profesorados; `ismunt.unt.edu.ar`), Instituto Técnico (3 tecnicaturas en `unt.edu.ar/expount`), Primaria/Inicial (sitio infd), Artes (503), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (123) — UNT Instituto Superior de Música: 3 profesorados cargados
+- Páginas oficiales en `unt.edu.ar/expount/.../instituto-superior-de-musica/` (las URLs con http redirigen a https; la lista por año es explícita "Primer Año"…"Cuarto Año"). Educación Musical 44 materias (11/11/12/10), Dirección Coral 45 (11/11/13/10), Instrumento 46 (12/12/12/10). Afuera: Optativa I–IV (genéricas); "Residencia" repetida en Instrumento se carga una vez. Ortografía literal ("Lationamericana"). Por `planes_manuales` (hoja `data/planes_unt_musica.csv`, "lector html (máquina fija)"): 135/135 verificadas, leídas de vuelta con año.
+- Exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+- Pendiente UNT: Instituto Técnico (3 tecnicaturas en `unt.edu.ar/expount`), Primaria/Inicial (sitio infd), Artes (503), Medicina, Veterinaria, Contador, Economía, Administración, Letras/Inglés, Ed. Física.
