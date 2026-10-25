@@ -1,0 +1,42 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Electrónica;5;;;https://www.facet.unt.edu.ar/ingelectronica/plan-de-estudios/;"1 | Cálculo I
+1 | Algebra y Geometría Analítica
+1 | Física I
+1 | Fundamentos de Química Gral.
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Sistemas de representación
+2 | Cálculo III
+2 | Circuitos Eléctricos I
+2 | Física III
+2 | Programación I
+2 | Cálculo IV
+2 | Circuitos Eléctricos II
+2 | Probabilidad y Estadística
+2 | Mediciones Eléctricas
+3 | Cálculo V
+3 | Circuitos Eléctricos III
+3 | Materiales Eléctricos
+3 | Electrónica I
+3 | Dispositivos Electrónicos
+3 | Electrónica II
+3 | Instalaciones Eléctricas
+3 | Electrónica III
+4 | Señales eléctricas
+4 | Electromagnetismo I
+4 | Electrónica IV
+4 | Máquinas Eléctricas
+4 | Introducción al Derecho
+4 | Sistemas de Control I
+4 | Principios de Economía
+4 | Procesamiento Digital de Señales
+5 | Administración de Proyectos
+5 | Gestión Ambiental, Salud Ocupacional y Seguridad
+5 | Electiva I
+5 | Electiva II
+5 | Electiva III
+5 | Electiva IV
+5 | Electiva V
+5 | Trabajo de Graduación";lector html (máquina fija);;"Plan 1991, modificación 2004; tabla oficial por año y módulo I a X (dos módulos por año). Exigencias adicionales (inglés, PPS) afuera.";Universidad Nacional de Tucumán;d919827a-3f85-4264-8c0f-da9791d0cc69

@@ -800,3 +800,8 @@
 - Ing. Industrial: el plan está en cinco páginas por año y la lista de programas omite el primer año; no hay un único documento para comprobar los nombres (el verificador lee un solo enlace). Registrada en `relevamiento/planes_sin_cargar.json`.
 - Ing. Electrónica: su página de correlativas no se leyó (las correlativas del sitio no traen año); queda para el próximo ciclo con Civil, Biomédica, Azucarera y Agrimensura.
 - Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (100) — UNT: Ing. Electrónica cargada
+- Ing. Electrónica (FACET): tabla HTML oficial de `/ingelectronica/plan-de-estudios/` (Plan 1991, modificación 2004, módulos I a X → 5 años); 41 materias (9/8/8/8/8 por año), Electivas I a V y Trabajo de Graduación incluidos, inglés y PPS afuera. Por `planes_manuales` (hoja `data/planes_unt_electronica.csv`, cargado_por "lector html (máquina fija)"): 41/41 verificadas contra la página.
+- Civil, Biomédica y Azucarera: los slugs `/ingenieria-civil/`, `/ingenieria-biomedica/`, `/ingenieria-azucarerafacet/` responden, pero no tienen `/plan-de-estudios/` (404); queda buscar el enlace del plan en cada portada (y Agrimensura).
+- Cadena exportar → verificar UNT → exportar. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
