@@ -1066,3 +1066,7 @@
 ## 2026-10-25 (157) — Sin trabajo accionable; sitios siguen caídos
 - Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador sin entradas nuevas. Nada cargado ni cambiado en datos. Tests: 932 OK.
 - Pendiente: igual que ciclo 156 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (158) — Sin trabajo accionable; sitios siguen caídos
+- Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador sin entradas nuevas. Nada cargado ni cambiado en datos. Tests: 932 OK.
+- Pendiente: igual que ciclo 157 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes). Sin credenciales de producción ni de GitHub.
