@@ -946,3 +946,7 @@
 - `unsj.edu.ar` (y `ffha.unsj.edu.ar`) no resuelven (DNS, curl exit 6; el resto de los sitios responde): 49 carreras de UNSJ sin plan quedan pendientes hasta que el sitio vuelva. `uncuyo.edu.ar` responde 410.
 - `planes_documentos UNMdP` (vista previa): 0 planes nuevos. Nada cargado ni cambiado en datos; no hace falta exportar. Tests: 932 OK.
 - Siguiente: reintentar UNSJ; UNaM/UNNE/USPT (responden 200) con lectores propios. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (128) — UNNE y UNaM sin planes nuevos por el lector general; UNSJ y fcyt.uader siguen caídas
+- `planes_documentos UNNE` y `planes_documentos UNaM` (vista previa): 0 planes nuevos en ambas. `unsj.edu.ar` y `fcyt.uader.edu.ar` siguen sin responder (curl 000). Nada cargado ni cambiado en datos; no hace falta exportar.
+- Pendiente: UNNE (63 ofertas) y UNaM (70) necesitan lectores propios por facultad (sitios responden 200); USPT (45) sin probar; reintentar UNSJ y fcyt.uader. Sin credenciales de producción ni de GitHub.
