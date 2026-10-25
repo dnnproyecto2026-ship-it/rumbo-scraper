@@ -838,3 +838,8 @@
 - Profesorado de Psicología NO cargado: la página lo presenta como Ciclo de Complementación Curricular de 660 hs (2 años, 6 obligatorias + 3 optativas) y el catálogo lo tiene como grado de 4 años; hay que corregir la duración/tipo antes de cargar el plan.
 - Pendiente UNT sin materias: Prof. Psicología (arriba), Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental (sin enlace), Contador Público y otras de Filo/Naturales/Medicina.
 - Cadena exportar → verificar UNT → exportar OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (107) — UNT: Lic. en Informática cargada
+- Lic. en Informática (FACET): tabla HTML oficial de `/licinformatica/plan-de-estudio/` (modificación 2009, módulos I a X → 5 años); 37 materias (8/6/7/8/8), Laboratorio I y II, Optativas I y II, Proyecto de Software y Tesis incluidos; Inglés I y II (exigencia adicional) afuera. Por `planes_manuales` (hoja `data/planes_unt_lic_informatica.csv`, cargado_por "lector html (máquina fija)"): 37/37 verificadas.
+- Pendiente UNT sin materias: Prof. Psicología (ver 106), Ing. Industrial y Civil (FACET), Artes, Ed. Física, Diseño de Iluminación (PDF), Física Ambiental, Contador Público/Economía/Administración (FACE), Filo, Medicina, Agronomía/Veterinaria, Instituto Técnico y Música.
+- Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
