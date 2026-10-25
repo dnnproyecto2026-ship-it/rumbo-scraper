@@ -811,3 +811,8 @@
 - Ing. Azucarera (FACET): PDF oficial del plan (`/ingenieria-azucarera/wp-content/uploads/sites/79/2021/11/Plan-de-Estudios-INGENIERIA-AZUCARERA.pdf`), 38 asignaturas (coincide con el total que declara el PDF), módulos I a X con dos por año; hoja `data/planes_unt_azucarera.csv`, 38/38 verificadas.
 - Pendiente UNT sin materias: Ing. Civil (su portada no enlaza el plan; buscar), Agrimensura, Tec. Azucarera (3 años), Derecho, Psicología, Artes, Educación Física, Contador Público (escaneo ruidoso).
 - Cadena exportar → verificar UNT → exportar OK. Tests: 932 OK. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (102) — UNT: Ing. en Agrimensura cargada; Ing. Civil sin plan enlazado
+- Agrimensura (FACET): listado oficial `/agrimensura/asignaturas-por-modulos/` (módulos I a X agrupados por año explícito); 44 materias (9/8/10/10/7), Electivas I a III incluidas, horas y códigos afuera. Por `planes_manuales` (hoja `data/planes_unt_agrimensura.csv`, cargado_por "lector html (máquina fija)"): 44/44 verificadas.
+- Ing. Civil: la portada `/ingenieria-civil/` es una página suelta sin enlace a plan ni menú de carrera; no hay documento que comprobar. Pendiente (sin plan publicado en el sitio).
+- Verificación UNT corrida. Sin credenciales de producción ni de GitHub. Tests: 932 OK.
