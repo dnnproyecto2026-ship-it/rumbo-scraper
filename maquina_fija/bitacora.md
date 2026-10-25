@@ -1114,3 +1114,7 @@
 ## 2026-10-25 (169) — Sin trabajo accionable; sitios siguen caídos
 - Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador: Austral materias 1375→1095 "CAYÓ" (ya señalado antes; no se cargó, revisar antes de confiar en ese spider). Nada cargado. Tests: 932 OK.
 - Pendiente: igual que ciclo 168 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-25 (170) — Sin trabajo accionable; sitios siguen caídos
+- Reintento: `unsj.edu.ar`, `fcyt.uader.edu.ar` y `uncuyo.edu.ar` sin respuesta (curl 000); `www.artes.unt.edu.ar` 503. Vigilancia del lanzador: itba materias 991→999, sin otras novedades. Nada cargado. Tests: 932 OK.
+- Pendiente: igual que ciclo 169 (UNSJ, UNNE, UNaM, USPT, UNCuyo, UNT Artes). Sin credenciales de producción ni de GitHub.
