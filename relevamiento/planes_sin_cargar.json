@@ -1946,5 +1946,27 @@
   "motivo": "La base tenía 26 renglones sin año y con nombres cortados en varias líneas (\"RADIOLOGÍA, DIAGNÓSTICO / POR IMÁGENES Y TERAPIA / RADIANTE I\", \"MÓDULO\" suelto) para una carrera de 7 años: no era un plan comprobable y se borró. No se encontró todavía un documento oficial con las materias por año de la Facultad de Medicina; hay que ubicarlo (la oferta no tiene enlace oficial) antes de volver a cargarla.",
   "documentos": [],
   "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Arqueología",
+  "carrera_id": "30db165b-ce59-4191-9dc3-619d1071e738",
+  "motivo": "Las resoluciones de 1998-99 son escaneos: el OCR rompe nombres (\"CEOLOGIA\", \"APQUEOLOGiA\") y pierde renglones, y el plan trae Materias de Especialidad I-III genéricas; no se pueden comprobar los nombres. No se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._RR_-_812-98.pdf",
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._Res_Minist_1227-99.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitaria en Documentación y Museología Arqueológica",
+  "carrera_id": "683dbf4e-50dd-47a1-a036-686bf13a80ab",
+  "motivo": "Comparte con Arqueología las resoluciones escaneadas de 1998-99 (OCR roto, renglones perdidos): los nombres no se pueden comprobar. No se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._RR_-_812-98.pdf",
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._Res_Minist_1227-99.pdf"
+  ],
+  "revisado": "2026-10-25"
  }
 ]
