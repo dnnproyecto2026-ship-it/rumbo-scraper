@@ -1,0 +1,21 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Tecnicatura Universitaria en Física Ambiental;2.5;;;https://www.facet.unt.edu.ar/tecfisicaambiental/plan-de-estudios/;"1 | Cálculo Nivel I
+1 | Elementos de Álgebra Lineal y Geometría Analítica
+1 | Análisis Geoambiental
+1 | Química General
+1 | Física I
+1 | Cálculo Nivel II
+1 | Química Inorgánica y Orgánica
+1 | Informática
+2 | Cálculo Nivel III
+2 | Física II
+2 | Sistemas Hidrológicos
+2 | Impacto y Gestión Ambiental
+2 | Contaminación Atmosférica
+2 | Microbiología General y Aplicada
+2 | Física III
+2 | Introducción a la Acústica y Psicoacústica
+3 | Mecánica de Fluidos
+3 | Meteorología y Climatología
+3 | Introducción a la Teledetección
+3 | Contaminación Electromagnética y Medio Ambiente";lector html (máquina fija);;"Página oficial del plan: cuadros por semestre (1.º y 2.º = 1.er año, 3.º y 4.º = 2.º, 5.º = 3.º). 20 asignaturas; Optativa General I y II (marcadores sin nombre) afuera; 'Física I (Res.644-2021)' sin la resolución. Duración 5 semestres (2,5 años); el catálogo decía 2.";Universidad Nacional de Tucumán;407854ed-3dd8-40fe-bf4f-c67294e672b4
