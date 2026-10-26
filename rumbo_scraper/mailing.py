@@ -10,16 +10,18 @@ is sent only when `consentimiento` says yes. Scraped addresses never carry
 that column, so a list built from institution pages cannot be mailed by
 mistake: consent has to be recorded by whoever collected the address.
 
-Sending goes through SMTP (Brevo in production, port 2525) with the same
-variable names as the Rumbo app: SMTP_HOST, SMTP_PORT, SMTP_USER,
-SMTP_PASSWORD, RUMBO_MAIL_FROM. Every message carries a footer and a
+Sending goes through the authenticated SMTP server of Rumbo's professional
+Donweb mailbox, from the Contabo VPS, with the same variable names as the
+Rumbo app: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD,
+RUMBO_MAIL_FROM. Every message carries a footer and a
 List-Unsubscribe header pointing to MAILING_BAJA (defaults to the sender).
 Whoever replies BAJA is added to data/mailing/bajas.txt by hand, and that
 list wins over any contacts file.
 
 What was sent is appended to data/mailing/enviados.csv as it happens, so an
 interrupted run resumes without mailing anyone twice, and the daily cap
-(MAILING_LIMITE_DIARIO, 280 by default under Brevo's free 300) counts the
+(MAILING_LIMITE_DIARIO, 50 by default until the Donweb plan's limit is
+confirmed) counts the
 messages already sent today across every campaign.
 """
 
@@ -147,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
     campana = leer_campana(args.campana)
     remitente = os.getenv("RUMBO_MAIL_FROM", "").strip()
     baja = os.getenv("MAILING_BAJA", "").strip() or parseaddr(remitente)[1]
-    limite = int(os.getenv("MAILING_LIMITE_DIARIO", "280"))
+    limite = int(os.getenv("MAILING_LIMITE_DIARIO", "50"))
     ESTADO.mkdir(parents=True, exist_ok=True)
     enviados_path = ESTADO / "enviados.csv"
     enviados = leer_enviados(enviados_path)
