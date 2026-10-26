@@ -1284,3 +1284,7 @@
 ## 2026-10-26 (211) — usal revisada: sin carreras nuevas
 - `load_usal --input data/vigilancia/usal_completo.json --solo-nuevas` (vista previa) no lista ninguna carrera nueva: el 78→80 de la vigilancia repite el mismo desfase de baseline desde el 23/10 y las 80 ya están en la base. Nada cargado.
 - La cadena 209 (PID 2173141, `verificar_catalogo` PID 2173975) sigue corriendo; no lancé otra. Pendiente: confirmar `Archivo: ...`; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (212) — Verificación del ciclo 209 sigue corriendo; nada nuevo
+- `verificar_catalogo` (PID 2173975, cadena PID 2173141) sigue activo tras 21 min de CPU; `verificaciones.json` se sigue escribiendo. No lancé otra exportación/verificación ni cambié código. `www.unsj.edu.ar` y `www.uncuyo.edu.ar` sin respuesta, `www.artes.unt.edu.ar` 503, `fcyt.uader.edu.ar` 200. Vigilancia del lanzador sin entradas nuevas desde el ciclo 211.
+- Pendiente: confirmar `Archivo: ...` de la cadena 209; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
