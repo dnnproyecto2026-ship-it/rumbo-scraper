@@ -1292,3 +1292,7 @@
 ## 2026-10-26 (213) — Verificación del ciclo 209 sigue corriendo; nada nuevo
 - Cadena 209 (PID 2173141) activa tras 40 min; `verificar_catalogo` va por los institutos (ISJ*), `verificaciones.json` se sigue escribiendo. No lancé otra exportación/verificación ni cambié código.
 - Pendiente: confirmar `Archivo: ...` de la cadena 209; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-26 (214) — Verificación del ciclo 209 sigue corriendo; nada nuevo
+- Cadena 209 (PID 2173141, `verificar_catalogo` PID 2173975) activa tras 45 min; `verificaciones.json` se sigue escribiendo (01:26). No lancé otra exportación/verificación ni cambié código.
+- Pendiente: confirmar `Archivo: ...` de la cadena 209; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
