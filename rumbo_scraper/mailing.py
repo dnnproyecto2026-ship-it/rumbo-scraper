@@ -188,9 +188,12 @@ def main(argv: list[str] | None = None) -> int:
     log_path = Path(os.devnull) if args.prueba else enviados_path
     nuevo = not args.prueba and (not enviados_path.exists() or enviados_path.stat().st_size == 0)
     ok = 0
-    with smtplib.SMTP(os.environ["SMTP_HOST"], int(os.environ["SMTP_PORT"]), timeout=60) as smtp, \
+    puerto = int(os.environ["SMTP_PORT"])
+    smtp_cls = smtplib.SMTP_SSL if puerto == 465 else smtplib.SMTP
+    with smtp_cls(os.environ["SMTP_HOST"], puerto, timeout=60) as smtp, \
             log_path.open("a", encoding="utf-8", newline="") as log:
-        smtp.starttls()
+        if puerto != 465:
+            smtp.starttls()
         smtp.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
         escritor = csv.DictWriter(log, fieldnames=["campana", "email", "fecha"])
         if nuevo:
