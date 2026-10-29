@@ -75,6 +75,9 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         _SECUNDARIA + "Filosofía": (_PBA + "2024-03/FILOSOF%C3%8DA.pdf", planes_sitios.plan_diseno_pba),
         _SECUNDARIA + "Ciencia Política": (_PBA + "2024-03/C.%20Politica.pdf", planes_sitios.plan_diseno_pba),
         _SECUNDARIA + "Historia": (_PBA + "2024-03/Historia_0.pdf", planes_sitios.plan_diseno_pba),
+        "Tecnicatura Superior en Enfermería": (
+            "https://isfdyt89-bue.infd.edu.ar/sitio/carreras-2018/upload/546-16_Enfermeria.pdf",
+            planes_sitios.plan_carga_horaria),
         "Profesorado de Educación Inicial": (_INICIAL_Y_PRIMARIA,
                                              functools.partial(planes_sitios.plan_indice_pba, "Educación Inicial")),
         "Profesorado de Educación Primaria": (_INICIAL_Y_PRIMARIA,

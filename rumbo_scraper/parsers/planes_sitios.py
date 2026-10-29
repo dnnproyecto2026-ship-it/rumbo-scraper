@@ -2761,6 +2761,41 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
     return unicas
 
 
+def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
+    """A Province of Buenos Aires design of a tecnicatura superior (Enfermería,
+    Tiempo Libre y Recreación): each unit a heading in capitals over its
+    "Carga horaria: 32 horas" (or "TIEMPO LIBRE Y RECREACIÓN - Carga horaria: 2
+    horas"), under its year ("PRIMER AÑO"). The overview of the structure that
+    comes first has no such line, and the prose's "carga horaria total" no colon."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for i, linea in enumerate(lineas):
+        ano = re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", linea)
+        if ano:
+            anio = _ANIO_INDICE[ano.group(1).lower()]
+            continue
+        mismo = re.match(r"^(.+?)\s*[-–]\s*carga horaria\s*:", linea, re.I)
+        if not anio or not (mismo or re.match(r"(?i)^carga horaria\s*:\s*\d+\s*horas?\b", linea)):
+            continue
+        # (A heading wrapped over two lines leaves its tail, "Recreativos - Carga horaria: 4", alone.)
+        if mismo and not mismo.group(1).split()[0].isupper():
+            continue
+        titulo = mismo.group(1) if mismo else _titulo_de_unidad(lineas, i)
+        if titulo.isupper() or mismo:
+            titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
+        if titulo and not titulo.endswith(":") and len(titulo.split()) <= 16 \
+                and not re.match(r"(?i)^(campos? de|total)", titulo):
+            _agregar(materias, titulo, anio)
+    vistas: set[str] = set()
+    unicas = []
+    for nombre, a in materias:
+        if comparison_key(nombre) not in vistas:
+            vistas.add(comparison_key(nombre))
+            unicas.append((nombre, a))
+    return desde_el_primero(unicas)
+
+
 def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of 2017 on (Profesorado de Inglés;
     the Técnico Profesional ones of 2023): each unit a heading ("Pedagogía",

@@ -514,3 +514,27 @@ class PlanUpDyc(unittest.TestCase):
         self.assertEqual(plan_up_dyc(html), [
             ("Diseño de Interiores I", 1), ("Taller de Interiores I", 1),
             ("Cultura II", 4), ("Trabajo Final de Grado (Proyecto de Graduación)", 4)])
+
+
+class PlanCargaHoraria(unittest.TestCase):
+    def test_titulo_sobre_su_carga_horaria_y_titulo_en_la_misma_linea(self):
+        texto = """3.3 ESTRUCTURA CURRICULAR
+PRIMER AÑO
+Psicología   Salud Pública I
+Total de Horas: 736 horas
+
+PRIMER AÑO
+CAMPO DE FORMACION GENERAL
+
+PSICOLOGÍA
+
+        Carga Horaria: 32 horas
+Alcances de los contenidos:
+SEGUNDO AÑO
+SALUD PÚBLICA II - Carga horaria: 2 horas reloj por semana
+Prácticas de la carga horaria total
+SUJETOS DE LA RECREACIÓN - Carga horaria:
+Recreativos - Carga horaria: 4 horas
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [("Psicología", 1), ("Salud pública II", 2),
+                                                        ("Sujetos de la recreación", 2)])
