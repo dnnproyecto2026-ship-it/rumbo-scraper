@@ -9,6 +9,8 @@ classified:
 - ``plan_en_pagina``: the page itself lists the subjects by year;
 - ``pdf_del_plan``: it links a PDF that is called a plan, a curriculum or a
   list of subjects;
+- ``pdf_con_texto`` / ``pdf_escaneado``: what ``--pdfs`` makes of a ``pdf_del_plan`` once the file is read (a
+  scanned one has no text and needs OCR);
 - ``plan_en_otra_pagina``: it links a page of the same site that is called so;
 - ``js``: almost no text, built by scripts (needs the browser reader);
 - ``caida``: the page did not answer, or answered with a block (never worked
@@ -68,6 +70,46 @@ def clasificar(url: str, html: str, estado: int) -> tuple[str, str]:
     return "sin_plan_publicado", ""
 
 
+def texto_del_pdf(contenido: bytes) -> int:
+    """How many characters of text a PDF has: an image-only (scanned) one has next to none."""
+    import subprocess
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf") as archivo:
+        archivo.write(contenido)
+        archivo.flush()
+        salida = subprocess.run(["pdftotext", "-l", "3", archivo.name, "-"], capture_output=True, text=True, timeout=120)
+    return len(re.sub(r"\s+", "", salida.stdout))
+
+
+def revisar_pdfs() -> None:
+    """Splits the ``pdf_del_plan`` rows of the survey into ``pdf_con_texto`` and ``pdf_escaneado``."""
+    from rumbo_scraper.spiders.visitante import Visitante
+
+    with SALIDA.open(encoding="utf-8-sig") as archivo:
+        filas = list(csv.DictReader(archivo, delimiter=";"))
+    vistos: dict[str, str] = {}
+    with Visitante(timeout=60) as visitante:
+        for fila in filas:
+            if fila["motivo"] != "pdf_del_plan":
+                continue
+            enlace = fila["enlace"]
+            if enlace not in vistos:
+                try:
+                    respuesta = visitante.client.get(enlace)
+                    vistos[enlace] = ("caida" if respuesta.status_code != 200 else
+                                      "pdf_con_texto" if texto_del_pdf(respuesta.content) >= 300 else "pdf_escaneado")
+                except Exception:
+                    vistos[enlace] = "caida"
+                time.sleep(PAUSA)
+            fila["motivo"] = vistos[enlace]
+    with SALIDA.open("w", newline="", encoding="utf-8-sig") as archivo:
+        escritor = csv.DictWriter(archivo, fieldnames=CAMPOS, delimiter=";")
+        escritor.writeheader()
+        escritor.writerows(filas)
+    print(f"{len(vistos)} PDFs revisados -> {SALIDA}")
+
+
 def ofertas_sin_plan(conexion: Any, siglas: list[str]) -> list[tuple[str, str, int]]:
     """(university, page, offers without a plan) from production."""
     filtro = "" if not siglas else "and u.nombre_corto = any(%s)"
@@ -89,6 +131,8 @@ def main() -> None:
     from rumbo_scraper.spiders.visitante import Visitante
     import psycopg
 
+    if "--pdfs" in sys.argv:
+        return revisar_pdfs()
     siglas = [a for a in sys.argv[1:] if not a.startswith("--")]
     hechas: dict[str, list[str]] = {}
     if SALIDA.exists():

@@ -25,3 +25,21 @@ class Clasificar(unittest.TestCase):
     def test_cloudflare_en_los_scripts_no_es_un_bloqueo(self):
         html = '<script src="https://cdnjs.cloudflare.com/x.js"></script><p>' + "Requisitos de ingreso " * 200 + "</p>"
         self.assertEqual(clasificar("https://u.edu.ar/c/", html, 200)[0], "sin_plan_publicado")
+
+
+class TextoDelPdf(unittest.TestCase):
+    def test_un_pdf_sin_texto_no_cuenta_caracteres(self):
+        import shutil
+        import subprocess
+        import tempfile
+        from pathlib import Path
+
+        from rumbo_scraper.database.sondeo_universidades import texto_del_pdf
+
+        if not shutil.which("pdftotext"):
+            self.skipTest("pdftotext no está")
+        with tempfile.TemporaryDirectory() as carpeta:
+            vacio = Path(carpeta) / "v.pdf"
+            vacio.write_bytes(b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
+                              b"3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 100 100]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF")
+            self.assertLess(texto_del_pdf(vacio.read_bytes()), 300)
