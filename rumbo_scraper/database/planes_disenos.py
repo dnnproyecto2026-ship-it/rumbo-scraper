@@ -233,6 +233,8 @@ def _mismo_nombre(a: str, b: str) -> bool:
     def clave(nombre: str) -> str:
         # ... or "Educación Nivel Inicial", as the INFoD names it.
         nombre = re.sub(r"^Profesorado en ", "Profesorado de ", nombre)
+        # An institute's "Enfermería" is the province's "Tecnicatura Superior en Enfermería".
+        nombre = re.sub(r"^Tecnicatura (?:Superior |Universitaria )?(?:en|de) ", "", nombre)
         return re.sub(r"\bEducación Nivel Inicial$", "Educación Inicial", nombre).lower()
     return clave(a) == clave(b)
 
