@@ -156,7 +156,8 @@ ANUAL     QUÍMICA LEGAL"""
 
     def test_ucasal_nombres_abreviados_o_cortados_no_se_leen(self):
         self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
-        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [])
+        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [("Filosofía", 1)])
+        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    PSICOLOGÍA EDUC.   3   1 Sem."), [])
 
     def test_anexo_con_codigo_de_anio_y_nombre_partido(self):
         texto = """                                              PRIMER AÑO
@@ -552,3 +553,28 @@ TERCER AÑO
             ("Física para seguridad 1", 1),
             ("Práctica profesionalizante 2: intervenciones en el campo profesional", 2),
             ("Comunicación, tecnología y sociedad", 3)])
+
+
+class PlanUcasalCorrelatividades(unittest.TestCase):
+    def test_nombres_partidos_en_varias_lineas_y_correlativas_a_la_derecha(self):
+        texto = """                    PLAN DE ESTUDIO Y CORRELATIVIDADES DETALLADAS
+     MATERIAS                  CR.    SEMESTRE            CORRELATIVAS PARA CURSAR
+ 1° Año
+08 0100 DIDÁCTICA GENERAL        4    0 Anual
+08 0540 SUJETO DEL               4    0 Anual
+        APRENDIZAJE
+08 1490 PRÁCTICA I:              4    0 Anual
+        CONTEXTO,
+        COMUNIDAD Y
+        ESCUELA
+ 2° Año
+07 1580 PSICOLOGÍA DEL           3    0 Anual                                             Aprob      07 0590   PSICOLOGÍA EDUCAC.
+        DESARROLLO INFANTIL                                                               .
+08 1495 PRÁCTICA II:             4    0 Anual    Reg.      08 1490   PRACT.I CONT.COM.ESC Aprob      08 0100   DIDACT.GRAL.
+        CURRICULUM
+08 9999 PSICOLOGÍA EDUC.         3    0 Anual
+"""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Didáctica General", 1), ("Sujeto del Aprendizaje", 1),
+            ("Práctica I: Contexto, Comunidad y Escuela", 1),
+            ("Psicología del Desarrollo Infantil", 2), ("Práctica II: Currículum", 2)])

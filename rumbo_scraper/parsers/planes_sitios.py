@@ -564,10 +564,58 @@ _UCASAL_ABREVIADA = re.compile(r"[º°]|\w\.(?=\s*\w)|\w\.$")
 _UCASAL_NO_ES = re.compile(r"(?i)^(prueba de suficiencia|plan de estudio|carrera|modalidad|plan\s+\d)|@|ucasal\.edu")
 
 
+_UCASAL_UNIDAD = re.compile(r"^\d{2} \d{4} (.+?)(?:\s{2,}|\s+)(\d+)\s+\d\s+(?:Anual|Sem\.)")
+
+
+def plan_ucasal_correlatividades(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UCASAL's "Plan de estudio y correlatividades detalladas" (``pdftotext
+    -layout``): under each "1° Año", a row per unit with its code ("08 0100"),
+    its name, its credits, its term ("0 Anual", "1 Sem.") and, from the second
+    year on, its prerequisites in the columns to the right. The name wraps
+    over the lines below in its column, in capitals; the prerequisites'
+    "Aprob." / "Reg." are not part of it."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    abierta: list[str] | None = None
+
+    def cerrar() -> None:
+        nonlocal abierta
+        nombre = " ".join(abierta or [])
+        # (A name cut short, "PSICOLOGÍA EDUCAC.", is the prerequisites' column, not the unit's.)
+        if abierta is not None and anio and not re.search(r"\b[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}\.(?:\s|$)", nombre):
+            _agregar(materias, nombre, anio)
+        abierta = None
+
+    for linea in (texto_con_columnas or "").replace("\f", "\n").splitlines():
+        crudo = linea.replace("\xa0", " ").rstrip()
+        ano = re.match(r"^\s*(\d)\s*[°º]\s*A[ñn]o\s*$", crudo)
+        if ano:
+            cerrar()
+            anio = int(ano.group(1))
+            continue
+        fila = _UCASAL_UNIDAD.match(crudo.strip()) if crudo[:1].isdigit() else None
+        if fila:
+            cerrar()
+            abierta = [fila.group(1).strip()]
+            continue
+        if abierta is not None:
+            # The name's next line: indented, in capitals, before the prerequisites' columns.
+            trozo = re.split(r"\s{2,}", crudo.strip())[0] if crudo.startswith("        ") else ""
+            if trozo and not re.match(r"^(?:Aprob|Reg|\.)", trozo) and trozo == trozo.upper() \
+                    and re.search(r"[A-ZÁÉÍÓÚÑ]", trozo) and not re.search(r"\d", trozo[:3]):
+                abierta.append(trozo)
+            elif not crudo.strip() or re.match(r"^\s*P[áa]gina\b", crudo):
+                continue
+            elif not crudo.startswith("        "):
+                cerrar()
+    cerrar()
+    return desde_el_primero(materias)
+
+
 def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
     texto = texto_con_columnas or ""
     if "CORRELATIVIDADES DETALLADAS" in texto:
-        return []
+        return plan_ucasal_correlatividades(texto)
     materias: list[tuple[str, int]] = []
     anio = 0
     if "PLAN DE ESTUDIO POR CARRERA" in texto:
