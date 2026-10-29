@@ -30,6 +30,9 @@ ENV_DE_LA_APP = Path.home() / "Desktop" / "Rumbo" / ".env"
 
 CON_PLAN = ("exists (select 1 from planes_estudio pe join planes_materias pm on pm.plan_id = pe.id "
             "where pe.oferta_id = o.id and pe.vigente)")
+POSGRADOS = ("from ofertas_publicadas op join ofertas o on o.id = op.oferta_id "
+             "join carreras c on c.id = o.carrera_id join universidades u on u.id = o.universidad_id "
+             "where c.nivel not in ('grado', 'pregrado')")
 BASE = ("from ofertas_publicadas op join ofertas o on o.id = op.oferta_id "
         "join carreras c on c.id = o.carrera_id join universidades u on u.id = o.universidad_id "
         "where c.nivel in ('grado', 'pregrado')")
@@ -66,13 +69,15 @@ def instantanea(conexion: Any) -> dict[str, Any]:
     por_provincia = consultar(conexion, f"select p.nombre as clave, {CUENTAS} {BASE.replace('where', PROVINCIA + ' where', 1)} "
                                         "group by 1 order by 2 desc")
     por_institucion = consultar(conexion, f"select u.nombre_corto as clave, {CUENTAS} {BASE} group by 1 order by 2 desc")
+    posgrados = consultar(conexion, f"select coalesce(u.tipo_gestion, '?') as clave, {CUENTAS} {POSGRADOS} "
+                                    "group by 1 order by 2 desc")
     totales = consultar(conexion, "select (select count(*) from universidades) as instituciones, "
                                   "(select count(*) from ofertas_publicadas) as ofertas_publicadas, "
                                   "(select count(*) from carreras) as carreras, "
                                   "(select count(*) from planes_estudio where vigente) as planes, "
                                   "(select count(*) from planes_materias) as materias")[0]
     return {"fecha": date.today().isoformat(), "totales": totales, "por_tipo": por_tipo,
-            "por_provincia": por_provincia, "por_institucion": por_institucion}
+            "por_provincia": por_provincia, "por_institucion": por_institucion, "posgrados": posgrados}
 
 
 def diferencia(nueva: dict[str, Any], vieja: dict[str, Any] | None) -> list[str]:
@@ -83,13 +88,18 @@ def diferencia(nueva: dict[str, Any], vieja: dict[str, Any] | None) -> list[str]
     for clave in ("instituciones", "ofertas_publicadas", "carreras", "planes", "materias"):
         antes, ahora = vieja["totales"].get(clave, 0), nueva["totales"][clave]
         lineas.append(f"{clave}: {antes} -> {ahora} ({ahora - antes:+d})")
-    for grupo, titulo in (("por_tipo", "tipo"), ("por_provincia", "provincia")):
-        anteriores = {f["clave"]: f for f in vieja[grupo]}
-        for fila in nueva[grupo]:
+    for grupo, titulo in (("por_tipo", "tipo"), ("por_provincia", "provincia"), ("posgrados", "posgrados")):
+        anteriores = {f["clave"]: f for f in vieja.get(grupo, [])}
+        for fila in nueva.get(grupo, []):
             antes = anteriores.get(fila["clave"], {"con_plan": 0, "ofertas": 0})
-            if fila["con_plan"] != antes["con_plan"] or fila["ofertas"] != antes["ofertas"]:
+            if (fila["con_plan"], fila["ofertas"]) != (antes["con_plan"], antes["ofertas"]) or (
+                    titulo == "posgrados" and (fila["con_titulo"], fila["con_duracion"]) != (
+                        antes.get("con_titulo", 0), antes.get("con_duracion", 0))):
                 lineas.append(f"{titulo} {fila['clave']}: con plan {antes['con_plan']} -> {fila['con_plan']} "
                               f"({fila['con_plan'] - antes['con_plan']:+d}), ofertas {antes['ofertas']} -> {fila['ofertas']}")
+                if titulo == "posgrados":
+                    lineas.append(f"{titulo} {fila['clave']}: título {antes.get('con_titulo', 0)} -> {fila['con_titulo']}, "
+                                  f"duración {antes.get('con_duracion', 0)} -> {fila['con_duracion']}")
     return lineas
 
 

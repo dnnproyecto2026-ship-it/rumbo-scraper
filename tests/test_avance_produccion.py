@@ -17,3 +17,10 @@ class Diferencia(unittest.TestCase):
         self.assertIn("planes: 5 -> 8 (+3)", lineas)
         self.assertIn("provincia Buenos Aires: con plan 10 -> 14 (+4), ofertas 40 -> 40", lineas)
         self.assertNotIn("carreras: 50 -> 50 (+1)", lineas)
+
+    def test_los_posgrados_se_comparan_aparte(self):
+        vieja = foto(5, 10)
+        nueva = foto(5, 10)
+        vieja["posgrados"] = [{"clave": "publica", "ofertas": 100, "con_plan": 5, "con_titulo": 80, "con_duracion": 20}]
+        nueva["posgrados"] = [{"clave": "publica", "ofertas": 100, "con_plan": 5, "con_titulo": 85, "con_duracion": 40}]
+        self.assertEqual(diferencia(nueva, vieja)[-1], "posgrados publica: título 80 -> 85, duración 20 -> 40")
