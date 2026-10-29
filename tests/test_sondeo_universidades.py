@@ -21,3 +21,7 @@ class Clasificar(unittest.TestCase):
     def test_bloqueo_y_pagina_sin_plan(self):
         self.assertEqual(clasificar("https://u.edu.ar/c/", "<html>Just a moment...</html>", 403)[0], "caida")
         self.assertEqual(clasificar("https://u.edu.ar/c/", "<p>Requisitos de ingreso</p>" * 200, 200)[0], "sin_plan_publicado")
+
+    def test_cloudflare_en_los_scripts_no_es_un_bloqueo(self):
+        html = '<script src="https://cdnjs.cloudflare.com/x.js"></script><p>' + "Requisitos de ingreso " * 200 + "</p>"
+        self.assertEqual(clasificar("https://u.edu.ar/c/", html, 200)[0], "sin_plan_publicado")

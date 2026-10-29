@@ -41,10 +41,11 @@ _BLOQUEO = re.compile(r"(?i)captcha|cloudflare|access denied|just a moment|atten
 
 def clasificar(url: str, html: str, estado: int) -> tuple[str, str]:
     """(motivo, enlace) of one page."""
-    if estado >= 400 or _BLOQUEO.search(html[:3000]):
-        return "caida", ""
     sin_scripts = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", html)
     texto = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", sin_scripts))
+    # (A block is read in the page's text, not in its code: a CDN's name is in every page's scripts.)
+    if estado >= 400 or (len(texto) < 1500 and _BLOQUEO.search(texto)):
+        return "caida", ""
     if len(_ANIO.findall(texto)) >= 3 and len(texto) > 1500:
         return "plan_en_pagina", ""
     sitio = urlparse(url).netloc.removeprefix("www.")
