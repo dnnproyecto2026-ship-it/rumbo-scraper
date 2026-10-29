@@ -538,3 +538,17 @@ Recreativos - Carga horaria: 4 horas
 """
         self.assertEqual(p.plan_carga_horaria(texto), [("Psicología", 1), ("Salud pública II", 2),
                                                         ("Sujetos de la recreación", 2)])
+
+    def test_unidades_numeradas_y_titulo_partido_en_dos_lineas(self):
+        texto = """PRIMER AÑO
+1. Física para Seguridad 1 - Carga horaria: 2 (dos) módulos por semana.
+SEGUNDO AÑO
+17. Práctica Profesionalizante 2: Intervenciones en el campo profesional - Carga
+horaria: 3 (tres) módulos por semana.
+TERCER AÑO
+18. Comunicación, Tecnología y Sociedad. Carga horaria: 2 (dos) módulos por semana.
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [
+            ("Física para seguridad 1", 1),
+            ("Práctica profesionalizante 2: intervenciones en el campo profesional", 2),
+            ("Comunicación, tecnología y sociedad", 3)])

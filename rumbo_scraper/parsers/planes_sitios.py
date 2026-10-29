@@ -2768,6 +2768,12 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
     horas"), under its year ("PRIMER AÑO"). The overview of the structure that
     comes first has no such line, and the prose's "carga horaria total" no colon."""
     lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    # A numbered heading wrapped over two lines ("17. Práctica Profesionalizante 2: ... - Carga" /
+    # "horaria: 3 (tres) módulos") is one.
+    for i in range(len(lineas) - 1):
+        if re.match(r"^\d{1,2}\.\s", lineas[i]) and not re.search(r"(?i)carga horaria\s*:", lineas[i]) \
+                and re.search(r"(?i)^horaria\s*:|^[^.]{0,60}[-–]\s*carga horaria\s*:", lineas[i + 1]):
+            lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
     materias: list[tuple[str, int]] = []
     anio = 0
     for i, linea in enumerate(lineas):
@@ -2775,13 +2781,16 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         if ano:
             anio = _ANIO_INDICE[ano.group(1).lower()]
             continue
-        mismo = re.match(r"^(.+?)\s*[-–]\s*carga horaria\s*:", linea, re.I)
+        mismo = re.match(r"^(.+?)\s*[-–.]\s*carga horaria\s*:", linea, re.I)
         if not anio or not (mismo or re.match(r"(?i)^carga horaria\s*:\s*\d+\s*horas?\b", linea)):
             continue
         # (A heading wrapped over two lines leaves its tail, "Recreativos - Carga horaria: 4", alone.)
-        if mismo and not mismo.group(1).split()[0].isupper():
+        # (Numbered units, "1. Fundamentos de Matemática para Seguridad - Carga horaria: ...", are whole.)
+        numerada = mismo and re.match(r"^\d{1,2}\.\s+\S", mismo.group(1))
+        if mismo and not numerada and not mismo.group(1).split()[0].isupper():
             continue
         titulo = mismo.group(1) if mismo else _titulo_de_unidad(lineas, i)
+        titulo = re.sub(r"^\d{1,2}\.\s+", "", titulo)
         if titulo.isupper() or mismo:
             titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
         if titulo and not titulo.endswith(":") and len(titulo.split()) <= 16 \

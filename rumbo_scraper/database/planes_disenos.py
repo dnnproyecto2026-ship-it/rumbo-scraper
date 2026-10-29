@@ -78,6 +78,9 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Tecnicatura Superior en Enfermería": (
             "https://isfdyt89-bue.infd.edu.ar/sitio/carreras-2018/upload/546-16_Enfermeria.pdf",
             planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Higiene, Seguridad y Ambiente Laboral": (
+            "https://iseta.edu.ar/iseta/wp-content/uploads/2025/12/Tec.-Sup-en-Higiene-Seguridad-y-ambiente-Laboral.pdf",
+            planes_sitios.plan_carga_horaria),
         "Profesorado de Educación Inicial": (_INICIAL_Y_PRIMARIA,
                                              functools.partial(planes_sitios.plan_indice_pba, "Educación Inicial")),
         "Profesorado de Educación Primaria": (_INICIAL_Y_PRIMARIA,
