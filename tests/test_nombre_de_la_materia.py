@@ -132,3 +132,12 @@ class SinPlanesRepartidos(unittest.TestCase):
                     for m in materias]
         quedan = {m["carrera_o_programa"] for m in sin_planes_repartidos(materias)}
         self.assertEqual(quedan, {"Maestría en X Bs As", "Maestría en X Rosario"})
+
+
+class EditorialNoEsUnaCita(unittest.TestCase):
+    def test_diseno_editorial_es_una_materia_y_una_editorial_es_una_cita(self):
+        from rumbo_scraper.database.exportar_catalogo import _NO_ES_UN_NOMBRE
+        for materia in ("Diseño Editorial", "Gestión editorial", "Proyecto editorial II", "Editorial"):
+            self.assertIsNone(_NO_ES_UN_NOMBRE.search(materia.lower()), materia)
+        for cita in ("Editorial Paidós", "Buenos Aires, Editorial Kapelusz", "Ediciones Siglo XXI", "ISBN 978"):
+            self.assertTrue(_NO_ES_UN_NOMBRE.search(cita.lower()), cita)

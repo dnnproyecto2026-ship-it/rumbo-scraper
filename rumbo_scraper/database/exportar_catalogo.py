@@ -305,7 +305,7 @@ def _materia_sin_mayusculas(nombre: str) -> str:
 # one: an address, a link, a file, a bibliography entry ("Ed. Trillas",
 # "Recuperado de"), a letter repeated down a column ("c c c c").
 _NO_ES_UN_NOMBRE = re.compile(
-    r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|editorial|ediciones)\b"
+    r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|ediciones)\b|^editorial\s+\S|,\s*editorial\b"
     r"|\b(?:ed|pp|vol)\.|recuperado de|\bet al\b|(?:\b\w\b\s+){3}"
     # A page's banners, videos, address and notes read as a plan's lines ("A
     # cincuenta años del Golpe Nunca Más", "▶ Ver video en YouTube", "Paseo del
