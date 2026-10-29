@@ -28,14 +28,20 @@ from rumbo_scraper.database import planes_documentos as pd
 from rumbo_scraper.parsers import ocr
 
 HALLADOS = Path("data/planes_escaneados.json")
+VOCABULARIO = Path("data/vocabulario_materias.txt")
 SIN_TEXTO = 100   # characters a document's first pages have when it is only images
 
 
 def _vocabulario(client: Any) -> dict[str, str]:
     from rumbo_scraper.database.supabase import select_all
 
-    return ocr.vocabulario({m["nombre_materia"] for m in select_all(client.table("materias").select("nombre_materia"))
-                            if m["nombre_materia"]})
+    nombres = {m["nombre_materia"] for m in select_all(client.table("materias").select("nombre_materia"))
+               if m["nombre_materia"]}
+    # The subjects production publishes (a read-only list, `data/vocabulario_materias.txt`) are known too: a
+    # scraper base rebuilt from scratch has few.
+    if VOCABULARIO.exists():
+        nombres |= {linea.strip() for linea in VOCABULARIO.read_text(encoding="utf-8").splitlines() if linea.strip()}
+    return ocr.vocabulario(nombres)
 
 
 def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
@@ -47,7 +53,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
         propio = texto_propio(archivo)
         return propio if len(propio.strip()) >= SIN_TEXTO else ocr.texto(archivo)[:20000]
 
-    def leer_documento(archivo: Path, documento: str) -> list[tuple[str, int | None]]:
+    def leer_documento(archivo: Path, documento: str, carrera: str = "") -> list[tuple[str, int | None]]:
         if len(texto_propio(archivo).strip()) >= SIN_TEXTO:
             return []
         escaneados.add(documento)
