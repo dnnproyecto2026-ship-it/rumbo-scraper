@@ -61,7 +61,17 @@ OTROS_SITIOS = {"dges-cba.edu.ar": {"dges-cba.infd.edu.ar"},
                 "bue.edu.ar": {"documentosboletinoficial.buenosaires.gob.ar"}}
 
 
+# The sites of the education authorities themselves: the INFoD (where every
+# province hosts its institutes and its curricular designs), the Province of
+# Buenos Aires' Dirección General de Cultura y Educación, Mendoza's DGE. An
+# institute with no site of its own has its plan from its province's design,
+# which these publish.
+DOMINIOS_DE_LA_EDUCACION = frozenset({"infd.edu.ar", "abc.gob.ar", "mendoza.edu.ar"})
+
+
 def es_oficial(url: str | None, sitio_web: str | None) -> bool:
+    if url and not sitio_web:
+        return dominio(url) in DOMINIOS_DE_LA_EDUCACION
     if not (url and sitio_web):
         return False
     propio = dominio(sitio_web)

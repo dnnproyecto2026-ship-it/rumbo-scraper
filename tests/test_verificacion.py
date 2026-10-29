@@ -194,3 +194,14 @@ class NumeroPegadoALaPalabra(unittest.TestCase):
     def test_el_numero_de_renglon_pegado_a_la_palabra_es_otro_token(self):
         self.assertEqual(v.plano("4.5Práctica y Residencia"), "4 5 practica y residencia")
         self.assertEqual(v.plano("Física 2"), "fisica 2")
+
+
+class FuenteDeUnInstitutoSinSitio(unittest.TestCase):
+    def test_sin_sitio_propio_vale_el_de_la_autoridad_educativa(self):
+        from rumbo_scraper.verificacion import es_oficial
+        self.assertTrue(es_oficial("https://abc.gob.ar/secretarias/sites/default/files/x.pdf", None))
+        self.assertTrue(es_oficial("https://isfdyt89-bue.infd.edu.ar/sitio/x.pdf", ""))
+        self.assertFalse(es_oficial("https://iseta.edu.ar/x.pdf", None))
+        self.assertFalse(es_oficial(None, None))
+        # With a site of its own, only that site is its source.
+        self.assertFalse(es_oficial("https://abc.gob.ar/x.pdf", "https://iseta.edu.ar"))
