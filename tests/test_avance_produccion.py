@@ -24,3 +24,13 @@ class Diferencia(unittest.TestCase):
         vieja["posgrados"] = [{"clave": "publica", "ofertas": 100, "con_plan": 5, "con_titulo": 80, "con_duracion": 20}]
         nueva["posgrados"] = [{"clave": "publica", "ofertas": 100, "con_plan": 5, "con_titulo": 85, "con_duracion": 40}]
         self.assertEqual(diferencia(nueva, vieja)[-1], "posgrados publica: título 80 -> 85, duración 20 -> 40")
+
+
+class MotivosDeLasOfertasSinPlan(unittest.TestCase):
+    def test_cada_oferta_sin_plan_lleva_el_motivo_de_su_pagina(self):
+        from rumbo_scraper.database.avance_produccion import motivos_de
+
+        pendientes = [("UCP", "https://ucp/a", 9), ("UCP", "https://ucp/b", 2), ("UNLP", "https://unlp/x", 4)]
+        sondeo = {"https://ucp/a": "sin_plan_publicado", "https://ucp/b": "sin_plan_publicado", "https://unlp/x": "js"}
+        self.assertEqual(motivos_de(pendientes, sondeo), {"sin_plan_publicado": 11, "js": 4})
+        self.assertEqual(motivos_de([("U", "https://u/z", 3)], sondeo), {"sin_sondear": 3})

@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 AVANCE = Path("data/avance")
+SONDEO = Path("entregables/avance/sondeo_universidades.csv")
 COLA = Path("entregables/avance/cola_terciarios.csv")
 ENV_DE_LA_APP = Path.home() / "Desktop" / "Rumbo" / ".env"
 
@@ -76,8 +77,28 @@ def instantanea(conexion: Any) -> dict[str, Any]:
                                   "(select count(*) from carreras) as carreras, "
                                   "(select count(*) from planes_estudio where vigente) as planes, "
                                   "(select count(*) from planes_materias) as materias")[0]
-    return {"fecha": date.today().isoformat(), "totales": totales, "por_tipo": por_tipo,
+    return {"fecha": date.today().isoformat(), "totales": totales, "sin_plan_motivos": motivos_sin_plan(conexion), "por_tipo": por_tipo,
             "por_provincia": por_provincia, "por_institucion": por_institucion, "posgrados": posgrados}
+
+
+def motivos_de(pendientes: list[tuple[str, str, int]], sondeo: dict[str, str]) -> dict[str, int]:
+    """The universities' offers without a plan, by the reason the survey recorded for their page
+    (``sin_plan_publicado``, ``pdf_del_plan``...), and ``sin_sondear`` for the pages it has not read."""
+    cuenta: dict[str, int] = {}
+    for _universidad, url, ofertas in pendientes:
+        motivo = sondeo.get(url, "sin_sondear")
+        cuenta[motivo] = cuenta.get(motivo, 0) + ofertas
+    return cuenta
+
+
+def motivos_sin_plan(conexion: Any) -> dict[str, int]:
+    from rumbo_scraper.database.sondeo_universidades import ofertas_sin_plan
+
+    sondeo: dict[str, str] = {}
+    if SONDEO.exists():
+        with SONDEO.open(encoding="utf-8-sig") as archivo:
+            sondeo = {fila["url"]: fila["motivo"] for fila in csv.DictReader(archivo, delimiter=";")}
+    return motivos_de(ofertas_sin_plan(conexion, []), sondeo)
 
 
 def diferencia(nueva: dict[str, Any], vieja: dict[str, Any] | None) -> list[str]:
@@ -88,6 +109,10 @@ def diferencia(nueva: dict[str, Any], vieja: dict[str, Any] | None) -> list[str]
     for clave in ("instituciones", "ofertas_publicadas", "carreras", "planes", "materias"):
         antes, ahora = vieja["totales"].get(clave, 0), nueva["totales"][clave]
         lineas.append(f"{clave}: {antes} -> {ahora} ({ahora - antes:+d})")
+    antes_m, ahora_m = vieja.get("sin_plan_motivos") or {}, nueva.get("sin_plan_motivos") or {}
+    for motivo in sorted(set(antes_m) | set(ahora_m)):
+        if antes_m.get(motivo, 0) != ahora_m.get(motivo, 0):
+            lineas.append(f"universidades sin plan, {motivo}: {antes_m.get(motivo, 0)} -> {ahora_m.get(motivo, 0)}")
     for grupo, titulo in (("por_tipo", "tipo"), ("por_provincia", "provincia"), ("posgrados", "posgrados")):
         anteriores = {f["clave"]: f for f in vieja.get(grupo, [])}
         for fila in nueva.get(grupo, []):
