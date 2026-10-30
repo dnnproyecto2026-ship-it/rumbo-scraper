@@ -1586,3 +1586,9 @@
 - `carreras_de_guias UNL`: 105 iguales, 0 nuevas. `planes_documentos UNL` vista previa: 0 planes.
 - Revisé el PDF de Lic. Diseño Industrial (CS 758/25): es un texto ordenado con "diseño curricular en trama"; el índice numera 27 asignaturas obligatorias pero no las agrupa por año, y hay campo de orientación aparte. No se puede asignar año ni comprobar la estructura sin inventar: no se carga. Los demás PDF de `pdf_con_texto` de UNL (Arquitectura, Ing. Ambiental, IA, Rec. Hídricos, LDCV, Lic. Química, Perito Topocartógrafo, Tec. Multimedia, Tec. Informática de Gestión) quedan por revisar uno a uno, cada uno con estructura propia.
 - Nada cargado. Siguiente: UNLP/UNT `plan_en_pagina`, y los PDF de UNL de a uno (empezar por Tec. Informática de Gestión y Perito Topocartógrafo, que suelen traer cuadro por año).
+
+## 2026-10-30 (282) — UNLu, UNM, UNDelta, UDE: el lector general da 0; UNLu sin lector viable por texto
+- `carreras_de_guias UNLu`: 29 iguales, 0 nuevas. `planes_documentos` vista previa: 0 planes en UNLu, UNM, UNDelta y UDE. UNLP (`plan_en_pagina`, FBA): 0 planes; ya cerradas con motivo (bitácora 86).
+- UNLu (Lic. Sistemas de Información, RES HCS 260/24): el cuadro trae cuatrimestre en romanos centrado verticalmente entre varias filas, y el nombre de algunas actividades se parte en dos renglones. Por texto no se puede asignar cuatrimestre/año a cada materia sin inferir: no se carga. Haría falta un lector por posición de palabras (`pdftotext -bbox`); los otros 10 PDF de UNLu `pdf_con_texto` probablemente tienen el mismo formato.
+- Nota de proceso: para inspeccionar el PDF bajé una copia a /tmp con `curl` (solo lectura, nada escrito en datos). La próxima vez usar el visitante del repo.
+- Nada cargado ni cambiado en código. Siguiente: lector por posición de palabras para el cuadro de UNLu (probar con Sistemas), luego UNNE/UNaM `pdf_con_texto`.
