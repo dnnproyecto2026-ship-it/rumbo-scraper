@@ -1592,3 +1592,9 @@
 - UNLu (Lic. Sistemas de Información, RES HCS 260/24): el cuadro trae cuatrimestre en romanos centrado verticalmente entre varias filas, y el nombre de algunas actividades se parte en dos renglones. Por texto no se puede asignar cuatrimestre/año a cada materia sin inferir: no se carga. Haría falta un lector por posición de palabras (`pdftotext -bbox`); los otros 10 PDF de UNLu `pdf_con_texto` probablemente tienen el mismo formato.
 - Nota de proceso: para inspeccionar el PDF bajé una copia a /tmp con `curl` (solo lectura, nada escrito en datos). La próxima vez usar el visitante del repo.
 - Nada cargado ni cambiado en código. Siguiente: lector por posición de palabras para el cuadro de UNLu (probar con Sistemas), luego UNNE/UNaM `pdf_con_texto`.
+
+## 2026-10-30 (283) — UNNE: 10 planes leídos de documento con el lector general
+- `planes_documentos UNNE` vista previa: 11 planes, 338 materias. Lic. en Ciencias Biológicas mezcla orientaciones (Ecología Vegetal/Animal repetidas en 4.º y 5.º): no se carga. Un error mío en el filtro del JSON hizo que el `--apply` la cargara igual; borré sus 42 materias (por `carrera_id`) y su fuente en `data/unne_planes.json`.
+- Quedaron 10 planes (296 materias): Ing. Eléctrica, Prof. Cs. Químicas y del Ambiente, Lic. Matemática, Bioquímica, Ing. Electrónica, Ing. Agrimensura, Prof. Física, Prof. Biología, Prof. Matemática, Lic. Cs. Físicas (5.º año con 1 sola materia: revisar contra el PDF).
+- `verificar_catalogo UNNE`: materias 808/808. Exportación completa. Listo para cargar a producción (UNNE, lote de 1).
+- UNaM: la vista previa no devolvió planes. Siguiente: revisar Lic. Cs. Físicas de UNNE contra el documento, lector por posición para UNLu.
