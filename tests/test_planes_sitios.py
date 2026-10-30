@@ -1012,6 +1012,24 @@ Recreativos - Carga horaria: 4 horas
             ("Historia de la Enfermería", 2)])
         self.assertEqual(p.plan_estructura_numerada("sin tabla"), [])
 
+    def test_plan_indice_por_anio_chaco(self):
+        texto = (
+            "ÍNDICE\n Estructura Curricular   18\n\n1° AÑO\n"
+            "Pedagogía...................................................   20\n.\n"
+            "Literatura Clásica II……………………………………………………………………..\n"
+            "                                                          27\n"
+            "Práctica Docente I.........................................   33\n\n"
+            "2°AÑO\n"
+            "Psicología Educacional.....................................   36\n"
+            "Geografía Económica                                    3   63\n\n"
+            "                                  6\n"
+            "INTRODUCCIÓN\n"
+            "Pedagogía...................................................   20\n")
+        self.assertEqual(p.plan_indice_por_anio(texto), [
+            ("Pedagogía", 1), ("Literatura Clásica II", 1), ("Práctica Docente I", 1),
+            ("Psicología Educacional", 2), ("Geografía Económica", 2)])
+        self.assertEqual(p.plan_indice_por_anio("sin índice"), [])
+
     def test_formato_de_unidad_con_titulo_partido_y_practica(self):
         texto = """Primer Año
 Pedagogía

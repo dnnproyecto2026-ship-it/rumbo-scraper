@@ -1463,3 +1463,11 @@
 - Lector nuevo `plan_estructura_numerada` (tabla "N° ID 1° Año", nombres partidos con su primera parte arriba) con su prueba; da 30 materias (13/9/8), cada una igual a la fila del PDF. Registrado en `DISENOS["Catamarca"]`; `leer_diseno` lo acepta como plan entero. Como el PDF está en el dominio de Belén, `planes_disenos` solo lo asigna a esa institución (las demás de Catamarca no tienen su propio sitio con el diseño).
 - Listo para cargar con `planes_disenos --apply` desde la Mac. Tests 961 OK.
 - Siguiente: Chaco Geografía/Lengua, Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (249) — Chaco Lengua y Literatura (14): diseño registrado, listo para cargar; Geografía no
+- Revisados los sitios INFoD de Chaco: el IES de Machagai (`insmachagai-cha.infd.edu.ar`) publica los diseños de Lengua (Res. 6565/14), Geografía (6566/14), Historia, Matemática, Inglés y Software. Ningún otro sitio chaqueño leído enlaza un diseño en PDF.
+- Lector nuevo `plan_indice_por_anio` (índice del diseño con "1° AÑO"/"Primer año", nombres con puntos guía o número de página) con su prueba. Lengua: 34 unidades (9/11/8/6), todas literales del índice, con las Prácticas y Residencia que `plan_formato_ubicacion` perdía. Registrado en `DISENOS["Chaco"]`.
+- Geografía NO cargable: el índice (32) omite "Didáctica General", que el diseño sí tiene en 1.º; con `plan_formato_ubicacion` salen Prácticas faltantes y nombres rotos. Historia (35 por índice vs 29 fichas), Matemática e Inglés: el índice no coincide con las fichas o no existe; sin cargar.
+- La vista previa local da 0 institutos (la base del scraper no tiene esas ofertas): listo para cargar con `planes_disenos --apply` desde la Mac. Tests 962 OK.
+- Siguiente: Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+

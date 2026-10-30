@@ -3158,6 +3158,39 @@ def plan_estructura_numerada(texto: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+def plan_indice_por_anio(texto: str) -> list[tuple[str, int]]:
+    """A Chaco design (``pdftotext -layout``) whose index lists the units by
+    year: a heading ("1° AÑO", "Segundo año"), then a line per unit, its name
+    and its page ("Pedagogía ........ 20"; the page may be missing). The index ends at the first line
+    that is none of those (the next section's title); a stray number in the
+    page column ("Geografía Económica   3   63") is not part of the name."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for linea in (texto or "").splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        if not re.search(r"\w", linea):
+            continue
+        cabecera = re.match(r"(?i)^\s*(?:\d[°º]|primer|segundo|tercer|cuarto|quinto)\s*a[ñn]o\s*$", linea)
+        if cabecera:
+            if materias and anio_de(linea) != anio + 1 and anio_de(linea) != anio:
+                break
+            anio = anio_de(linea) or 0
+            continue
+        if not anio:
+            continue
+        # A name over dotted leaders (its page may fall on a line of its own),
+        # or a name and its page.
+        fila = (re.match(r"^\s*(\S.*?)\s*[.…]{3,}", linea)
+                or re.match(r"^\s*(\S.*?)(?:\s+\d{1,2})?\s{2,}\d{1,3}\s*$", linea))
+        if fila and re.search(r"[^\W\d_]{3}", fila.group(1)):
+            _agregar(materias, clean_text(fila.group(1)), anio)
+        elif re.match(r"^\s*\d{1,3}\s*$", linea) or (anio == 1 and not materias):
+            continue
+        else:
+            break
+    return desde_el_primero(materias)
+
+
 def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of 2017 on (Profesorado de Inglés;
     the Técnico Profesional ones of 2023): each unit a heading ("Pedagogía",

@@ -175,6 +175,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
     "Chaco": {
         "Profesorado de Educación Inicial": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISENO_PROF._EDUC_INICIAL..pdf", planes_sitios.plan_formato_ubicacion),
         "Profesorado de Educación Primaria": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISEN_O_PRIMARIA2.pdf", planes_sitios.plan_formato_ubicacion),
+        # Its Lengua y Literatura (Res. 6565/14), as the IES de Machagai publishes it.
+        "Profesorado de Lengua y Literatura": (
+            "https://insmachagai-cha.infd.edu.ar/sitio/wp-content/uploads/2020/09/RESOLUCION-06565-14Dis%C3%B1o-Lengua-y-Lit.pdf",
+            planes_sitios.plan_indice_por_anio),
     },
     "Chubut": {
         "Profesorado de Educación Primaria": ("https://ies813pabloluppi-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
