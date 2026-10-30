@@ -1668,3 +1668,8 @@
 - `plan_fio_unam` ahora lee filas con el código solo y el nombre en la línea siguiente, códigos con guion (`EM-261`) y el typo `2º C,`. Cada PDF da tantas materias como códigos tiene. +2 pruebas, 977 OK.
 - `planes_documentos UNaM --apply` (126 materias), `verificar_catalogo UNaM`, exportación completa. Listo para cargar a producción (UNaM, lote de 1).
 - Pendiente: Lic. Higiene y Seguridad (códigos de 3 dígitos), Ing. Electrónica (no salió en la vista previa: ver nombre en catálogo), FCEQyN, FAyD TUIT, FHyCS.
+
+## 2026-10-30 (299) — UNaM FCEQyN: lector `plan_fceqyn_unam` (Ing. en Alimentos 40, Lic. en Genética 36), sin cargar: el sitio no responde
+- Lector por tablas del PDF (`plan_fceqyn_unam` + `tests/test_planes_fceqyn_unam.py`, registrado para `fceqyn.unam.edu.ar`): nombres partidos arriba/abajo de la fila del código (simetría), nombre cortado por salto de página, fin en "OTRO REQUISITO"/pie. Sobre los PDF en caché: Grilla-IA 40 materias y Grilla-LG 36, igual a la cantidad de códigos de cada grilla (cotejado contra el texto). "Optativa I/II" salen como nombre y las filtra el cargador; los 3 "Curso de Orientación Regional" no se toman. 982 tests OK.
+- `planes_documentos UNaM` (vista previa): 0 planes, porque `www.fceqyn.unam.edu.ar` da timeout de conexión (caída desde esta máquina). Nada cargado.
+- Pendiente: reintentar `planes_documentos UNaM` cuando el sitio responda, `--apply`, `verificar_catalogo UNaM`. Grilla-TUCyP es un reporte SIU sin años: no se carga. Siguen FAyD TUIT, FHyCS Lengua de Señas, Lic. Higiene y Seguridad.
