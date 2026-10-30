@@ -3033,12 +3033,15 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
     return unicas
 
 
-def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
+def plan_carga_horaria(texto: str, solo_numeradas: bool = False) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of a tecnicatura superior (Enfermería,
     Tiempo Libre y Recreación): each unit a heading in capitals over its
     "Carga horaria: 32 horas" (or "TIEMPO LIBRE Y RECREACIÓN - Carga horaria: 2
     horas"), under its year ("PRIMER AÑO"). The overview of the structure that
-    comes first has no such line, and the prose's "carga horaria total" no colon."""
+    comes first has no such line, and the prose's "carga horaria total" no colon.
+    With `solo_numeradas`, only the numbered units count: Radiología also heads each
+    "trayecto" ("RADIOLÓGICAS ESPECIALES - Carga Horaria: 128 horas") and says which
+    units make it up ("Integrado por la unidad curricular ..."), and neither is a unit."""
     lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
     # A numbered heading wrapped over two lines ("17. Práctica Profesionalizante 2: ... - Carga" /
     # "horaria: 3 (tres) módulos") is one.
@@ -3077,6 +3080,8 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         # (Numbered units, "1. Fundamentos de Matemática para Seguridad - Carga horaria: ...", are whole.)
         numerada = mismo and re.match(r"^\d{1,2}\.\s+\S", mismo.group(1))
         if mismo and not numerada and not mismo.group(1).split()[0].isupper():
+            continue
+        if solo_numeradas and not numerada:
             continue
         titulo = mismo.group(1) if mismo else _titulo_de_unidad(lineas, i)
         titulo = re.sub(r"^\d{1,2}\.\s+", "", titulo)

@@ -1038,6 +1038,19 @@ La carga horaria total de la Tecnicatura es de 1824 horas
 """
         self.assertEqual(p.plan_carga_horaria(texto), [("Derecho", 1), ("Derecho laboral", 2)])
 
+    def test_solo_numeradas_deja_los_trayectos(self):
+        texto = """PRIMER AÑO
+Integrado por la unidad curricular SALUD PÚBLICA 1 -
+Carga Horaria: 64 horas reloj anuales.
+1. Salud Pública 1 - Carga horaria: 2 (dos) módulos por semana
+SEGUNDO AÑO
+RADIODIAGNÓSTICO - Carga Horaria: 96 horas reloj anuales.
+2. Tecnologías Radiográficas - Carga horaria: 3 (tres) módulos por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto, solo_numeradas=True),
+                         [("Salud pública 1", 1), ("Tecnologías radiográficas", 2)])
+        self.assertIn(("Radiodiagnóstico", 2), p.plan_carga_horaria(texto))
+
 
 class PlanUcasalCorrelatividades(unittest.TestCase):
     def test_nombres_partidos_en_varias_lineas_y_correlativas_a_la_derecha(self):

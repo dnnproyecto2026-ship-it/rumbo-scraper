@@ -89,6 +89,9 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             planes_sitios.plan_carga_horaria),
         "Tecnicatura Superior en Administración de Recursos Humanos": (
             _PBA + "2025-04/TS%20Recursos%20Humanos%205311-24.pdf", planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Radiología": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Radiologia%20-%20Res.%205308-24%20y%20Res.%201369-25%20y%20Anexos.pdf",
+            functools.partial(planes_sitios.plan_carga_horaria, solo_numeradas=True)),
         "Tecnicatura Superior en Turismo": (
             _PBA + "2023-08/TS%20en%20Turismo%20Res.%202686-20%20y%20Anexo.pdf", planes_sitios.plan_carga_horaria),
         "Tecnicatura Superior en Guía de Turismo": (
