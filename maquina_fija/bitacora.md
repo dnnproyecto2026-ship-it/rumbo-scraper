@@ -1401,3 +1401,7 @@
 - Mismo sitio y lector que el ciclo 234 (des-ers.infd.edu.ar, "Versión Diseñada" con texto): Geografía (34 unidades, años 10/10/7/7), Física (35; 10/10/8/7), Química (34; 10/10/8/6). Unidades leídas = cantidad de "Formato:" del PDF en las tres. Registrados en `planes_disenos.DISENOS["Entre Ríos"]`; tests 959 OK.
 - Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para Geografía (8), Física (6), Química (5). Los nombres de oferta pueden decir "Educación Secundaria en ...": revisar en la vista previa.
 - Pendiente ER: Educación Especial (16; Res. 0976/17 y 5733/17), Educación Física (8; 0979/17 y 5785/17), Música (7), Artes Visuales (7), Economía (5), Enfermería (15): solo se ve el PDF de la resolución, falta confirmar si tiene capa de texto. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (236) — Entre Ríos: el resto de los diseños son escaneos
+- En des-ers.infd.edu.ar solo los 10 profesorados ya registrados tienen "Versión Diseñada" con texto. Educación Física (Res. 5785/17, 6 págs.), Economía (4795/15, 157 págs.) y Filosofía (4793/15, 154 págs.) no tienen capa de texto (`pdftotext` devuelve solo saltos de página); Educación Especial, Música, Artes Visuales y Enfermería solo publican el PDF de la resolución, del mismo tipo. Razón registrada: `pdf_escaneado`; solo entrarían por `planes_manuales` con chequeo literal. Nada cargado ni cambiado en código.
+- Siguiente: Córdoba Enfermería (30), PBA Enfermería (86), Mendoza/Misiones/Corrientes Inicial/Primaria. Sin credenciales de producción ni de GitHub.
