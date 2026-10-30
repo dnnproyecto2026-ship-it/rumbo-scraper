@@ -1619,3 +1619,7 @@
 ## 2026-10-30 (288) — UNC: vista previa de `planes_documentos` sin planes
 - Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). El tiempo agotado del ciclo 287 era por correr UNC y UNR juntas. Nada cargado ni cambiado en código.
 - Pendiente: UNR y UNDAV de a una; UNC (18 `pdf_con_texto`) necesita lector propio por PDF, de a uno.
+
+## 2026-10-30 (289) — UNR: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
+- Pendiente: UNDAV de a una; UNC y UNR necesitan lector propio por PDF, de a uno.
