@@ -1633,3 +1633,8 @@
 - Profesorado y Lic. en Cs. de la Educación (UNLu) también salieron de la vista previa, pero el 5.º año mezcla las electivas de las orientaciones (17-19 materias): NO cargadas, las saqué de la vista previa.
 - `planes_documentos UNLu --apply`; `verificar_catalogo UNLu`; exportación completa. Listo para cargar a producción (UNLu, lote de 1). Tests: 971 OK.
 - Pendiente: los otros PDF de UNLu `pdf_con_texto` (Física, Geografía, Matemática, Historia, Prof. Adultos, Educación Inicial) con el mismo lector: no dieron plan, hay que ver su formato de a uno.
+
+## 2026-10-30 (292) — UNLu Educación Física (RES HCS 418-25): lector por celdas da un plan incompleto, no se carga
+- Probé `plan_unlu_cuatrimestres` sobre el PDF (Lic. en Educación Física, complementación, 4 cuatrimestres): lee 12 de ~16 materias. Pierde las del idioma optativo en filas "Inglés I o Francés I o Portugués I" (toma solo una alternativa), "Teorías de la Educación y la Educación Física" y "Planeamiento y Gestión…" (nombre partido con la nota "(1)" en la columna de código). Ensanchar el código a `\d{5}(\(n\))*` suma 2 materias pero no arregla las alternativas. Revertí el cambio de prueba; sin cambios en código ni datos.
+- Un plan incompleto es peor que ninguno: pendiente. Posible salida: `planes_manuales` con chequeo literal (idioma como una sola materia "Inglés/Francés/Portugués" no corresponde: decidir con una persona), o lector por celdas que parta las alternativas.
+- Siguiente: otro PDF de UNLu (Geografía res hcs 531-25, Matemática 248-24) o UNaM/UNM `pdf_con_texto`.
