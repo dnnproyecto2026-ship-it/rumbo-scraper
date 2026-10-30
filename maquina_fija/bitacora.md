@@ -1420,3 +1420,7 @@
 ## 2026-10-30 (239) — Misiones Primaria (22): el diseño publicado es un escaneo
 - El diseño (Res. 333) está en dos PDF de isfdbrasil-mis.infd.edu.ar (`.../2019/06/Diseño-Curricular-Profesorado-Educación-Primaria-páginas-1-1517-60.pdf`, 59 págs., y `...páginas-61-101.pdf`). Ambos son imágenes: `pdftotext` no devuelve texto. Razón registrada: `pdf_escaneado`; solo entraría por `planes_manuales` con chequeo literal, y eso exige texto verificable. Nada cargado ni cambiado en código; sin commit de código.
 - Siguiente: Misiones Inicial (10; probablemente el mismo tipo de escaneo), PBA Enfermería (86), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (240) — Misiones Inicial (10): no se halló el diseño en un sitio oficial
+- El sitio del ISFD Brasil (`isfdbrasil-mis.infd.edu.ar`) solo publica el diseño de Primaria (ya registrado como `pdf_escaneado`, ciclo 239); su búsqueda "inicial" no lista ningún diseño. La búsqueda web solo devuelve una copia en Scribd (no es dominio oficial, y el texto menciona la Res. 4165-14 que es de Entre Ríos): no se usa. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: PBA Enfermería (86; el CSV está desactualizado), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
