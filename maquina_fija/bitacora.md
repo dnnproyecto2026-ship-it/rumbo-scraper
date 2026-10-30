@@ -1581,3 +1581,8 @@
 - UCH: `carreras_de_guias` 12 iguales; el lector `plan_uch` ya existía y `planes_documentos UCH` da 0 planes nuevos (41 materias, cada rechazo con su motivo en el docstring: numeración repetida, fuente ilegible). Sin cambios.
 - UNComa: `planes_documentos` da 0. Los PDF `ord_*.pdf` son ordenanzas escaneadas con OCR sucio (no cargables). Único listado limpio: Tec. Univ. en Farmacia (medicina.uncoma.edu.ar, 25 materias). Agregué `plan_uncoma_listado` + prueba (`tests/test_planes_uncoma.py`), pero la oferta NO está en la base del scraper (la guía la trae sin facultad y `carreras_de_guias` la cuenta como igual). Pendiente: agregarla con `agregar_carrera` y recién ahí `planes_documentos UNComa`/`planes_manuales`.
 - Siguiente: UNL, UNLP (`plan_en_pagina`), UNT (`plan_en_pagina`), resto de UCASAL.
+
+## 2026-10-30 (281) — UNL: el lector general da 0 planes; PDF sin año por materia
+- `carreras_de_guias UNL`: 105 iguales, 0 nuevas. `planes_documentos UNL` vista previa: 0 planes.
+- Revisé el PDF de Lic. Diseño Industrial (CS 758/25): es un texto ordenado con "diseño curricular en trama"; el índice numera 27 asignaturas obligatorias pero no las agrupa por año, y hay campo de orientación aparte. No se puede asignar año ni comprobar la estructura sin inventar: no se carga. Los demás PDF de `pdf_con_texto` de UNL (Arquitectura, Ing. Ambiental, IA, Rec. Hídricos, LDCV, Lic. Química, Perito Topocartógrafo, Tec. Multimedia, Tec. Informática de Gestión) quedan por revisar uno a uno, cada uno con estructura propia.
+- Nada cargado. Siguiente: UNLP/UNT `plan_en_pagina`, y los PDF de UNL de a uno (empezar por Tec. Informática de Gestión y Perito Topocartógrafo, que suelen traer cuadro por año).
