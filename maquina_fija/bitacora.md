@@ -1311,3 +1311,8 @@
 - `disenos_a_buscar.csv` está desactualizado: "Enfermería" (86) ya está registrada en `planes_disenos.DISENOS` como Tecnicatura Superior en Enfermería (ciclos anteriores, ISFD 89 / Res. 546/16).
 - Acompañamiento Terapéutico (78 ofertas): el diseño oficial (Res. 1221/15) está en abc.gob.ar (`.../2021-06/TS en Acompañamiento Terapéutico - Res. 1221_15_compressed.pdf`, 52 páginas), pero es un escaneo sin texto (`pdftotext` da 0 líneas). Sin OCR verificable no se carga; razón registrada. No cambié código ni la base.
 - Siguiente: Higiene y Seguridad en el Trabajo (67) y Radiología (65; Res. 5143/03 "Tecnología en Salud con especialidad en Radiología", copia en isfd147-bue.infd.edu.ar, ver si es texto). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (218) — Higiene y Seguridad en el Trabajo (PBA): diseño registrado, 0 institutos lo reciben
+- Res. 320/13 (Expte. 5812-2.158.779/07), PDF con texto en isfdyt28-bue.infd.edu.ar. `plan_carga_horaria` lo lee entero: 24 materias (9/9/6 por año), una por cada línea "Carga horaria" del PDF (suman 1910 h de las 1920 declaradas; no se cargó ninguna hora, solo nombres y años). Registrado en `planes_disenos.DISENOS["Buenos Aires"]`; sin lector nuevo.
+- Vista previa: 0 institutos (el diseño está solo en el dominio de un instituto; la regla exige el dominio propio de cada uno, igual que Tiempo Libre y Recreación). Nada escrito en la base. Razón registrada para las 67 ofertas; no hay copia en abc.gob.ar en la búsqueda.
+- Siguiente: Radiología (65; Res. 5143/03, copia en isfd147-bue.infd.edu.ar, ver si es texto). Sin credenciales de producción ni de GitHub.

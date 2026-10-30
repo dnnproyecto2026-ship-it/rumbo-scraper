@@ -81,6 +81,8 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Tecnicatura Superior en Higiene, Seguridad y Ambiente Laboral": (
             "https://iseta.edu.ar/iseta/wp-content/uploads/2025/12/Tec.-Sup-en-Higiene-Seguridad-y-ambiente-Laboral.pdf",
             planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Higiene y Seguridad en el Trabajo": (
+            "https://isfdyt28-bue.infd.edu.ar/sitio/upload/TECSI_320-13.pdf", planes_sitios.plan_carga_horaria),
         "Tecnicatura Superior en Tiempo Libre y Recreación": (
             "https://isfd72-bue.infd.edu.ar/sitio/wp-content/uploads/2025/04/Tecnicatura-en-Tiempo-Libre-y-Recreacion.pdf",
             planes_sitios.plan_carga_horaria),
