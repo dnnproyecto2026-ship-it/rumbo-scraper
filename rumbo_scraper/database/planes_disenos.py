@@ -228,6 +228,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2024/09/"
             "Diseno-Curicular-Profesorado-de-Educacion-Primaria-2023.pdf",
             planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Inicial": (
+            "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2025/07/"
+            "RESOL-2023-6867-GDEMZA-DGE-Profesorado-de-Educacion-Inicial.pdf",
+            planes_sitios.plan_mapa_curricular_numerado),
     },
     # Córdoba's (the ones in force), as its Dirección General de Educación
     # Superior publishes them on its INFoD site, linked from its own.

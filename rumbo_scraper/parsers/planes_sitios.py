@@ -3158,6 +3158,50 @@ def plan_estructura_numerada(texto: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
+def plan_mapa_curricular_numerado(texto: str) -> list[tuple[str, int]]:
+    """A Mendoza design of 2023 (``pdftotext -layout``): its "Resumen de
+    cantidad de Unidades Curriculares" gives the units of each year (the six
+    counts of the row, not its "Total", which the design mistypes) and its
+    "Mapa curricular" lists them, in order, as "NN- Name" with the format,
+    term and hours to the right and a wrapped name on the next lines. The year
+    of a unit is where it falls in that count; if the units listed are not
+    those counted, nothing is read."""
+    texto = texto or ""
+    cuentas = [sum(int(n) for n in fila.group(2).split())
+               for fila in re.finditer(r"(?m)^\s*([1-5])[°º]\s+((?:\d+\s+){6})\S+\s*$", texto)]
+    inicio = re.search(r"(?im)^\s*3\.3\.?\s*Mapa curricular", texto)
+    if not cuentas or not inicio:
+        return []
+    formatos = {"módulo", "módulo-", "taller", "seminario", "seminari", "o", "taller-", "módulo-taller",
+                "taller-módulo", "seminario-taller", "módulo - taller"}
+    unidades: list[str] = []
+    abierta = False
+    for linea in texto[inicio.end():].splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        if re.search(r"Unidad Curricular|^\s*Cant\.|^\s*\d+\.\s+[A-ZÁÉÍÓÚ]{3}", linea):
+            break
+        linea = re.sub(r"^\s*(?:(?:FG|FE|PP|[1-5][°º])\s+)*(?:FG|FE|PP|[1-5][°º])?(?=\s|$)", "", linea)
+        fila = re.match(r"^\s*(\d{1,2})\s*[-–]\s*(\S.*)$", linea)
+        resto = fila.group(2) if fila else linea
+        trozo = re.split(r"\s{2,}", resto.strip())[0]
+        if fila:
+            unidades.append(trozo)
+            abierta = True
+        elif abierta and trozo and trozo.lower() not in formatos and not re.fullmatch(r"[\d\W]+|[ACac]", trozo):
+            unidades[-1] = f"{unidades[-1]} {trozo}"
+        elif abierta and trozo.lower() in formatos | {""}:
+            continue
+    if sum(cuentas) != len(unidades):
+        return []
+    materias: list[tuple[str, int]] = []
+    desde = 0
+    for anio, cantidad in enumerate(cuentas, 1):
+        for nombre in unidades[desde:desde + cantidad]:
+            _agregar(materias, clean_text(nombre), anio)
+        desde += cantidad
+    return desde_el_primero(materias)
+
+
 def plan_indice_por_anio(texto: str) -> list[tuple[str, int]]:
     """A Chaco design (``pdftotext -layout``) whose index lists the units by
     year: a heading ("1° AÑO", "Segundo año"), then a line per unit, its name

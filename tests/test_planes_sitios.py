@@ -1012,6 +1012,37 @@ Recreativos - Carga horaria: 4 horas
             ("Historia de la Enfermería", 2)])
         self.assertEqual(p.plan_estructura_numerada("sin tabla"), [])
 
+    def test_plan_mapa_curricular_numerado_mendoza(self):
+        texto = (
+            "Año         CFG        CFE\n"
+            "            Anuale  Cuatri.  Anuale  Cuatri.  Anuale  Cuatri.  Total\n"
+            "1°     1     1     0     0     0     0     02\n"
+            "2°     0     1     1     0     1     0     03\n"
+            "Total  1     2     1     0     1     0     6\n\n"
+            "3.3. Mapa curricular\n"
+            "         Campo   N° y Nombre de la UC       Formato  Régimen  Cuatri  Semanal Total\n"
+            "                        01- Pensamiento Filosófico     Módulo   C     1ro   5   80\n"
+            "                 FG     02-Comprensión y Producción\n"
+            "                        de textos académicos\n"
+            "                                                       Taller   A     ---   4   128\n"
+            "       1°\n"
+            "       2°       03-Didáctica                           Módulo   C     1ro   5   80\n"
+            "                04-Psicología Educacional\n"
+            "                                  Módulo-\n"
+            "                                  Seminari   C   2do   5   80\n"
+            "                                  o\n"
+            "          05-Práctica Profesional\n"
+            "     PP                                  Taller  A  ---  6  192\n"
+            "                Docente II\n"
+            "                    Cant.   Carga\n"
+            "         Unidad Curricular\n")
+        self.assertEqual(p.plan_mapa_curricular_numerado(texto), [
+            ("Pensamiento Filosófico", 1), ("Comprensión y Producción de textos académicos", 1),
+            ("Didáctica", 2), ("Psicología Educacional", 2), ("Práctica Profesional Docente II", 2)])
+        # Units that are not the ones counted: nothing is read.
+        self.assertEqual(p.plan_mapa_curricular_numerado(texto.replace("05-Práctica", "Práctica")), [])
+        self.assertEqual(p.plan_mapa_curricular_numerado("sin mapa"), [])
+
     def test_plan_indice_por_anio_chaco(self):
         texto = (
             "ÍNDICE\n Estructura Curricular   18\n\n1° AÑO\n"
