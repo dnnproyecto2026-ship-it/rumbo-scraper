@@ -1008,6 +1008,15 @@ Recreativos - Carga horaria: 4 horas reloj por semana
             ("Prácticas profesionalizantes II: planificación de proyectos recreativos", 2),
             ("Prácticas profesionalizantes III: diseño e implementación de proyectos recreativos", 3)])
 
+    def test_unidad_numerada_sin_dos_puntos(self):
+        texto = """Primer año
+1. Derecho - Carga horaria: 2 (dos) módulos por semana
+Segundo año
+12. Derecho Laboral – Carga horaria 2 (dos) módulos por semana
+La carga horaria total de la Tecnicatura es de 1824 horas
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [("Derecho", 1), ("Derecho laboral", 2)])
+
 
 class PlanUcasalCorrelatividades(unittest.TestCase):
     def test_nombres_partidos_en_varias_lineas_y_correlativas_a_la_derecha(self):

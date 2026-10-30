@@ -3063,6 +3063,9 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
             anio = _ANIO_INDICE[ano.group(1).lower()]
             continue
         mismo = re.match(r"^(.+?)\s*[-–.]\s*carga horaria\s*:", linea, re.I)
+        if not mismo:
+            # (A numbered unit may drop the colon: "13. Derecho Comercial – Carga horaria 2 (dos) módulos".)
+            mismo = re.match(r"^(\d{1,2}\.\s+.+?)\s*[-–]\s*carga horaria\s+\d", linea, re.I)
         if not anio or not (mismo or re.match(r"(?i)^carga horaria\s*:\s*\d+\s*horas?\b", linea)):
             continue
         # (A heading wrapped over two lines leaves its tail, "Recreativos - Carga horaria: 4", alone.)
