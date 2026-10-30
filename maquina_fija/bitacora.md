@@ -1452,3 +1452,8 @@
 - Córdoba Administración: el índice oficial de la DGES (`dges-cba.infd.edu.ar/sitio/curriculares/`) no lista ninguna tecnicatura de Administración (solo Animación, Biblioteca, Gestión Sociocultural, Dirección Coral). Razón registrada: `sin_plan_publicado` (no en el índice oficial).
 - Santa Fe Matemática (re-mirado): en el anexo del ISP 1 los nombres de unidad van partidos arriba y abajo de la fila de horas ("PRÁCTICA DOCENTE I:" / fila / "ESCENARIOS EDUCATIVOS"); asignar fragmentos a su fila exige coordenadas (`pdftotext -bbox`) y sigue sin saberse qué instituto usa cada plan. Sin cambios.
 - Nada cargado ni cambiado en código; tests 960 OK. Siguiente: PBA Enfermería (CSV desactualizado, ya registrada: solo falta la carga desde la Mac), Santa Fe Lengua/Historia/Biología (mismo formato que Matemática), `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (247) — Catamarca Primaria (13) e Inicial (13): sin diseño de formación docente legible
+- El IES Belén (`iesbelen-cat.infd.edu.ar`) publica `.../2024/05/DCJ-Profesorado-de-Educacion-Primaria-2016.pdf`, pero es el diseño curricular de la escuela primaria para alumnos (472 págs., Ministerio de Catamarca 2016), no el plan del profesorado: ningún lector devuelve nada (y no corresponde). Su página de profesorados no enlaza ningún diseño de Inicial ni de Primaria. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit. Tests 960 OK.
+- Hay en el mismo sitio un PDF de Enfermería (`TS-en-Enfermeria-2018.pdf`, Catamarca) para mirar en otro ciclo.
+- Siguiente: Catamarca Enfermería, Chaco Geografía/Lengua, Santiago del Estero Primaria Rural. Sin credenciales de producción ni de GitHub.
