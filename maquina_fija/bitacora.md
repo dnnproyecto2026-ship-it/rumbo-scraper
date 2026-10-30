@@ -1306,3 +1306,8 @@
 ## 2026-10-30 (216) — Tiempo Libre y Recreación (PBA): no hay copia en abc.gob.ar
 - Búsqueda de una copia oficial del diseño en abc.gob.ar: sin resultados. Solo aparece el del ISFD 72 (el ya registrado, EX-2022-28195991-GDEBA) y los de CABA y Chubut, que son otras jurisdicciones y no valen. Las ~80 ofertas siguen sin plan; razón registrada: el diseño solo está en el dominio de un instituto. No cambié código.
 - Siguiente: Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA (`disenos_a_buscar.csv`). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (217) — Acompañamiento Terapéutico (PBA): diseño escaneado, no cargable
+- `disenos_a_buscar.csv` está desactualizado: "Enfermería" (86) ya está registrada en `planes_disenos.DISENOS` como Tecnicatura Superior en Enfermería (ciclos anteriores, ISFD 89 / Res. 546/16).
+- Acompañamiento Terapéutico (78 ofertas): el diseño oficial (Res. 1221/15) está en abc.gob.ar (`.../2021-06/TS en Acompañamiento Terapéutico - Res. 1221_15_compressed.pdf`, 52 páginas), pero es un escaneo sin texto (`pdftotext` da 0 líneas). Sin OCR verificable no se carga; razón registrada. No cambié código ni la base.
+- Siguiente: Higiene y Seguridad en el Trabajo (67) y Radiología (65; Res. 5143/03 "Tecnología en Salud con especialidad en Radiología", copia en isfd147-bue.infd.edu.ar, ver si es texto). Sin credenciales de producción ni de GitHub.
