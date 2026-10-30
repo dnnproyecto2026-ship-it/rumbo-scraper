@@ -1424,3 +1424,7 @@
 ## 2026-10-30 (240) — Misiones Inicial (10): no se halló el diseño en un sitio oficial
 - El sitio del ISFD Brasil (`isfdbrasil-mis.infd.edu.ar`) solo publica el diseño de Primaria (ya registrado como `pdf_escaneado`, ciclo 239); su búsqueda "inicial" no lista ningún diseño. La búsqueda web solo devuelve una copia en Scribd (no es dominio oficial, y el texto menciona la Res. 4165-14 que es de Entre Ríos): no se usa. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit de código.
 - Siguiente: PBA Enfermería (86; el CSV está desactualizado), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (241) — Formosa Primaria (18): el diseño solo está en Google Drive
+- La página oficial de diseños (`des-for.infd.edu.ar/sitio/disenos-curriculares/`) lista el Profesorado de Educación Primaria (Res. 5995/22) e Inicial (Res. 4028/22), pero el "DESCARGAR" apunta a Google Drive (`drive.google.com/file/d/15bdLi45SO21-FssvAbDgJ7y-XKYr99RF/...`), que no es dominio de los institutos: `es_oficial` lo rechazaría y la verificación literal no tendría fuente oficial legible. Razón registrada: `sin_plan_publicado` (solo en Drive). Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: CABA Inicial (17), Santa Fe Matemática (17) y Enfermería (18), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
