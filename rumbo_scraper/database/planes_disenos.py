@@ -270,6 +270,15 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Inglés": (
             "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Ingles_Solene_Borja_131015_final.pdf",
             planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Geografía": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Geografia_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Física": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/fisica_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Química": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Quimica_solene_borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
     },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
