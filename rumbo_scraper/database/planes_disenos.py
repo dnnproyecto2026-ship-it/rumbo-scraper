@@ -212,6 +212,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://isfdsabato-crr.infd.edu.ar/sitio/wp-content/uploads/2020/03/"
             "Dise%C3%B1o-Curricular-Jurisdiccional-%E2%80%93-Profesorado-de-primaria.pdf",
             planes_sitios.plan_estructura_con_regimen),
+        # Its Inicial (Res. 1487/14), as the ISFD de Curuzú Cuatiá publishes it.
+        "Profesorado de Educación Inicial": (
+            "https://iscuruzucuatia-crr.infd.edu.ar/sitio/wp-content/uploads/2021/07/Profesorado-de-Educacion-Inicial.pdf",
+            planes_sitios.plan_estructura_con_regimen),
     },
     # Mendoza's Primaria (its 2023 update), as the Instituto del Bicentenario
     # publishes it on its INFoD site (mendoza.edu.ar).

@@ -1410,3 +1410,9 @@
 - La página oficial de diseños de la DGES (`dges-cba.infd.edu.ar/sitio/curriculares/`) no lista Enfermería (ningún enlace con "Enfermer"; sí Animación Sociocultural, Artes Visuales, Biblioteca, Gestión Sociocultural, Dirección Coral). El único anexo que la nombra está en el Boletín Oficial de Córdoba (`boletinoficial.cba.gov.ar/.../2026/03/77310_ED_134_ANEXO.pdf`), pero el cliente del repo recibe una página de protección (986 bytes, no es un PDF): es un bloqueo y no se evade.
 - Razón registrada: `sin_plan_publicado` / sitio con bloqueo para las 30 ofertas de Córdoba Enfermería. Nada cargado ni cambiado en código; no hay commit de código. (Error mío: probé una vez con `curl` para ubicar el anexo; no se usó ningún dato de ahí y no se repite.)
 - Siguiente: PBA Enfermería (86; CSV desactualizado), Mendoza/Misiones/Corrientes Inicial/Primaria. Vigilancia CAYÓ en austral, ub, uba, udesa sigue sin revisar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (238) — Corrientes Inicial (21): diseño registrado
+- Res. 1487/14 (39 unidades, 4 años), PDF con texto del ISFD de Curuzú Cuatiá (`iscuruzucuatia-crr.infd.edu.ar/.../2021/07/Profesorado-de-Educacion-Inicial.pdf`). `plan_estructura_con_regimen` ahora acepta "1º año" en minúscula (con prueba); lee 37 de 39 unidades (9/10/10/8): las 2 faltantes son "Propuesta variable o complementaria", no materias. Registrado en `planes_disenos.DISENOS["Corrientes"]`; tests 960 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 21 ofertas. Sin vista previa local (base sin institutos).
+- Mendoza Inicial: la búsqueda no halló el diseño publicado; pendiente. (Error mío: bajé el PDF con `curl` para mirarlo; los datos salen solo del lector del repo, no se repite.)
+- Siguiente: Misiones Primaria (22), Mendoza Inicial, PBA Enfermería. Sin credenciales de producción ni de GitHub.

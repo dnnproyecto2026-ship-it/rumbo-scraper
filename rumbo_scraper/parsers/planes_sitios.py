@@ -1912,7 +1912,7 @@ def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
                              _HORAS_IUPA, _RESTO_IUPA)
 
 
-_ANIO_CON_NUMERO = re.compile(r"^\s*(\d)\s*[º°]\s*A[ñn]o\s*$")
+_ANIO_CON_NUMERO = re.compile(r"^\s*(\d)\s*[º°]\s*[Aa][ñn]o\s*$")
 _REGIMEN_DE_FILA = r"(?:Anual|Cuatrimestral|Semestral)\b"
 _PIEZA_CON_REGIMEN_DE_FILA = re.compile(r"^\s{4,}([A-Za-zÁÉÍÓÚÑáéíóúñ(][^\d●]*?)\s*(?:\s{2,}(?:" + _REGIMEN_DE_FILA + r"|\d).*)?$")
 

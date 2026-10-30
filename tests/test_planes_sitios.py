@@ -491,6 +491,18 @@ class PlanEstructuraConRegimen(unittest.TestCase):
             ("Práctica Docente II: Programación de la Enseñanza/ Curriculum y Organizaciones Escolares", 2)])
 
 
+class PlanEstructuraConRegimenAnioEnMinuscula(unittest.TestCase):
+    def test_encabezado_con_anio_en_minuscula(self):
+        texto = """
+                          1º año
+ 1     Pedagogía                      Cuatrimestral     Materia     6 horas
+
+                          2º año
+10     Filosofía                      Cuatrimestral     Materia     4 horas
+"""
+        self.assertEqual(p.plan_estructura_con_regimen(texto), [("Pedagogía", 1), ("Filosofía", 2)])
+
+
 class PlanFormatoUbicacionMendoza(unittest.TestCase):
     def test_ubicacion_sobre_el_formato_y_nombre_numerado(self):
         texto = """
