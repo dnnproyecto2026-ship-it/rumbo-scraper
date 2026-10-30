@@ -71,3 +71,7 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 - PBA diseños (ciclo 217): Acompañamiento Terapéutico (78) NO cargable, diseño Res. 1221/15 escaneado sin texto. Enfermería ya registrada. Siguiente: Higiene y Seguridad en el Trabajo, Radiología (isfd147-bue DC Servicios de Salud con especialización en Radiología).
 
 - UNLu (ciclo 291): Lic. en Sistemas de Información cargada en la base del scraper (37 materias, lector `plan_unlu_cuatrimestres`). Listo para cargar a producción (UNLu, lote de 1). Educación (Prof. y Lic.) NO cargables: electivas de orientaciones en 5.º año. Siguiente: otros PDF de UNLu (Física, Geografía, Matemática, Historia), luego UNaM/UNDAV.
+
+## Actualización ciclo 295 (2026-10-30)
+- Listo para cargar a producción: UNM (lote de 1) — Tecnicatura Universitaria en Gestión Ambiental, 25 materias (lector `plan_unm`, commit 81c45017).
+- Próximo: tecnicaturas de UNM con título intermedio (Biotecnología, Derecho, Impositivo Contable, Electrónica) cortando el PDF largo en "Título Intermedio"; luego Diseño 2026 (Animación Digital, Imagen e Identidad Corporativa, Prototipado Rápido); luego UNaM (11 pdf_con_texto).
