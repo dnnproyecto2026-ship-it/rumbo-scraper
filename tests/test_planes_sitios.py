@@ -1038,6 +1038,15 @@ La carga horaria total de la Tecnicatura es de 1824 horas
 """
         self.assertEqual(p.plan_carga_horaria(texto), [("Derecho", 1), ("Derecho laboral", 2)])
 
+    def test_unidad_numerada_con_carga_mal_escrita(self):
+        texto = """PRIMER AÑO
+12. PRÁCTICAS PROFESIONALIZANTES 1 - Carga horaria: 3 (módulos) por semana
+SEGUNDO AÑO
+13. BIOÉTICA - Carla horaria: 2 (dos) módulos por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto, solo_numeradas=True),
+                         [("Prácticas profesionalizantes 1", 1), ("Bioética", 2)])
+
     def test_solo_numeradas_deja_los_trayectos(self):
         texto = """PRIMER AÑO
 Integrado por la unidad curricular SALUD PÚBLICA 1 -

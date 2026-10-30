@@ -3042,7 +3042,9 @@ def plan_carga_horaria(texto: str, solo_numeradas: bool = False) -> list[tuple[s
     With `solo_numeradas`, only the numbered units count: Radiología also heads each
     "trayecto" ("RADIOLÓGICAS ESPECIALES - Carga Horaria: 128 horas") and says which
     units make it up ("Integrado por la unidad curricular ..."), and neither is a unit."""
-    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    # (Biotecnología's "13. BIOÉTICA - Carla horaria: 2" misspells it.)
+    lineas = [re.sub(r"(?i)(\d\.\s.*?[-–]\s*)carla(\s+horaria)", r"\1carga\2", clean_text(l.replace("\f", "")))
+              for l in texto.splitlines()]
     # A numbered heading wrapped over two lines ("17. Práctica Profesionalizante 2: ... - Carga" /
     # "horaria: 3 (tres) módulos") is one.
     for i in range(len(lineas) - 1):
