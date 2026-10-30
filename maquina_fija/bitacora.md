@@ -1342,3 +1342,8 @@
 - Res. 458/23 y 4020/24 (abc.gob.ar, `.../2026-06/DC Tecnicatura Superior en Administracion de Pymes...pdf`), PDF con texto. `plan_carga_horaria` perdía Derecho Laboral y Marketing Estratégico y Operativo (unidad numerada con "– Carga horaria 2", sin dos puntos). Lector corregido con su prueba: ahora 24 materias (8/9/7 por año), una por cada unidad numerada 1–24 del PDF. Registrado en `planes_disenos.DISENOS["Buenos Aires"]`.
 - Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 39 ofertas. La vista previa local da 0 institutos (la base local no los tiene).
 - Siguiente: Administración de Recursos Humanos (34; Res. 276/03 en abc.gob.ar, el lector da 27 renglones con encabezados pegados: revisar), Analista de Sistemas (34). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (224) — Administración de Recursos Humanos (PBA): diseño nuevo registrado
+- La Res. 276/03 (la del ciclo 223) fue derogada por la Res. 5311/24 (art. 1); el diseño vigente está en abc.gob.ar (`.../2025-04/TS Recursos Humanos 5311-24.pdf`). `plan_carga_horaria` lo lee limpio: 24 materias (9/8/7 por año), sin encabezados pegados; nombres comprobados contra los rótulos numerados del PDF. Registrado en `planes_disenos.DISENOS["Buenos Aires"]` sin lector nuevo; tests en verde (954).
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 34 ofertas. Sin vista previa local (la base no tiene institutos). Nota: institutos con cohortes viejas siguen en la 276/03 (ultraactividad); no se cargó ese plan.
+- Siguiente: Analista de Sistemas (34), Servicios Gastronómicos (31). Sin credenciales de producción ni de GitHub.
