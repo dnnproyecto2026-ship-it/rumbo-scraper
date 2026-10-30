@@ -1615,3 +1615,7 @@
 ## 2026-10-30 (287) — UNC y UNR: vista previa de `planes_documentos` sin resultado (tiempo agotado)
 - Corrí la vista previa de UNC y UNR en un solo proceso en segundo plano; cada una consumió su límite y no imprimió planes ni errores. UNDAV no llegó a correr. Nada cargado ni cambiado en código.
 - Pendiente: reintentar de a una universidad, con tiempo largo y salida a archivo, empezando por UNC (18 `pdf_con_texto`), luego UNR y UNDAV.
+
+## 2026-10-30 (288) — UNC: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). El tiempo agotado del ciclo 287 era por correr UNC y UNR juntas. Nada cargado ni cambiado en código.
+- Pendiente: UNR y UNDAV de a una; UNC (18 `pdf_con_texto`) necesita lector propio por PDF, de a uno.
