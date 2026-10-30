@@ -3062,6 +3062,11 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         if ano:
             anio = _ANIO_INDICE[ano.group(1).lower()]
             continue
+        # (Turismo heads its years "1ER AÑO", "2DO AÑO".)
+        ano = re.match(r"(?i)^([1-5])\s*(?:er|do|ro|to)\s+a[ñn]o$", linea)
+        if ano:
+            anio = int(ano.group(1))
+            continue
         mismo = re.match(r"^(.+?)\s*[-–.]\s*carga horaria\s*:", linea, re.I)
         if not mismo:
             # (A numbered unit may drop the colon: "13. Derecho Comercial – Carga horaria 2 (dos) módulos".)
@@ -3078,7 +3083,7 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         if titulo.isupper() or mismo:
             titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
         if titulo and not titulo.endswith(":") and len(titulo.split()) <= 16 \
-                and not re.match(r"(?i)^(campos? de|total)", titulo):
+                and not re.match(r"(?i)^(campos? de|total|edi$)", titulo):
             _agregar(materias, titulo, anio)
     vistas: set[str] = set()
     unicas = []

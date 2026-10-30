@@ -1008,6 +1008,27 @@ Recreativos - Carga horaria: 4 horas reloj por semana
             ("Prácticas profesionalizantes II: planificación de proyectos recreativos", 2),
             ("Prácticas profesionalizantes III: diseño e implementación de proyectos recreativos", 3)])
 
+    def test_anios_1er_2do_y_edi_generico(self):
+        texto = """Carga horaria: 1952 Horas
+1ER AÑO
+1. Inglés 1
+
+                                   Carga horaria: 64 horas
+2DO AÑO
+9. Inglés 2 (aplicado)
+
+                                   Carga horaria: 64 horas
+TERCER AÑO
+21. EDI
+
+                                   Carga horaria: 64 horas
+22. Prácticas Profesionales 3
+
+                                   Carga horaria: 288 horas
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [
+            ("Inglés 1", 1), ("Inglés 2 (aplicado)", 2), ("Prácticas Profesionales 3", 3)])
+
     def test_unidad_numerada_sin_dos_puntos(self):
         texto = """Primer año
 1. Derecho - Carga horaria: 2 (dos) módulos por semana
