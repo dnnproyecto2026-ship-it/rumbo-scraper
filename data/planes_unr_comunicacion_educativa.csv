@@ -1,0 +1,27 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Profesorado Universitario en Comunicación Educativa;4.0;;;https://fcpolit.unr.edu.ar/wp-content/uploads/2020/04/Profesorado-Comunicación-Educativa-PlanVigente.pdf;"1|Cultura y Subjetividad
+1|Pensamiento Sociopolítico
+1|Lenguajes I
+1|Redacción I
+1|Expresión Oral
+1|Taller de Alfabetización en Comunicación
+2|Historia Sociopolítica del Sistema Educativo Argentino
+2|Epistemología de la Comunicación
+2|Lenguajes II
+2|Redacción II
+2|Producción Radiofónica
+2|Pedagogía
+2|Educomunicación en la sociedad del conocimiento
+3|Comunicación Audiovisual
+3|Comunicación Visual Gráfica
+3|Currículum y didáctica
+3|Audiocreativa. Producción y estética Radiofónicas
+3|Epistemología de la visualidad
+3|Teorías del Sujeto y del Aprendizaje
+3|Residencia Integral
+4|Gestión de la Comunicación en el Campo Educativo
+4|Producción y Evaluación de Material Multimedia Educativo
+4|Trabajo de Campo Área Educativa
+4|Narrativas Transmedia en el Campo Educomunicacional
+4|Política y Derecho a la Comunicación
+4|Residencia Docente";lector planes_manuales;;"Plan CD 2586/14, CS 1075/14, RM 222/17; enlazado desde fcpolit.unr.edu.ar/?page_id=6966";Universidad Nacional de Rosario;7443ed93-ae04-4920-ade3-6d445139ebc8

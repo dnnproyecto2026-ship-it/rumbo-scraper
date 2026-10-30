@@ -1,0 +1,79 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Tecnicatura Superior Universitaria en Comunicación Digital;3.0;;;http://perio.unlp.edu.ar/academica/carreras/comunicacion-digital/asignaturas-tecnicatura-digital/;"1 | Introducción a la gestión estratégica de contenidos digitales
+1 | Antecedentes del campo de la comunicación
+1 | Taller de producción de contenidos y narrativas audiovisuales
+1 | Taller de producción de contenidos y narrativas gráficas
+1 | Taller de producción de contenidos y narrativas sonoras y radiales
+1 | Historia de los procesos políticos y económicos de los siglos XX y XXI
+1 | Problemáticas contemporáneas sobre medios de comunicación
+1 | Taller de producción y edición de textos
+1 | Culturas digitales I
+1 | Taller de edición técnica de producciones audiovisuales y sonoras
+2 | Culturas digitales II
+2 | Taller de producción y edición transmedia I
+2 | Introducción al diseño digital interactivo
+2 | Comunicación digital en el marco de las políticas públicas
+2 | Periodismo digital y nuevos medios
+2 | Análisis crítico de los discursos
+2 | Taller de producción y edición transmedia II
+2 | Introducción a los lenguajes de programación
+2 | Narrativas transmedia
+3 | Metodología de la investigación en comunicación digital
+3 | Laboratorio de producción y prácticas multimediales y transmedia
+3 | Gestión de la comunicación digital
+3 | Diseño de materiales digitales educativos
+3 | Prueba de idioma extranjero/originario";lector plan_perio_unlp;;;Universidad Nacional de La Plata;7d26fffa-3b24-49b6-be86-00b087ad8722
+UNLP;Tecnicatura Superior Universitaria en Periodismo Deportivo;3.0;;;http://perio.unlp.edu.ar/academica/carreras/periodismo-deportivo/asignaturas-plan-2017/;"1 | Introducción a la comunicación y el deporte
+1 | Periodismo Deportivo I
+1 | Taller de producción de contenidos y narrativas gráficas
+1 | Taller de edición y realización de proyectos de comunicación gráfica
+1 | Taller integral de lenguajes y narrativas
+1 | Taller de lectura y escritura
+1 | Medios, comunicación y deporte
+1 | Historia social del deporte
+1 | Seminario interdisciplinario I
+1 | Comunicación, deporte y acción colectiva
+2 | Periodismo Deportivo II
+2 | Metodología de la investigación social
+2 | Taller de producción de contenidos y narrativas radiofónicas
+2 | Taller de edición y realización de proyectos de comunicación radiofónica
+2 | Taller de redacción periodística
+2 | Taller de análisis de la información
+2 | Estudios de comunicación en América Latina
+2 | Estudios sociales del deporte
+2 | Seminario interdisciplinario II
+2 | Prácticas corporales, comunicación y subjetividad
+3 | Periodismo Deportivo III
+3 | Planificación en las organizaciones deportivas y gestión de medios
+3 | Taller de producción de contenidos y narrativas audiovisuales
+3 | Taller de edición y realización de proyectos de comunicación audiovisual
+3 | Taller de producción de contenidos y narrativas digitales
+3 | Comunicación deporte y DDHH
+3 | Culturas populares y deporte
+3 | Discurso y narrativas deportivas
+3 | Capacitación en idioma";lector plan_perio_unlp;;;Universidad Nacional de La Plata;3917a9cc-658e-423c-99c3-bcf88f31dac8
+UNLP;Tecnicatura Superior Universitaria en Comunicación Pública y Política;3.0;;;http://perio.unlp.edu.ar/academica/carreras/comunicacion-publica-y-politica/asignaturas-publica-y-politica/;"1 | Taller de Introducción a la comunicación pública y política
+1 | Estudio sobre política y sociedad I
+1 | Taller de comunicación política I
+1 | Taller de Lectura y Escritura
+1 | Comunicación, territorios y acción colectiva
+1 | Matrices de pensamiento y paradigmas de la política pública
+1 | Taller de análisis de producción de lenguajes intermedia I
+1 | Introducción a los estudios de la comunicación
+2 | Estudio sobre política y sociedad II
+2 | Taller de comunicación política II
+2 | Comunicación pública y política
+2 | Estudios de comunicación en América Latina
+2 | Liderazgos políticos en América Latina
+2 | Problemas sociológicos
+2 | Taller de análisis de producción de lenguajes intermedia II
+2 | Taller de producción de textos políticos
+3 | Estudio sobre política y sociedad III
+3 | Taller de comunicación política III
+3 | Taller de Análisis de Medios, Periodismo y Poder Político
+3 | Taller de Análisis del Discurso Político
+3 | Idioma
+3 | Metodología de la investigación en comunicación social
+3 | Taller de planificación de políticas de comunicación
+3 | Participación, ciudadanía y movimientos sociales
+3 | Gestión de la comunicación digital";lector plan_perio_unlp;;;Universidad Nacional de La Plata;69b0ac1f-2eab-4aa8-abed-aabe733778f3

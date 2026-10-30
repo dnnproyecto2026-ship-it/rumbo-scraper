@@ -1,0 +1,120 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLZ;Tecnicatura Universitaria Contable;;;;https://www.economicas.unlz.edu.ar/nuevosite/index.php/contador-publico/;"1 | Contabilidad Básica
+1 | Matemática I
+1 | Derecho Constitucional
+1 | Metodología de las Ciencias Sociales
+1 | Principios de Administración
+1 | Historia Económica Contemporánea
+2 | Matemática II
+2 | Introducción a la Economía
+2 | Derecho Civil
+2 | Comportamiento Organizacional
+2 | Organización y Estructuras
+2 | Técnicas de Valuación
+2 | Tecnologías de la Información y la Comunicación
+2 | Sistemas de Información
+3 | Estadística
+3 | Sistemas de Costos
+3 | Derecho Comercial I
+3 | Matemática Financiera
+3 | Microeconomía
+3 | Macroeconomía
+3 | Derecho Administrativo
+4 | Estados Contables
+4 | Derecho del Trabajo y la Seguridad Social";lector planes_manuales;;"Título intermedio de Contador Público; 3 años y medio según la página";Universidad Nacional de Lomas de Zamora;d62a1eb6-4c6b-4d25-b88d-db3981c74bb6
+UNLZ;Contador Público;;;;https://www.economicas.unlz.edu.ar/nuevosite/index.php/contador-publico/;"1 | Contabilidad Básica
+1 | Matemática I
+1 | Derecho Constitucional
+1 | Metodología de las Ciencias Sociales
+1 | Principios de Administración
+1 | Historia Económica Contemporánea
+2 | Matemática II
+2 | Introducción a la Economía
+2 | Derecho Civil
+2 | Comportamiento Organizacional
+2 | Organización y Estructuras
+2 | Técnicas de Valuación
+2 | Tecnologías de la Información y la Comunicación
+2 | Sistemas de Información
+3 | Estadística
+3 | Sistemas de Costos
+3 | Derecho Comercial I
+3 | Matemática Financiera
+3 | Microeconomía
+3 | Macroeconomía
+3 | Derecho Administrativo
+4 | Estados Contables
+4 | Costos para la Toma de Decisiones
+4 | Finanzas Públicas
+4 | Contabilidad Pública
+4 | Derecho Comercial II
+4 | Impuestos I
+4 | Derecho del Trabajo y la Seguridad Social
+5 | Administración del Sector Público
+5 | Auditoría
+5 | Impuestos II
+5 | Seminario de Actuación Profesional en el Ámbito Administrativo Contable
+5 | Coyuntura Económica
+5 | Seminario de Actuación Profesional en el Ámbito Jurídico
+5 | Administración Financiera
+5 | Práctica Profesional Supervisada (P.P.S.)";lector planes_manuales;;"2708 horas; incluye PPS";Universidad Nacional de Lomas de Zamora;3538616f-88c5-4cfa-bcf2-13a71eb8be77
+UNLZ;Tecnicatura Universitaria en Administración y Gestión;;;;https://www.economicas.unlz.edu.ar/nuevosite/index.php/licenciatura-en-administracion/;"1 | Contabilidad Básica
+1 | Matemática I
+1 | Derecho Constitucional
+1 | Metodología de las Ciencias Sociales
+1 | Principios de Administración
+1 | Historia Económica Contemporánea
+2 | Matemática II
+2 | Introducción a la Economía
+2 | Derecho Civil
+2 | Comportamiento Organizacional
+2 | Organización y Estructuras
+2 | Técnicas de Valuación
+2 | Tecnologías de la Información y la Comunicación
+2 | Sistemas de Información
+3 | Matemática Financiera
+3 | Administración Estratégica
+3 | Derecho Comercial I
+3 | Derecho del Trabajo y la Seguridad Social
+3 | Microeconomía
+3 | Estadística
+3 | Procedimientos Administrativos
+4 | Macroeconomía
+4 | Administración de Recursos Humanos";lector planes_manuales;;"Título intermedio de la Lic. en Administración; 3 años y medio según la página";Universidad Nacional de Lomas de Zamora;cb6b262c-860c-4a75-95b0-0bcb0084a4f1
+UNLZ;Licenciatura en Administración;;;;https://www.economicas.unlz.edu.ar/nuevosite/index.php/licenciatura-en-administracion/;"1 | Contabilidad Básica
+1 | Matemática I
+1 | Derecho Constitucional
+1 | Metodología de las Ciencias Sociales
+1 | Principios de Administración
+1 | Historia Económica Contemporánea
+2 | Matemática II
+2 | Introducción a la Economía
+2 | Derecho Civil
+2 | Comportamiento Organizacional
+2 | Organización y Estructuras
+2 | Técnicas de Valuación
+2 | Tecnologías de la Información y la Comunicación
+2 | Sistemas de Información
+3 | Matemática Financiera
+3 | Administración Estratégica
+3 | Derecho Comercial I
+3 | Derecho del Trabajo y Seguridad Social
+3 | Microeconomía
+3 | Estadística
+3 | Procedimientos Administrativos
+4 | Sistemas de Costos
+4 | Costos para la Toma de Decisiones
+4 | Macroeconomía
+4 | Finanzas Públicas
+4 | Administración de Recursos Humanos
+4 | Investigación Operativa
+4 | Derecho Administrativo
+4 | Marketing
+5 | Derecho Comercial II
+5 | Seminario de Planeamiento y Evaluación de Proyectos
+5 | Administración de la Producción
+5 | Seminario de Dirección General
+5 | Coyuntura Económica
+5 | Administración del Sector Público
+5 | Administración Financiera
+5 | Práctica Profesional Supervisada (P.P.S.)";lector planes_manuales;;"2772 horas; incluye PPS";Universidad Nacional de Lomas de Zamora;09b8a714-74ed-4d2e-8ace-798f9a9950dc

@@ -1,0 +1,59 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNTREF;Licenciatura en Administración;5;;;http://materiales.untrefvirtual.edu.ar/planes/lic_y_tec/administracion.pdf;"1 | Teorías de la Administración
+1 | Cultura, Comunicación y Conflictos en las Organizaciones
+1 | Elementos de Matemáticas y Estadística
+1 | Informática para Administradores
+1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Instituciones de Derecho Privado
+1 | Contabilidad I
+2 | Análisis Matemático
+2 | Cuestiones de Sociología, Economía y Política
+2 | Comercialización I
+2 | Sistemas Administrativos
+2 | Administración de Recursos Humanos
+2 | Fundamentos de Economía
+2 | Problemas de Historia del Siglo XX
+3 | Administración Financiera I
+3 | Comercialización II
+3 | Macroeconomía y Política Económica
+3 | Cultura Contemporánea
+3 | Fundamentos de Estrategia Organizacional
+3 | Gestión de Operaciones
+3 | Formulación y Evaluación de Proyectos
+4 | Administración General
+4 | Algebra Lineal
+4 | Contabilidad II
+4 | Microeconomía
+4 | Administración Financiera II
+4 | Administración de la Producción
+4 | Estadística para Administradores
+4 | Costos
+5 | Sistemas de Información
+5 | Instituciones de Derecho Público
+5 | Metodología de la Investigación
+5 | Régimen Tributario
+5 | Teoría de la Decisión y Cambio Organizacional
+5 | Dirección Estratégica";lector planes_manuales;;"Plan 2018/2019 (Modificada en 2019), 8.1.1 de la Licenciatura: 35 materias con año por cuatrimestre (1ero-2do=1.º ... 9no-10mo=5.º); afuera Taller y Trabajo Final (34, 35). Sin optativas en el plan. Duración 5 años según el documento.";Universidad Nacional de Tres de Febrero;51808291-5d29-4624-867b-14cdb1dfc461
+UNTREF;Licenciatura en Ciencias Políticas;4;;;http://materiales.untrefvirtual.edu.ar/planes/lic_y_tec/ciencias_politicas.pdf;"1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Introducción a las Ciencias Políticas
+1 | Cultura Contemporánea
+1 | Problemas de Historia del Siglo XX
+1 | Cuestiones de Sociología, Economía y Política
+1 | Metodología de los Estudios Políticos
+2 | Teoría Política I
+2 | Historia Política Americana
+2 | Sociología Política
+2 | Derecho Constitucional
+2 | Historia Política Argentina
+2 | Economía Política
+3 | Teoría Política II
+3 | Estructura y Funcionamiento de los Órganos del Estado
+3 | Metodología de la Investigación
+3 | Liderazgo y Conducción Política
+3 | Política Comparada I
+3 | Campañas y Marketing Político
+4 | Teoría Política III
+4 | Macroeconomía y Política Económica
+4 | Política Internacional
+4 | Política Comparada II
+4 | Seminario de Trabajo Final";lector planes_manuales;;"Plan de estudios 8.4 (esquema de cursada por año, 4 años): 23 materias de los cuatrimestres I-VIII con año; Seminario de Trabajo Final (407) incluido como materia del 4.º año; afuera las optativas I y II, el Trabajo Final de Licenciatura y las materias complementarias obligatorias (idiomas e informática, sin año: el cargador no mezcla filas con y sin año).";Universidad Nacional de Tres de Febrero;75c8ef6b-6599-4dd1-91ca-b3a7960c613a

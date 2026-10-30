@@ -1,0 +1,136 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Profesorado en Música Orientación Educación Musical;4;;;https://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-superior-de-musica/profesorado-en-musica-con-orientacion-en-educacion-musical/;"1 | Ejecución Instrumental I
+1 | Instrumento Complementario I
+1 | Lenguaje Musical I
+1 | Práctica Coral I
+1 | Técnica Vocal
+1 | Psicología del Niño
+1 | Historia de la Música I
+1 | Pedagogía Musical
+1 | Historia y Política de la Educación Argentina
+1 | Didáctica General
+1 | Taller de Iniciación a la Práctica
+2 | Ejecución Instrumental II
+2 | Instrumento Complementario II
+2 | Práctica Coral II
+2 | Lenguaje Musical II
+2 | Armonía
+2 | Psicología del Adolescente
+2 | Didáctica de la Música I
+2 | Historia de la Música II
+2 | Observaciones y Prácticas I
+2 | Taller del Rol Docente
+2 | Metodología de la Investigación Musical
+3 | Ejecución Instrumental III
+3 | Dirección de Coros Escolares
+3 | Instrumento Complementario III
+3 | Elementos del Contrapunto
+3 | Transcripción y Arreglos Musicales
+3 | Informática de la Música
+3 | Historia de la Música III
+3 | Didáctica de la Música II
+3 | Psicología de la Música
+3 | Sociología de la Música
+3 | Observaciones y Prácticas II
+3 | Taller de Coordinación de Grupos
+4 | Ejecución Instrumental IV
+4 | Música Folklórica Argentina y Latinoamericana
+4 | Danzas Folklóricas Argentinas y Latinoamericanas
+4 | Teorías del Currículum
+4 | Taller de Análisis de la Práctica Docente
+4 | Morfología Musical
+4 | Historia de la Música Argentina y Latinoamericana
+4 | Integración de los Lenguajes Artísticos
+4 | Estética de la Música
+4 | Residencia";lector html (máquina fija);;;;cd3a6c9d-b163-4a26-91cd-eeda64b03267
+UNT;Profesorado en Música Orientación Dirección Coral;4;;;https://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-superior-de-musica/profesorado-en-musica-con-orientacion-en-direccion-coral/;"1 | Dirección Coral I
+1 | Piano para Dirección Coral I
+1 | Lenguaje Musical I
+1 | Práctica Coral I
+1 | Técnica Vocal
+1 | Psicología del Niño
+1 | Historia de la Música I
+1 | Pedagogía Musical
+1 | Historia y Política de la Educación Argentina
+1 | Didáctica General
+1 | Taller de Iniciación a la Práctica
+2 | Dirección Coral II
+2 | Piano para Dirección Coral II
+2 | Fonética y Traducción del Italiano
+2 | Lenguaje Musical II
+2 | Armonía
+2 | Psicología del Adolescente
+2 | Didáctica de la Música I
+2 | Historia de la Música II
+2 | Observaciones y Prácticas I
+2 | Taller del Rol Docente
+2 | Metodología de la Investigación Musical
+3 | Dirección Coral III
+3 | Piano para Dirección Coral III
+3 | Técnicas Compositivas del Siglo XX
+3 | Elementos del Contrapunto
+3 | Transcripción y Arreglos Musicales
+3 | Informática de la Música
+3 | Historia de la Música III
+3 | Didáctica de la Música II
+3 | Psicología de la Música
+3 | Sociología de la Música
+3 | Observaciones y Prácticas II
+3 | Taller de Coordinación de Grupos
+3 | Fonética y Traducción de Francés
+4 | Dirección Coral IV
+4 | Piano para Dirección Coral IV
+4 | Fonética y Traducción del Inglés
+4 | Fonética y Traducción del Alemán
+4 | Morfología Musical
+4 | Historia de la Música Argentina y Lationamericana
+4 | Integración de los Lenguajes Artísticos
+4 | Estética de la Música
+4 | Proyecto de Graduación
+4 | Residencia";lector html (máquina fija);;;;ba024074-3e28-4630-80ba-6b7216f5f574
+UNT;Profesorado en Música Orientación Instrumento;4;;;https://www.unt.edu.ar/expount/facultades-y-escuelas/instituto-superior-de-musica/profesorado-en-musica-con-orientacion-en-instrumento/;"1 | Interpretación Instrumental I
+1 | Música de Cámara I
+1 | Práctica Instrumental I
+1 | Contrapunto Modal
+1 | Conciencia Corporal I
+1 | Armonía
+1 | Psicología del Niño
+1 | Historia de la Música I
+1 | Pedagogía Musical
+1 | Historia y Política de la Educación Argentina
+1 | Didáctica General
+1 | Taller de Iniciación a la Práctica
+2 | Interpretación Instrumental II
+2 | Música de Cámara II
+2 | Práctica Instrumental II
+2 | Contrapunto Tonal
+2 | Psicología del Adolescente
+2 | Didáctica de la Música I
+2 | Historia de la Música II
+2 | Observaciones y Prácticas I
+2 | Metodología de la Investigación Musical
+2 | Conciencia Corporal II
+2 | Técnicas Compositivas del Siglo XX
+2 | Iniciación a la Crítica Musical
+3 | Interpretación Instrumental III
+3 | Gestión de Espectáculos Musicales
+3 | Música de Cámara III
+3 | Taller del Rol Docente
+3 | Transcripción y Arreglos Musicales
+3 | Informática de la Música
+3 | Historia de la Música III
+3 | Didáctica del Instrumento
+3 | Morfología Musical
+3 | Observaciones y Prácticas II
+3 | Sociología de la Música
+3 | Psicología de la Música
+4 | Interpretación Instrumental IV
+4 | Música de Cámara IV
+4 | Improvisación y Acompañamiento
+4 | Acústica y Organología
+4 | Lectura e Interpretación de la Música Contemporánea
+4 | Residencia
+4 | Historia de la Música Argentina y Latinoamericana
+4 | Integración de los Lenguajes Artísticos
+4 | Estética de la Música
+4 | Proyecto de Graduación";lector html (máquina fija);;;;3634e604-0a1b-4817-8d34-c5f8f90ffe39

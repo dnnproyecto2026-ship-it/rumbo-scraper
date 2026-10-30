@@ -68,10 +68,6 @@ class UnaMateria(unittest.TestCase):
             with self.subTest(linea=linea):
                 self.assertEqual(nombre_de_la_materia(linea), materia)
 
-
-if __name__ == "__main__":
-    unittest.main()
-
     def test_lo_que_rodea_al_plan_en_el_documento_no_sale(self):
         for linea in (
             "clorenzano@untref.edu.ar",
@@ -98,6 +94,12 @@ if __name__ == "__main__":
         self.assertEqual(nombre_de_la_materia("Desarrollo de proyectos culturales, audiovisuales y "
                                               "editoriales"),
                          "Desarrollo de proyectos culturales, audiovisuales y editoriales")
+
+    def test_editorial_es_de_la_materia_salvo_que_siga_la_editorial(self):
+        for nombre in ("Introducción al Diseño y Arte Editorial", "Diseño Editorial", "Taller Editorial I",
+                       "Industrias Culturales I Editorial"):
+            self.assertEqual(nombre_de_la_materia(nombre), nombre)
+        self.assertIsNone(nombre_de_la_materia("Historia argentina. Buenos Aires: Editorial Paidós"))
 
 
 class PlanesAmontonados(unittest.TestCase):
@@ -134,10 +136,14 @@ class SinPlanesRepartidos(unittest.TestCase):
         self.assertEqual(quedan, {"Maestría en X Bs As", "Maestría en X Rosario"})
 
 
+if __name__ == "__main__":
+    unittest.main()
+
+
 class EditorialNoEsUnaCita(unittest.TestCase):
     def test_diseno_editorial_es_una_materia_y_una_editorial_es_una_cita(self):
         from rumbo_scraper.database.exportar_catalogo import _NO_ES_UN_NOMBRE
         for materia in ("Diseño Editorial", "Gestión editorial", "Proyecto editorial II", "Editorial"):
-            self.assertIsNone(_NO_ES_UN_NOMBRE.search(materia.lower()), materia)
+            self.assertIsNone(_NO_ES_UN_NOMBRE.search(materia), materia)
         for cita in ("Editorial Paidós", "Buenos Aires, Editorial Kapelusz", "Ediciones Siglo XXI", "ISBN 978"):
-            self.assertTrue(_NO_ES_UN_NOMBRE.search(cita.lower()), cita)
+            self.assertTrue(_NO_ES_UN_NOMBRE.search(cita), cita)

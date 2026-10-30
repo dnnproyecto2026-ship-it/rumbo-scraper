@@ -1,0 +1,43 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNAHUR;Tecnicatura Universitaria en Energía Eléctrica;2.5;;;https://unahur.edu.ar/wp-content/uploads/2023/04/Tecnicatura-Universitaria-en-Energia-Electrica-1.pdf;"1 | Introducción a la Energía Eléctrica
+1 | Álgebra y Geometría Analítica
+1 | Nuevos Entornos y Lenguajes: la producción del conocimiento en la cultura digital
+1 | Introducción al análisis matemático
+1 | Electrotecnia
+1 | Sistemas de representación gráfica
+1 | Física I
+1 | Análisis matemático I
+2 | Sistemas de mediciones
+2 | Asignatura UNAHUR
+2 | Química
+2 | Física II
+2 | Circuitos eléctricos
+2 | Electrónica
+2 | Inglés I
+2 | Programación
+3 | Dispositivos e instalaciones eléctricas I
+3 | Máquinas Eléctricas
+3 | Inglés II
+3 | Ingeniería ambiental, seguridad e higiene
+3 | ESIC";lector plan_unahur_numerado;;"Folleto del plan; 5 cuatrimestres, 21 asignaturas numeradas; afuera Créditos";;3b60ad52-cdf5-4534-91a6-d8a70a3eee63
+UNAHUR;Tecnicatura Universitaria en Metalurgia;2.5;;;https://unahur.edu.ar/wp-content/uploads/2023/05/Tecnicatura-Universitaria-en-Metalurgia.pdf;"1 | Introducción a la Metalurgia
+1 | Introducción al Análisis Matemático
+1 | Nuevos entornos y lenguajes: la producción de conocimiento en la cultura digital
+1 | Química
+1 | Sistemas de Representación Gráfica
+1 | Asignatura UNAHUR
+1 | Análisis Matemático I
+1 | Metalurgia I
+1 | Álgebra y Geometría Analítica
+2 | Física I
+2 | Ingeniería Ambiental, Seguridad e Higiene
+2 | Inglés I
+2 | Técnicas de Análisis
+2 | Física II
+2 | Mineralogía y Tratamiento de los Minerales
+2 | Metalurgia II
+2 | Inglés II
+3 | Programación
+3 | Ensayos de Materiales
+3 | Probabilidad y estadística
+3 | Espacio de Integración Curricular I (Práctica Profesional Supervisada)";lector plan_unahur_numerado;;"Folleto del plan; 5 cuatrimestres, 21 asignaturas numeradas; la tabla escribe 'Análisis Matemático l' y 'Metalurgia ll', el mismo documento dice I/II en contenidos mínimos; afuera Créditos";;5c08446f-d707-4bbe-aef8-fa929ab64640

@@ -1,0 +1,45 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Agrimensura;5;;;https://www.facet.unt.edu.ar/agrimensura/asignaturas-por-modulos/;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica
+1 | Física I
+1 | Sistemas de Representación
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Fundamentos de Química General
+2 | Cálculo III
+2 | Física III
+2 | Topografía I
+2 | Dibujo Topográfico
+2 | Cálculo IV
+2 | Probabilidad y Estadística
+2 | Topografía II
+2 | Dibujo Cartográfico
+3 | Topografía III
+3 | Hidráulica para Agrimensores
+3 | Fundamentos Matemáticos para Geodesia
+3 | Ordenamiento Territorial
+3 | Laboratorio de Computación I
+3 | Teoría de Errores y Compensación
+3 | Cartografía Asistida por Computadora
+3 | Vías de Comunicación
+3 | Laboratorio de Computación II
+3 | Agrimensura Legal I
+4 | Astronomía
+4 | Fotogrametría I
+4 | Geofísica y Geomorfología
+4 | Economía
+4 | Agrimensura Legal II
+4 | Geodesia
+4 | Fotogrametría II
+4 | Deslindes, Límite y Mensura
+4 | Catastro
+4 | Sistemas de Información Territorial
+5 | Electiva I
+5 | Técnicas Satelitales
+5 | Mediciones Especiales
+5 | Valuaciones
+5 | Electiva II
+5 | Electiva III
+5 | Optimización de Sistemas de Gestión";lector html (máquina fija);;"Listado oficial por módulos I a X agrupados por año; Electivas I a III incluidas; horas y códigos afuera.";Universidad Nacional de Tucumán;36c4dd3c-7247-4d6d-8a60-ad5ab39b2c2a

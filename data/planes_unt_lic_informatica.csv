@@ -1,0 +1,38 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Licenciatura en Informática;5;;;https://www.facet.unt.edu.ar/licinformatica/plan-de-estudio/;"1 | Cálculo I
+1 | Cálculo II
+1 | Álgebra y Geometría Analítica
+1 | Elementos de Álgebra Lineal
+1 | Elementos de Computación y Lógica
+1 | Programación
+1 | Laboratorio I
+1 | Laboratorio II
+2 | Algoritmos y Estructuras de Datos I
+2 | Paradigmas de Programación
+2 | Cálculo III
+2 | Probabilidad y Estadística
+2 | Taller de Lenguajes I
+2 | Conceptos de Bases Datos I
+3 | Arquitectura y Organización de Computadoras I
+3 | Arquitectura y Organización de Computadoras II
+3 | Métodos Numéricos I
+3 | Taller de Lenguajes II
+3 | Conceptos de Bases Datos II
+3 | Métodos Numéricos II
+3 | Matemática Discreta
+4 | Ingeniería de Software I
+4 | Ingeniería de Software II
+4 | Sistemas Operativos I
+4 | Sistemas Operativos II
+4 | Comunicaciones I
+4 | Comunicaciones II
+4 | Proyecto de Software
+4 | Sistemas Abiertos
+5 | Sistemas de Información
+5 | Administración Avanzada de S.O.
+5 | Conceptos de Lenguajes
+5 | Algoritmos y Estructuras de Datos II
+5 | Optativa I
+5 | Taller de Legislación y Organizaciones
+5 | Tesis de Licenciatura
+5 | Optativa II";lector html (máquina fija);;"Plan modificación 2009; tabla oficial por módulos I a X (dos módulos por año). Inglés I y II (exigencia adicional) afuera; Optativas I y II, Proyecto de Software y Tesis incluidos.";Universidad Nacional de Tucumán;9dca7d4f-d079-4923-9d95-2e9fe06023e6

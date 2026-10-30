@@ -1,0 +1,237 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNAJ;Ingeniería en Petróleo;;;;https://www.unaj.edu.ar/wp-content/uploads/2025/11/Materias-y-Correlatividades-PETROLEO-NP.pdf;"1 | Taller de Ingeniería
+1 | Fundamentos de Informática
+1 | Problemas de Historia Argentina
+1 | Taller de Lectura y Escritura
+1 | Introducción a la Matemática
+1 | Prácticas Culturales
+1 | Cálculo I
+1 | Álgebra I
+1 | Sistemas de Representación
+2 | Álgebra II
+2 | Cálculo II
+2 | Física I
+2 | Inglés Aplicado a la Ingeniería I
+2 | Introducción al Tratamiento de Datos
+2 | Fundamentos de Química I
+2 | Física II
+2 | Inglés Aplicado a la Ingeniería II
+2 | Geología del Petróleo y el Gas I
+2 | Cálculo III
+3 | Fundamentos de Química II
+3 | Geología del Petróleo y el Gas II
+3 | Física III
+3 | Termodinámica I
+3 | Ingeniería, Innovación y Tecnología
+3 | Estática y Resistencia de Materiales I
+3 | Electrotecnia y Máquinas Eléctricas
+3 | Mecánica de los Fluidos
+3 | Probabilidad y Estadística
+3 | Química del Petróleo y del Gas
+4 | Reservorios I
+4 | Exploración de Hidrocarburos
+4 | Seguridad e Higiene Laboral
+4 | Perforación I
+4 | Máquinas Térmicas
+4 | Perforación II
+4 | Reservorios II
+4 | Perfilaje de Pozos
+4 | Producción de Petróleo y Gas I
+4 | Gestión Ambiental
+5 | Gestión Económica y Legal del Petróleo y el Gas
+5 | Industrialización del Petróleo y el Gas
+5 | Reservorios III
+5 | Producción de Petróleo y Gas II
+5 | Organización Industrial
+5 | Evaluación y Estimulación de Formaciones
+5 | Proyecto de Instalaciones de Superficie
+5 | Desarrollo de Yacimientos";lector planes_manuales;;"Nuevo plan (Res. CS 188/22), listado 'Materias y Correlatividades' (2025); afuera optativas e Inglés extracurricular";Universidad Nacional Arturo Jauretche;10cf991f-455e-4358-b18b-c54e8dd270ee
+UNAJ;Bioingeniería;;;;https://www.unaj.edu.ar/wp-content/uploads/2025/11/Materias-y-Correlatividades-BIOINGENIERIA-NP.pdf;"1 | Introducción a la Matemática
+1 | Taller de Ingeniería
+1 | Sistemas de Representación
+1 | Problemas de Historia Argentina
+1 | Fundamentos de Informática
+1 | Cálculo I
+1 | Prácticas Culturales
+1 | Álgebra I
+1 | Taller de Lectura y Escritura
+1 | Inglés Aplicado a la Ingeniería I
+2 | Cálculo II
+2 | Física I
+2 | Introducción al Tratamiento de Datos
+2 | Biología I
+2 | Inglés Aplicado a la Ingeniería II
+2 | Álgebra II
+2 | Física II
+2 | Biología II
+2 | Química General
+2 | Ingeniería, Innovación y Tecnología
+3 | Cálculo III
+3 | Física III
+3 | Probabilidad y Estadística
+3 | Análisis de Circuitos
+3 | Química Orgánica
+3 | Fisiología y Fisiopatología
+3 | Electrónica analógica
+3 | Biomateriales
+3 | Gestión de la Calidad, Higiene y Seguridad
+3 | Física IV
+4 | Sensores y Acondicionadores de Señal
+4 | Electrónica Digital I
+4 | Sistemas de Control Automático
+4 | Ingeniería Ambiental
+4 | Organización Industrial
+4 | Señales y Sistemas
+4 | Biomecánica
+4 | Electrónica Digital II
+4 | Gestión Económica y Legal
+4 | Modelado y Simulación de Sistemas Biomédicos
+5 | Bioinstrumentación I
+5 | Ingeniería Clínica I
+5 | Sistema de Diagnóstico por Imágenes
+5 | Ingeniería de la Rehabilitación
+5 | Biointrumentación II
+5 | Radiaciones y Radioprotección
+5 | Instalaciones y Arquitectura Hospitalaria
+5 | Práctica Profesional Supervisada";lector planes_manuales;;"Nuevo plan (Res. CS 189/22), listado 'Materias y Correlatividades' (2025); afuera optativas e Inglés extracurricular";Universidad Nacional Arturo Jauretche;b163e7a0-6cbe-4995-9ede-530b63ee023d
+UNAJ;Ingeniería Electromecánica;;;;https://www.unaj.edu.ar/wp-content/uploads/2025/11/Materias-y-Correlatividades-ELECTROMECANICA-NP.pdf;"1 | Introducción a la Matemática
+1 | Sistemas de Representación
+1 | Taller de Ingeniería
+1 | Problemas de Historia Argentina
+1 | Fundamentos de Informática
+1 | Álgebra I
+1 | Cálculo I
+1 | Prácticas Culturales
+1 | Taller de Lectura y Escritura
+2 | Cálculo II
+2 | Introducción al Tratamiento de Datos
+2 | Física I
+2 | Inglés Aplicado a Ingeniería I
+2 | Elementos de la Economía
+2 | Física II
+2 | Álgebra II
+2 | Seguridad e Higiene Laboral
+2 | Química General
+2 | Organización Industrial
+3 | Física III
+3 | Electrotecnia
+3 | Materiales
+3 | Cálculo III
+3 | Ingeniería Ambiental
+3 | Física IV
+3 | Mecánica de los Fluidos
+3 | Electrónica
+3 | Máquinas Eléctricas
+3 | Estática y Resistencia de Materiales I
+3 | Inglés Aplicado a Ingeniería II
+4 | Estática y Resistencia de Materiales II
+4 | Mecánica Racional
+4 | Ingeniería Legal
+4 | Termodinámica I
+4 | Probabilidad y Estadística
+4 | Ingeniería Innovación y Tecnología
+4 | Mecanismos y Elementos de Máquinas
+4 | Dispositivos e Instalaciones Eléctricas
+4 | Circuitos y Máquinas Hidroneumáticas
+4 | Termodinámica II
+5 | Tecnología Mecánica
+5 | Tecnologías de Fabricación
+5 | Máquinas Térmicas
+5 | Generación, Transporte y Distribución de la Energía Eléctrica I
+5 | Proyecto de Máquinas
+5 | Mantenimiento Industrial
+5 | Automatización y Control
+5 | Proyecto Integrador
+5 | Generación, Transporte y Distribución de la Energía Eléctrica II";lector planes_manuales;;"Nuevo plan (Res. CS 192/22), listado 'Materias y Correlatividades' (2025); afuera optativas e Inglés extracurricular";Universidad Nacional Arturo Jauretche;b323e4ae-f3e6-4852-b6c2-704bb155b071
+UNAJ;Ingeniería en Informática;;;;https://www.unaj.edu.ar/wp-content/uploads/2025/11/Materias-y-Correlatividades-INFORMATICA-NP.pdf;"1 | Problemas de Historia Argentina
+1 | Conceptos de Programación
+1 | Introducción a la Matemática
+1 | Taller de Lectura y Escritura
+1 | Programación con Objetos
+1 | Prácticas Culturales
+1 | Álgebra I
+1 | Matemática Discreta
+1 | Taller de Ingeniería
+2 | Álgebra II
+2 | Algoritmos y Estructuras de Datos
+2 | Organización de Computadoras
+2 | Cálculo I
+2 | Organizaciones y Sistemas
+2 | Probabilidad
+2 | Cálculo II
+2 | Complejidad Temporal y Patrones de Diseño de Software
+2 | Arquitectura de Computadoras
+2 | Fundamentos de Base de Datos
+3 | Estadística y Análisis de Datos
+3 | Física I
+3 | Fundamentos de Sistemas Operativos
+3 | Autómatas y Lenguajes
+3 | Ingeniería de Software
+3 | Física II
+3 | Comunicaciones de Datos
+3 | Proyecto Informático
+3 | Economía General
+3 | Base de Datos Avanzados
+4 | Programación Concurrente y Paralela
+4 | Redes de Datos I
+4 | Fundamentos de Aplicaciones Móviles
+4 | Administración de Sistemas de Información
+4 | Ingeniería, Innovación y Tecnología
+4 | Seguridad en los Sistemas de Información
+4 | Redes de Datos II
+4 | Calidad de Software
+4 | Conceptos Avanzados de Sistemas Operativos
+4 | Ciencia de Datos e Inteligencia Artificial
+5 | Gestión de Proyectos
+5 | Sistemas de Tiempo Real
+5 | Gestión Legal y Profesional en Informática
+5 | Inglés Aplicado a la Ingeniería I
+5 | Inglés Aplicado a la Ingeniería II
+5 | Proyecto Integrador
+5 | Conceptos de Bioinformática
+5 | Cloud Computing y Big Data";lector planes_manuales;;"Nuevo plan (Res. CS 191/22), listado 'Materias y Correlatividades' (2025); afuera optativas e Inglés extracurricular";Universidad Nacional Arturo Jauretche;72883acd-cd70-439f-b268-7ab3d5e07623
+UNAJ;Ingeniería Industrial;;;;https://www.unaj.edu.ar/wp-content/uploads/2025/11/Materias-y-Correlatividades-INDUSTRIAL-NP.pdf;"1 | Taller de Ingeniería
+1 | Sistemas de Representación
+1 | Problemas de Historia Argentina
+1 | Introducción a la Matemática
+1 | Prácticas Culturales
+1 | Álgebra I
+1 | Cálculo I
+1 | Taller de Lectura y Escritura
+1 | Fundamentos de Informática
+2 | Introducción al Tratamiento de Datos
+2 | Física I
+2 | Cálculo II
+2 | Ingeniería, Innovación y Tecnología
+2 | Seguridad e Higiene Laboral
+2 | Física II
+2 | Álgebra II
+2 | Química General
+2 | Elementos de la Economía
+3 | Cálculo III
+3 | Probabilidad y Estadística
+3 | Física III
+3 | Electrotecnia y Máquinas Eléctricas
+3 | Organización Industrial
+3 | Materiales
+3 | Ingeniería Ambiental
+3 | Termodinámica I
+3 | Ingeniería de la Calidad
+4 | Estática y Resistencia de los Materiales I
+4 | Gestión de la Producción I
+4 | Desarrollo Emprendedor
+4 | Inglés Aplicado a la Ingeniería I
+4 | Economía Social y Productiva
+4 | Mecánica y Mecanismos
+4 | Gestión de la Producción II
+4 | Inglés Aplicado a la Ingeniería II
+4 | Cadena de Suministro y Logística
+5 | Sistemas Integrados de Manufactura
+5 | Comercialización para Ingeniería
+5 | Mecánica de los Fluidos
+5 | Administración General
+5 | Diseño y Optimización de Operaciones
+5 | Desarrollo Integral de Proyectos
+5 | Instalaciones Industriales
+5 | Ingeniería Legal
+5 | Gestión de Recursos Humanos";lector planes_manuales;;"Nuevo plan (Res. CS 122/24), listado 'Materias y Correlatividades' (2025); afuera optativas e Inglés extracurricular";Universidad Nacional Arturo Jauretche;73185e34-4ba6-4bca-a873-9e3d2fa9cc2d

@@ -1,0 +1,31 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Licenciatura en Trabajo Social;5.0;;;http://trabajosocial.unlp.edu.ar/wp-content/uploads/2026/04/plan-LTS-FTS-UNLP.pdf;"1 | Trabajo Social I
+1 | Historia Social de América Latina y Argentina
+1 | Introducción a la Teoria Social
+1 | Epistemología de las Cs. Soc.
+1 | Configuración de Problemas Sociales
+1 | Introducción a la Filosofía
+2 | Trabajo Social II
+2 | Teoria Social
+2 | Investigación Social I
+2 | Teo. de la cultura y antropologías de las Soc. contemporáneas
+2 | Introducción a la Psicología
+2 | Teoría del Estado
+2 | Economía Política
+3 | Trabajo Social III
+3 | Conformación de la Estructura Social Argentina
+3 | Política Social
+3 | Trabajo Social y sujetos colectivos
+3 | Perspectivas antropológicas para la intervención social
+3 | Investigación Social II
+4 | Trabajo Social IV
+4 | Trabajo Social y análisis institucional
+4 | Psicología del desarrollo y la subjetividad
+4 | Teoría y práctica de la educación
+4 | Derecho de infancia, familia y cuestión penal
+4 | Salud Colectiva
+4 | Teoria del Derecho y Derecho Social
+5 | Trabajo Social V
+5 | Políticas Públicas: Planificación y Gestión
+5 | Filosofía Social
+5 | Debate contemporáneo en Trabajo Social";IA operador (pdftotext del plan oficial);;;Universidad Nacional de La Plata;ba5a41da-5799-4bb4-96fc-2bd91115539f

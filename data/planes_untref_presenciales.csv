@@ -1,0 +1,85 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNTREF;Licenciatura en Artes Electrónicas;5;;;https://untref.edu.ar/uploads/Programas/programas-carreras/Lic.%20en%20Artes%20Electronicas%20-%20Plan%202019%20-%20RM%201311-2020.pdf;"1 | Laboratorio I
+1 | Seminario de Prácticas Artísticas
+1 | Cuestiones de Sociología, Economía y Política
+1 | Computación Estructura de Datos y Algoritmos
+1 | Laboratorio II
+1 | Seminario Pensamiento Tecno Científico
+1 | Problemas de Historia del Siglo XX
+1 | Informática Imagen
+2 | Laboratorio III
+2 | Tecnologías Sonoras y Visuales
+2 | Introducción a la Problemática del Mundo Contemporáneo
+2 | Ingles I o Frances I
+2 | Laboratorio IV
+2 | Taller de Técnicas y Procesos de Materiales
+2 | Cultura Contemporánea
+2 | Ingles II o Frances II
+3 | Laboratorio V
+3 | Estructuras Sonoras y Visuales
+3 | Taller de Producción y Postproducción Sonora y Visual I
+3 | Laboratorio VI
+3 | Seminario de Artes Electrónicas
+3 | Taller de Producción y Postproducción Sonora y Visual II
+5 | Metodología de la Investigación Aplicada a las Artes Electrónicas (Trabajo Integrador de las Artes Electrónicas)";lector plan_untref_anexo;;"Plan 2019, anexo RM 1311/2020; afuera optativas, electivas y TFA";;f5b7e140-370a-40b7-88fe-6af1a029fa59
+UNTREF;Profesorado en Geografía;4;;;https://untref.edu.ar/uploads/Programas/programas-carreras/Profesorado%20en%20Geografia%20-%20Plan%202019%20-%20RM%201145-2020.pdf;"1 | Introducción a la Geografía
+1 | Cartografía I
+1 | Geografía Física
+1 | Introducción a la Problemática del Mundo Contemporáneo
+1 | Informática Básica
+1 | Geografía Social
+1 | Sistemas de Información Geográfica I
+1 | Ecología y Biogeografía
+1 | Cuestiones de Sociología, Economía y Política
+1 | Introducción a las Técnicas de Investigación Social
+2 | Geografía Económica
+2 | Cartografía II
+2 | Métodos Cuantitativos en Geografía
+2 | Problemas de Historia del Siglo XX
+2 | Introducción a la Didáctica
+2 | Climatología
+2 | Geografía Rural
+2 | Taller de Lectura en Geografía Económica
+2 | Psicología del Sujeto del Aprendizaje
+2 | Taller de Lectura en Problemáticas de Geografía Social y Cultural
+3 | Geografía Política y Geopolítica
+3 | Geografía Urbana
+3 | Métodos Cualitativos
+3 | Cultura Contemporánea
+3 | Teoría y Métodos de la Geografía
+3 | Taller de Lectura en Migraciones Internacionales
+3 | Didáctica de la Geografía y las Ciencias Sociales
+3 | Taller de Lectura en Problemáticas de Geografía Urbana y Estudios Urbanos
+3 | Educación y Contextos Socioculturales
+4 | Prácticas de la Enseñanza de la Geografía I
+4 | Taller de Lectura en Teorías Contemporáneas de la Geografía
+4 | TIC's, Enseñanza y Geografía
+4 | Didáctica de la Geografía y Curriculum
+4 | Prácticas de la Enseñanza de la Geografía II";lector plan_untref_anexo;;"Plan 2019, anexo RM 1145/2020; afuera electiva, seminarios optativo/electivo, idiomas (sin cuatrimestre) y TFA";;bc990d21-7595-4783-bdfb-abfa83f0b673
+UNTREF;Licenciatura en Ciencias de la Educación;2;;;https://untref.edu.ar/carrera/ciencias-de-la-educacion;"1 | Cultura Contemporánea
+1 | Cuestiones de Sociología, Economía y Política
+1 | Política y Administración de la Educación
+1 | Problemática y Perspectiva de la Pedagogía Contemporánea
+1 | Aspectos Socio-Institucionales del Aprendizaje
+1 | Metodología de la Investigación
+2 | Gestión Escolar y Currículum
+2 | Tecnología de la Información y Comunicación en Educación
+2 | Seminario de Investigación Educativa
+2 | Diseño y Gestión de Programas y Proyectos
+2 | Orientación Educacional y Ocupacional
+2 | Inglés I y II
+2 | Informática I";lector plan_untref;;"Ciclo de licenciatura (4 cuatrimestres); el PDF del plan 1998 es escaneado, la lista es la de la página; afuera Trabajo Final";;0e67c5ab-bbef-41cd-8fbe-95add08bc1a3
+UNTREF;Licenciatura en Gestión Educativa;2;;;https://untref.edu.ar/carrera/gestion-educativa;"1 | Cultura Contemporánea
+1 | Cuestiones de Sociología, Economía y Política
+1 | Política y Administración de la Educación
+1 | Problemática y Perspectiva de la Pedagogía Contemporánea
+1 | Sociología de las Organizaciones
+1 | Metodología de la Investigación
+2 | Gestión Escolar y Currículum
+2 | Resolución de Conflictos Institucionales
+2 | Tecnología de la Información y Comunicación en Educación
+2 | Seminario de Investigación y Práctica en Gestión Institucional
+2 | Diseño y Gestión de Programas y Proyectos
+2 | Evaluación Institucional
+2 | Inglés I y II
+2 | Informática I";lector plan_untref;;"Ciclo de licenciatura (4 cuatrimestres); el PDF del plan 1998 es escaneado, la lista es la de la página; afuera Trabajo Final";;ca79e69c-ad78-47fc-9854-173e17e15ac8

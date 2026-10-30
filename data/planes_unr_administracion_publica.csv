@@ -1,0 +1,20 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Tecnicatura en Administración Pública;3.0;;;https://fcpolit.unr.edu.ar/wp-content/uploads/2020/04/Tecnicatura-Universitaria-en-Administración-Pública-PlanVigente.pdf;"1|Administración Pública I
+1|El trabajo en Argentina en perspectiva histórica
+1|Economía
+1|Estado y Sociedad
+1|Estructura Jurídica del Estado
+1|Sociología de las Organizaciones
+1|Informática
+2|Administración Pública II
+2|Tecnologías de la Administración Pública I
+2|Gestión de Proyectos
+2|Finanzas y Presupuesto Público
+2|Políticas Públicas
+2|Régimen Jurídico de la Administración Pública Provincial y Local
+2|Empleo Público y Derecho Laboral
+3|Convivencia y Respeto en el ámbito laboral
+3|Tecnologías de la Administración Pública II
+3|Gestión de Personal en la Administración Pública
+3|Planificación Estratégica y Desarrollo Local
+3|Taller y Trabajo Final";lector planes_manuales;;Plan RCD 586/15 (vigente 2016), con la modificación de correlatividades RCS 229/2018 (enlazada desde fcpolit.unr.edu.ar/escuelacienciapolitica/tuap/), que deja 2.13.2 sin la alternativa (b).;Universidad Nacional de Rosario;379faf70-b110-47cd-b55c-33ed91a7311d

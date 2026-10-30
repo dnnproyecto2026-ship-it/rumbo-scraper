@@ -1,0 +1,78 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Farmacia;5.0;;;https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/farmacia.php;"1|Seminario Introductorio a la Problemática Farmacéutica
+1|Química General e Inorgánica I
+1|Matemática Básica
+1|Física I
+1|Cálculo
+1|Química General e Inorgánica II
+1|Taller de Biología
+2|Fisicoquímica
+2|Biología
+2|Química Orgánica I
+2|Física II
+2|Taller de Problemática Profesional I
+2|Química Orgánica II
+2|Introducción a la Estadística
+2|Taller de Problemática Profesional II
+3|Química Biológica
+3|Química Analítica I
+3|Farmacobotánica
+3|Ética y Epistemología de la Ciencia
+3|Farmacia y Sociedad
+3|Microbiología
+3|Química Analítica II
+3|Anatomía e Histología Humanas
+4|Farmacognosia
+4|Química Medicinal
+4|Tecnología Farmacéutica
+4|Fisiología
+4|Farmacología I
+4|Fisiopatología
+4|Nutrición y Bromatología
+4|Tecnología Farmacéutica y Biofarmacia
+4|Práctica Profesional Nivel I
+5|Farmacia Asistencial
+5|Práctica Profesional Nivel II Farmacia Comunitaria y Farmacia Hospitalaria
+5|Farmacología II
+5|Garantía de calidad de medicamentos
+5|Toxicología
+5|Práctica Profesional Nivel III Farmacia Industrial
+5|Farmacia Clínica";lector Claude máquina fija;;"Plan vigente (primer bloque, códigos F25xx) de la página de la facultad; el bloque 'Plan de Estudios 2018' queda afuera. Afuera: Optativas/Electivas.";UNR;3b4c2fa6-0705-429b-9586-6d72c03a1802
+UNR;Bioquímica;6.0;;;https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/bioquimica.php;"1|Seminario Introductorio a la Problemática Bioquímica
+1|Química General e Inorgánica I
+1|Matemática Básica
+1|Física I
+1|Cálculo
+1|Química General e Inorgánica II
+1|Taller de Biología
+2|Fisicoquímica
+2|Biología
+2|Química Orgánica I
+2|Física II
+2|Taller de Problemática Profesional I
+2|Química Orgánica II
+2|Taller de Problemática Profesional II
+2|Introducción a la Estadística
+3|Química Biológica
+3|Química Analítica I
+3|Anatomía e Histología Humanas
+3|Ética y Epistemología de la Ciencia
+3|Química Analítica II
+3|Fisiología
+4|Biología Molecular
+4|Inmunología I
+4|Salud Pública
+4|Microbiología General
+4|Inmunología II
+4|Hematología I
+4|Bacteriología
+4|Química Analítica Clínica
+5|Bioquímica Clínica y Fisiopatología
+5|Farmacología
+5|Bromatología y Nutrición
+5|Virología
+5|Toxicología
+5|Hematología II
+5|Parasitología
+5|Micología
+6|Práctica Profesional";lector Claude máquina fija;;"Plan vigente (primer bloque, códigos F25xx) de la página de la facultad; el bloque 'Plan de Estudios 2018' queda afuera. Afuera: Optativas/Electivas.";UNR;d248a28d-e2bd-41b8-932d-ac3e05c35631

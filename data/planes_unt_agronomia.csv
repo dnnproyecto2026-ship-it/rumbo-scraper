@@ -1,0 +1,53 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Agronómica;5;;;https://faz.unt.edu.ar/idehost/wp-content/uploads/2025/08/RES-DGAC-20125-2024-Resolucion-Plan-de-estudios-2024-Agronomia.pdf;"1 | Morfología de las Plantas Vasculares
+1 | Matemática
+1 | Inglés Técnico
+1 | Sociología Agraria
+1 | Química Básica
+1 | Botánica Sistemática
+1 | Zootecnia General Agrónoma
+1 | Ecología General
+1 | Física General
+1 | Química Analítica y Agrícola
+1 | Práctica Agronómica 1
+2 | Química Orgánica
+2 | Agrometeorología
+2 | Bioestadística
+2 | Economía Agraria
+2 | Mecanización Agropecuaria
+2 | Malezas
+2 | Bioquímica Agrícola
+2 | Físico - Química
+2 | Zoología Agrícola
+2 | Política Agraria
+2 | Práctica Agronómica 2
+3 | Fisiología Vegetal
+3 | Genética
+3 | Fitopatología
+3 | Edafología
+3 | Microbiología Agrícola
+3 | Manejo y Conservación de Suelo
+3 | Fitotecnia General
+3 | Producción Animal
+3 | Terapéutica Vegetal
+3 | Práctica Agronómica 3
+4 | Riego y Drenaje
+4 | Cerealicultura
+4 | Legislación Agraria
+4 | Diseño Experimental
+4 | Taller de Comunicación Oral y Escrita
+4 | Taller de Agricultura Digital
+4 | Práctica Agronómica 4
+4 | Gestión de la Empresa Agropecuaria
+4 | Manejo Integrado de Plagas
+4 | Floricultura
+4 | Forrajicultura
+4 | Agroecología
+4 | Dasonomía
+4 | Taller de Bionegocios
+5 | Cultivos Industriales
+5 | Fruticultura
+5 | Agroindustrias
+5 | Horticultura
+5 | Caña de Azúcar
+5 | Práctica Profesional";lector pdftotext (máquina fija);;"Plan de Estudios 2024 (Res. DGAC 20125/2024), cuadro por año; texto limpio. Afuera las Optativas 1 a 3 (menús sin nombre) y ""Principios de Nutrición y Alimentación Animal"", cortado en dos renglones por el PDF.";Universidad Nacional de Tucumán;ccc1b41d-cc8b-42ab-9c00-826089b7396e

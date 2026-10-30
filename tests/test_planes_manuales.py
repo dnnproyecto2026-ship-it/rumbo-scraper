@@ -41,6 +41,9 @@ class Revisar(unittest.TestCase):
             "Licenciatura en Criminología – Ciclo de Complementación Curricular"), self.UNIVERSIDAD, set(),
             _Fuentes("\n".join(self.MATERIAS)))
         self.assertEqual((motivo, len(materias)), ("", 13))
+        motivo, _, _ = revisar(self.FILA, self.carrera("Licenciatura en Geografía (Complementación)"),
+                               self.UNIVERSIDAD, set(), _Fuentes("\n".join(self.MATERIAS)))
+        self.assertEqual(motivo, "")
 
     def test_a_degree_stopping_in_its_second_year_is_not(self):
         motivo, _, _ = revisar(self.FILA, self.carrera("Licenciatura en Criminología"), self.UNIVERSIDAD, set(),

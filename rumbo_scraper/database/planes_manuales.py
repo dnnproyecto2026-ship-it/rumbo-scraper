@@ -134,7 +134,9 @@ def revisar(fila: dict[str, str], carrera: dict[str, Any] | None, universidad: d
     # plan, which whoever copied it saw it was not; its stored duration may
     # be the degree's.
     nombre, duracion = carrera["nombre_carrera"], carrera.get("duracion_anios")
-    marca = re.compile(r"(?i)\s*[–-]?\s*(?:ciclo de complementaci[óo]n curricular|\(ccc\))")
+    # (UNTREF names one "Licenciatura en Geografía (Complementación)".)
+    marca = re.compile(r"(?i)\s*[–-]?\s*(?:\((?:ciclo de )?complementaci[óo]n\)|"
+                       r"ciclo de complementaci[óo]n curricular|\(ccc\))")
     # A document that opens by saying it is a completion cycle ("Licenciatura
     # en Hotelería y Turismo (Ciclo de Complementación Curricular)", UB's
     # virtual licenciaturas) is one, whatever the career's name says.

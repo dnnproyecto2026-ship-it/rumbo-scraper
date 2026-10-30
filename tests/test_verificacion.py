@@ -16,6 +16,9 @@ class VerificacionTest(unittest.TestCase):
         self.assertTrue(v.es_oficial("https://www.fi.uba.ar/plan", "https://www.uba.ar"))
         self.assertFalse(v.es_oficial("https://ar.linkedin.com/in/alguien", "https://www.utdt.edu"))
         self.assertFalse(v.es_oficial("https://www.unla.edu.ar/x", "https://www.unq.edu.ar"))
+        # A school of the university on a domain of its own, linked from its home.
+        self.assertTrue(v.es_oficial("http://www.ips.edu.ar/wp-content/uploads/2018/05/TUGP.pdf", "https://unr.edu.ar"))
+        self.assertFalse(v.es_oficial("http://www.ips.edu.ar/x.pdf", "https://www.unc.edu.ar"))
 
     def test_la_fuente_dice_la_materia_con_palabras_enteras(self):
         fuente = v.plano("1er año: ANÁLISIS MATEMÁTICO I - Álgebra y Geometría Analítica")
@@ -26,6 +29,17 @@ class VerificacionTest(unittest.TestCase):
 
     def test_una_palabra_partida_al_final_del_renglon_se_une(self):
         self.assertTrue(v.dice(v.plano("Química de los Alimen- tos"), "Química de los Alimentos"))
+
+    def test_un_nombre_cortado_por_el_fin_de_pagina_se_une(self):
+        # UNTREF's annex of the RM 1134/20: the row's name runs on to page 2.
+        fuente = v.plano("Seminario de Investigación Geografía IF-2020-36779914-APN-DNGYFU#MECCYT Página 1 de 2 "
+                         "Carga Carga Modalidad Cod Asignatura Régimen Horaria Correlativas Obs 167 Integrada "
+                         "Cuatrimestral 8 128 Urbana")
+        self.assertTrue(v.dice(fuente, "Seminario de Investigación Integrada"))
+        self.assertFalse(v.dice(fuente, "Seminario de Investigación Cuantitativa"))
+        # Without a page's end between them, the two parts are not one name.
+        self.assertFalse(v.dice(v.plano("Seminario de Investigación Geografía 167 Integrada"),
+                                "Seminario de Investigación Integrada"))
 
     def test_el_texto_incluye_los_datos_de_los_scripts(self):
         html = ('<html><body><h1>Plan</h1><script>{"materia":"Introducci\\u00f3n a la '
@@ -124,6 +138,17 @@ class VerificacionTest(unittest.TestCase):
         self.assertEqual([f["materia"] for f in _veredictos_que_siguen(anterior, hallado)],
                          ["norma.htm Ley", "Agroecología CFB"])
 
+    def test_lo_que_el_plan_no_decia_se_vuelve_a_mirar(self):
+        from rumbo_scraper.database.verificar_catalogo import _contradichas_antes
+
+        anterior = {"materias": [
+            {"carrera": "Desarrollo Agrario", "materia": "Química general", "estado": "no_lo_dice", "fuente": None},
+            {"carrera": "Desarrollo Agrario", "materia": "Biología", "estado": "verificado", "fuente": "x"},
+        ]}
+        self.assertEqual(_contradichas_antes(anterior), [
+            {"nombre_materia": "Química general", "carrera_o_programa": "Desarrollo Agrario"}])
+        self.assertEqual(_contradichas_antes(None), [])
+
 
 class NombreConGuion(unittest.TestCase):
     def test_a_name_broken_at_its_hyphen_is_found(self):
@@ -151,6 +176,15 @@ class NombreConCortes(unittest.TestCase):
         self.assertFalse(v.dice(v.plano("fisicaii"), "Física II"))
         self.assertFalse(v.dice(v.plano("matematica discretas aplicadas"), "Matemática Discreta Avanzada"))
         self.assertFalse(v.dice(v.plano("introduccion a la biologia celular molecular"), "Introducción a la Biología Molecular"))
+
+    def test_a_closing_roman_numeral_read_as_a_digit_is_found(self):
+        # FCQ-UNC's Ord. 6/2018: the scan prints "Física I", its OCR "Física 1".
+        fuente = v.plano("Física 1 71 4,7 Laboratorio 1 74 4,8 Procesos biotecnológicos lI 70")
+        for nombre in ("Física I", "Laboratorio I", "Procesos biotecnológicos II"):
+            self.assertTrue(v.dice(fuente, nombre), nombre)
+        self.assertFalse(v.dice(fuente, "Física II"))
+        self.assertFalse(v.dice(v.plano("Física 11"), "Física I"))
+        self.assertFalse(v.dice(v.plano("Física 2"), "Física II"))
 
 
 class PlanEnDrive(unittest.TestCase):

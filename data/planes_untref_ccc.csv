@@ -1,0 +1,60 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNTREF;Licenciatura en Geografía (Complementación);2.5;;;https://untref.edu.ar/uploads/Programas/programas-carreras/Lic.%20en%20Geografia%20CL%20-%20Plan%202019%20-%20RM%201134-2020.pdf;"1 | Introducción a las Técnicas de Investigación Social
+1 | Geografía Social
+1 | Geografía Económica
+1 | Informática Básica
+1 | Métodos Cuantitativos en Geografía
+1 | Cartografía I
+1 | Geografía Rural
+1 | Métodos Cualitativos
+2 | Climatología
+2 | Sistemas de Información Geográfica I
+2 | Geografía Política y Geopolítica
+2 | Geografía Urbana
+2 | Teledetección
+2 | Teoría y Métodos de la Geografía
+2 | Seminario de Investigación Integrada";lector planes_manuales;;"Anexo de la RM 1134/20 (IF-2020-36779914), plan 2019: 15 asignaturas en 4 cuatrimestres (1.º-2.º=1.º, 3.º-4.º=2.º); afuera Idioma Extranjero I y TFA (otros requisitos) y Trabajo Final (5.º cuatrimestre, tesina o seminarios). ""Seminario de Investigación Integrada"" sigue en la página 2.";Universidad Nacional de Tres de Febrero;5dfb557f-4b7b-4b90-8c80-1c68020e6273
+UNTREF;Instrumentación Quirúrgica (Ciclo de Complementación);2;;;https://untref.edu.ar/carrera/instrumentacion-quirurgica;"1 | Metodología de la Investigación
+1 | Administración General
+1 | Didáctica de la Enseñanza en el Área de la Salud
+1 | Dinámica de Grupo
+1 | Cultura Contemporánea
+1 | Metodología Aplicada
+1 | Epidemiología y Bioestadística
+1 | Paciente Crítico/Trauma
+1 | Gestión organizativa de los Centros Quirúrgicos I
+1 | Cuestiones de Sociología, Economía y Política
+2 | Salud Comunitaria
+2 | Taller de Tesis I
+2 | Gestión organizativa de los Centros Quirúrgicos II
+2 | Taller de Cirugía Veterinaria
+2 | Introducción a la Salud Pública
+2 | Taller de Instrumentación en Hemodinamia
+2 | Taller de Tesis II
+2 | Actualización de Cirugía Avanzada
+2 | Gestión de Calidad";lector planes_manuales;;"Bloque ""Plan de estudios"" de la página (4 cuatrimestres, 19 asignaturas); afuera ""Otros requerimientos"" (Inglés I-II, Informática I-II, Trabajo Final). El PDF de la RM 205/17 está escaneado, sin texto.";Universidad Nacional de Tres de Febrero;6eff6732-d341-42f0-960b-e8f30ab9dc6f
+UNTREF;Licenciatura en Resolución de Conflictos y Mediación (Ciclo de Complementación);;;;https://untref.edu.ar/uploads/Programas/programas-carreras/RSPU-N-477-2022-ANEXO-I-IF-2022-75550627-APN-DNGU-ME.pdf;"1 | Cuestiones de Sociología, Economía y Política
+1 | Nociones Elementales de Métodos de Resolución de Conflictos
+1 | Fundamentos de Derecho
+1 | Fundamentos de Psicología
+1 | Introducción a la Resolución de Conflictos
+1 | Cultura Contemporánea
+1 | Teoría de la Comunicación
+1 | Teoría del Conflicto
+1 | Negociación I
+1 | Resolución de Conflictos en Línea
+2 | Metodología de la Investigación
+2 | Negociación II
+2 | Mediación General
+2 | Taller de Elaboración del Trabajo Final
+2 | Arbitraje
+2 | Mediación Patrimonial y Laboral
+2 | Mediación Penal, Justicia Restaurativa y Programas Restaurativos
+2 | Mediación Familiar
+2 | Mediación Educativa y Comunitaria
+3 | Diseño de Sistemas de Resolución Apropiada de Conflictos
+3 | Pasantía
+3 | Ingles Nivel I
+3 | Ingles Nivel II
+3 | Informática Nivel I
+3 | Informática Nivel II";lector planes_manuales;;"Anexo I de la RSPU 477/22 (IF-2022-75550627), sin columna de código: 25 asignaturas en 5 cuatrimestres (5.º=3.º); afuera Trabajo Final. Ni la página ni la resolución dicen la duración en años (queda vacía).";Universidad Nacional de Tres de Febrero;807a61bd-ea2a-4343-818f-ba61ff7b76c8

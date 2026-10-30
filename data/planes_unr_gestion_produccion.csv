@@ -1,0 +1,43 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Tecnicatura Universitaria en Gestión y Producción;3.0;;;http://www.ips.edu.ar/wp-content/uploads/2018/05/TUGP.pdf;"1|Sistemas de Representación
+1|Física Aplicada
+1|Álgebra y Geometría Analítica
+1|Sistema Informático en la Empresa
+1|Informatización de Procesos I
+1|Procesos Industriales
+1|Administración del Personal
+1|Dibujo de Componentes
+1|Matemática
+1|Contabilidad
+1|Informatización de los Procesos II
+1|Gestión de la Logística
+1|Mantenimiento
+1|Legislación Laboral
+2|Estados Contables
+2|Técnicas de Organización
+2|Programación Lineal y Dinámica
+2|Diseño Asistido
+2|Métodos de Trabajo
+2|Higiene y Seguridad Industrial
+2|Gestión Ambiental
+2|Costos y Control Presupuestario
+2|Dirección Estratégica
+2|Compras y Abastecimiento
+2|Planeamiento y Control de la Producción I
+2|Ingeniería de Producto
+2|Calidad en la Recepción
+2|Gestión de Procesos, Trabajo y Equipos
+3|Economía Empresaria y Comercio Exterior
+3|Integración y Proyecto
+3|Planeamiento y Control de la Producción II
+3|Máquinas, Dispositivos y Puesta a Punto
+3|Calidad en los Procesos
+3|Medición del Trabajo I
+3|Inglés Técnico I
+3|Control de Gestión
+3|Evaluación de Proyectos y Análisis de Inversiones
+3|Comercialización
+3|Proyecto Final
+3|Gestión de la Calidad
+3|Medición del Trabajo II
+3|Inglés Técnico II";lector planes_manuales;;"Plan enlazado desde la página de la carrera del Instituto Politécnico Superior (ips.edu.ar/gestion), que unr.edu.ar/tecnicaturas/ enlaza; año según el código. Mismo plan que el 'Nuevo Plan de Estudio 2012' (solo cambia el cuatrimestre de 2.16.1 y 2.23.2).";Universidad Nacional de Rosario;fbb764c9-5e7b-40f3-945e-eafdb87a80e4

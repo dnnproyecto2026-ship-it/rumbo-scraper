@@ -1,0 +1,15 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNLP;Licenciatura en Francés Orientación Lingüística;5.0;;;https://www.fahce.unlp.edu.ar/facultad/secretarias-y-prosecretarias/academica/deptos/lenguas-y-literaturas-modernas/carreras/licenciatura-en-frances-orientacion-linguistica/@@edit/++widget++form.widgets.IArchivos.archivos/@@download/1;"1 | Introducción a la Lengua Francesa
+2 | Lengua Francesa 1
+2 | Fonetica y Fonologia Francesas 1
+2 | Gramatica Francesa 1
+2 | Tecnicas de Expresion en Castellano
+3 | Lengua Francesa 2
+3 | Fonetica y Fonologia Francesas 2
+3 | Gramatica Francesa 2
+3 | Gramatica Contrastiva (Cast.- Fran.)
+3 | Historia de la Lengua Francesa
+4 | Lengua Francesa 3
+4 | Diccion Francesa 1
+4 | Diccion Francesa 2
+5 | Lengua Francesa 4";IA operador;;Plan 2016, PDF oficial de la facultad. Solo materias obligatorias: afuera electivas y optativas a elegir, seminarios de licenciatura, tesina y capacitaciones en idioma. También afuera Introducción a los Estudios del Lenguaje y de la Comunicación (1.º): el PDF la abrevia y no se puede comprobar el nombre literal. Tampoco Literatura Francesa Contemporánea (3.º): el PDF dice 'LITER.'.;Universidad Nacional de La Plata;9288ae62-cbc2-431d-999e-d95f7e28652a

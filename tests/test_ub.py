@@ -34,6 +34,13 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual({r.name: r.level for r in refs},
                          {"Abogacía": "Grado", "Maestría": "Posgrado"})
 
+    def test_a_link_through_the_front_controller_is_the_same_page(self) -> None:
+        refs = discover_programmes({
+            POSGRADO_INDEX: [(f"/index.php/escuela-de-posgrado-en-derecho/maestria", "MAESTRÍA")],
+        })
+        self.assertEqual([r.url for r in refs],
+                         [f"{BASE_URL}/escuela-de-posgrado-en-derecho/maestria"])
+
     def test_the_names_are_published_in_capitals_and_read_back(self) -> None:
         refs = discover_programmes({GRADO_INDEX: [(CAREER, "LICENCIATURA EN COMERCIO EXTERIOR")]})
         self.assertEqual(refs[0].name, "Licenciatura en Comercio Exterior")

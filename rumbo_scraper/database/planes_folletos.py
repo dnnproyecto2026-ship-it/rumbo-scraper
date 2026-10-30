@@ -14,8 +14,14 @@ missing a column.
 The preview keeps its own file (``data/planes_folletos.json``); ``--apply``
 writes from it.
 
+``--tildes`` reads again the brochures of the careers that already have
+subjects and gives back the capital "É" an older reading lost ("Etica
+Profesional" → "Ética Profesional"), where today's reading has the same
+subject, in the same year, with it.
+
     python -m rumbo_scraper.database.planes_folletos
     python -m rumbo_scraper.database.planes_folletos --apply
+    python -m rumbo_scraper.database.planes_folletos --tildes [--apply]
 """
 
 from __future__ import annotations
@@ -43,7 +49,9 @@ FOLLETOS = {"USAL": ".propuesta-plan img"}
 PAUSA = 1.0
 
 
-def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
+def leer(client: Any, solo: set[str], cargadas: bool = False) -> dict[str, dict[str, Any]]:
+    """The plan each brochure gives, for the careers without subjects (or,
+    with ``cargadas``, for those with them)."""
     from rumbo_scraper.database.supabase import select_all
 
     universidades = {u["id"]: u for u in select_all(client.table("universidades").select("*"))
@@ -68,7 +76,7 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
             # students Rumbo serves, and its brochures are drawn tighter:
             # names wrap without a connecting word ("Gestión Estratégica de
             # la Comunicación" over "Institucional").
-            if carrera["id"] in con_materias or not url or "complementaci" in carrera["nombre_carrera"].lower():
+            if (carrera["id"] in con_materias) != cargadas or not url or "complementaci" in carrera["nombre_carrera"].lower():
                 continue
             corto = universidades[carrera["universidad_id"]]["nombre_corto"]
             html = visitante.get(url)
@@ -96,14 +104,51 @@ def leer(client: Any, solo: set[str]) -> dict[str, dict[str, Any]]:
     return planes
 
 
+def con_tilde(cargadas: list[dict[str, Any]], leidas: list[tuple[str, int]]) -> list[tuple[dict[str, Any], str]]:
+    """The loaded subjects (``nombre_materia``, ``anio_cursada``) whose name
+    lost the "É" the brochure reads today, each with the name it reads."""
+    hoy = {(nombre, anio) for nombre, anio in leidas}
+    cambios = []
+    for materia in cargadas:
+        nombre = folleto_usal._E_SIN_TILDE.sub("Étic", materia["nombre_materia"])
+        if nombre != materia["nombre_materia"] and (nombre, materia["anio_cursada"]) in hoy:
+            cambios.append((materia, nombre))
+    return cambios
+
+
+def tildes(client: Any, solo: set[str], aplicar: bool) -> None:
+    from rumbo_scraper.database.supabase import select_all
+
+    planes = leer(client, solo, cargadas=True)
+    materias: dict[str, list[dict[str, Any]]] = {}
+    for materia in select_all(client.table("materias").select("id,carrera_id,nombre_materia,anio_cursada")):
+        if materia["carrera_id"] in planes:
+            materias.setdefault(materia["carrera_id"], []).append(materia)
+    cambios = 0
+    for carrera_id, plan in planes.items():
+        for materia, nombre in con_tilde(materias.get(carrera_id, []), plan["materias"]):
+            print(f"{plan['universidad']:8} {plan['carrera']['nombre_carrera'][:48]:48} "
+                  f"{materia['nombre_materia']} → {nombre} ({materia['anio_cursada']})", flush=True)
+            if aplicar:
+                client.table("materias").update({"nombre_materia": nombre}).eq("id", materia["id"]).execute()
+            cambios += 1
+    print(f"Planes releídos: {len(planes)}; materias {'corregidas' if aplicar else 'a corregir'}: {cambios}",
+          flush=True)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Cargar los planes publicados como folleto en imagen")
     parser.add_argument("--apply", action="store_true", help=f"Escribir lo que dejó la vista previa en {HALLADOS}")
     parser.add_argument("universidades", nargs="*", help="Nombres cortos; todas las de FOLLETOS si se omite")
+    parser.add_argument("--tildes", action="store_true",
+                        help="Devolver la É perdida a las materias ya cargadas que el folleto lee con ella")
     args = parser.parse_args()
 
     from rumbo_scraper.database.supabase import get_supabase_client
     client = get_supabase_client()
+    if args.tildes:
+        tildes(client, set(args.universidades), args.apply)
+        return
     if args.apply:
         planes = json.loads(HALLADOS.read_text())
     else:

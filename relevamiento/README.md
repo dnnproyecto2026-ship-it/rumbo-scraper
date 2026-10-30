@@ -12,3 +12,8 @@ item, a resolution, a report). It is where to look, not the data:
 `load_convenios --relevados` reads every page with the scraper's client and
 keeps a partner only while its page still names it. A page that is not the
 university's own must also name the university.
+
+`planes_sin_cargar.json` is, career by career, why a career Rumbo publishes
+has no plan of studies yet: the document it links, and what keeps it from
+being read (names cut short, a scanned PDF, a format no reader takes), with
+the day it was checked. A career leaves the list when its plan is loaded.

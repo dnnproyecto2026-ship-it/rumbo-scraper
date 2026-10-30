@@ -1,0 +1,40 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Biomédica;5;;;https://www.facet.unt.edu.ar/ingbiomedica/plan-de-estudios/;"1 | Cálculo I
+1 | Álgebra y Geometría Analítica
+1 | Física I
+1 | Fundamentos de Química General
+1 | Cálculo II
+1 | Elementos de Álgebra Lineal
+1 | Física II
+1 | Informática
+1 | Sistemas de Representación
+2 | Cálculo III
+2 | Física III
+2 | Circuitos Eléctricos I
+2 | Química Orgánica
+2 | Anatomía para Ingenieros
+2 | Cálculo IV
+2 | Probabilidad y Estadística
+2 | Circuitos Eléctricos II
+2 | Biología para Ingenieros
+2 | Técnicas y Herramientas de Computación
+3 | Materiales Eléctricos
+3 | Circuitos Eléctricos III
+3 | Electrónica I
+3 | Dispositivos Electrónicos
+3 | Electrónica II
+3 | Electrónica III
+3 | Métodos Numéricos
+3 | Fisiología
+4 | Transductores Biomédicos
+4 | Instrumentación Biomédica
+4 | Ingeniería Clínica I
+4 | Informática Médica
+4 | Introducción a la Bioingeniería
+4 | Ingeniería Clínica II
+4 | Biomateriales
+4 | Ingeniería y Medicina Legal
+5 | Economía y Organización Industrial
+5 | Optativa 1
+5 | Optativa 2
+5 | Proyecto de Graduación";lector html (máquina fija);;"Plan de estudio Modificación 2006; tabla oficial por año y módulo I a X (dos módulos por año). Idioma Inglés, Cátedra Abierta y PPS (exigencias adicionales) afuera.";Universidad Nacional de Tucumán;732e4416-12c5-4ac4-a89d-f18840f26de8

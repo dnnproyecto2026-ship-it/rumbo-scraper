@@ -1,0 +1,41 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Carrera de Arquitectura y Urbanismo;5;;;https://fau.unt.edu.ar/fau/wp-content/uploads/2025/08/plan2008.pdf;"1 | Sistemas de Representación
+1 | Morfología I
+1 | Introducción a Taller de Proyecto
+1 | Matemática Aplicada
+1 | Introducción Técnica
+1 | Tecnología
+1 | Cultura y Producción Arquitectónica
+2 | Técnicas Digitales I
+2 | Morfología II
+2 | Taller de Proyecto Arquitectónico I
+2 | Taller de Proyecto Arquitectónico II
+2 | Estructuras I
+2 | Construcciones I
+2 | Acondicionamiento Natural
+2 | Historia de la Arquitectura I
+2 | Teoría de la Arquitectura
+3 | Técnicas Digitales II
+3 | Morfología III
+3 | Taller de Proyecto Arquitectónico III
+3 | Taller de Proyecto Arquitectónico IV
+3 | Estructuras II
+3 | Construcciones II
+3 | Construcciones III
+3 | Diseño de Instalaciones I
+3 | Historia de la Arquitectura II
+4 | Taller de Proyecto Arquitectónico V
+4 | Taller de Proyecto Arquitectónico VI
+4 | Estructuras III
+4 | Diseño de Instalaciones II
+4 | Acondicionamiento Artificial
+4 | Economía de la Construcción I
+4 | Historia de la Arquitectura III
+4 | Urbanística I
+5 | Taller de Proyecto Arquitectónico VII
+5 | Taller de Proyecto Arquitectónico VIII
+5 | Taller de Urbanismo y Planificación I
+5 | Taller de Urbanismo y Planificación II
+5 | Economía de la Construcción II
+5 | Legislación y Ejercicio Profesional
+5 | Urbanística II";lector pdftotext (máquina fija);;"Plan 2008 (PDF oficial de la FAU, texto); niveles 1 a 5 como años; Materias Electivas I a VI y Proyecto Final no incluidas";Universidad Nacional de Tucumán;374e88ff-16f1-4505-8179-8bd32deb9e9c

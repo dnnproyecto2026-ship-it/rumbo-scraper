@@ -1,0 +1,2642 @@
+[
+ {
+  "universidad": "UCASAL",
+  "carrera": "Abogacía",
+  "carrera_id": "47ec10db-5a52-4c96-99ff-d1033f495786",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-Abogacia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Arquitectura",
+  "carrera_id": "232f5b5f-801f-4461-ae3c-52bb0652a1fb",
+  "motivo": "El folleto trae el menú de electivas en una segunda columna y renglones con dos materias pegadas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-Arquitectura-2.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ciencias Veterinarias",
+  "carrera_id": "3bd9493a-6e21-44c7-9818-2adaf86a704a",
+  "motivo": "El folleto imprime acentos graves (\"PATOLOGÌA QUIRÙRGICA\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-cs-veterinarias.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Contador Público",
+  "carrera_id": "657e032a-9441-4afd-ad3c-73dce7e0b668",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/PLAN-CONTADOR.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Corredor Inmobiliario y Martillero Público",
+  "carrera_id": "8f9e37db-e2dc-4882-9d0b-32ddf1f53d96",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/244-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Escribanía",
+  "carrera_id": "04c96035-a4a8-4f21-bf09-4bff3cb0b007",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/11/Plan-de-Estudios-Correlativas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Guía Universitario de Turismo",
+  "carrera_id": "a782b84d-721c-462c-8861-bdc25891a2fc",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/175-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería Civil",
+  "carrera_id": "b304b8f2-74e6-48ee-9fda-05322b96b647",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/18-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "f90abf35-3b51-40c7-a779-1130a666cb35",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/04/Ingenieria-Industrial.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Industrial-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería en Informática",
+  "carrera_id": "6585bb20-2895-439f-9e5a-0dcca0d1b36f",
+  "motivo": "El folleto legible es el plan 2015; la página publica un \"NUEVO PLAN\" en el formato del Departamento de Alumnos (nombres cortados a 20 letras): no se carga el viejo.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-ing-en-informatica.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Informatica-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Ingeniería en Telecomunicaciones",
+  "carrera_id": "4b71ea43-e2bb-4efc-9e21-f215f101b7c3",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/10/Plan-Telecomunicaciones-2026-2-1.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Plan-Telecomunicaciones-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Administración Agropecuaria",
+  "carrera_id": "50c69f05-fd91-4bfc-849f-0752b3664678",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/LAA-2021-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Administración de Negocios Digitales",
+  "carrera_id": "a05cbbe6-440d-444d-899d-6d838d04f05e",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/02/Carrera-250.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Artes Musicales",
+  "carrera_id": "2ded3927-0747-4959-a64f-a78ee23a7110",
+  "motivo": "El plan de alumnos repite una materia por instrumento (\"Instrumento Principal I (Oboe)\"): es una elección, no la secuencia del plan; no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-estudios-LIC-EN-ARTES-MUSICALES-Todas-las-materias.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Ciencia de Datos",
+  "carrera_id": "154f5697-fbed-426a-94ca-2e808e477b50",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Lic_-en-Ciencia-de-Datos_plan-de-estudios-con-correlativ-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Ciencias Políticas",
+  "carrera_id": "c696f142-0009-46c4-96e8-aa4e3fe0e91e",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/04/Plan-Estudios-Cs-Politicas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Comercio Internacional",
+  "carrera_id": "7da8a44d-d050-437b-ab6a-f3e5cb825ffe",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Estudio-LIc-Com-Int-2019-cambios.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Comunicación",
+  "carrera_id": "a2a8867c-6942-4752-9d7e-35aa47ba6fd7",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Comunicacion-Plan-de-Estudio-2025-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Corretaje, Tasación y Administración de Consorcios (Ciclo de Complementación Curricular)",
+  "carrera_id": "93b347ab-c3d8-4c60-a000-cb6860ad925d",
+  "motivo": "Tabla con código y nombre completo: `plan_ucasal` la lee entera (20 materias, 2 años). Ciclo de complementación: `planes_documentos` saltea los ciclos y el exportador los deja afuera.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/04/PLAN-DE-ESTUDIO-LICENCIATURA-EN-CORRETAJE-TASACION-Y-ADMINISTRACION-DE-CONSORCIOS-2.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Diseño de Interiores",
+  "carrera_id": "2730d6dc-0019-4087-9dc0-9ced553ff1ce",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-lic-diseno-de-interiores.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Diseño de la Comunicación Visual",
+  "carrera_id": "0cce3291-aed4-431a-89a5-5f336b673601",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/07/Infografia-Lic.-en-Diseno-de-la-Comunicacion-Visual-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "4417785c-e499-4cf3-bde7-cfee91165b12",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Plan-De-Estudio-LE-2025.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Educación Física",
+  "carrera_id": "f2530a1b-abeb-4319-ac75-728122203cc7",
+  "motivo": "La página de la carrera no enlaza ningún plan.",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Entrenamiento Deportivo (Ciclo de Complementación Curricular)",
+  "carrera_id": "45354d80-2cd3-4fe7-a627-b7cef00ba4cb",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/LICENCIATURA-EN-ENTRENAMIENTO-DEPORTIVO-CICLO-DE-COMPLEMENTACION-CURRICULAR-modalidad-a-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "7b525ca8-1d8c-472a-9b10-4b2ce515cbb2",
+  "motivo": "La página enlaza tres planes (2009, 2025 y la DI-2026-392 de la SSPU); los de alumnos cortan los nombres a 20 letras, y el anexo de la DI 2026 (IF-2026-27871056) abrevia y corta nombres (\"LECTURA E INTERP. DE TEXTOS\", \"TEXTO IV: CONTEMP.\", \"PROBLEMAS DE FILOSOFIA CONTEMPO\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar//wp-content/uploads/2021/10/100-1-plan.pdf",
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/05/DI-392-2026-LICENCIADO-A-EN-FILOSOFIA-UNIVERSIDAD-CATOLICA-DE-SALTA.pdf",
+   "https://www.ucasal.edu.ar//wp-content/uploads/2021/10/100-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Finanzas",
+  "carrera_id": "774a8e2e-cdad-464f-b68e-7bb359cf0b39",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/plan-de-finanzas-con-correlativas.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Fonoaudiología",
+  "carrera_id": "f0fcfe84-1481-4e79-889e-d7a3b20f9bca",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-FONOAUDIOLOGIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Fonoaudiología (sede Jujuy)",
+  "carrera_id": "99bccac9-4d2f-4b50-9654-77c5511874b2",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/342-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Gerontología Social",
+  "carrera_id": "bf79e1da-4e0b-44d5-8cf1-d1c0b1670503",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/09/Infografia-Lic-en-Gerontologia-Social.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Gestión Educativa (Ciclo de Complementación Curricular)",
+  "carrera_id": "846b5a26-a806-44bd-b4d1-d72fcae6e5a9",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/05/Plan-de-estudio-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Higiene y Seguridad en el Trabajo",
+  "carrera_id": "5d2819de-eff8-4c23-95d9-d26356ef16ef",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/03/Plan-de-Estudio-2022-HyS-Presencial-Correlatividades.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Imagen y Sonido",
+  "carrera_id": "fce81cb2-e119-4014-b68b-9b9338bd25e4",
+  "motivo": "Folleto del plan 2007: las siglas ya se conservan, pero el folleto pone \"ELEMENTAL\" (de \"Lengua Inglesa Elemental\") en el renglón de \"PENSAMIENTO FILOSÓFICO I\" y el lector no los separa: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/11/Plan-de-Estudio-lic-Imagen-y-sonido.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Kinesiología y Fisioterapia",
+  "carrera_id": "a7e9e39f-115b-4017-961d-3db74fd344a5",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-KINESIOLOGIA-Y-FISIOTERAPIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Lenguajes Expresivos (Ciclo de Complementación Curricular)",
+  "carrera_id": "688f5bbf-03a0-4964-90f9-30e28885e1f0",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/LICENCIATURA-EN-LENGUAJES-EXPRESIVOS.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Periodismo",
+  "carrera_id": "ed18be83-5d36-478c-a93d-0bdae360b0f7",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Periodismo-Plan-de-Estudio-2024.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Producción de Bioimágenes (Ciclo de Complementación Curricular)",
+  "carrera_id": "15748fac-54e3-4998-94a8-37a19732a306",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos. Además: PDF sin texto (imagen): necesita OCR (planes_escaneados).",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/11/RR_1295-2015.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Psicomotricidad",
+  "carrera_id": "d3a5be84-b376-4d31-bbef-dbdf6d8380cf",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-PSICOMOTRICIDAD.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Psicopedagogía",
+  "carrera_id": "bf660c10-dfdb-4067-a4d3-6d7107a9dafa",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-psicopedagogia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Publicidad",
+  "carrera_id": "7697c78d-792c-4222-9c38-8c2bb0a26171",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Publicidad-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Realización Audiovisual",
+  "carrera_id": "0cbcf6bc-c23a-47ea-a928-79b423900f0b",
+  "motivo": "El plan publicado es una grilla con nombres abreviados (\"T/\", \"Invest.\", \"Admin.\") y partidos entre celdas: no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/Infografia-Lic.-en-Realizacion-Audiovisual-Plan-de-Estudio-2026.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Recreación y Ocio Educativo (Ciclo de Complementación Curricular)",
+  "carrera_id": "a1040d78-eca4-4433-a31c-b8fa4f0d7cb4",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/08/Lic-en-Recreacion-y-Ocio-Educativo-ultima-actualizacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Relaciones Internacionales",
+  "carrera_id": "79a00090-e598-43e9-a124-7861634a38d8",
+  "motivo": "Tabla con código y nombre completo (la lee `plan_ucasal`), pero los 5 primeros nombres del 1.er semestre (códigos 1–5) están dibujados como curvas: no hay texto que verificar. El lector descarta el plan.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/02/PLAN-DE-ESTUDIOS-LIC.-EN-RRII-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Seguridad (Ciclo de Complementación Curricular)",
+  "carrera_id": "be2d5366-7a0f-4099-8ce5-1e3c256d00ef",
+  "motivo": "Ciclo de complementación: el exportador deja afuera los ciclos. Además: El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/196-7-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Teología",
+  "carrera_id": "30c22466-cb76-4b7a-83e4-083d32d0ae1d",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-estudio.-Lic-en-teologia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Terapia Ocupacional",
+  "carrera_id": "b567b274-a80c-459e-b8a2-c2b20fdd5272",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/LIC.-EN-TERAPIA-OCUPACIONAL.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Terapia Ocupacional (sede Jujuy)",
+  "carrera_id": "5e3a247c-72ca-4a73-8060-6e4b7db3e55d",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/08/PLAN-ESTUDIO-TO-con-modificaciones-para-PPP.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Licenciatura en Turismo",
+  "carrera_id": "689edf0f-6294-4a80-838f-3e01195d9f4b",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2022/10/Plan-de-Estudios-Licenciatura-en-Turismo-2019.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Perito en Accidentología",
+  "carrera_id": "411ec996-336a-47b0-b292-875fe2294bfb",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/68-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Procuración",
+  "carrera_id": "5999db83-27cc-4d9c-b63b-59a5c8ff2821",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2024/09/PLAN-DE-ESTUDIOS-Y-CORRELATIVAS-PROCURACION.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Producción y Dirección para Radio y Televisión",
+  "carrera_id": "93d1e0e8-811d-4e94-a709-f63ef46cbdbe",
+  "motivo": "La página de la carrera no responde (sin contenido el 24/10).",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Univ. en Campo Disciplinar según Titulación de Base",
+  "carrera_id": "7c033891-48e8-461c-9a8f-64f98bf15711",
+  "motivo": "PDF escaneado del Departamento de Alumnos: corta cada nombre (\"PRÁCT.I AN.CONTEXTOS\", \"FILOS. EDUCAC.\") y es un ciclo de complementación. No se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/04/plan-de-estudio-de-profesorado-en-campo-240.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Universitario en Educación Inicial",
+  "carrera_id": "eb151ab2-e660-4cdb-9e56-6e4012cc821f",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/47-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado Universitario en Educación Primaria",
+  "carrera_id": "54a8b150-af13-4d92-8bb0-de0a861ba67e",
+  "motivo": "PDF escaneado del Departamento de Alumnos: corta cada nombre (\"DID. CS. NAT.I\", \"TALL.ED.ARTÍSTICA I\"). No se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/09/Plan-2021.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "de0f2bae-378a-4cfc-995f-cf87416b38b2",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/31-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "5deab40a-1644-49fb-92ce-9c679407e72c",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/PROFESORADO-EN-FILOSOFIA-Plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Inglés",
+  "carrera_id": "b084857c-f026-46fe-9dde-213d4ba403bb",
+  "motivo": "El folleto imprime \"LEGISLACIÒN\" (acento grave) y \"LINGUÍSTICA\": no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-Artes-y-Ciencias-profesorado-ingles.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Profesorado en Psicología",
+  "carrera_id": "740a8099-e8a7-42c6-9e7b-65e23b6ef958",
+  "motivo": "Folleto escaneado: el OCR (tesseract) no lee los rótulos \"3° AÑO\" y \"4° AÑO\" (blanco sobre rojo) y deforma nombres (\"PsicoLOGÍA\", \"PRÁCTICA lil\"); sin los años no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/03/Plan-Artes-y-Ciencias-Prof-Psicologia-presencial-1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Actividad Física y Fitness",
+  "carrera_id": "022c4a92-7b4a-41e0-896a-89e43d715d61",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://ucasal.edu.ar/postulantes/pdf/238-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Administración Universitaria",
+  "carrera_id": "38348007-a764-4145-9574-86bafe54939e",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2026/03/Plan-de-Estudio-ECO-tecnicatura-en-administracion-y-gestion-presencial.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Gestión de Calidad",
+  "carrera_id": "c7cead11-d98a-4d6b-b18c-1d3953a21378",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/05/Calidad-Distancia-Plan_2018.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Podología",
+  "carrera_id": "2a754ead-28a0-475c-9880-c7cff48bcf26",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/09/TEC.-EN-PODOLOGIA.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Producción de Bioimágenes",
+  "carrera_id": "822b88c8-5247-48a5-af59-5d5501d84cc5",
+  "motivo": "La página de la carrera no enlaza ningún plan.",
+  "documentos": [],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Producción de Bioimágenes (sede Jujuy)",
+  "carrera_id": "efd16924-043a-4e75-8546-f65b250628d7",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/postulantes/pdf/232-1-plan.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Secretariado Ejecutivo",
+  "carrera_id": "a3f0429e-ac32-4180-8694-37d29966a607",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/08/SECRETARIADO.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura Universitaria en Seguridad Informática",
+  "carrera_id": "e27b083a-ffa9-4e4e-9566-222652d30e5c",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-Estudio-tecnicatura-en-seguridad-informatica-distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Administración y Gestión Judicial",
+  "carrera_id": "1ac78fac-cb4e-4404-96f9-247ad3137b52",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/04/Plan-Estudios-Tecnicatura-Adm-y-Ges-Judicial.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Higiene y Seguridad en el Trabajo",
+  "carrera_id": "837bfb68-3466-4c34-9f23-621332d2e4ee",
+  "motivo": "El plan publicado es el del Departamento de Alumnos, que corta cada nombre a 20 letras (\"MATEMAT.II\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2023/03/Plan-de-Estudio-2022-HyS-Presencial-Correlatividades.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UCASAL",
+  "carrera": "Tecnicatura en Operaciones Mineras e Industriales",
+  "carrera_id": "d897e4c8-cf11-464b-bcd7-dc7078a12cb4",
+  "motivo": "El folleto copia nombres abreviados del Departamento de Alumnos (\"Dº\", \"INT.\"): no se carga.",
+  "documentos": [
+   "https://www.ucasal.edu.ar/wp-content/uploads/2025/12/Plan-de-Estudio-tecnicatura-en-operaciones-mineras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Tecnología de los Alimentos",
+  "carrera_id": "3923f45a-126d-41e6-84fe-1224fb522603",
+  "motivo": "Tabla por cuatrimestre con columnas IPS/IPP que ningún lector toma; la resolución RES-1372-17 es un escaneo. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/Licenciatura-en-Tecnologia-de-los-Alimentos.pdf",
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/RES-1372-17-LIC.-EN-TECNOLOGIA-DE-LOS-ALIMENTOS.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Educación",
+  "carrera_id": "3bc8b68a-fb00-467b-9a99-e14fcae3cc4c",
+  "motivo": "Es un ciclo de complementación (CCC) con \"Unidad curricular electiva 1–4\": los ciclos no se cargan por diseño.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2026/01/Licenciatura-en-Educacion-Presencial-_-A-Distancia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Diseño Industrial",
+  "carrera_id": "3d72158c-9af3-48ef-9591-0dfb11f037a6",
+  "motivo": "El lector la lee entera (36), pero el texto del PDF pega palabras (\"TecnologíaI\", \"InglésI\", \"Proyectoﬁnal\") y el verificador no las encuentra. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-estudios-de-Licenciatura-en-Diseno-Industrial-con-titulo-intermedio.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Tecnicatura Universitaria en Producción Agroecológica Periurbana",
+  "carrera_id": "5580871a-0317-40c1-8a81-bfa30670e800",
+  "motivo": "El texto del PDF tiene las tildes y ligaduras rotas (\"Biologıá\", \"cientı icas\") y columnas mezcladas: los nombres no se pueden comprobar. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/09/Plan-de-estudios-Tecnicatura-Universitaria-en-Produccion-Agroecologica-Periurbana.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNAHUR",
+  "carrera": "Licenciatura en Gestión del Mantenimiento",
+  "carrera_id": "625ff4e1-a9a2-4b38-9e6c-d0d5b6e78601",
+  "motivo": "Filas partidas: la \"C\" del régimen en un renglón, campo y horas en otro; ningún lector las toma enteras. No se carga.",
+  "documentos": [
+   "https://unahur.edu.ar/wp-content/uploads/2025/10/Plan-de-Estudios-de-la-Lic-en-Gestion-del-Mantenimiento-con-titulo-intermedio-RCS-381_2024.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Bioquímica",
+  "carrera_id": "76a477e3-5fd2-484d-b8e3-32f1524e32a0",
+  "motivo": "La Ord. HCD 05/2014 (texto ordenado, común a Bioquímica y Farmacia) es un escaneo con OCR roto (\"Qufmica\", \"Ineluye\") y desde el 9.º cuatrimestre Bioquímica se abre en orientaciones: no se carga.",
+  "documentos": [
+   "https://www.fcq.unc.edu.ar/wp-content/uploads/carreras/ORD_5_2014.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Farmacia",
+  "carrera_id": "03c3dab5-1f70-4ca2-8a2f-a5c58c31ed3b",
+  "motivo": "La Ord. HCD 05/2014 (texto ordenado, común a Bioquímica y Farmacia) es un escaneo con OCR roto (\"Qufmica\", \"Ineluye\"): los nombres no se pueden cotejar literalmente. No se carga.",
+  "documentos": [
+   "https://www.fcq.unc.edu.ar/wp-content/uploads/carreras/ORD_5_2014.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNC",
+  "carrera": "Licenciatura en Química",
+  "carrera_id": "fd3a33ce-b161-4f26-963b-bb21315e2f59",
+  "motivo": "El plan ampliado agrupa por ciclo (básico/intermedio/superior), no por año, y abrevia nombres (bitácora 12): no se carga.",
+  "documentos": [
+   "https://fcq.unc.edu.ar/wp-content/uploads/carreras/Plan-Lic-Quimica-ampliado.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Astronomía",
+  "carrera_id": "4d511747-50b0-4903-9d06-4b90f320afaf",
+  "motivo": "La lista por año de la FCAG nombra solo 1.º a 3.º; 4.º y 5.º son optativas por puntos, seminario y tesis: no se sabe el plan entero. Las 74 materias que tenía eran las de Astronomía, Geofísica y Meteorología mezcladas con rótulos de la página (\"Facultad de ciencias\"); borradas (bitácora 83).",
+  "documentos": [
+   "https://www.fcaglp.unlp.edu.ar/index.php/alumnos/materias-y-programas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Escribanía",
+  "carrera_id": "0cd2f066-6e2f-4ce5-be3e-3969da8aa9b7",
+  "motivo": "El plan 6 de Escribanía (tabla de la Facultad de Ciencias Jurídicas) abrevia nombres en mayúsculas sin tildes (\"DER.PUB.PROV.Y MUNICIPAL\", \"ADAP.PROF.PRAC.PENALES\", \"T. DE LECTO-COMPRESION IDIOMA I\"); Seminario y Práctica Notarial sin año. La página dice que es Abogacía más la Práctica Notarial, pero eso no deja tomar los nombres de otro documento: no se carga (bitácora 84).",
+  "documentos": [
+   "https://www.jursoc.unlp.edu.ar/documentos/institucional/carreras/plan6ESCRIBANO.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Técnico Superior Universitario de Martillero público y Corredor",
+  "carrera_id": "dd218a5b-c530-4242-ba27-639407722802",
+  "motivo": "La página de carreras de la Facultad de Ciencias Jurídicas describe el título pero no enlaza un plan de estudios (bitácora 84).",
+  "documentos": [
+   "https://www.jursoc.unlp.edu.ar/index.php/estudiantes/informacion/carreras"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Escultura",
+  "carrera_id": "0245d4a0-d13c-44e6-938f-17f16d6f7ec4",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Música Popular",
+  "carrera_id": "05bd4b63-f8ef-4975-8f53-c0fcd85ffee4",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/musica-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Cerámica",
+  "carrera_id": "09ca4ff5-14ab-431c-88a2-5e77ad735d85",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Grabado",
+  "carrera_id": "1bd9d4aa-ffdc-4a70-a712-f66f134058d0",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Pintura",
+  "carrera_id": "20eef274-4eb5-4a10-a71c-e431d63fe15d",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Música Popular",
+  "carrera_id": "2c8911ea-df42-4002-9e98-671f475d2b20",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/musica-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Piano",
+  "carrera_id": "329b0a05-d910-4b45-b69f-ec8d8d46f0ab",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/piano/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Guitarra",
+  "carrera_id": "37fb5b3e-4908-4571-b9f5-18b654f20395",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/guitarra/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura en Música Popular",
+  "carrera_id": "48dfa92f-82b1-4c46-8388-ff82d24426f3",
+  "motivo": "La página de la carrera (www2.fba.unlp.edu.ar) no devuelve contenido: no hay plan que leer.",
+  "documentos": [
+   "https://www2.fba.unlp.edu.ar/musica/tecnicatura/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Escultura",
+  "carrera_id": "505d3ca0-0ccc-410b-a75f-471138b9c674",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura Universitaria en Fotografía",
+  "carrera_id": "5cf78d62-aefd-491b-a688-718a10e3716f",
+  "motivo": "La página de la carrera (www2.fba.unlp.edu.ar) no devuelve contenido: no hay plan que leer.",
+  "documentos": [
+   "https://www2.fba.unlp.edu.ar/artesvisuales/fotografia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Guitarra",
+  "carrera_id": "5eaa6d9f-1d5c-4dd6-8747-007db425be05",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/guitarra/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Dirección Orquestal",
+  "carrera_id": "648086e9-fe28-497b-86fd-544883e188a7",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-orquestal/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Dirección Coral",
+  "carrera_id": "659ec15f-0804-47c7-9d35-654e02505632",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-coral/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Dirección de Fotografía",
+  "carrera_id": "8233d6bc-49b1-4c1b-b10b-f0232015bdc7",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Teoría y Crítica",
+  "carrera_id": "9771852d-0e1f-4618-8d2f-496c4f5aaf0b",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Dirección Orquestal",
+  "carrera_id": "a13f17e8-7cd0-4763-adc5-45fe52e26756",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-orquestal/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Muralismo",
+  "carrera_id": "afb09ad8-8841-460d-b9e8-32a2a5a8a9f5",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Dibujo",
+  "carrera_id": "afd22529-8b46-4735-973f-46fbac655210",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Composición",
+  "carrera_id": "b2ee1652-f440-4d03-b3c0-f68ec522a2a5",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/composicion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Educación Musical",
+  "carrera_id": "b7e062d5-f55c-4c8d-b137-d8d0fb660ce8",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/educacion-musical/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Pintura",
+  "carrera_id": "ba1f54b9-01b6-49f9-8f73-d7212e553aac",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Composición",
+  "carrera_id": "c1861f86-40d0-43b7-946b-36d6ff9e8328",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/composicion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Grabado",
+  "carrera_id": "c23de4dc-768a-4d15-9f5d-766491264323",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Plásticas or. Escenografía",
+  "carrera_id": "ca29b71f-57ab-4851-a917-1f4dcfe21a38",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-visualea/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Muralismo",
+  "carrera_id": "cd986463-dac2-492e-a72d-f2c92ef6d2ca",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Cerámica",
+  "carrera_id": "de478ef0-4ef5-46cd-8b9f-80521e9a5c41",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Educación Musical",
+  "carrera_id": "f2a635c1-0a95-47ec-a353-99ca262508d8",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/educacion-musical/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Música or. Piano",
+  "carrera_id": "f478f9a4-b478-4870-ab68-cd8bdc689a65",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/piano/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Dibujo",
+  "carrera_id": "f47e1301-6992-459d-858f-5ded7fc9a31d",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Guión",
+  "carrera_id": "f5596045-0b7a-49c9-9a46-625e9686c7d4",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Música or. Dirección Coral",
+  "carrera_id": "f5cf8bef-e177-4ba1-84bf-fd1a40e43938",
+  "motivo": "La página del instrumento/orientación sirve a la Licenciatura y al Profesorado con una sola lista (con pasantía, trabajo final y didáctica juntos): no se puede saber cuál plan es cuál. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/direccion-coral/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Artes Plásticas or. Escenografía",
+  "carrera_id": "f8378bc1-22cb-43a9-be38-ee83d2f464d4",
+  "motivo": "La página trae una lista común de siete orientaciones y el plan de cada una es una imagen (PNG): no se puede cotejar nombre por nombre. No se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/profesorado-en-artes-visuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Artes Audiovisuales or. Realización",
+  "carrera_id": "fa0f30ef-9356-45dc-9e89-9e73dfea5e67",
+  "motivo": "La página lista un solo plan con cuatro orientaciones de 4.º y 5.º año mezcladas; el plan de cada orientación es un enlace aparte: no se carga.",
+  "documentos": [
+   "https://fba.unlp.edu.ar/licenciatura-en-artes-audiovisuales/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Profesorado en Comunicación Social",
+  "carrera_id": "0b735e6b-45dd-4b06-8161-b053630879ff",
+  "motivo": "El plan 2017 (PDF de 66 páginas) arma la carrera por ciclos y niveles (ciclo inicial, ciclo I, ciclo II) con electivas y optativas, y comparte el tronco con la Licenciatura; no dice en qué año se cursa cada materia: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/profesorado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Tecnicatura Universitaria en Comunicación Popular",
+  "carrera_id": "c05bf89c-57fb-4c82-bb88-04f09112a581",
+  "motivo": "El plan 2017 organiza las materias en bimestre inicial y tres ciclos, con opciones obligatorio-electivas dentro de cada ciclo y dos optativas; ninguna lleva año: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/comunicacion-popular/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Comunicación Social con Orientación Periodismo, Producción de contenidos y Gestión de Medios",
+  "carrera_id": "eb3fb293-31c8-4f9f-b0ec-2e55218dce3c",
+  "motivo": "La página enlaza un solo plan 2017 (y el 1998) para la Licenciatura con sus orientaciones; ciclo básico por niveles y ciclo superior con bandeja de optativas por orientación, sin año por materia: no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/licenciatura/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNLP",
+  "carrera": "Licenciatura en Comunicación Social con Orientación Planificación y Gestión de la Comunicación en Organizaciones",
+  "carrera_id": "cf7a8053-5052-4b9a-8fe4-762a067865e5",
+  "motivo": "Misma página y mismo plan que la otra orientación de la Licenciatura (orientaciones mezcladas, ciclos sin año por materia): no se carga.",
+  "documentos": [
+   "https://perio.unlp.edu.ar/academica/carreras/licenciatura/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería Química",
+  "carrera_id": "3bee7bf1-1850-4624-84e6-b319c730ec60",
+  "motivo": "La página de la carrera (ing.unsa.edu.ar) trae los contenidos sintéticos por área (básica, tecnologías), sin año por materia; la grilla del plan por año (aps.ing.unsa.edu.ar, pidplan=11) no responde: no se carga.",
+  "documentos": [
+   "https://ing.unsa.edu.ar/ingenieria-quimica"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "28f78947-3c1a-493c-ab3b-fb2a53a29ea1",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Filosofia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Filosofia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "c7ffa224-131a-4f94-bcd4-3e3af5f2e08a",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Filosofia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Filosofia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Antropología",
+  "carrera_id": "56fe1725-c38f-4e3f-aa21-37b412166b54",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Antropologia.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Antropologia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Ciencias de la Educación",
+  "carrera_id": "6fb27d5d-5e43-420f-a0da-88ba164774c0",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Educacion.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Educacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado Ciencias de la Educación",
+  "carrera_id": "bdd653f6-1dd6-4e42-95a5-e7c000db1482",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Educacion.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Educacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "b2723e99-263b-4f7d-866a-9506f6248b12",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Letras.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Letras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Letras",
+  "carrera_id": "c482a463-fa0a-4e3d-89c0-b2a942e767ec",
+  "motivo": "El plan oficial (hum.unsa.edu.ar/carreras/Letras.pdf) es un PDF escaneado sin capa de texto; no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Letras.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Historia",
+  "carrera_id": "b3ff0262-8f46-4d4d-a2ca-85ab8e798bc9",
+  "motivo": "El plan oficial (Res. CS 225/11, hum.unsa.edu.ar/carreras/Historia.pdf) es un PDF escaneado sin capa de texto; el reparto por año es una grilla de cajas con nombres partidos en renglones y el OCR la mezcla (Licenciatura): no se puede verificar cada nombre literalmente, no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Historia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Profesorado en Historia",
+  "carrera_id": "d198b5b3-83e0-44e5-8900-08b08ae1a470",
+  "motivo": "El plan oficial (Res. CS 225/11, hum.unsa.edu.ar/carreras/Historia.pdf) es un PDF escaneado sin capa de texto; el reparto por año es una grilla de cajas con nombres partidos en renglones y el OCR la mezcla (Profesorado): no se puede verificar cada nombre literalmente, no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Historia.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Ciencias de la Comunicación",
+  "carrera_id": "420bcb57-205c-4d26-a5e6-20a143c7c751",
+  "motivo": "El PDF de la carrera (Res. CS 182/09) es un escaneo con texto de OCR defectuoso ('£TICA', 'OE RADIÓ II', 'LACOMUNiCACIÓN') y junta dos estructuras curriculares; los nombres no se pueden cotejar literalmente: no se carga.",
+  "documentos": [
+   "https://hum.unsa.edu.ar/carreras/Comunicacion.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Contador Público Nacional",
+  "carrera_id": "4cf5ae64-aebc-4de8-9d31-a1742db10bf5",
+  "motivo": "El plan oficial (Res. CS 439/18, 23 páginas) es un PDF escaneado sin capa de texto; el OCR de la grilla por año sale desordenado (columnas y nombres mezclados). La sección de contenidos mínimos tiene los nombres limpios pero sin año, que no se puede inferir: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2018/R-CS-2018-0439.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Contabilidad",
+  "carrera_id": "9c5a5d56-df0d-48d0-bc63-175f6b99e4e6",
+  "motivo": "El plan oficial (Res. CS 188/21) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2021/R-CS-2021-0188.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Administración",
+  "carrera_id": "690e195e-3a7f-4687-b0a4-bae6a1aadce4",
+  "motivo": "El plan de las carreras de Económicas enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "a67eb75a-d12e-4e80-b01c-60e5688b55a6",
+  "motivo": "El plan de las carreras de Económicas enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Gestión de Turismo",
+  "carrera_id": "3f9f8725-0472-437d-933a-bc72d159363f",
+  "motivo": "El plan enlazado en la página (Res. CS 521/13) es un PDF escaneado sin capa de texto: no hay documento con texto contra el cual verificar cada nombre de materia: no se carga.",
+  "documentos": [
+   "https://bo.unsa.edu.ar/cs/R2013/R-CS-2013-0521.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Medicina",
+  "carrera_id": "33bbbe6e-8159-4ede-9ce8-940837b1d914",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/2016-12-13-16-04-27/noticias"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Enfermería",
+  "carrera_id": "f41b54a7-8b44-4e31-832f-9ca12fecf7fe",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/enfermeria"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Enfermería",
+  "carrera_id": "d70c3b77-09c6-4858-a537-ac9747d83114",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/licenciatura-en-enfermeria-plan-2018/plan-de-estudio"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Licenciatura en Nutrición",
+  "carrera_id": "f5208e93-cc04-419f-9de0-99e7c49eb9ca",
+  "motivo": "La página de la carrera (fsalud.unsa.edu.ar) devuelve 404 y la raíz del sitio muestra el panel de un servidor XAMPP (dashboard), sin contenido de la facultad; no hay documento del plan: no se carga.",
+  "documentos": [
+   "http://fsalud.unsa.edu.ar/salud/index.php/carreras/2013-10-29-12-49-32/2015-03-11-14-38-45"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería en Perforaciones",
+  "carrera_id": "df7b9732-ab1f-4656-b6f2-d1ef729cbc86",
+  "motivo": "El sitio de la facultad (natura.unsa.edu.ar) no responde (timeout) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://natura.unsa.edu.ar/web/index.php/carreras/sede-regional-tartagal/ingenieria-en-perforaciones"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Perforaciones",
+  "carrera_id": "081d07ad-4d86-4880-bb9a-dc5db03d3fa8",
+  "motivo": "El sitio de la facultad (natura.unsa.edu.ar) no responde (timeout) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://natura.unsa.edu.ar/web/index.php/carreras/sede-regional-tartagal/tecnicatura-universitaria-en-perforaciones"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Recursos Forestales",
+  "carrera_id": "5e3db9c3-ec8e-4f2f-8495-2a91194b8c6b",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/tecnicatura-universitaria-en-recursos-forestales"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Ingeniería en Recursos Naturales y Medio Ambiente",
+  "carrera_id": "58cf235f-1388-4372-bc0b-bd525bfb64db",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/ingenieria-en-recursos-naturales-y-medio-ambiente"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Administración de Empresas Agropecuarias",
+  "carrera_id": "bf5fcc4f-6b60-4ad3-8bd0-f969276deaca",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencia-naturales/tecnicatura-universitaria-en-administracion-de-empresas-agropecuarias"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNSa",
+  "carrera": "Tecnicatura Universitaria en Laboratorio de Análisis Clínicos y Microbiológicos",
+  "carrera_id": "9413316c-24b8-45cc-989f-fa4c3abdd506",
+  "motivo": "El sitio de la sede (sroweb.unsa.edu.ar) no resuelve el nombre (DNS) y no hay otro documento oficial del plan: no se carga.",
+  "documentos": [
+   "http://sroweb.unsa.edu.ar/webpage/index.php/carreras/ciencias-de-la-salud/tecnicatura-universitaria-en-laboratorio-de-analisis-clinicos-y-microbiologicos"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Abogacía",
+  "carrera_id": "cceb6c9a-9a31-4da6-a7f0-3d74a8c9c678",
+  "motivo": "El plan enlazado (PLAN_2012-1.pdf, Res. CS 447/2011) es un escaneo sin texto con OCR ruidoso, y la misma página publica un plan de transición 2011-2015 (Res. CD 728/18): el plan 2012 puede no ser el vigente (bitácora 25).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-academica/carreras-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Derecho",
+  "carrera_id": "44d9dd1c-4f20-4170-90e2-5613a60696ae",
+  "motivo": "El plan enlazado (PLAN_2012-1.pdf, Res. CS 447/2011) es un escaneo sin texto con OCR ruidoso, y la misma página publica un plan de transición 2011-2015 (Res. CD 728/18): el plan 2012 puede no ser el vigente (bitácora 25).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-academica/carreras-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Medicina",
+  "carrera_id": "3f500804-8b95-4b9a-8faa-899c173a6bce",
+  "motivo": "El plan (Res. CS 158/2001, fcm.unr.edu.ar) es un mapa curricular por áreas y ciclos vitales, sin materias por año; además hay una resolución posterior (CS-31-24) sin revisar (bitácora 31).",
+  "documentos": [
+   "https://fcm.unr.edu.ar/medicina-informacion/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Psicología",
+  "carrera_id": "d01b7141-dc4a-4ba4-af07-44b86a33ffc6",
+  "motivo": "El plan 2014 (Res. CS 437) es un PDF escaneado sin texto; la página de la carrera solo trae las asignaturas por área y sus contenidos mínimos, sin año por materia (bitácora 31, releído en el ciclo 92).",
+  "documentos": [
+   "https://fpsico.unr.edu.ar/carreras/psicologia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Arquitectura",
+  "carrera_id": "10fc5802-df2e-418d-bfa6-c318b5048c26",
+  "motivo": "La facultad está cambiando el plan (grilla «preliminar» aprobada por el Consejo Directivo); un plan en transición no se carga hasta que haya uno vigente (bitácora 30).",
+  "documentos": [
+   "https://fapyd.unr.edu.ar/arquitectura/plan-de-estudios/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ciencia de Datos",
+  "carrera_id": "0a1810cb-4279-4073-909e-d6c66503a7cf",
+  "motivo": "La tabla de la página («en construcción») está vacía y el plan 2024 está solo en Google Drive; la página muestra 5 años y el catálogo dice 4 (bitácora 43).",
+  "documentos": [
+   "https://www.fcecon.unr.edu.ar/carreras/grado/licenciatura-en-ciencia-de-datos-pagina-en-construccion"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "fc254c94-9e5e-48bc-947b-dd2e15f66b2c",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/licenciatura-en-letras/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Bellas Artes",
+  "carrera_id": "750416d4-d45c-46cd-a6db-0059a7080a44",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/licenciatura-en-bellas-artes/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Bellas Artes",
+  "carrera_id": "c175f731-37b7-4657-88da-b4b41878649f",
+  "motivo": "4.º y 5.º año por orientación (ciclos y orientaciones mezclados) y el PDF del plan está solo en Google Drive (bitácora 37).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/profesorado-en-bellas-artes/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Química",
+  "carrera_id": "51bc077a-6995-477b-8036-070cfc0b1483",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Plásticos y Elastómeros",
+  "carrera_id": "d68638a3-87d7-4427-ae40-4339f4c7c2dd",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Sistemas Electrónicos",
+  "carrera_id": "3aff0414-b90f-4635-96ec-232be574c42f",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Construcciones",
+  "carrera_id": "50d1c786-3571-4401-8ac0-e18898a5eb6a",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Mecatrónica",
+  "carrera_id": "e4906dee-4f29-4f1d-b07c-4908812f98d7",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Óptica",
+  "carrera_id": "f7e115d5-4069-4683-9876-ebf3b44dcd56",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Óptica y Contactología",
+  "carrera_id": "08d0f808-b307-4232-8069-bb7e3a21b392",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Analista Universitario en Sistemas",
+  "carrera_id": "8d7af041-7b2d-4453-a427-44aff906b64c",
+  "motivo": "Cada página del Politécnico (ips.edu.ar) enlaza un PDF y además un «Plan vigente» solo en Google Drive que no respondió; sin poder confirmar que el PDF del sitio es el vigente (bitácora 43), no se carga.",
+  "documentos": [
+   "https://unr.edu.ar/tecnicaturas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Civil",
+  "carrera_id": "1110c273-7c5e-4613-9a82-98223215d48a",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Mecánica",
+  "carrera_id": "3b897121-cf70-4794-b4b4-9a25c89bf25d",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 26).",
+  "documentos": [
+   "https://fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_375_2014_CS_Plan_2014__Ingenieria_Mecanica_1.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Eléctrica",
+  "carrera_id": "81a760f9-17e2-486a-857d-f84c9c5ce49e",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "90b685b7-8989-4508-9457-36ddb3c24356",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Agrimensura",
+  "carrera_id": "91a93579-9c23-43cd-9aa1-ffb8dbf28408",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 26).",
+  "documentos": [
+   "https://fceia.unr.edu.ar/images/PDF/planes_de_estudio/Res_374_2014_CS_Plan_2014__Agrimensura.pdf"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Matemática",
+  "carrera_id": "3cb03b6a-32ec-4b15-b5e0-26a0172f1bb9",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Física",
+  "carrera_id": "bbcabf08-05a1-43b2-ab19-2631c6d5c38f",
+  "motivo": "El PDF oficial del plan 2014 en fceia.unr.edu.ar es un escaneo sin texto (pdftotext ~25 bytes); un plan por OCR sin comprobar no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Ciencias de la Computación",
+  "carrera_id": "b7d3736c-0b9c-4ef2-b37e-80621746e334",
+  "motivo": "El PDF legible es del plan 2010 y la página vigente dice plan 2024 (PDF escaneado): un plan viejo no se carga (bitácora 23).",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Química",
+  "carrera_id": "7afb4b9f-549a-459c-8c8e-a2b1a2127b0a",
+  "motivo": "La página de la FCByF publica dos planes (uno sin correlativas y «Plan de Estudios 2018») con materias y cargas distintas, sin decir cuál rige; pendiente de que una persona confirme el vigente (bitácora 33).",
+  "documentos": [
+   "https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Fonoaudiología",
+  "carrera_id": "a93b6270-2782-46d1-899c-034eaf5afda1",
+  "motivo": "El plan 2024 de fcm.unr.edu.ar se publica solo como descarga de Google Drive, fuera del dominio de la UNR; el cargador lo rechaza (bitácora 36).",
+  "documentos": [
+   "https://fcm.unr.edu.ar/fonoaudiologia-plan-2024/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Interpretación",
+  "carrera_id": "2acd2895-ce0d-487d-9804-2e20f2da75fa",
+  "motivo": "Nombre genérico de una lista vieja: Humanidades hoy publica una carrera por instrumento, que ya tienen plan; revisar si sobra en el catálogo (bitácora 38).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Licenciatura en Interpretación",
+  "carrera_id": "d8a2549e-bcbd-47c2-9578-877163d5a3e1",
+  "motivo": "Nombre genérico de una lista vieja: Humanidades hoy publica una carrera por instrumento, que ya tienen plan; revisar si sobra en el catálogo (bitácora 38).",
+  "documentos": [
+   "https://fhumyar.unr.edu.ar/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Notariado",
+  "carrera_id": "bf07d5ed-9d89-4cfd-b94d-458ceae06f19",
+  "motivo": "Es una carrera de la Escuela de Graduados (posgrado, Res. Ministerio 151/96): la página solo trae inscripción y requisitos, sin plan de estudios publicado.",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/secretaria-de-graduados/carreras_posgrado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Corretaje Inmobiliario",
+  "carrera_id": "2d4ea6d6-ac31-4a00-adf9-2e12e71a675d",
+  "motivo": "La página de la facultad solo trae las fechas y pasos de ingreso; el plan de estudios no está publicado (solo el reglamento de cursado, CD 448/2023).",
+  "documentos": [
+   "https://www.fder.unr.edu.ar/portfolio-item/ingreso-2024-corretaje-inmobiliario/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado en Derecho",
+  "carrera_id": "8a7a1ebb-dd7d-4563-8c2f-30f5303d8c6a",
+  "motivo": "La página de Carreras de Grado de la facultad no publica un plan para este profesorado; solo está listado en el índice de profesorados de la UNR.",
+  "documentos": [
+   "https://unr.edu.ar/profesorados-de-grado/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Matemática",
+  "carrera_id": "25020378-f829-4aa2-a806-d6041a2c10f1",
+  "motivo": "El plan vigente (Plan 2018, Res. CD 933/17) está en un PDF escaneado sin texto; el texto legible de la resolución no trae las materias: no se carga.",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/es/profesorado-de-matem%C3%A1tica.html"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Física",
+  "carrera_id": "beed7494-9071-499f-ae0d-eab76ba27376",
+  "motivo": "El plan (Res. CS 306/2015) es un PDF escaneado sin texto: no se carga.",
+  "documentos": [
+   "https://web.fceia.unr.edu.ar/es/profesorado-en-f%C3%ADsica.html"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Profesorado de Psicología",
+  "carrera_id": "d722aad0-a4cf-4569-bab3-d5785a3c23b6",
+  "motivo": "El plan (Plan-profesorado.pdf, 33 páginas) es un PDF escaneado sin texto: no se carga.",
+  "documentos": [
+   "https://fpsico.unr.edu.ar/carreras/profesorado-en-psicologia/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNR",
+  "carrera": "Tecnicatura Universitaria en Administración de Empresas",
+  "carrera_id": "c2f248a0-b0e2-4d9e-8aa7-a92d971291c5",
+  "motivo": "El Campus Virtual solo publica un programa por año en PDF escaneado sin texto (tercer año en dos orientaciones, uno de ellos con el archivo dañado): no hay lista de materias legible.",
+  "documentos": [
+   "https://www.campusvirtualunr.edu.ar/oferta_academica/tecnicaturas/tecnicatura_administracion_empresas.html"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Ciencias Biológicas",
+  "carrera_id": "cb5cea14-5bed-4d08-962f-09e632015319",
+  "motivo": "El único plan en PDF de la página (Plan 2000 mod. 2007) es el anterior: el vigente es el Plan 2000 mod. 2013 (implementado desde 2014), cuya página de detalle (csnat.unt.edu.ar/carreras/lic-cs-biologicas/...) da 404 y la página solo resume (26 obligatorias, 8 optativas, tesina). Cargar el plan 2007 sería un plan desactualizado: no se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/licenciatura-en-ciencias-biologicas/"
+  ],
+  "revisado": "2026-10-24"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Informática",
+  "carrera_id": "9dca7d4f-d079-4923-9d95-2e9fe06023e6",
+  "motivo": "El plan (Modificación 2009, FACET) se publica en módulos I a X, sin año: pasar módulos a años sería inferirlo y el reglamento de correlativas vigente (RES FACET DDAC 17056/2025) tampoco trae años. No se carga.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/licinformatica/plan-de-estudio/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Ingeniería Mecánica",
+  "carrera_id": "4b620a72-38c7-41a6-ba92-1c03ecbcd814",
+  "motivo": "Los PDF del plan en la página de la carrera son una traducción al inglés (cuadro por módulos y contenidos de asignaturas en inglés) y un escaneo de 31 páginas sin texto: no hay lista oficial en español que se pueda comprobar nombre por nombre.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/ingmecanica/plan-de-estudios/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Ingeniería Industrial",
+  "carrera_id": "00e09f00-87bc-4b8e-9f17-abd6924a382d",
+  "motivo": "El plan está repartido en cinco páginas por año (1o-ano a 5-ano) y la lista de programas omite el primer año; no hay un único documento oficial contra el que comprobar los nombres de las 44 materias, y el verificador lee un solo enlace.",
+  "documentos": [
+   "https://www.facet.unt.edu.ar/ingindustrial/plan-de-estudio/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Abogacía",
+  "carrera_id": "b2944e56-5ba3-4e0d-be44-ef88ce4365fb",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-abogacia/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Escribanía",
+  "carrera_id": "8a5cec2f-f817-4395-a3a7-f02ea344e43f",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-escribania/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Procuración",
+  "carrera_id": "2c532338-58b8-43b2-a16f-f93a02d3bf79",
+  "motivo": "La página de la carrera en derecho.unt.edu.ar no publica el plan de estudios; el único PDF del sitio es el de correlativas de Notariado (Plan 2000), una lista de correlatividades sin año. No hay documento oficial con las materias por año contra el que comprobar nombres: no se carga.",
+  "documentos": [
+   "https://derecho.unt.edu.ar/carreras-de-grado-procuracion/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "6cd0e47a-f1d9-4bb8-bff2-47a889500ac3",
+  "motivo": "La página oficial de la Facultad de Educación Física (Plan 2000) lista las materias por categorías (obligatorias, deportes, orientaciones, talleres, niveles de inglés) sin año de cursada: asignar años sería inferirlo. No se carga.",
+  "documentos": [
+   "https://www.facdef.unt.edu.ar/profesorado.html"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Contador Público",
+  "carrera_id": "9dab70c6-a1bc-43d9-9e41-89b0d7e9386c",
+  "motivo": "El plan 2018 (Res. HCS) solo se publica como PDF escaneado de 3.800 líneas con OCR ilegible (columnas y renglones mezclados): no se puede comprobar cada nombre contra el documento. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/archivos-publicaciones/Plan_de_estudio_2018_con_modif.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Administración",
+  "carrera_id": "fc8c847f-119f-4fba-81c2-d41b4f482006",
+  "motivo": "La página de la carrera en face.unt.edu.ar solo da la cantidad de materias (34) y la duración; no enlaza ni publica el plan de estudios. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/carreras/licenciatura-en-administracion/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Economía",
+  "carrera_id": "8e5d9c55-bc9f-480d-bde6-4f3d052a8b5b",
+  "motivo": "La página de la carrera en face.unt.edu.ar no enlaza ni publica el plan de estudios. No se carga.",
+  "documentos": [
+   "https://face.unt.edu.ar/web/carreras/licenciatura-en-economia/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado en Letras",
+  "carrera_id": "8dab72d0-9d42-4d96-a5b4-6c77a2fdafc6",
+  "motivo": "El folleto oficial pone el Ciclo Superior en una sola columna sin año (con bolsas de electivas y optativas); no se infiere el año de cada materia. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_letras_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Letras",
+  "carrera_id": "724deb62-e45f-4c12-a0a6-1a6844fe3d35",
+  "motivo": "El folleto oficial pone el Ciclo Superior en una sola columna sin año (con bolsas de electivas, optativas y Tesis); no se infiere el año de cada materia. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_letras_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Inglés",
+  "carrera_id": "67108db5-65b9-46b8-8a54-dad2e422a0cb",
+  "motivo": "El folleto oficial trae tres orientaciones (Lingüística, Historia, Literatura) con planes distintos y la carrera es una sola; cargarlas juntas mezclaría orientaciones. No se carga.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_ingles_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Medicina Veterinaria",
+  "carrera_id": "7d2931c2-96ec-49ea-b481-e123e45baacc",
+  "motivo": "El Plan 2018 es un escaneo: la malla curricular (cuadro por módulo y ciclo) sale desordenada por OCR y el resto del documento son programas por asignatura sin año; no se carga.",
+  "documentos": [
+   "https://faz.unt.edu.ar/idehost/wp-content/uploads/2024/02/Plan-de-estudio-2018DOC280319-Veterinaria-Rectif-8.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Medicina",
+  "carrera_id": "ab1d6d25-c95d-40c0-8b31-01f035445da3",
+  "motivo": "La base tenía 26 renglones sin año y con nombres cortados en varias líneas (\"RADIOLOGÍA, DIAGNÓSTICO / POR IMÁGENES Y TERAPIA / RADIANTE I\", \"MÓDULO\" suelto) para una carrera de 7 años: no era un plan comprobable y se borró. No se encontró todavía un documento oficial con las materias por año de la Facultad de Medicina; hay que ubicarlo (la oferta no tiene enlace oficial) antes de volver a cargarla.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Arqueología",
+  "carrera_id": "30db165b-ce59-4191-9dc3-619d1071e738",
+  "motivo": "Las resoluciones de 1998-99 son escaneos: el OCR rompe nombres (\"CEOLOGIA\", \"APQUEOLOGiA\") y pierde renglones, y el plan trae Materias de Especialidad I-III genéricas; no se pueden comprobar los nombres. No se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._RR_-_812-98.pdf",
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._Res_Minist_1227-99.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitaria en Documentación y Museología Arqueológica",
+  "carrera_id": "683dbf4e-50dd-47a1-a036-686bf13a80ab",
+  "motivo": "Comparte con Arqueología las resoluciones escaneadas de 1998-99 (OCR roto, renglones perdidos): los nombres no se pueden comprobar. No se carga.",
+  "documentos": [
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._RR_-_812-98.pdf",
+   "https://csnat.unt.edu.ar/wp-content/uploads/2026/03/Arqueologia_y_Tecnico_Universitario_en_Docume._Res_Minist_1227-99.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Licenciatura en Cinematografía",
+  "carrera_id": "b4b68e26-ce92-4f84-9a14-e2f62426496c",
+  "motivo": "La página y el PDF 'Plan de Estudio 2025' de la Escuela de Cine son una lista de cátedras con docentes: 2.º y 3.º año repiten seminario y taller de 'Roles de producción audiovisual' por cada una de las seis orientaciones (cámara y fotografía, dirección, guion, montaje, producción, sonido), 4.º tiene solo 'Asignatura por orientación' y el sitio escribe mal nombres ('audiovisua'). No se puede saber qué materias cursa cada estudiante ni comprobar nombres limpios: no se carga.",
+  "documentos": [
+   "https://www.escueladecine.unt.edu.ar/plan-de-estudio/",
+   "https://www.escueladecine.unt.edu.ar/wp-content/uploads/2025/08/Plan-de-Estudio-2025.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitaria en Medios Audiovisuales",
+  "carrera_id": "57c32f50-aac2-4422-92fa-dc88fdf5c1eb",
+  "motivo": "La tecnicatura (3 años) es el tramo inicial del plan de la Lic. en Cinematografía y el sitio de la Escuela de Cine solo publica una lista de cátedras con docentes de los 5 años, con seis orientaciones desde 2.º. No hay un plan propio de la tecnicatura que separe sus materias ni nombres limpios para comprobar: no se carga.",
+  "documentos": [
+   "https://www.escueladecine.unt.edu.ar/plan-de-estudio/"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitaria en Diseño de Indumentaria y Textil",
+  "carrera_id": "ce512130-d48a-46f2-a4c0-c2dcbcf87198",
+  "motivo": "La página de la FAU solo describe las 4 áreas y el régimen (36 materias, 1860 hs); la única lista de materias es el díptico PDF 2026, un folleto con columnas por año donde las materias vienen en pares ('Taller de Diseño I y II', 'Moldería Base I y II') que no se pueden comprobar una por una, y 'Gestión Empresarial' (área de Gestión) no aparece en ninguna columna de año. Repartir los pares y ubicar esa materia sería inferir: no se carga hasta que la facultad publique el plan completo.",
+  "documentos": [
+   "https://fau.unt.edu.ar/fau/tecnicatura-universitaria-en-diseno-de-indumentaria-y-textil/",
+   "https://fau.unt.edu.ar/fau/wp-content/uploads/2025/10/DipticoFAU-TUDIT-2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado de Educación Primaria",
+  "carrera_id": "64da8c66-0bff-4275-ab70-8306fa14b2c7",
+  "motivo": "El plan se publica solo como imagen JPG (cuadro por campo de formación y año, sin texto). El OCR del repo confirma los nombres pero mezcla las columnas y pierde el año de cada materia, así que el año no lo comprueba el código; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. No se carga hasta que una persona lo copie y revise.",
+  "documentos": [
+   "https://elvs-tuc.infd.edu.ar/sitio/profesorado-de-educacion-primaria/",
+   "https://elvs-tuc.infd.edu.ar/sitio/wp-content/uploads/2020/06/plan-de-estudio-primaria-.jpg"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Profesorado de Educación Inicial",
+  "carrera_id": "d0d5795d-d40b-423e-b766-0969737dfb30",
+  "motivo": "El plan se publica solo como imagen JPG (cuadro por campo de formación y año, sin texto). El OCR del repo confirma los nombres pero mezcla las columnas y pierde el año de cada materia, así que el año no lo comprueba el código; `planes_manuales` solo acepta imágenes con revisión a mano de una persona. No se carga hasta que una persona lo copie y revise.",
+  "documentos": [
+   "https://elvs-tuc.infd.edu.ar/sitio/profesorado-de-educacion-inicial/",
+   "https://elvs-tuc.infd.edu.ar/sitio/wp-content/uploads/2021/05/plan-de-estudio-EInicial.jpg"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UNT",
+  "carrera": "Tecnicatura Universitario en Comunicación",
+  "carrera_id": "d5188513-1a7f-4de4-8a4e-8022cd9d0f97",
+  "motivo": "Es el título intermedio (3 años) de la Lic. en Ciencias de la Comunicación; el folleto oficial de filo.unt.edu.ar no trae un plan propio de la tecnicatura y repartir las materias de la licenciatura sería inferirlo.",
+  "documentos": [
+   "https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_comunicacion_2026.pdf"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Accidentología Vial",
+  "carrera_id": "0699269a-f395-4750-98f0-c4a2f9421cfd",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/49"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Canto Popular",
+  "carrera_id": "07958c85-ae3b-46f5-9329-a52c956f0db7",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/90"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Psicogerontología",
+  "carrera_id": "089f1ad5-f9c3-4acf-885d-3d9b9589fe6f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/106"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Psicología",
+  "carrera_id": "167c9a26-5a16-4d62-84bb-9bf7f65b5317",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/96"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Laboratorio",
+  "carrera_id": "174f1cde-4484-48fe-8357-b3a64916e46c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/33"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Psicología",
+  "carrera_id": "17b7e47a-ad7d-43d0-80e9-dd20d67ebf86",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Enfermería",
+  "carrera_id": "18d54e40-0913-44c2-91a9-bf5e35c74352",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/28"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Teatro",
+  "carrera_id": "1a8d6246-1f2a-42bd-abdb-6fe20859b99c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Física",
+  "carrera_id": "1e64312a-f111-426c-8262-459b602ffa1d",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Cerámica",
+  "carrera_id": "21825512-2aff-463b-956f-9dfa573856dd",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/101"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Instrumento",
+  "carrera_id": "2b2c98c4-643a-4f20-ad8f-43162e05a680",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/77"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Canto Lírico",
+  "carrera_id": "314bffa2-1ecd-48a0-8c6d-8a153eaecd55",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/68"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Grabado",
+  "carrera_id": "33faca5f-528d-4cab-9691-510ab542e8e0",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/103"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Historia",
+  "carrera_id": "3edcfd92-4580-4355-81b4-57b9d3bcbdda",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Administración Pública",
+  "carrera_id": "4679bf35-4048-4dc0-a18c-668c34da428e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/20"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Podología Universitaria",
+  "carrera_id": "46c1e0a7-694e-4ab2-a453-d8574e1fcf50",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/38"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Higiene y Salud Animal",
+  "carrera_id": "4ae1c8b8-9272-4105-be0e-3a7141a97e42",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/36"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Artes Visuales",
+  "carrera_id": "50d83934-ada7-4936-bfa0-c0f1dccc27e6",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Inicial",
+  "carrera_id": "529a7714-5cc5-4e7c-8463-4a40eb2d8ab1",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Actividad Física y Deporte",
+  "carrera_id": "52f5a2d3-1bd7-465b-b05b-573a45c81d66",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/34"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Pintura",
+  "carrera_id": "53525acf-be82-4043-8254-52d605f0ea46",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/105"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Producción de Bioimágenes",
+  "carrera_id": "5d2f65ac-48d8-4e46-920d-00fb4b412807",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/39"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Acompañamiento Terapéutico",
+  "carrera_id": "60885b71-f816-4683-80b5-759804579096",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/99"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Turismo",
+  "carrera_id": "63309835-2761-46f0-9f94-afcd9424d402",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/17"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Portugués",
+  "carrera_id": "635ec6da-c238-4aa6-baf2-3b4e816160a0",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Primaria",
+  "carrera_id": "67131093-fc01-4796-83ea-56557a8a804c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Administración de Empresas",
+  "carrera_id": "678a8a59-ad5b-43ea-b355-c691396b18b8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/19"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Higiene y Seguridad Laboral",
+  "carrera_id": "71e6f65e-4b44-4d7a-8303-dc85e6cfaaf3",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/30"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Actividad Física y Deporte",
+  "carrera_id": "7313aac5-70f2-4da9-919d-ed6419ed630a",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/161"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Geografía",
+  "carrera_id": "735b3a41-0308-4247-9039-8adb076e5d5f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Artes Visuales",
+  "carrera_id": "76090d7f-ddae-4724-a712-2303089f20c6",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/88"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Escultura",
+  "carrera_id": "7a9822a6-d043-48e9-8585-42cdd066e4d3",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/102"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Archivología",
+  "carrera_id": "7e9934f2-56cf-4d6d-90df-ebe6b7512a10",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/21"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Inglés",
+  "carrera_id": "7fd888ba-035c-4758-aef2-51080a098e5b",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Geografía",
+  "carrera_id": "80bb59f4-9407-40f0-ab97-29496d6b6949",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/93"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Canto Lírico",
+  "carrera_id": "81cfa14b-21a6-496f-adb0-7cd7fc9023ae",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/100"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Higiene y Seguridad Laboral",
+  "carrera_id": "828896d9-8dfe-4f63-bf0c-e99f341becb9",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/37"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Enfermería Universitaria",
+  "carrera_id": "83ee6dcc-6de6-4fdf-992d-526f3f76e883",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/35"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Interpretación Instrumental (Guitarra)",
+  "carrera_id": "8c84df8f-7b6e-497e-b11b-6b34bf8dc04f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/95"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Podología",
+  "carrera_id": "8d0937aa-2990-413f-a183-20baa49a3ec8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/177"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Ciencias Sociales",
+  "carrera_id": "8d60e845-6e11-40d7-97b2-a71ea8bd05c8",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/69"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Producción Agropecuaria",
+  "carrera_id": "8ea6497b-818b-4132-b60e-4bffa78425c2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/47"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Traductorado en Italiano",
+  "carrera_id": "9704c672-a1ad-4114-9c24-56a6952e687e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/98"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Producción de Bioimágenes",
+  "carrera_id": "a0027de1-f39d-4d6e-bf38-022de65f117d",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/31"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Prótesis Dental",
+  "carrera_id": "ad106814-af3d-4c5f-a772-4448eb4da129",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/40"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Producción Porcina",
+  "carrera_id": "ad6ba744-b81b-41e7-8bad-e7f4bc5d6d74",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/60"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Instrumentista Musical",
+  "carrera_id": "ad99c848-bcb7-412b-b65e-6919dd9b154e",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/104"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Historia",
+  "carrera_id": "ae205d13-7839-428a-ad95-c7540b01878f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/94"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Tecnológica",
+  "carrera_id": "b8fb52ab-2458-4964-aca5-b2bf615964da",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Traductorado en Francés",
+  "carrera_id": "ba09444b-700a-4c1d-a051-407e5af12c57",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/97"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Seguridad Pública",
+  "carrera_id": "bb2dfa82-ce70-4d15-bc6e-a563fd5d54e2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/170"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Canto Lírico",
+  "carrera_id": "bb3a284c-e096-4311-83e1-309cf970cbec",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/89"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Ciencias Sociales",
+  "carrera_id": "be888b56-7828-4511-b858-54aca101b5b2",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/91"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Italiano",
+  "carrera_id": "c1dd4e1f-3271-420b-ace3-0a6b7c901a17",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Guía de Turismo",
+  "carrera_id": "ca78c1e9-e183-4804-ac14-68c2b094ab7f",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/18"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Filosofía",
+  "carrera_id": "d1455df0-1552-4095-9513-2fa7068cc7a9",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Educación Especial",
+  "carrera_id": "d453cfc3-e80a-4ae6-9ba8-94d5317fcb20",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Automatización y Control de Procesos Industriales",
+  "carrera_id": "d99d2111-1288-4d5d-879c-cc1564bfe183",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/43"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Música",
+  "carrera_id": "dbff70fb-bbaa-4aeb-8530-2629bef58f76",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Bibliotecología",
+  "carrera_id": "e52459b1-5625-495f-8816-ca5bc0089360",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/11"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Licenciatura en Filosofía",
+  "carrera_id": "f1c762c0-24c6-4ace-8f90-c5628116223c",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/92"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Francés",
+  "carrera_id": "f90bdba7-2682-4858-af94-fa306dd9f1e1",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Tecnicatura en Archivología",
+  "carrera_id": "fd7d2d12-2160-433d-a64b-3ccefde6da35",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [
+   "https://ingresantes.uader.edu.ar/node/10"
+  ],
+  "revisado": "2026-10-25"
+ },
+ {
+  "universidad": "UADER",
+  "carrera": "Profesorado en Lengua y Literatura",
+  "carrera_id": "fe6002af-e249-427d-97d7-4eb176664325",
+  "motivo": "El plan de estudios se publica solo como enlace a un archivo de Google Drive desde la ficha de ingresantes.uader.edu.ar (o a un subdominio de facultad que respondió 504); Drive no es el dominio de la universidad y `planes_manuales` solo acepta enlaces del dominio oficial, así que el código no puede leer ni verificar el documento. Pendiente hasta que la UADER lo publique en su dominio.",
+  "documentos": [],
+  "revisado": "2026-10-25"
+ }
+]

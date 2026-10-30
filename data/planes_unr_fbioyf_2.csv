@@ -1,0 +1,94 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Licenciatura en Biotecnología;5.0;;;https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/licbiotecnologia.php;"1|Seminario Introductorio a la Problemática Biotecnológica
+1|Química General e Inorgánica
+1|Matemática I
+1|Física I
+1|Matemática II
+2|Taller de Problemática Biotecnológica
+2|Biología
+2|Química Orgánica I
+2|Física II
+2|Taller de Computación
+2|Química Orgánica II
+2|Taller de Matemática Aplicada
+2|Fisicoquímica I
+2|Estadística
+3|Química Biológica
+3|Química Analítica I
+3|Fisicoquímica II
+3|Taller de Inglés
+3|Epistemología y Metodología de la Investigación
+3|Biología Animal y Vegetal
+3|Química Analítica II
+4|Procesos Biotecnológicos I
+4|Fisiología Microbiana
+4|Biofísica
+4|Taller de Bioinformática
+4|Genética Microbiana
+4|Procesos Biotecnológicos II
+4|Biología Molecular
+5|Proyectos Biotecnológicos
+5|Tesina";lector Claude máquina fija;;"Tabla HTML del plan; afuera: Optativas/Electivas";UNR;6ffa2a27-99b3-4273-8f29-13414e5f1e63
+UNR;Licenciatura en Ciencia y Tecnología de los Alimentos;5.0;;;https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/liccytalimentos.php;"1|Seminario Introductorio a la Problemática de los Alimentos
+1|Química General e Inorgánica
+1|Matemática I
+1|Física I
+1|Matemática II
+2|Taller de Problemática Profesional I
+2|Biología
+2|Química Orgánica I
+2|Física II
+2|Taller de Idiomas
+2|Taller de Computación
+2|Química Orgánica II
+2|Fisicoquímica I
+2|Estadística
+3|Bioquímica
+3|Química Analítica I
+3|Fisicoquímica II
+3|Química Analítica II
+3|Taller de Problemática Profesional II
+3|Química de los Alimentos
+3|Historia y Sociología de la Alimentación
+4|Epistemología y Metodología de la Investigación
+4|Microbiología General
+4|Análisis de los Alimentos
+4|Nutrición
+4|Microbiología de los Alimentos
+4|Toxicología de los Alimentos
+4|Propiedades Fisicoquímicas y Funcionales de los Alimentos
+4|Legislación y Control de Calidad de los Alimentos
+5|Tecnología de los Alimentos I
+5|Biotecnología de los Alimentos
+5|Taller de Análisis Sensorial de los Alimentos
+5|Taller de Envases Alimentarios
+5|Tecnología de los Alimentos II
+5|Comercialización de los Alimentos
+5|Práctica Profesional";lector Claude máquina fija;;"Tabla HTML del plan; afuera: Optativas/Electivas";UNR;cbbd58be-c4a9-475f-81e5-7ce2839704b7
+UNR;Profesorado en Química;4.0;;;https://www.fbioyf.unr.edu.ar/website/ofertaeducativa/profquimica.php;"1|Química General e Inorgánica
+1|Historia Socio-política del Sistema Educativo Argentino
+1|Matemática I
+1|Física I
+1|Matemática II
+1|Taller de Problemática Profesional Docente I
+2|Pedagogía
+2|Biología
+2|Química Orgánica I
+2|Física II
+2|Epistemología y Metodología de la Investigación I
+2|Química Orgánica II
+2|Fisicoquímica I
+2|Estadística
+2|Epistemología y Metodología de la Investigación II
+3|Teorías del Sujeto y del Aprendizaje
+3|Currículum y Didáctica
+3|Química Analítica I
+3|Fisicoquímica II
+3|Química Biológica
+3|Taller de Problemática Profesional Docente II
+3|Química Analítica II
+4|Seminario de Historia de la Ciencia
+4|Mineralogía
+4|Inglés
+4|Computación
+4|Residencia";lector Claude máquina fija;;"Tabla HTML del plan; afuera: Optativas/Electivas";UNR;eafb5664-f432-4072-baeb-9943d607c88c

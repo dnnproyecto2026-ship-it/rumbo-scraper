@@ -118,6 +118,7 @@ _PLANES_EN_LA_PAGINA = (("ungs.edu.ar", planes_sitios.plan_ungs), ("unl.edu.ar",
                         ("fhycs.unam.edu.ar", planes_sitios.plan_anio_y_lista),
                         ("fce.unam.edu.ar", planes_sitios.plan_fce_unam),
                         ("unq.edu.ar", planes_sitios.plan_unq),
+                        ("unq.edu.ar", planes_sitios.plan_unq_cursos),
                         ("lenguas.unc.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("carreras.unsl.edu.ar", planes_sitios.plan_titulo_y_lista),
                         ("go.eseade.edu.ar", planes_sitios.plan_texto_por_anio),
@@ -204,6 +205,10 @@ def _nombra(texto: str, carrera: str) -> bool:
     # A name set on its side down a margin comes out backwards (Austral's
     # brochures: "rodatnoC :arerraC").
     palabras |= {palabra[::-1] for palabra in palabras}
+    # A plan sheet names the title, not the career: UCASAL's "CARRERA (109)
+    # TRADUCTOR PÚBLICO EN INGLÉS" for its Traductorado.
+    if "traductor" in palabras:
+        palabras.add("traductorado")
     propias = [p for p in re.findall(r"[a-z0-9]+", comparison_key(carrera)) if p not in _VACIAS]
     return all(p in palabras for p in propias)
 
@@ -342,7 +347,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
-_DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.edu.ar", planes_sitios.plan_bloques_numerados), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_todos), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
+_DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.edu.ar", planes_sitios.plan_bloques_numerados), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_documento), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
                        ("ucasal.edu.ar", planes_sitios.plan_ucasal), ("uch.edu.ar", planes_sitios.plan_uch), ("unab.edu.ar", planes_sitios.plan_unab), ("ub.edu.ar", planes_sitios.plan_ub_documento), ("um.edu.ar", planes_sitios.plan_umendoza_todos), ("fca.unju.edu.ar", planes_sitios.plan_fca_unju),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
@@ -358,7 +363,7 @@ _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.
                        ("filo.unt.edu.ar", planes_sitios.plan_filo_unt),
                        # UNPAZ's career brochures: a table per year.
                        ("unpaz.edu.ar", planes_sitios.plan_unpaz),
-                       ("uno.edu.ar", planes_sitios.plan_uno),
+                       ("uno.edu.ar", planes_sitios.plan_uno_todos),
                        # UNRC Económicas: the current plans' PDFs (its pages list the old ones).
                        ("eco.unrc.edu.ar", planes_sitios.plan_eco_unrc),
                        # Mendoza's IUCE and IUAS: their career brochures.
@@ -415,6 +420,8 @@ _DOCUMENTOS_PROPIOS += (("unsada.edu.ar", planes_sitios.plan_unsada),)
 _DOCUMENTOS_PROPIOS += (("iuse.edu.ar", planes_sitios.plan_iuse),)
 # UNTREF's career pages: the "Plan de estudios" block, by year or by term.
 _PLANES_EN_LA_PAGINA += (("untref.edu.ar", planes_sitios.plan_untref),)
+# Its "Programas para descargar": the Ministry's annex, each name centred on its row.
+_DOCUMENTOS_PROPIOS += (("untref.edu.ar", planes_sitios.plan_untref_anexo),)
 # UNLP Veterinarias' plan sheet: rows "Obligatoria Cuatrimestral 70 horas" under each year.
 _DOCUMENTOS_PROPIOS += (("fcv.unlp.edu.ar", planes_sitios.plan_fcv_unlp),)
 _PLANES_SIN_SU_NOMBRE = ("fcv.unlp.edu.ar",)
@@ -535,8 +542,11 @@ def _parece_el_plan_entero(carrera: str, materias: list[tuple[str, int | None]],
         return False
     # ("Seminario A", "Optativa B": a capital alone is a label, not a cut "a".)
     # ("e-Business" opens in lower case and is whole.)
+    # (A name ending on a comma or with a bracket left open goes on in a
+    # line that was not read: "Algunas materias optativas: Management Político,".)
     if len(materias) < 10 or any((nombre[:1].islower() and not re.match(r"e-[A-Z]", nombre)) or (_TERMINA_CORTADA.search(nombre)
                                                           and not re.search(r"\s[A-Z]$", nombre))
+                                 or nombre.endswith(",") or nombre.count("(") > nombre.count(")")
                                  for nombre, _ in materias):
         return False
     anios = [anio for _, anio in materias if anio]

@@ -1,0 +1,104 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Licenciatura en Diseño de Indumentaria;4.0;;;https://fhumyar.unr.edu.ar/licenciatura-en-diseno-de-indumentaria-y-textil/;"1|Taller de Diseño I
+1|Moldería y Taller de Prácticas Constructivas I
+1|Tecnologías I
+1|Laboratorio Textil I
+1|Lenguajes Artísticos
+1|Taller de Escritura
+1|Medios Expresivos I
+1|Historia del Diseño
+1|Morfología I
+1|Ciudadanía, Diversidad y Derechos Humanos
+1|Legislación y Ética Profesional
+2|Taller de Diseño II
+2|Moldería y Taller de Prácticas Constructivas II
+2|Tecnologías II
+2|Laboratorio Textil II
+2|Medios Expresivos II: Indumentaria y Textil
+2|Historia de la Indumentaria
+2|Morfología II: Indumentaria y Textil
+2|Práctica Pre-profesional I
+2|Gestión Empresarial y Mercadotecnia
+3|Taller de Diseño III
+3|Moldería y Taller de Prácticas Constructivas III
+3|Tecnologías III
+3|Diseño Estratégico y Sustentable
+3|Taller de Producción y Diseño de Ropa Deportiva
+3|Comunicación y Narrativa
+3|Práctica Pre-profesional II
+3|Nivel I de Segunda Lengua
+4|Proyecto Integrador
+4|Tecnologías IV
+4|Metodología de Investigación en Diseño
+4|Vestuario
+4|Diseños, Textiles y Texturas en Argentina y Latinoamérica
+4|Producción de Moda y Estilismo
+4|Extensión, Territorio y Organizaciones Sociales (PSE)
+4|Práctica Pre-profesional III
+4|Nivel II de Segunda Lengua";lector Claude máquina fija;;"Licenciatura en Diseño de Indumentaria y Textil (Facultad de Humanidades y Artes); año según la página; afuera: Asignaturas Electivas I y II, Asignatura Optativa y Trabajo Final";UNR;96e7b73c-b216-4beb-bdc3-6144af820a4b
+UNR;Tecnicatura Universitaria en Interpretación de Acordeón;3.0;;;https://fhumyar.unr.edu.ar/tecnicatura-en-acordeon/;"1|Acordeón I
+1|Educación Audioperceptiva I
+1|Taller de Composición de Canciones
+1|Técnicas de Armonía y Contrapunto I
+1|Ensamble I
+1|Ensamble II
+2|Acordeón II
+2|Educación Audioperceptiva II
+2|Técnicas de Armonía y Contrapunto II
+2|Folklore
+2|Ensamble III
+2|Ensamble IV
+2|Análisis de Música Popular
+2|Arreglos de Música Popular
+3|Acordeón III
+3|Seminarios de Contenidos Variables
+3|Acústica
+3|Ensamble V
+3|Ensamble VI
+3|Producción Musical
+3|Informática aplicada a la Música I
+3|Informática aplicada a la Música II";lector Claude máquina fija;;"Plan publicado en la página de la carrera (Humanidades y Artes); afuera: Taller Electivo";UNR;3638cdd9-f6bd-47be-915d-85035dcdeb6c
+UNR;Tecnicatura Universitaria en Interpretación de Bajo Eléctrico;3.0;;;https://fhumyar.unr.edu.ar/tecnicatura-en-bajo-electrico/;"1|Bajo Eléctrico I
+1|Educación Audioperceptiva I
+1|Técnicas de Armonía y Contrapunto I
+1|Ensamble I
+1|Ensamble II
+1|Taller de Rítmica
+2|Bajo Eléctrico II
+2|Educación Audioperceptiva II
+2|Técnicas de Armonía y Contrapunto II
+2|Ensamble específico I
+2|Ensamble específico II
+2|Análisis de Música Popular
+2|Arreglos de Música Popular
+3|Bajo Eléctrico III
+3|Seminario de Contenidos Variables
+3|Acústica
+3|Ensamble específico III
+3|Ensamble específico IV
+3|Producción musical
+3|Informática aplicada a la Música I
+3|Informática aplicada a la Música II";lector Claude máquina fija;;"Plan publicado en la página de la carrera (Humanidades y Artes); afuera: Instrumento armónico complementario electivo y Taller Electivo";UNR;4c0d2fb0-e751-4586-8f3e-4a4d16917ebe
+UNR;Tecnicatura Universitaria en Interpretación de Guitarra Eléctrica;3.0;;;https://fhumyar.unr.edu.ar/tecnicatura-en-guitarra-electrica/;"1|Guitarra Eléctrica I
+1|Educación Audioperceptiva I CN
+1|Técnicas de Armonía y Contrapunto I
+1|Ensamble I
+1|Ensamble II
+1|Taller de Rítmica
+1|Taller de Amplificación y Pedales de Efectos
+2|Guitarra Eléctrica II
+2|Educación Audioperceptiva II
+2|Técnicas de Armonía y Contrapunto II
+2|Ensamble específico I
+2|Ensamble específico II
+2|Análisis de Música Popular
+2|Arreglos de Música Popular
+2|Taller de Blues
+3|Guitarra Eléctrica III
+3|Seminario de Contenidos Variables
+3|Acústica
+3|Ensamble específico III
+3|Ensamble específico IV
+3|Producción musical
+3|Informática aplicada a la Música I
+3|Informática aplicada a la Música II";lector Claude máquina fija;;"Plan publicado en la página de la carrera (Humanidades y Artes); afuera: Taller Electivo";UNR;8b0474a7-1d07-45df-b9ff-4a2cd360665f

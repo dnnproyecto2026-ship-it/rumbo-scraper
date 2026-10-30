@@ -1,0 +1,31 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Licenciatura en Diseño Gráfico;4.0;;;https://fapyd.unr.edu.ar/wp-content/uploads/2022/05/220304_LDG_PLAN_DE_ESTUDIOS.pdf;"1|Taller de Diseño Gráfico 1
+1|Medios Expresivos
+1|Tipografía 1
+1|Historia del Diseño
+1|Semiótica y Cultura Visual
+1|Taller de Escritura
+1|Morfología I
+1|Historia del Diseño Gráfico
+1|Comunicación
+2|Taller de Diseño Gráfico 2
+2|Morfología II
+2|Tipografía 2
+2|Tecnología
+2|Escenarios contemporáneos de la Comunicación
+2|Ciudadanía, diversidad cultural y DDHH
+3|Taller de Diseño Gráfico 3
+3|Laboratorio de gráfica, sonido y movimiento
+3|Tipografía 3
+3|Tecnología, Diseño y Sociedad
+3|Extensión, territorio y organizaciones
+3|Gestión empresarial y mercadotecnia
+3|Legislación y práctica profesional
+3|Práctica Social Educativa
+3|Práctica Profesional Supervisada
+4|Taller de Proyecto Final
+4|Diseño Estratégico y Sustentable
+4|Teoría y Crítica del Diseño
+4|Laboratorio de multiplataformas y transmedia
+4|Diseño Editorial
+4|Metodología de la Investigación en Diseño";lector Claude máquina fija;;"Plan por semestres de fapyd.unr.edu.ar/dg-plan-de-estudios; año = semestre/2. Afuera: 4 espacios curriculares optativos.";UNR;7fc70a08-d7a3-498e-85e8-3a40faec1776

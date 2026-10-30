@@ -1,0 +1,40 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNSa;Ingeniería Industrial;5.0;;;https://ing.unsa.edu.ar/ingenieria-industrial;"1 | Álgebra Lineal y Geometría Analítica
+1 | Análisis Matemático I
+1 | Sistemas de Representación
+1 | Física I
+1 | Química General
+1 | Informática
+2 | Análisis Matemático II
+2 | Química para Ingeniería Industrial
+2 | Probabilidad y Estadística
+2 | Estabilidad y Resistencia de Materiales
+2 | Física II
+2 | Estadística Experimental
+2 | Termodinámica I
+2 | Matemática Aplicada
+3 | Electrónica
+3 | Termodinámica II
+3 | Electrotecnia y Máquinas Eléctricas
+3 | Teoría General de Sistemas
+3 | Microeconomía
+3 | Mecanismos y Tecnología Mecánica
+3 | Fundamentos de las Operaciones Industriales
+3 | Organización Industrial I
+3 | Macroeconomía
+4 | Organización Industrial II
+4 | Costos Industriales
+4 | Operaciones Industriales
+4 | Construcciones Industriales
+4 | Investigación Operativa
+4 | Formulación y Evaluación de Proyectos
+4 | Ingeniería de Planta
+4 | Materiales Industriales
+4 | Instrumentación y Control Automático
+5 | Gestión Ambiental
+5 | Industrias
+5 | Derecho para Ingenieros
+5 | Gestión Estratégica
+5 | Gestión de la Calidad
+5 | Relaciones Humanas
+5 | Higiene y Seguridad Industrial";lector plan_unsa_pagina;;"Res. 0447-CS-2014; excluidos Seminarios Electivos y Práctica Profesional de Fábrica (requisitos sin año)";Universidad Nacional de Salta;ec0f347f-9f47-44dc-8029-caa1f678bbeb

@@ -1,0 +1,45 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Ingeniería Agronómica;5.0;;;https://fcagr.unr.edu.ar/wp-content/uploads/2024/08/CS-416-23-2-Plan-de-Estudios-IA.pdf;"1|Introducción a los Sistemas de Producción Agropecuarios
+1|Física
+1|Matemática I
+1|Biología
+1|Química General e Inorgánica
+1|Matemática II
+1|Química Orgánica
+2|Química Biológica
+2|Economía General
+2|Estadística
+2|Botánica Morfológica
+2|Anatomía y Fisiología Animal
+2|Economía y Política Agraria
+2|Maquinaria Agrícola I
+2|Botánica Sistemática Agronómica
+2|Agroclimatología
+2|Taller de Integración I: La Investigación en las Ciencias Naturales y Sociales
+3|Nutrición Animal
+3|Genética
+3|Edafología
+3|Sociología Rural
+3|Legislación Agropecuaria
+3|Fisiología Vegetal
+3|Ecología
+3|Microbiología Agrícola
+3|Maquinaria Agrícola II
+3|Taller de Integración II: Agroecosistemas de la Región Pampeana
+4|Manejo de Tierras
+4|Mejoramiento Vegetal y Producción de Semillas
+4|Forrajes
+4|Fruticultura
+4|Malezas
+4|Sistemas de Cultivos Extensivos
+4|Zoología Agrícola
+4|Fitopatología
+4|Taller de Integración III: Sistemas de Producción Agropecuarios
+5|Horticultura
+5|Sistemas de Producción Porcina
+5|Sistemas de Producción Bovina
+5|Terapéutica Vegetal
+5|Extensión Rural
+5|Comercialización Agropecuaria
+5|Administración Rural
+5|Taller de Integración IV: Prácticas Profesionales";lector Claude máquina fija;;"Plan 2023 (RCS 416/2023, vigente desde 2024); afuera: Optativas I y II, Electivas, y Inglés, Informática y Práctica Social Educativa (la grilla no les da año)";UNR;5c2c0bba-86fb-4331-8c56-1fdbbedc5765

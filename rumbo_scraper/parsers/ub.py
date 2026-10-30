@@ -88,6 +88,8 @@ def discover_programmes(
         level = level_of.get(index_url, "Grado")
         for href, label in links:
             path = urlparse(urljoin(BASE_URL, href or "")).path.rstrip("/")
+            # The lists link some pages through a front-controller prefix.
+            path = path.removeprefix("/index.php")
             match = _PROGRAMME_PATH.match(path)
             name = clean_text(label)
             if not match or not name or len(name) > 90:

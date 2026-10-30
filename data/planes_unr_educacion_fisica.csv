@@ -1,0 +1,34 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNR;Profesorado Universitario en Educación Física;4.0;;;https://famhyc.unr.edu.ar/wp-content/uploads/2025/10/b.-ESPACIOS-CURRICULARES-Y-CORRELATIVIDADES-Profesorado-en-Educacion-Fisica.pdf;"1|Pedagogía y didáctica
+1|Anatomo-fisiología del cuerpo humano I
+1|Psicología
+1|Deportes individuales I
+1|Deportes de conjunto I
+1|Juego y cultura
+1|Taller de docencia I
+2|Educación física y tecnologías
+2|Anatomo-fisiología del cuerpo humano II
+2|Ética profesional
+2|Educación sexual integral
+2|Políticas educativas
+2|Deportes individuales II
+2|Deportes de conjunto II
+2|Prácticas corporales no deportivas
+2|Taller de docencia II
+3|Planeamiento y gestión institucional
+3|Tiempo libre, recreación, y actividades en la naturaleza
+3|Práctica de la enseñanza en la educación no formal I
+3|Práctica de la enseñanza en la educación formal I
+3|Deportes de playa y río
+3|Entrenamiento
+3|Deportes individuales III
+3|Deportes de conjunto III
+3|Taller de docencia III
+4|Práctica de la enseñanza en la educación formal II
+4|Diseños de proyectos institucionales y comunitarios
+4|Prevención de accidentes: primeros auxilios y cuidados personales
+4|Práctica de la enseñanza en la educación no formal II
+4|Educación física, salud y problemas contemporáneos
+4|Antropología: el cuerpo, la actividad física y el deporte en la historia
+4|Educación Física e Inclusión
+4|Taller de docencia IV";lector planes_manuales;;"Tabla de espacios curriculares enlazada desde famhyc.unr.edu.ar/profesorado-universitario-en-educacion-fisica/; año según el código del espacio. Afuera: Optativa I y II.";Universidad Nacional de Rosario;195bbfbc-0d83-4259-b723-ac13c493f24a

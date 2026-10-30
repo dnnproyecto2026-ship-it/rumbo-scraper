@@ -1,0 +1,106 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Profesorado en Ciencias de la Educación;5;;;https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_educacion_2026.pdf;"1 | Historia General de la Educación y la Pedagogía
+1 | Teorías Psicológicas
+1 | Pedagogía I
+1 | Pensamiento Filosófico
+1 | Historia Social General
+1 | Lengua y Comunicación
+1 | Lengua Extranjera I
+2 | Antropología Social
+2 | Comunicación y Educación
+2 | Taller Sobre Problemáticas Educativas
+2 | Lengua Extranjera II
+2 | Psicología Social
+2 | Sociología de la Educación
+2 | Psicología de la Niñez y la Adolescencia
+2 | Pedagogía II
+3 | Seminario de Educación No Formal
+3 | Filosofía de la Educación
+3 | Teorías del Aprendizaje
+3 | Historia Social de la Educación Argentina y Latinoamericana
+3 | Didáctica General
+3 | Política y Legislación Escolar
+3 | Investigación Educativa I
+3 | Curso Básico de Computación
+4 | La Institución y sus Organizaciones en Educación
+4 | Educación Primaria
+4 | Educación Especial
+4 | Educación Inicial
+4 | Formación Docente con Prácticas de Enseñanza
+4 | Teorías y Diseños Curriculares
+5 | Tecnología Educativa
+5 | Seminario Sobre Educación Universitaria
+5 | Educación Secundaria
+5 | Residencia";lector folleto pdf (máquina fija);;"Plan por año del folleto oficial 2026; afuera 'Optativa de Formación General' y 'Optativa del Departamento de Ciencias de la Educación' (menús sin nombre).";Universidad Nacional de Tucumán;619be8b0-8bb6-4cc6-a405-a8dc01e07dd1
+UNT;Licenciatura en Ciencias de la Educación;5;;;https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_educacion_2026.pdf;"1 | Historia General de la Educación y la Pedagogía
+1 | Teorías Psicológicas
+1 | Pedagogía I
+1 | Lengua Extranjera I
+1 | Pensamiento Filosófico
+1 | Historia Social General
+1 | Lengua y Comunicación
+2 | Antropología Social
+2 | Comunicación y Educación
+2 | Taller Sobre Problemáticas Educativas
+2 | Lengua Extranjera II
+2 | Psicología Social
+2 | Sociología de la Educación
+2 | Psicología de la Niñez y la Adolescencia
+2 | Pedagogía II
+3 | Seminario de Educación No Formal
+3 | Filosofía de la Educación
+3 | Teorías del Aprendizaje
+3 | Historia Social de la Educación Argentina y Latinoamericana
+3 | Didáctica General
+3 | Política y Legislación Escolar
+3 | Investigación Educativa I
+3 | Curso Básico de Computación
+4 | La Institución y sus Organizaciones en Educación
+4 | Educación Primaria
+4 | Educación Especial
+4 | Educación Inicial
+4 | Formación Docente con Prácticas de Enseñanza
+4 | Teorías y Diseños Curriculares
+5 | Educación Secundaria
+5 | Tecnología Educativa
+5 | Seminario Sobre Educación Universitaria
+5 | Taller de Diseño y Elaboración de Tesina
+5 | Investigación Educativa II";lector folleto pdf (máquina fija);;"Plan por año del folleto oficial 2026; afuera las dos optativas genéricas (menús sin nombre).";Universidad Nacional de Tucumán;67c17924-6e6a-4a7b-b0dc-62cf79eed12d
+UNT;Licenciatura en Ciencias de la Comunicación;4;;;https://filo.unt.edu.ar/wp-content/uploads/2026/07/folleto_comunicacion_2026.pdf;"1 | Idioma Moderno 1 (Francés / Inglés / Italiano)
+1 | Comprensión y Producción Textual
+1 | Informática
+1 | Lengua y Comunicación
+1 | Periodismo
+1 | Historia de la Comunicación
+1 | Teoría de la Imagen
+1 | Sociología
+2 | Lengua Extranjera (Francés / Inglés / Italiano)
+2 | Teoría de la Comunicación I
+2 | Semiótica
+2 | Publicidad
+2 | Historia Social General
+2 | Comunicación Radiofónica
+2 | Fotografía
+2 | Comunicación Visual Gráfica 1
+2 | Comunicación Audiovisual
+2 | Cultura y Comunicación
+2 | Producción Periodística
+3 | Teoría de la Comunicación 2
+3 | Comunicación Institucional
+3 | Producción Audiovisual
+3 | Producción Multimedia
+3 | Pensamiento Filosófico
+3 | Historia Social y Política Argentina
+3 | Comunicación Visual Gráfica 2
+3 | Comunicación Televisiva
+3 | Técnicas de la Investigación
+3 | Comunicación Alternativa
+3 | Guión y Narración
+4 | Tesina de Licenciatura
+4 | Metodología de la Investigación Científica
+4 | Economía y Comunicación
+4 | Ética y Legislación de la Comunicación
+4 | Análisis del Discurso
+4 | Seminario de Trabajo Final
+4 | Epistemología
+4 | Estadística";lector folleto pdf (máquina fija);;"Plan por año del folleto oficial 2026 (título intermedio de Técnico en 3 años dentro del mismo plan); afuera 'Optativas de Ciencias de la Comunicación' (menú sin nombre).";Universidad Nacional de Tucumán;19183e42-f0cf-4094-97ae-b723a0f2e661

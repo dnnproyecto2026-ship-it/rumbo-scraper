@@ -156,6 +156,93 @@ ANUAL     QUÍMICA LEGAL"""
 
     def test_ucasal_nombres_abreviados_o_cortados_no_se_leen(self):
         self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   Dº PROC CIVIL I\n          FILOSOFÍA"), [])
+        # (The detailed-prerequisites sheets name each unit whole, wrapped over lines; a name cut short is dropped.)
+        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [("Filosofía", 1)])
+        self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    PSICOLOGÍA EDUC.   3   1 Sem."), [])
+        # Twenty letters at most: cut; one longer name and twenty is a whole name.
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   ESTADÍSTICA APLICADA\n          FILOSOFÍA"), [])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   ESTADÍSTICA APLICADA\n          PRINCIPIOS DE ECONOMÍA POLÍTICA"),
+                         [("Estadística Aplicada", 1), ("Principios de Economía Política", 1)])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   PATOLOGÌA QUIRÙRGICA\n          FILOSOFÍA"), [])
+        self.assertEqual(p.plan_ucasal("  AÑO\n1° SEM.   FILOSOFÍA\n          PAISAJE I                         ELECTIVA"), [])
+
+    def test_ucasal_folleto_une_los_nombres_partidos(self):
+        texto = """  AÑO
+1° CUAT.   ADMINISTRACIÓN FINANCIERA I
+           ÉTICA
+2° CUAT.   ADMINISTRACIÓN
+           FINANCIERA II
+           PRÁCTICA DE INTEGRACIÓN: PLANES DE EFICIENCIA ENERGÉTICA PARA
+           DISTINTOS TIPOS DE ESTABLECIMIENTOS
+CUATRIM.   SEGUROS PATRIMONIALES I (SEGUROS DE COSAS)
+           PRÁCTICA PROFESIONAL (1)"""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Administración Financiera I", 1), ("Ética", 1), ("Administración Financiera II", 1),
+            ("Práctica de Integración: Planes de Eficiencia Energética para Distintos Tipos de Establecimientos", 1),
+            ("Seguros Patrimoniales I (Seguros de Cosas)", 1), ("Práctica Profesional", 1)])
+
+    def test_ucasal_anexo_nombre_centrado_en_su_codigo(self):
+        texto = """COD        ASIGNATURA         REGIMEN     HORARIA HORARIA CORRELATIVAS              OBS.
+                                                                        DICTADO
+PRIMER AÑO
+         FUNDAMENTOS DEL
+ 1                             Anual         3      90          -      Presencial
+          TRABAJO SOCIAL
+              PRÁCTICA
+       PROFESIONALIZANTE I:
+ 2                             Anual         2      60          -      Presencial   1*
+        INTRODUCCIÓN A LA
+           INTERVENCIÓN
+ 3           SOCIOLOGÍA        Anual         3      90          -      Presencial
+
+SEGUNDO AÑO
+          PSICOLOGÍA DEL
+ 4     DESARROLLO Y DE LA      Anual         3      90          -      Presencial
+            SUBJETIVIDAD
+                                                     IF-2022-01530633-APN-DNGU#ME
+COD        ASIGNATURA          REGIMEN     HORARIA HORARIA CORRELATIVAS              OBS.
+                                                          35-36- 37-38-39-
+        TALLER DE TRABAJO
+ 5                              Anual         3      90      40- 41- 42-     Presencial   9*
+      INTEGRADOR FINAL (TIF)
+                                                           43-44-45-46-47
+
+TÍTULO: LICENCIADO/A EN TRABAJO SOCIAL"""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Fundamentos del Trabajo Social", 1), ("Práctica Profesionalizante I: Introducción a la Intervención", 1),
+            ("Sociología", 1), ("Psicología del Desarrollo y de la Subjetividad", 2),
+            ("Taller de Trabajo Integrador Final (TIF)", 2)])
+        # A name whose lines do not centre on its code: unread.
+        self.assertEqual(p.plan_ucasal(texto.replace("           INTERVENCIÓN\n", "")), [])
+
+    def test_ucasal_nomina_de_asignaturas(self):
+        texto = """             CONTENIDOS MINIMOS POR AREA
+                 ●     Fundamentos de Química
+Nómina de Asignaturas por régimen de cursado, carga horaria y sistema de correlatividades
+Código    Asignatura                                               a
+                                        PRIMER AÑO
+          Filosofía                                    1º Sem.     2        32              -            -
+1.1
+          Fundamentos de Química                       1º Sem.     5        80                           -
+1.2
+                                                                                        1.1             1.1
+1.3       Anatomía y Fisiología                        2º Sem.     5        80
+                                                                                        1.2             1.2
+                      TOTAL                                                            784 hrs.
+                                       SEGUNDO AÑO
+                                                                                        1.3
+2.1      Nutrición y Alimentación Animal               1º Sem      5        80                          1.3
+Universidad Católica de Salta
+2.2                                                2º Sem.   2   32           2.1            2.1
+        Ética Profesional I
+TOTAL                                                                  768 hrs."""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Filosofía", 1), ("Fundamentos de Química", 1), ("Anatomía y Fisiología", 1),
+            ("Nutrición y Alimentación Animal", 2), ("Ética Profesional I", 2)])
+        # A year with a code more than its names: unread.
+        self.assertEqual(p.plan_ucasal(texto.replace("2.2     ", "2.3     ")), [])
+
+
         self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    FILOSOFIA   3   1 Sem."), [("Filosofía", 1)])
         self.assertEqual(p.plan_ucasal("CORRELATIVIDADES DETALLADAS\n 1 ° Año\n05 0000    PSICOLOGÍA EDUC.   3   1 Sem."), [])
 
@@ -215,6 +302,72 @@ Código   Asignatura                 Régimen         Horas
       00 0050     TEOLOGÍA                                                              3      1 Sem"""
         self.assertEqual(p.plan_ucasal(texto), [("Filosofía", 1), ("Planificación, Producción y Logística de Eventos", 1),
                                                 ("Teología", 2)])
+
+    def test_ucasal_tabla_con_codigo(self):
+        texto = """PLAN DE ESTUDIOS                                                FACULTAD DE
+LICENCIATURA EN CRIMINOLOGÍA                                    CIENCIAS JURÍDICAS
+                                           PRIMER AÑO
+                            1er Semestre
+ Cód.                                                      Régimen    por semestre de
+                             MATERIA
+  1     Filosofía I                                      Semestral  3         -   48
+        Negociación comercial, transcultural y
+  6                                                        Semestral     4         64
+        relaciones humanas
+                                                         TOTAL DE HORAS DEL SEMESTRE
+               Facultad de Ciencias Jurídicas | sead.juridicas@ucasal.edu.ar
+PLAN DE ESTUDIOS                                                FACULTAD DE
+LICENCIATURA EN CRIMINOLOGÍA                                    CIENCIAS JURÍDICAS
+                                           SEGUNDO AÑO
+  11    Teología I                                    Semestral      3       -             48
+        Seminario: Técnicas de Comunicación Científica
+                                               -      Semestral      4       -             64
+  14
+        Criminológica
+     Seminario: Investigación Criminal en Lavado de Semestral    4       -              64
+  32
+     activos
+        Teología II                                   Semestral    2       -             32
+  14
+  15    Seguridad Pública                             Semestral      4       -             64
+                                 SEMINARIOS ELECTIVOS
+  Técnicas de resolución de conflictos."""
+        self.assertEqual(p.plan_ucasal(texto), [
+            ("Filosofía I", 1), ("Negociación comercial, transcultural y relaciones humanas", 1),
+            ("Teología I", 2), ("Seminario: Técnicas de Comunicación Científica Criminológica", 2),
+            ("Seminario: Investigación Criminal en Lavado de activos", 2), ("Teología II", 2),
+            ("Seguridad Pública", 2)])
+        # A code whose name is drawn, not written: the plan is not read.
+        self.assertEqual(p.plan_ucasal(texto.replace("  1     Filosofía I    ", "  1                ")), [])
+
+    def test_unq_los_cursos_obligatorios_de_cada_nucleo(self):
+        html = """<p>Ciclo Introductorio</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Lectura y escritura académica</td><td>5</td><td>10</td></tr>
+        <tr><td>Matemática</td><td>5</td><td>10</td></tr>
+        <tr><td>Total Ciclo Introductorio</td><td></td><td>20</td></tr></table>
+        <p>Cursos del Ciclo Superior</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Núcleo Obligatorio</td><td></td><td></td></tr>
+        <tr><td>Pedagogía</td><td>5</td><td>10</td></tr>
+        <tr><td>Curso Electivo 1</td><td>5</td><td>10</td></tr>
+        <tr><td>Núcleo Electivo</td><td></td><td></td></tr>
+        <tr><td>Mención: Gestión</td><td></td><td></td></tr>
+        <tr><td>Economía de la educación</td><td>4</td><td>8</td></tr>
+        <tr><td>Otros requisitos</td><td></td><td></td></tr>
+        <tr><td>Inglés</td><td>3</td><td>10</td></tr></table>
+        <p>Núcleo de cursos electivos</p><table>
+        <tr><td>Cursos</td><td>Horas semanales</td><td>Créditos</td></tr>
+        <tr><td>Historia de los medios</td><td>5</td><td>10</td></tr></table>"""
+        self.assertEqual(p.plan_unq_cursos(html), [("Lectura y escritura académica", None), ("Matemática", None),
+                                                   ("Pedagogía", None), ("Inglés", None)])
+        # A table whose credits do not add up to its total is a pool to choose from.
+        self.assertEqual(p.plan_unq_cursos(html.replace("<td>20</td>", "<td>40</td>")), [])
+        # A page with an orientation, or a table going on without its heading row, is not read.
+        self.assertEqual(p.plan_unq_cursos(html.replace("Cursos del Ciclo Superior",
+                                                        "Núcleo de Orientación en Periodismo")), [])
+        self.assertEqual(p.plan_unq_cursos(html + """<table><tr><td>Sexto cuatrimestre</td></tr>
+        <tr><td>Lógica</td><td>6</td><td>12</td></tr></table>"""), [])
 
 
 if __name__ == "__main__":
@@ -480,6 +633,157 @@ class PlanUnahur(unittest.TestCase):
         self.assertEqual(p.plan_unahur(texto), [("Química", 1), ("Cultura y alfabetización digital en la universidad", 1),
                                                 ("Física II", 2), ("Espacio de integración curricular II", 3)])
 
+    def test_a_table_without_numbers_its_names_centred_on_their_rows(self):
+        texto = "\n".join([
+            "   Titulación Final: 6.000 horas - 240 créditos",
+            "  UNIDAD CURRICULAR             D      CP          HIS    HIT      HTAT       HT        CRE",
+            "                                         PRIMER AÑO",
+            "Pedagogía                       C     CFB           4      64        61       125        5",
+            "Aprendizajes y prácticas",
+            "                                C     CFB           4      64        61       125        5",
+            "educativas",
+            "Territorio, sujetos e",
+            "                                C      CIC          4      64        86       150        6",
+            "instituciones",
+            "                   TOTAL PRIMER AÑO                       640       760      1400        56",
+            "Técnico/a universitario/a en prácticas",
+            "                                                         1209      1791      3000       120",
+            "socioeducativas de Biología",
+            "TERCER AÑO",
+            "Historia de la Nación Argentina y sus       C     CFB      3       48      77      125       5",
+            "                                                13",
+            "proyectos educativos",
+            "Didáctica en contextos de",
+            "                                    C       CFB         3       48        77       125     5",
+            "Educación superior",
+            "                      TOTAL CARRERA                            2379     3621       6000   240",
+        ])
+        # (No second year: not the whole plan.)
+        self.assertEqual(p.plan_unahur_campos(texto), [])
+        texto = texto.replace("TERCER AÑO", "SEGUNDO AÑO")
+        self.assertEqual(p.plan_unahur_campos(texto), [
+            ("Pedagogía", 1), ("Aprendizajes y prácticas educativas", 1),
+            ("Territorio, sujetos e instituciones", 1),
+            ("Historia de la Nación Argentina y sus proyectos educativos", 2),
+            ("Didáctica en contextos de Educación superior", 2)])
+
+    def test_the_field_before_the_length(self):
+        texto = "\n".join([
+            "                                                        PRIMER AÑO",
+            "Matemática                                               CFB        Cuatr.    64         86         150             6",
+            "Sistemas de Representación Gráﬁca                        CFB        Cuatr.    32         68         100             4",
+            "                                                       SEGUNDO AÑO",
+            "Gestión de la calidad                                    CFE        Cuatr.    64         86         150             6",
+        ])
+        self.assertEqual(p.plan_unahur_campos(texto), [("Matemática", 1), ("Sistemas de Representación Gráfica", 1),
+                                                       ("Gestión de la calidad", 2)])
+
+    def test_a_row_it_cannot_read_is_not_skipped(self):
+        texto = "\n".join([
+            "                                            PRIMER AÑO",
+            "Pedagogía                                   C     CFB        4      64",
+            "                                           SEGUNDO AÑO",
+            "Tecnología educativa                      C.      CFB       2       32      68     100       4",
+            "Didáctica del Chino                                          C1      CFE      3        48    77",
+        ])
+        self.assertEqual(p.plan_unahur_campos(texto), [("Pedagogía", 1), ("Tecnología educativa", 2),
+                                                       ("Didáctica del Chino", 2)])
+        # Gestión del Mantenimiento's: the length on one line, the field and hours on the next.
+        partida = texto + "\n".join(["", "Economía y Costo del ciclo de vida de los",
+                                     "                                                    C        CFE      4",
+                                     "Activos                                                                       64       61"])
+        self.assertEqual(p.plan_unahur_campos(partida), [])
+
+
+class PlanUnahurNumerado(unittest.TestCase):
+    # UNAHUR's Tecnicatura en Metalurgia, abridged.
+    TEXTO = "\n".join([
+        "Códi-                     Asignatura                      Régimen         Carga     Carga",
+        "                                                    1° Cuatrimestre",
+        "",
+        "1       Introducción a la Metalurgia                      Cuatrimestral   4         64        -",
+        "2       Introducción al Análisis Matemático               Cuatrimestral   4         64        -",
+        "        Nuevos entornos y lenguajes: la producción",
+        "3                                                         Cuatrimestral   2         32        -",
+        "        de conocimiento en la cultura digital",
+        "4       Química                                           Cuatrimestral   4         64        -",
+        "",
+        "                                                    3° Cuatrimestre",
+        "",
+        "5       Metalurgia ll                                     Cuatrimestral   6         96        8         3",
+        "        Créditos                                                                    80                  20",
+        "6       Ajena                                             Cuatrimestral   6         96",
+    ])
+
+    def test_the_name_around_its_row_and_two_terms_a_year(self):
+        self.assertEqual(p.plan_unahur_numerado(self.TEXTO), [
+            ("Introducción a la Metalurgia", 1), ("Introducción al Análisis Matemático", 1),
+            ("Nuevos entornos y lenguajes: la producción de conocimiento en la cultura digital", 1),
+            ("Química", 1), ("Metalurgia II", 2)])
+
+    def test_a_line_no_row_takes_gives_nothing(self):
+        # Below a named row with nothing above it, a line in upper case is no
+        # part of its name.
+        texto = self.TEXTO.replace("4       Química   ", "4       Química\n        General   ")
+        self.assertEqual(p.plan_unahur_numerado(texto), [])
+        self.assertEqual(p.plan_unahur_numerado(self.TEXTO.replace("4       Química", "7       Química")), [])
+
+    def test_a_name_going_on_below_its_row_and_the_field_first(self):
+        # Viverismo's annex: the field right after the name, a name going on
+        # below its row, the page's motto and the credits the plan counts apart.
+        texto = "\n".join([
+            "      Código                  Asignatura              Campo        Carga       Carga horaria",
+            "                                                    1° año",
+            "                                                1° cuatrimestre",
+            "      1            Introducción al                    CFE           4               64",
+            "                   viverismo",
+            "",
+            "      2            Ateneo de estudio de casos         CIC           4               64",
+            "                                                    “75 avo aniversario de la gratuidad universitaria”",
+            "3    Nuevos entornos y                     CFC          2   32",
+            "     lenguajes: la producción de",
+            "     conocimiento en la cultura",
+            "     digital",
+            "",
+            "                                      3° cuatrimestre",
+            "4    Floricultura                          CIC                   1",
+            "",
+            "                               15 créditos incluidos en materias (60 horas)",
+            "                        CARGA HORARIA TOTAL                                   1.424",
+        ])
+        self.assertEqual(p.plan_unahur_numerado(texto), [
+            ("Introducción al viverismo", 1), ("Ateneo de estudio de casos", 1),
+            ("Nuevos entornos y lenguajes: la producción de conocimiento en la cultura digital", 1),
+            ("Floricultura", 2)])
+
+    def test_years_and_a_named_row_centred_between_lines(self):
+        # Enfermería's RCS 385/2024, abridged.
+        texto = "\n".join([
+            "                                                           Primer Ciclo",
+            "                                                              1° Año",
+            "       Introducción a la Salud",
+            " 1                                                 C            4          64        64        86    150    6",
+            "       Comunitaria",
+            " 2     Créditos ACA                                C           2           32        32        68    100    4",
+            "                                                              2° Año",
+            "     Deontología y aspectos legales",
+            " 3   del ejercicio profesional de la        C         2        32        32                68       100     4",
+            "     Enfermería",
+            "     Práctica pre- Profesional          Mensual",
+            " 4                                                  20 (6)    100                100       125      225     9",
+            "     Supervisada I                        (5)",
+            "              Enfermero/a Universitario/a                    1977      1356      621      2523     4500    180",
+            "                                                  Segundo Ciclo",
+            "                                                     3° Año",
+            "                                                                 11",
+            " 5   Ética y Desarrollo Profesional         C         2        32        32                43        75     3",
+            "                    TOTAL DE HORAS                            3357     2268      1089     4143     7500    300",
+        ])
+        self.assertEqual(p.plan_unahur_numerado(texto), [
+            ("Introducción a la Salud Comunitaria", 1),
+            ("Deontología y aspectos legales del ejercicio profesional de la Enfermería", 2),
+            ("Práctica pre- Profesional Supervisada I", 2), ("Ética y Desarrollo Profesional", 3)])
+
 
 class PlanTablasPorAnio(unittest.TestCase):
     HTML = ("<html><head><title>Contador Público – Facultad</title></head><body><article>"
@@ -515,6 +819,139 @@ class PlanUpDyc(unittest.TestCase):
         self.assertEqual(plan_up_dyc(html), [
             ("Diseño de Interiores I", 1), ("Taller de Interiores I", 1),
             ("Cultura II", 4), ("Trabajo Final de Grado (Proyecto de Graduación)", 4)])
+
+
+class PlanUnpaz(unittest.TestCase):
+    def test_a_stray_prerequisite_beside_the_rest_of_a_name(self):
+        # Producción y Gestión Audiovisual: the "-" far right is no part of the name.
+        texto = "\n".join([
+            "                                      Código     Asignatura                                        Régimen                 Semanales",
+            "             Primer año",
+            "                                      10         Taller de edición                                 Cuatrimestral           4hs                 04",
+            "                                      11         Taller de realización y                           Cuatrimestral           4hs                 04-10",
+            "                                                 producción audiovisual I                                                                      -",
+            "                                      12         Producción operativa integral                     Cuatrimestral           4hs                 04",
+        ])
+        self.assertEqual(p.plan_unpaz(texto), [
+            ("Taller de edición", 1), ("Taller de realización y producción audiovisual I", 1),
+            ("Producción operativa integral", 1)])
+
+
+class PlanUnso(unittest.TestCase):
+    # UNSO's plans as ``pdftotext -layout`` gives them (Abogacía, Criminalística,
+    # Desarrollo de Videojuegos, Edición Audiovisual).
+    def test_rows_apart_by_blank_lines(self):
+        texto = "\n".join([
+            "PLAN DE ESTUDIOS",
+            "TECNICATURA UNIVERSITARIA EN CRIMINALÍSTICA",
+            "",
+            " ASIGNATURA                                  HS. TOTALES   HS. TEÓRICAS   HS. PRACTICAS",
+            "",
+            " PRIMER AÑO",
+            "",
+            " PRIMER CUATRIMESTRE",
+            "",
+            " Elementos de Derecho Civil, Comercial y         64             32             32",
+            " Laboral",
+            "",
+            " Taller de búsqueda Jurídica y análisis",
+            "                                                 64             16             48",
+            " Jurisprudencial",
+            "",
+            " Legales y comerciales                                          36             12",
+            "                                                 48",
+            "",
+            " Metodología de la Investigación                 64             32             32",
+            " en Cs. Sociales",
+            " SUBTOTAL                                        256            112            144",
+            "  SEGUNDO CUATRIMESTRE",
+            "",
+            "  Química                                                      64                 32                32",
+            "  TOTAL ANUAL",
+            "",
+            "  Psicología Criminal                                          64                 32                32",
+            "",
+            "  SUBTOTAL                                                    320                 144              176",
+            "",
+            "  TOTAL ANUAL                                                 640                 288              352",
+            "",
+            "  SEGUNDO AÑO",
+            "",
+            "  Balística Forense                                            64                 32                32",
+            "",
+            "  TOTAL ANUAL                                                 512                240               272",
+            "",
+            " Práctica Profesional Supervisada                            100                 25                75",
+            "",
+            " CARGA HORARIA TOTAL DE LA CARRERA                           1764                768               971",
+        ])
+        self.assertEqual(p.plan_unso(texto), [
+            ("Elementos de Derecho Civil, Comercial y Laboral", 1),
+            ("Taller de búsqueda Jurídica y análisis Jurisprudencial", 1),
+            ("Legales y comerciales", 1), ("Metodología de la Investigación en Cs. Sociales", 1),
+            ("Química", 1), ("Psicología Criminal", 1), ("Balística Forense", 2)])
+
+    def test_rows_together_with_the_hours_on_the_last_line(self):
+        texto = "\n".join([
+            "                               Horas       Horas            Horas",
+            "Asignatura                     totales     teóricas         prácticas",
+            "                                Primer Año",
+            "Primer cuatrimestre",
+            "Producción Audiovisual 1                64            32                32",
+            "Software en Edición",
+            "Audiovisual                             64            16                48",
+            "Postproducción Audiovisual",
+            "1                                       64            32                32",
+            "Subtotal                               192            80                112",
+            "Total Anual                            576            272               304",
+        ])
+        self.assertEqual(p.plan_unso(texto), [
+            ("Producción Audiovisual 1", 1), ("Software en Edición Audiovisual", 1),
+            ("Postproducción Audiovisual 1", 1)])
+
+    def test_rows_that_cannot_be_told_apart(self):
+        texto = "\n".join([
+            " PRIMER AÑO",
+            " Química General                             64             32              32",
+            " Ambiente y Territorio",
+            " Biología",
+            " SUBTOTAL                                    256            110             146",
+        ])
+        self.assertEqual(p.plan_unso(texto), [])
+
+
+class PlanUnahurCeldas(unittest.TestCase):
+    FILAS = [
+        ["Licenciatura en Desarrollo Agrario", None, None, None],
+        ["Código", "Asignatura", "Campo", "Correlatividad"],
+        ["1er año", None, None, None],
+        ["1er cuatrimestre", None, None, None],
+        ["1", "Introducción al desarrollo\nagrario", "CFE", "-"],
+        ["2", "UNAHUR I (asignatura\nelectiva)", "CFC", "-"],
+        ["2° Año", None, None, None],
+        ["3ercuatrimestre", None, None, None],
+        ["3", "Química general", "CFB", "1"],
+        ["Ateneo de casos de estudio", "5", None, None],
+        ["4", "Ajena", "CFB", "-"],
+    ]
+
+    def test_each_row_its_cell_and_the_year_above(self):
+        self.assertEqual(p.plan_unahur_celdas(self.FILAS), [
+            ("Introducción al desarrollo agrario", 1), ("UNAHUR I (asignatura electiva)", 1),
+            ("Química general", 2)])
+
+    def test_a_number_or_a_year_out_of_order_gives_nothing(self):
+        filas = [list(f) for f in self.FILAS]
+        filas[8][0] = "4"
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
+        filas = [list(f) for f in self.FILAS]
+        filas[6][0] = "3° Año"
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
+
+    def test_a_row_without_its_name_gives_nothing(self):
+        filas = [list(f) for f in self.FILAS]
+        filas[5][1] = None
+        self.assertEqual(p.plan_unahur_celdas(filas), [])
 
 
 class PlanCargaHoraria(unittest.TestCase):

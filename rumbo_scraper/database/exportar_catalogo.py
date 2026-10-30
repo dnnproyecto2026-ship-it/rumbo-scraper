@@ -305,7 +305,10 @@ def _materia_sin_mayusculas(nombre: str) -> str:
 # one: an address, a link, a file, a bibliography entry ("Ed. Trillas",
 # "Recuperado de"), a letter repeated down a column ("c c c c").
 _NO_ES_UN_NOMBRE = re.compile(
-    r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|ediciones)\b|^editorial\s+\S|,\s*editorial\b"
+    r"@|https?:|www\.|\.(?:pdf|html?|php|docx?)\b|\b(?:isbn|ediciones)\b"
+    # A publisher is "Editorial" and its name ("Editorial Paidós"); a subject
+    # may end in the adjective ("Diseño Editorial", "Taller Editorial I").
+    r"|\beditorial (?-i:(?!(?:I|II|III|IV|V|VI)\b)[A-ZÁÉÍÓÚ][a-záéíóúñ])"
     r"|\b(?:ed|pp|vol)\.|recuperado de|\bet al\b|(?:\b\w\b\s+){3}"
     # A page's banners, videos, address and notes read as a plan's lines ("A
     # cincuenta años del Golpe Nunca Más", "▶ Ver video en YouTube", "Paseo del
@@ -353,6 +356,9 @@ def nombre_de_la_materia(nombre: str | None) -> str | None:
     n = _CODIGO_DE_MATERIA.split(" ".join(n.split()), maxsplit=1)[0].strip()
     # A footnote of the plan ("* a partir del plan 2017...", "(***) La carga
     # horaria...") is not a subject; a bullet in front of one is not its name.
+    # The mark before a sentence is the footnote itself: "(***) La carga horaria total ...".
+    if re.match(r"\(\*+\)\s*(?:la|el|los|las|se)\s", n, re.I):
+        return None
     n = _LLAMADA.sub("", n)
     if n.startswith(("*", "(")):
         return None

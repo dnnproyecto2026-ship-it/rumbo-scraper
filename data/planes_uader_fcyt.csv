@@ -1,0 +1,108 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;carrera_id
+UADER;Licenciatura en Producción Agropecuaria;5.0;;;https://fcyt.uader.edu.ar/carreras/licenciatura-en-produccion-agropecuaria/;"1 | Metodología de la Investigación Científica
+1 | Comercialización de Productos Agrícolas y Agroindustriales
+1 | Dirección y Gerenciamiento
+1 | Gestión y Normas de Calidad Agropecuarias y Agroindustriales
+2 | Marketing Agropecuario
+2 | Higiene y Seguridad Laboral en la Empresa Agropecuaria
+2 | Sociología de las Organizaciones
+2 | Estrategias Competitivas y de Negociación
+2 | Seminario de Tesis
+2 | Observaciones
+2 | Tesis";lector fcyt_uader;;;8ea6497b-818b-4132-b60e-4bffa78425c2
+UADER;Profesorado en Educación Tecnológica;4.0;;;https://fcyt.uader.edu.ar/carreras/profesorado-en-educacion-tecnologica/;"1 | Química
+1 | Estadística
+1 | Metrología
+1 | Epistemología
+1 | Matemática I
+1 | Física I
+1 | Introducción a la Tecnología
+1 | Técnicas de Representación
+1 | Idioma Extranjero I
+1 | Lectura y Producción de Textos Científicos
+2 | Matemática II
+2 | Estructuras y Resistencias de los Materiales
+2 | Gestión de la Producción
+2 | Pedagogía
+2 | Tecnología de los Materiales
+2 | Electricidad y Electrónica
+2 | Mecánica Aplicada
+2 | Didáctica General
+2 | Sociología de la Educación
+2 | Física II
+2 | Tecnología de la Información y la Comunicación I
+2 | Idioma Extranjero II
+2 | Proyecto Tecnológico I
+3 | Psicología Educacional
+3 | Didáctica de la Tecnología I
+3 | Metodología de la Investigación Educativa
+3 | Práctica Docente I (EGB3)
+3 | Instrumentación y Control
+3 | Procesos Productivos
+3 | Tecnologías de la Información y la Comunicación II
+3 | Gestión de las Organizaciones
+3 | Proyecto Tecnológico II
+4 | Política Educativa
+4 | Didáctica de la Tecnología II
+4 | Análisis Institucional
+4 | Biotecnología
+4 | Economía y Legislación
+4 | Taller de Investigación en la Enseñanza de la Tecnología
+4 | Practica Docente II (Polimodal y Superior)
+4 | Proyecto Tecnológico III";lector fcyt_uader;;;b8fb52ab-2458-4964-aca5-b2bf615964da
+UADER;Licenciatura en Automatización y Control de Procesos Industriales;4.0;;;https://fcyt.uader.edu.ar/carreras/licenciatura-en-automatizacion-y-control-de-procesos-industriales/;"1 | Matemática I
+1 | Electrotecnia I
+1 | Física I
+1 | Sistemas Digitales I
+1 | Laboratorio I
+1 | Derechos Humanos
+1 | Álgebra
+1 | Matemática II
+1 | Electrotecnia II
+1 | Física II
+1 | Sistemas Digitales II
+1 | Electrónica Básica
+1 | Informática I
+1 | Laboratorio II
+2 | Laboratorio III
+2 | Técnicas de Trabajo Intelectual
+2 | Electrónica de Control
+2 | Sistemas Digitales III
+2 | Informática II
+2 | Instrumentos y Mediciones I
+2 | Inglés I
+2 | Probabilidades y Estadística
+2 | Matemática III
+2 | Sistemas Digitales IV
+2 | Electrónica de Potencia
+2 | Instrumentos y Mediciones II
+2 | Inglés II
+2 | Conversión Analógica Digital
+2 | Informática III
+2 | Física III
+3 | Higiene, Seguridad y
+3 | Legislación Laboral
+3 | Sistemas de Control Automático I
+3 | Inglés III
+3 | Proyecto de Sistemas Digitales
+3 | Hidráulica y Neumática
+3 | Instalaciones Industriales
+3 | Técnicas Investigación
+3 | Instrumentación de Procesos Industriales
+3 | Sistemas de Adquisición y Control de Datos
+3 | Proyecto de Automatización Industrial
+3 | Control Numérico y Robótica
+3 | Deontología Profesional
+4 | Administración de Recursos Humanos
+4 | Sistemas Multivariables de Control Automático
+4 | Matemática aplicada al Control de Procesos
+4 | Sistemas de Comunicaciones Industriales
+4 | Electrónica de Control Industrial
+4 | Metodología de la Investigación
+4 | Gestión de Proyectos y Gestión de Calidad
+4 | Aplicaciones en Control Automático Industrial
+4 | Sistemas de Control Digital
+4 | Sistemas de Control Automático Avanzados
+4 | Proyecto Final de Tesis
+4 | Ambiente Industrial y Medio Ambiente
+4 | Legislación Profesional";lector fcyt_uader;;;d99d2111-1288-4d5d-879c-cc1564bfe183

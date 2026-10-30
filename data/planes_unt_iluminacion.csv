@@ -1,0 +1,39 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Diseño de Iluminación;4;;;https://www.facet.unt.edu.ar/luminotecnia/wp-content/uploads/sites/15/2018/05/Carrera-DISLUM-_Rev03NOV2017.pdf;"1 | Matemáticas I
+1 | Laboratorio de Física general
+1 | Medio ambiente Visual
+1 | Laboratorio de Computación
+1 | Representación Gráfica (Dibujo)
+1 | Laboratorio de Circuitos Eléctricos
+1 | Laboratorio de Óptica e Iluminación
+1 | Efectos visuales y no visuales de la iluminación
+1 | Laboratorio de Fotometría
+1 | Diseño Asistido por computadora
+2 | Taller: Instalaciones Eléctricas I
+2 | Fuentes de luz, Luminarias y Equipos Auxiliares
+2 | Bases del diseño de Iluminación de interiores
+2 | Bases del diseño de Iluminación de exteriores
+2 | Inglés I
+2 | Laboratorio de Electrónica
+2 | Taller: Gestión de proyectos
+2 | Taller: Iluminación de interiores
+2 | Taller: Iluminación de exteriores
+2 | Inglés II
+3 | Matemáticas II
+3 | Estadística descriptiva
+3 | Acondicionamiento Ambiental
+3 | Percepción Visual
+3 | Lenguaje arquitectónico
+3 | Laboratorio de Radiometría y colorimetría
+3 | Iluminación natural
+3 | Psicología Ambiental
+3 | La luz en la historia de la arquitectura
+3 | Inglés III
+4 | Taller: Instalaciones Eléctricas II
+4 | Diseño de Iluminación de Interiores
+4 | Diseño de Iluminación de Exteriores
+4 | Ciencia, Tecnología y Sociedad
+4 | Inglés IV
+4 | Taller: Diseño integrado de Iluminación de Interiores
+4 | Taller: Diseño integrado de Iluminación de exteriores
+4 | Iluminación y contexto";lector html (máquina fija);;"PDF oficial de la carrera (Rev. 03/NOV/2017), tabla 3.1 con columna AÑO explícita (módulos 1-8). 38 asignaturas; Electiva I y II (marcadores sin nombre) afuera.";Universidad Nacional de Tucumán;d21f3189-951b-4379-8ac0-3cc36aed9c65

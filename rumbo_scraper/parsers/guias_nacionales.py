@@ -494,7 +494,16 @@ def con_tildes(nombre: str) -> str:
     vocabulario = _vocabulario()
     palabras = []
     for i, palabra in enumerate(clean_text(nombre).split()):
+        # A Roman figure ("PROFESIONALIZANTES IV: FAMILIA") and an acronym
+        # between brackets ("(TIF)") stay in capitals.
+        if re.fullmatch(r"(?:I{1,3}|IV|VI{0,3}|IX|X)[:,;.]?|\([A-ZÑ]{2,4}\)[:,;.]?", palabra):
+            palabras.append(palabra)
+            continue
         base = vocabulario.get(comparison_key(palabra), palabra.lower())
+        # (The first word between brackets too: "(Seguros de Cosas)".)
+        abre = re.match(r"^\(+", base)
+        if abre and base[abre.end():] not in _MINUSCULAS:
+            base = base[:abre.end()] + base[abre.end():abre.end() + 1].upper() + base[abre.end() + 1:]
         palabras.append(base if i and base in _MINUSCULAS else base[:1].upper() + base[1:])
     return " ".join(palabras)
 

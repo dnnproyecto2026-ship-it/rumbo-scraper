@@ -19,7 +19,8 @@ from __future__ import annotations
 import math
 import re
 import unicodedata
-from collections import Counter
+from collections import Counter, defaultdict
+from html import unescape
 
 from bs4 import BeautifulSoup, Tag
 
@@ -33,7 +34,7 @@ _ANIO_NUMERO = re.compile(r"(?i)^\s*(\d)\s*\.?\s*(?:er|ro|do|to|vo|mo|[°ºo])?\
 # Not subjects: an elective's slot, a heading that ends in a colon.
 _NO_ES_MATERIA = re.compile(
     r"(?i)^(?:asignaturas?\s+|materias?\s+)?(?:optativas?|electivas?|seminario optativo)(?:\s+(?:[ivx]+|\d+|optativas?|electivas?))*$"
-    r"|:$|^resoluci[óo]n|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
+    r"|:$|^resoluci[óo]n(?!\s+de\s+(?:conflictos|problemas))|deber[áa]|^entre\s+\d|a determinar|^horas flexibles$"
     # A row's kind alone (Barceló's "Práctica", "Seminario", "Taller" column).
     r"|^(?:pr[áa]ctica|seminario|taller)$"
     # The plan's own data, not a subject: "TÍTULO DE PREGRADO: ...", "CARGA HORARIA TOTAL: ...".
@@ -558,7 +559,12 @@ def plan_tabla_por_columna(html: str) -> list[tuple[str, int]]:
 #   then "05 0000   FILOSOFÍA   3   1 Sem" per subject.
 # Its "PLAN DE ESTUDIO Y CORRELATIVIDADES DETALLADAS" cuts every name at
 # twenty letters ("TÉC.Y ESTRAT.DE ESTU"): not read.
-_UCASAL_PERIODO = re.compile(r"^(?:ANUAL|\d\s*°\s*SEM\.?)\s+")
+_UCASAL_PERIODO = re.compile(r"^(?:ANUAL|\d\s*°\s*(?:SEM|CUAT)\.?|CUATRIM\.?)\s+")
+# A brochure that lists electives in a column of their own ("PAISAJE I
+# ... ELECTIVA") is a menu, and its lines run two names together.
+_UCASAL_COLUMNA_ELECTIVA = re.compile(r"\S\s{3,}(?:ELECTIVA|OPTATIVA)\s*$")
+# "PATOLOGÌA QUIRÙRGICA": accents Spanish does not write.
+_UCASAL_ACENTO_GRAVE = re.compile(r"[ÀÈÌÒÙàèìòù]")
 _UCASAL_FILA = re.compile(r"^\d{2}\s+\d{4}\s+(.+?)\s{2,}\d+\s+(?:\d\s*)?(?:Sem|Anual|ANUAL)")
 _UCASAL_ABREVIADA = re.compile(r"[º°]|\w\.(?=\s*\w)|\w\.$")
 _UCASAL_NO_ES = re.compile(r"(?i)^(prueba de suficiencia|plan de estudio|carrera|modalidad|plan\s+\d)|@|ucasal\.edu")
@@ -616,6 +622,12 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
     texto = texto_con_columnas or ""
     if "CORRELATIVIDADES DETALLADAS" in texto:
         return plan_ucasal_correlatividades(texto)
+    if re.search(r"\bCód\.", texto) and "Régimen" in texto:
+        return _ucasal_tabla_con_codigo(texto)
+    if re.search(r"(?m)^\s*COD\s+ASIGNATURA\s+REGIMEN", texto):
+        return _ucasal_anexo_con_codigo(texto)
+    if "Nómina de Asignaturas por régimen" in texto:
+        return _ucasal_nomina(texto)
     materias: list[tuple[str, int]] = []
     anio = 0
     if "PLAN DE ESTUDIO POR CARRERA" in texto:
@@ -637,8 +649,11 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
         return desde_el_primero(materias)
     # Each page repeats the heading ("CARRERA (46) LICENCIATURA" over "EN
     # CRIMINALÍSTICA") up to its first year.
+    renglones: list[tuple[str, int]] = []
     encabezado = False
     for linea in texto.splitlines():
+        if _UCASAL_COLUMNA_ELECTIVA.search(linea):
+            return []
         linea = clean_text(linea)
         # (Some brochures print the number: "4 AÑO".)
         rotulo = re.fullmatch(r"(?:(\d)\s*)?AÑO", linea)
@@ -652,11 +667,220 @@ def plan_ucasal(texto_con_columnas: str) -> list[tuple[str, int]]:
             continue
         # Some brochures copy the students' office's short names ("Dº PROC
         # CIVIL I", "PSIC.DESARR.NIÑO Y A"): such a plan is not read at all.
-        if _UCASAL_ABREVIADA.search(nombre) or len(nombre) == 20:
+        if _UCASAL_ABREVIADA.search(nombre) or _UCASAL_ACENTO_GRAVE.search(nombre):
             return []
         if nombre.isupper():
-            _agregar(materias, nombre, anio)
+            # (A footnote's number: "PRÁCTICA PROFESIONAL (1)".)
+            renglones.append((re.sub(r"\s*\(\d\)$", "", nombre), anio))
+    # Names cut at twenty letters leave none longer: a plan whose longest
+    # name is twenty is taken for cut ("ESTADÍSTICA APLICADA" is whole in a
+    # brochure that also prints longer ones).
+    if renglones and max(len(nombre) for nombre, _ in renglones) == 20:
+        return []
+    from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+    for nombre, anio in _ucasal_unir_partidos(renglones):
+        # (Its short names in capitals too: "ÉTICA".)
+        _agregar(materias, con_tildes(nombre), anio)
     return desde_el_primero(materias)
+
+
+_UCASAL_REGIMEN = r"(?:Semestral|Anual|Cuatrimestral)\b"
+_UCASAL_ORDINAL = {"PRIMER": 1, "SEGUNDO": 2, "TERCER": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6}
+
+
+def _ucasal_tabla_con_codigo(texto: str) -> list[tuple[str, int]]:
+    """The Jurídicas' plan sheets: a table per term ("Cód.", "MATERIA",
+    "Régimen") under each year's heading ("PRIMER AÑO"). A name too long for
+    its cell is wrapped around the row's code ("Negociación comercial,
+    transcultural y" / "6   Semestral" / "relaciones humanas"). A code
+    with no name in the text (one drawn as curves) leaves the plan unread."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    cabeza = ""        # a name's first line, before its code
+    codigo = False     # a code read on a line of its own, its name not yet whole
+    for linea in texto.splitlines():
+        linea = linea.replace("\xa0", " ").strip()
+        if not linea:
+            continue
+        if re.match(r"(?i)^seminarios\s+electivos", linea):
+            break
+        ordinal = re.fullmatch(r"(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO", linea)
+        fila = re.match(rf"^(\d{{1,2}})\s+(\S.*?)\s+{_UCASAL_REGIMEN}", linea)
+        solo_codigo = re.fullmatch(rf"\d{{1,2}}(?:\s+{_UCASAL_REGIMEN}.*)?", linea)
+        if codigo and (ordinal or fila or solo_codigo or not cabeza):
+            # (The name ended on its first line: "Teología I" over "14".)
+            if not cabeza:
+                return []
+            _agregar(materias, cabeza, anio)
+            cabeza, codigo = "", False
+        if ordinal:
+            anio, cabeza = _UCASAL_ORDINAL[ordinal.group(1)], ""
+        elif fila and anio:
+            _agregar(materias, fila.group(2), anio)
+            cabeza = ""
+        elif solo_codigo and anio:
+            codigo = True
+        elif re.match(rf"^-?\s*{_UCASAL_REGIMEN}", linea):
+            continue
+        else:
+            nombre = re.split(rf"\s+-?\s*{_UCASAL_REGIMEN}|\s{{3,}}", linea)[0]
+            # A heading, a total or the sheet's own title ("LICENCIATURA EN ...").
+            if (not anio or nombre.isupper() or re.match(r"(?i)^(cód|materia|horas|total|carga|\d\S*\s+semestre|plan de|facultad)", nombre)
+                    or not re.search(r"[a-záéíóúñ]", nombre)):
+                cabeza, codigo = "", False
+                continue
+            if codigo:
+                _agregar(materias, f"{cabeza} {nombre}", anio)
+                cabeza, codigo = "", False
+            else:
+                cabeza = nombre
+    if codigo:
+        if not cabeza:
+            return []
+        _agregar(materias, cabeza, anio)
+    return desde_el_primero(materias)
+
+
+def _ucasal_anexo_con_codigo(texto: str) -> list[tuple[str, int]]:
+    """The Ministry's annex of a plan ("COD", "ASIGNATURA", "REGIMEN"): a
+    row per subject, its code and regime on the line in the middle of its
+    name ("PSICOLOGÍA DEL" / "3  DESARROLLO Y DE LA  Anual" / "SUBJETIVIDAD").
+    A name is centred on its code's line, as many of its lines above as
+    below, which tells the tail of one name from the head of the next; a
+    count that does not close leaves the plan unread."""
+    from rumbo_scraper.parsers.guias_nacionales import con_tildes
+
+    # The lines of the name column, each a row's code (or None) and its text.
+    renglones: list[tuple[int | None, str]] = []
+    anios: list[tuple[int, int]] = []   # (index of the first line after the heading, year)
+    columna = 0
+    for linea in texto.splitlines():
+        linea = linea.replace("\xa0", " ")
+        encabezado = re.match(r"^\s*COD\s+ASIGNATURA\s+", linea)
+        if encabezado:
+            columna = encabezado.end()
+            continue
+        if re.match(r"^\s*TÍTULO:", linea) and renglones:
+            break
+        ordinal = re.fullmatch(r"\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*", linea)
+        if ordinal:
+            anios.append((len(renglones), _UCASAL_ORDINAL[ordinal.group(1)]))
+            continue
+        if not columna or not anios:
+            continue
+        fila = re.match(rf"^\s*(\d{{1,2}})\s+(.*?)\s*{_UCASAL_REGIMEN}", linea)
+        if fila:
+            renglones.append((int(fila.group(1)), fila.group(2)))
+            continue
+        nombre = linea[:columna].strip()
+        # (The table's heading over two lines, a total, the page's foot.)
+        if nombre and re.search(r"[A-ZÁÉÍÓÚÑ]", nombre) and not re.search(r"\d|CARGA|SEMANAL|DNGU|Página", nombre) \
+                and not linea[columna:].strip().startswith(("HORARIA", "TOTAL", "DICTADO")):
+            renglones.append((None, nombre))
+    codigos = [i for i, (codigo, _) in enumerate(renglones) if codigo is not None]
+    if not codigos or [renglones[i][0] for i in codigos] != list(range(1, len(codigos) + 1)):
+        return []
+    materias: list[tuple[str, int]] = []
+    inicio = 0          # where the current name starts
+    for n, i in enumerate(codigos):
+        cabeza = i - inicio
+        fin = i + 1 + cabeza
+        siguiente = codigos[n + 1] if n + 1 < len(codigos) else len(renglones)
+        if fin > siguiente or any(renglones[j][0] is not None for j in range(inicio, fin) if j != i):
+            return []
+        # (A year's heading falls between two names, never inside one.)
+        if any(inicio < a < fin for a, _ in anios):
+            return []
+        anio = max((a for a in anios if a[0] <= i), default=(0, 0))[1]
+        _agregar(materias, con_tildes(" ".join(t for _, t in renglones[inicio:fin] if t)), anio)
+        inicio = fin
+    if inicio != len(renglones):
+        return []
+    return desde_el_primero(materias)
+
+
+_UCASAL_SEMESTRE = r"[12]\s*[º°]\s*Sem\b"
+
+
+def _ucasal_nomina(texto: str) -> list[tuple[str, int]]:
+    """A faculty's whole plan (Producción Animal), whose last pages are the
+    "Nómina de Asignaturas por régimen de cursado": under each year's
+    heading a row per subject, "Fundamentos de Química   1º Sem.   5   80",
+    its code ("1.3") on the row or on a line of its own beside it. A row
+    with no name ("2.11   2º Sem.  2  32") has it on the next line. The
+    names of each year must be as many as its codes, 1 to n."""
+    materias: list[tuple[str, int]] = []
+    codigos: dict[int, set[int]] = defaultdict(set)
+    por_anio: Counter = Counter()
+    anio = 0
+    sin_nombre = False      # a row whose name is on the next line
+    for linea in texto.split("Nómina de Asignaturas por régimen", 1)[1].splitlines():
+        linea = linea.replace("\xa0", " ").replace("​", "")
+        if not linea.strip():
+            continue
+        ordinal = re.fullmatch(r"\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+AÑO\s*", linea)
+        if ordinal:
+            if sin_nombre:
+                return []
+            anio = _UCASAL_ORDINAL[ordinal.group(1)]
+            continue
+        if not anio:
+            continue
+        # (A code is near the margin; the correlatives, far to the right.)
+        codigo = re.match(r"^\s{0,9}(\d)\.(\d{1,2})\b", linea)
+        if codigo:
+            if int(codigo.group(1)) != anio:
+                return []
+            codigos[anio].add(int(codigo.group(2)))
+        resto = linea[codigo.end():] if codigo else linea
+        fila = re.match(rf"^\s*(\S.*?)\s{{2,}}{_UCASAL_SEMESTRE}", resto)
+        if sin_nombre:
+            nombre = re.split(r"\s{3,}", resto.strip())[0]
+            if fila or re.search(r"\d", nombre) or not re.search(r"[a-záéíóúñ]", nombre):
+                return []
+            _agregar(materias, nombre, anio)
+            por_anio[anio] += 1
+            sin_nombre = False
+        elif fila:
+            _agregar(materias, fila.group(1), anio)
+            por_anio[anio] += 1
+        elif re.match(rf"^\s*{_UCASAL_SEMESTRE}", resto):
+            sin_nombre = True
+    if sin_nombre or not por_anio or sorted(por_anio) != list(range(1, max(por_anio) + 1)):
+        return []
+    if any(codigos[a] != set(range(1, n + 1)) for a, n in por_anio.items()):
+        return []
+    return desde_el_primero(materias)
+
+
+_UCASAL_NUMERAL = re.compile(r"\s+(?:I{1,3}|IV|VI{0,3}|IX|X)$")
+
+
+def _ucasal_unir_partidos(renglones: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """A name the brochure wraps onto a second line, joined: where the first
+    ends in a comma or a word that does not end a name ("... ENERGÉTICA PARA"
+    over "DISTINTOS TIPOS DE ..."), or where the two make the next of a
+    series the plan has ("ADMINISTRACIÓN" over "FINANCIERA II", with
+    "ADMINISTRACIÓN FINANCIERA I")."""
+    series = Counter(_UCASAL_NUMERAL.sub("", nombre) for nombre, _ in renglones
+                     if _UCASAL_NUMERAL.search(nombre))
+    unidos: list[tuple[str, int]] = []
+    i = 0
+    while i < len(renglones):
+        nombre, anio = renglones[i]
+        if i + 1 < len(renglones):
+            cola, anio_cola = renglones[i + 1]
+            junto = f"{nombre} {cola}"
+            sigue = bool(re.search(r",$|\s(?:DE|DEL|LA|LAS|LOS|EL|Y|E|EN|A|AL|CON|PARA|POR)$", nombre))
+            if anio_cola == anio and (sigue or (len(cola.split()) <= 3 and _UCASAL_NUMERAL.search(cola)
+                                                and series[_UCASAL_NUMERAL.sub("", junto)])):
+                unidos.append((junto, anio))
+                i += 2
+                continue
+        unidos.append((nombre, anio))
+        i += 1
+    return unidos
 
 
 def _plan_en_lista(html: str) -> list[tuple[str, int]]:
@@ -3172,14 +3396,14 @@ def plan_forestales_unam(html: str) -> list[tuple[str, int]]:
     return desde_el_primero(materias)
 
 
-_FILA_UNPAZ = re.compile(r"^(\s*)(\d{2})\s{2,}(\S.*?)(?:\s{2,}(?:Anual|Cuatrimestral|Bimestral|Semestral|Trimestral)\b.*)?$")
+_FILA_UNPAZ = re.compile(r"^(\s*)(\d{2}|\d{4})\s{2,}(\S.*?)(?:\s{2,}(?:Anual|Cuatrimestral|Bimestral|Semestral|Trimestral)\b.*)?$")
 
 
 def plan_unpaz(texto: str) -> list[tuple[str, int]]:
     """UNPAZ's career brochures (``pdftotext -layout``): one table per year,
     each under its header ("Código  Asignatura  Régimen  Horas  Correlatividad")
     with the year's name beside it ("Primer año", wherever the table's
-    middle falls, or just over the header), each subject its two-digit code,
+    middle falls, or just over the header), each subject its code (two digits, or four: "6001"),
     its name and its term; a name too long for its cell goes on in the line
     right below, at the name's column ("Introducción a los Procedimientos" /
     "de Quirófano"). The options of an elective slot ("35 Optativa 1" over
@@ -3194,6 +3418,10 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
     for numero, linea in enumerate(lineas):
         limpia = linea.strip()
         if re.search(r"C[óo]digo\s+Asignatura", linea):
+            # The year may head the header's own line ("Tercer año   Código   Asignatura").
+            delante = re.match(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\s+C[óo]digo", limpia)
+            if delante:
+                pendiente = _ORDINALES[delante.group(1).lower()]
             actual = {"anios": set() if pendiente is None else {pendiente}, "filas": []}
             bloques.append(actual)
             pendiente, seguida = None, False
@@ -3223,8 +3451,11 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
             actual["filas"].append([len(fila.group(1)) + len(fila.group(2)), nombre])
             seguida = True
             continue
-        # The rest of a name, right below it at its column.
+        # The rest of a name, right below it at its column; a stray
+        # prerequisite far right ("producción audiovisual I      -") is not
+        # part of it.
         sangria = len(linea) - len(linea.lstrip())
+        limpia = re.sub(r"\s{2,}[\d\s-]+$", "", limpia)
         if (seguida and re.match(r"[A-Za-zÁÉÍÓÚÑáéíóúñ(]", limpia)
                 and actual["filas"][-1][0] < sangria <= actual["filas"][-1][0] + 12
                 and not re.search(r"\s{2,}", limpia)):
@@ -3240,6 +3471,131 @@ def plan_unpaz(texto: str) -> list[tuple[str, int]]:
         anio = next(iter(bloque["anios"]))
         for _, nombre in bloque["filas"]:
             _agregar(materias, nombre, anio)
+    return desde_el_primero(materias)
+
+
+_ANIO_UNSO = re.compile(r"(?i)^(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o\b")
+# The table's head, repeated on each page: its columns' words.
+_CABEZA_UNSO = {"asignatura", "asignaturas", "horas", "hora", "hs", "de", "del", "totales", "teóricas", "teoricas",
+                "prácticas", "practicas", "régimen", "regimen", "carga", "horaria", "total", "interacción",
+                "pedagógica", "trabajo", "autónomo", "estudiante", "créditos", "pre", "profesionales", "modalidad"}
+_TRAMO_UNSO = re.compile(r"(?i)^(?:(?:primer|segundo)\s+cuatrimestre|anual|subtotal\b.*)$")
+# What closes a year: its total, the degree it gives ("TITULO INTERMEDIO  1184 ..."),
+# or a term's heading with figures, the total mislabelled (Psicopedagogía:
+# "SEGUNDO CUATRIMESTRE  720  418  302").
+_CIERRE_UNSO = re.compile(r"(?i)^(?:total|subtotal anual)\b|^(?:t[íi]tulo\b.*|(?:primer|segundo) cuatrimestre)\s\d+(?:\s\d+)*$")
+_FIN_UNSO = re.compile(r"(?i)^(?:carga horaria total|total (?:de horas|carrera)|anexo|correlatividades$)")
+_HORAS_UNSO = re.compile(r"^(\s*)(?:(\S.*?)(?:\s{2,}(?:Cuatrimestral|Anual|Bimestral))?\s{2,})?(\d+(?:\s+\d+)*)\s*$")
+
+
+def plan_unso(texto: str) -> list[tuple[str, int]]:
+    """UNSO's plans (``pdftotext -layout``): a table per year ("PRIMER AÑO",
+    then "PRIMER CUATRIMESTRE"), a subject per row with its hours to the
+    right ("Física   64   32   32", or its term before them: "Costos
+    Cuatrimestral 64"), the rows mostly apart by a blank line. A name too
+    long for its cell takes two lines, the hours on the first, the second or
+    a line of their own between them ("Taller de búsqueda Jurídica y
+    análisis" / "64 16 48" / "Jurisprudencial"); where the rows are not
+    apart, a line without hours goes with the row below it, unless it goes
+    on in small letters ("en Cs. Sociales") or ends the group. A number at
+    the names' column is the name's ("Postproducción Audiovisual" / "1   64
+    32 32"); one at the hours' column below a row with hours fell from it
+    ("Legales y comerciales  36  12" / "48"). A total closes the year
+    ("TOTAL ANUAL", "TOTAL", the degree's line); what follows it without a
+    year of its own (the supervised practice, the final project) is not in
+    a year and is left out, unless a subtotal comes after it (a total out
+    of place: the Criminalística plan). The annex (prerequisites) is not the
+    plan."""
+    lineas = texto.replace("\f", "\n").splitlines()
+
+    def fila_de(linea: str) -> tuple[str | None, int] | None:
+        # A row's name and where its hours begin; a name of figures alone
+        # is a number of the hours ("64   186   250"), or of the name.
+        fila = _HORAS_UNSO.match(linea)
+        if not fila:
+            return None
+        if fila.group(2) and not fila.group(2).isdigit():
+            return fila.group(2), fila.start(3)
+        return (fila.group(2), fila.start(2)) if fila.group(2) else (None, fila.start(3))
+
+    # Where the hours begin: the leftmost hours of a row with its name.
+    columna = min((f[1] for f in map(fila_de, lineas) if f and f[0] and not f[0].isdigit()), default=0)
+    materias: list[tuple[str, int]] = []
+    anio: int | None = None
+    cerrado: int | None = None
+    sueltas: list[str] = []
+    bloque: list[str] = []
+
+    def resolver() -> bool:
+        partes: list[list] = []  # [name, has hours]
+        for linea in bloque:
+            fila = fila_de(linea)
+            if fila and fila[0] and fila[0].isdigit():
+                if fila[1] < columna - 8:
+                    partes.append([fila[0], True])  # a number at the names' column: "1   64  32  32"
+                    continue
+                fila = (None, fila[1])
+            if fila and fila[0] is None and partes and partes[-1][1]:
+                continue  # a number of the row above, fallen below it
+            nombre = (fila[0] or "") if fila else re.sub(r"\s{2,}(?:Cuatrimestral|Anual)\s*$", "", linea)
+            partes.append([re.sub(r"\s+", " ", nombre.strip()), bool(fila)])
+        bloque.clear()
+        # Figures alone: a subtotal's, its word on the line below ("288  152  136" / "SUBTOTAL").
+        if not any(nombre for nombre, _ in partes) or (anio is None and (cerrado is None or not any(h for _, h in partes))):
+            return True
+        nombres: list[str] = []
+        pendiente: list[str] = []
+        for numero, (nombre, horas) in enumerate(partes):
+            if not horas:
+                # The rest of the row just above: in small letters, or the group's last line.
+                if (nombres and not pendiente and partes[numero - 1][1]
+                        and (numero == len(partes) - 1 or re.match(r"[a-záéíóúñ(\d]", nombre))):
+                    nombres[-1] += " " + nombre
+                else:
+                    pendiente.append(nombre)
+                continue
+            nombres.append(" ".join(pendiente + ([nombre] if nombre else [])))
+            pendiente = []
+        if pendiente or not all(nombres):
+            return False
+        for nombre in nombres:
+            # A word the cell broke: "Georreferencia-" / "ción".
+            nombre = re.sub(r"([^\W\d_])- (?=[a-záéíóúñ])", r"\1", nombre)
+            if anio is not None:
+                _agregar(materias, nombre, anio)
+            else:
+                sueltas.append(nombre)
+        return True
+
+    for linea in lineas:
+        limpia = re.sub(r"\s+", " ", linea.strip())
+        if not limpia or re.fullmatch(r"\d+/\d+", limpia):
+            if not resolver():
+                return []
+            continue
+        if _FIN_UNSO.search(limpia):
+            break
+        del_anio = _ANIO_UNSO.match(limpia)
+        cabeza = not re.search(r"\d", limpia) and set(re.findall(r"[^\W\d_]+", limpia.lower())) <= _CABEZA_UNSO
+        if del_anio or cabeza or _TRAMO_UNSO.match(limpia) or _CIERRE_UNSO.match(limpia):
+            if not resolver():
+                return []
+            if del_anio:
+                anio, cerrado = _ORDINALES[del_anio.group(1).lower()], None
+                sueltas.clear()
+            elif _CIERRE_UNSO.match(limpia):
+                if anio is not None:
+                    anio, cerrado = None, anio
+            elif re.match(r"(?i)^subtotal\b", limpia) and cerrado is not None and sueltas:
+                # A subtotal after the total: the rows between were the year's.
+                for nombre in sueltas:
+                    _agregar(materias, nombre, cerrado)
+                sueltas.clear()
+                anio, cerrado = cerrado, None
+            continue
+        bloque.append(linea)
+    if not resolver():
+        return []
     return desde_el_primero(materias)
 
 
@@ -3310,6 +3666,144 @@ def plan_uno(ruta: str) -> list[tuple[str, int]]:
 
 
 plan_uno.ruta = True
+
+
+# "1º AÑO", "Primer Año -Ciclo Inicial-", "CICLO I - 1º AÑO": a year's heading, a line of its own.
+_ANIO_UNO = re.compile(r"(?i)^(?:ciclo [\wíé ]+?\s*[-–]\s*)?(?:(primer|segundo|tercer|cuarto|quinto|sexto)\s+a[ñn]o"
+                       r"|(\d)\s*[º°]\s*a[ñn]o)(?:\s*-\s*ciclo [\wíé]+\s*-)?$")
+# A row's code: "02069", "02-001", "02 001", "-----------" (an elective's).
+_CODIGO_UNO = re.compile(r"\d{4,5}|\d{2}-\d{2,3}|-{3,}")
+# Lines in the name's column that are not a subject's: the year's hours, the
+# intermediate title ("Título obtenido: ANALISTA ..."), a layer laid over
+# the table ("CICLO INICIAL  Hs  2432").
+# An elective's slot, a row without a code.
+_ELECTIVA_UNO = re.compile(r"(?i)(?:electiva|optativa)(?: [IVX\d]+)?")
+_NO_ES_FILA_UNO = re.compile(r"(?i)^(?:sub)?total\b|^horas totales$|^certificaci[óo]n\b|^plan de estudios$|^t[íi]tulo\b"
+                             r"|carga horaria total|^ciclo inicial$|^obtenido:|^[\d\s*°º/–-]+$|^c$")
+
+
+def plan_uno_codigos(cajas: str) -> list[tuple[str, int]]:
+    """UNO's plan PDFs whose table has a code per row (``-bbox-layout``):
+    "CÓDIGO  ASIGNATURA" (or "MATERIA") under "1º AÑO" / "Primer Año"
+    headings. A name too long for its cell wraps above, beside and below its
+    code's line ("Teoría de Grupo e Intervención" / "03084 Comunitaria";
+    "Acceso a la Justicia y a los Derechos" / "02080" / "en Contexto de
+    Vulnerabilidad"), so each line of the name's column is the nearest
+    code's; a line about as near two codes, or far from all of them inside
+    the table, gives nothing. The column right of the names has one value per
+    row (its "c", "1°" or hours): a row without its code (Redes' "Electiva")
+    would join the row above, so a count that differs gives nothing. Notes
+    above or below the table are not read."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
+        palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
+                    for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
+        renglones: dict[int, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            renglones.setdefault(round((y0 + y1) / 2), []).append((x0, t))
+        titulos = []
+        for y, renglon in sorted(renglones.items()):
+            titulo = _ANIO_UNO.match(" ".join(t for _, t in sorted(renglon)))
+            if titulo:
+                titulos.append((y, _ORDINALES[titulo.group(1).lower()] if titulo.group(1) else int(titulo.group(2))))
+        cabeza = next(((x0, x1, (y0 + y1) / 2) for x0, y0, x1, y1, t in palabras if t in ("ASIGNATURA", "MATERIA")), None)
+        if cabeza is None:
+            # (A year's heading on a page with no table: a layout this does not read.)
+            if titulos:
+                return []
+            continue
+        hx0, hx1, hy = cabeza
+        siguiente = min(((x0, x1) for x0, y0, x1, y1, t in palabras
+                         if abs((y0 + y1) / 2 - hy) < 8 and x0 > hx1 and t.isupper()), default=None)
+        if siguiente is None:
+            return []
+        # The codes, left of the names ("02 001" is two words).
+        izquierda_de: dict[int, list[tuple[float, float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            if x1 < hx0 and y0 > hy - 15:
+                izquierda_de.setdefault(round((y0 + y1) / 2), []).append((x0, x1, t))
+        filas = []
+        for y, renglon in sorted(izquierda_de.items()):
+            renglon.sort()
+            if re.search(r"(?<!\d)\d{2} \d{3}(?!\d)", " ".join(t for _, _, t in renglon)):
+                filas.append((y, max(x1 for _, x1, _ in renglon)))
+                continue
+            codigos = [x1 for _, x1, t in renglon if _CODIGO_UNO.fullmatch(t)]
+            if codigos:
+                filas.append((y, codigos[-1]))
+        if not filas:
+            continue
+        izquierda = max(x for _, x in filas) + 1
+        # An elective's slot has no code ("Electiva", "Optativa I" in Redes):
+        # a row of its own when its line has its value beside it, near the
+        # coded rows. It is not a subject (``_agregar`` leaves it out).
+        for y, renglon in renglones.items():
+            nombre = [(x0, t) for x0, t in renglon if izquierda < x0 < siguiente[0] - 1]
+            if (_ELECTIVA_UNO.fullmatch(" ".join(t for _, t in sorted(nombre)))
+                    and any(siguiente[0] - 8 <= x0 <= siguiente[1] + 8 for x0, _ in renglon)
+                    and 4 < min(abs(y - fy) for fy, _ in filas) < 30 and y > hy):
+                filas.append((y, izquierda - 1))
+        filas.sort()
+        arriba, abajo = filas[0][0] - 16, filas[-1][0] + 16
+        valores = sorted((y0 + y1) / 2 for x0, y0, x1, y1, t in palabras
+                         if siguiente[0] - 8 <= (x0 + x1) / 2 <= siguiente[1] + 8 and arriba <= (y0 + y1) / 2 <= abajo
+                         and re.fullmatch(r"\d+[°º*]?|[cx]|Anual|Semestral|Cuatrimestr(?:e|al)", t))
+        # (One row's "1º Cuatrimestre" is one value; a year's "2º AÑO" over the column is none.)
+        valores = [v for v in valores if all(abs(v - ty) > 3 for ty, _ in titulos)]
+        valores = [v for i, v in enumerate(valores) if i == 0 or v - valores[i - 1] > 4]
+        if (len(valores) != len(filas)
+                or len({min(range(len(filas)), key=lambda i: abs(filas[i][0] - v)) for v in valores}) != len(filas)):
+            return []
+        lineas: dict[int, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            # (A term's "1º" that reaches into the name's column is not the name's.)
+            if x0 > izquierda and x1 < siguiente[0] - 1 and (y0 + y1) / 2 > hy + 5 and not re.fullmatch(r"\d+[°º]", t):
+                lineas.setdefault(round((y0 + y1) / 2), []).append((x0, t))
+        juntas: list[tuple[int, list[tuple[float, str]]]] = []
+        for y in sorted(lineas):
+            if juntas and y - juntas[-1][0] < 2.5:
+                juntas[-1][1].extend(lineas[y])
+            else:
+                juntas.append((y, list(lineas[y])))
+        partes: list[list[tuple[int, str]]] = [[] for _ in filas]
+        for y, linea in juntas:
+            texto = " ".join(t for _, t in sorted(linea))
+            if not arriba <= y <= abajo or _ANIO_UNO.match(texto) or _NO_ES_FILA_UNO.search(texto):
+                continue
+            cerca = sorted((abs(y - fy), i) for i, (fy, _) in enumerate(filas))
+            if cerca[0][0] > 16:
+                # (A note between a year's last row and the next year's table.)
+                previa = max((fy for fy, _ in filas if fy < y), default=-1)
+                if any(previa < ty < y for ty, _ in titulos):
+                    continue
+                return []
+            if len(cerca) > 1 and cerca[0][0] > 0.6 * cerca[1][0]:
+                return []
+            partes[cerca[0][1]].append((y, texto))
+        for (fy, _), parte in zip(filas, partes):
+            anio_de_la_fila = next((a for ty, a in reversed(titulos) if ty < fy), anio)
+            if anio_de_la_fila is None or not parte:
+                return []
+            _agregar(materias, " ".join(t for _, t in sorted(parte)), anio_de_la_fila)
+        if titulos:
+            anio = titulos[-1][1]
+    return desde_el_primero(materias)
+
+
+plan_uno_codigos.cajas = True  # type: ignore[attr-defined]
+
+
+def plan_uno_todos(ruta: str) -> list[tuple[str, int]]:
+    """UNO: the tables pdfplumber reads whole (Matemática), then the coded
+    rows by position."""
+    import subprocess
+
+    return plan_uno(ruta) or plan_uno_codigos(
+        subprocess.run(["pdftotext", "-bbox-layout", ruta, "-"], capture_output=True, text=True, timeout=60).stdout)
+
+
+plan_uno_todos.ruta = True
 
 
 def plan_eco_unrc(ruta: str) -> list[tuple[str, int]]:
@@ -3460,7 +3954,248 @@ def plan_unahur_todos(texto_con_columnas: str) -> list[tuple[str, int]]:
     """UNAHUR: its 2025 resolutions' layout first (the stricter reading),
     then the older brochures', then the 2025-2026 plan documents' table."""
     return (plan_unahur_2025(texto_con_columnas) or plan_unahur(texto_con_columnas)
-            or plan_unahur_tabla(texto_con_columnas))
+            or plan_unahur_tabla(texto_con_columnas) or plan_unahur_campos(texto_con_columnas)
+            or plan_unahur_numerado(texto_con_columnas))
+
+
+# "1er año", "2° Año", "3° AÑO": a year's row of a table, alone in it.
+_ANIO_UNAHUR_CELDA = re.compile(r"(?i)^(\d)\s*(?:er|do|ro|to|[°º])?\s*año$")
+
+
+def plan_unahur_celdas(filas: list[list[str]]) -> list[tuple[str, int]]:
+    """UNAHUR's plans whose table is drawn cell by cell (Desarrollo
+    Agrario's, EXP. 898/23), read as rows of cells (``plan_unahur_tablas``):
+    the plan starts at the row headed "Código" and "Asignatura"; a row with
+    a year alone in it ("1er año", "2° Año") opens that year, one with a
+    term alone ("1er cuatrimestre") is passed over, and each subject's row
+    has its number in the code's column, 1, 2, 3 on to the end, and its name
+    whole in its cell (a wrapped name is one cell). The plan ends at the
+    first row that is none of these (the next table, its credits). A number
+    out of order, a year out of order or a row without its name gives
+    nothing."""
+    columnas = None
+    anios: list[int] = []
+    numeros: list[int] = []
+    materias: list[tuple[str, int]] = []
+    for fila in filas:
+        celdas = [" ".join((c or "").split()) for c in fila]
+        if columnas is None:
+            claves = [c.lower() for c in celdas]
+            if "código" in claves and "asignatura" in claves:
+                columnas = claves.index("código"), claves.index("asignatura")
+            continue
+        llenas = [c for c in celdas if c]
+        if len(llenas) == 1 and (anual := _ANIO_UNAHUR_CELDA.match(llenas[0])):
+            anios.append(int(anual.group(1)))
+            continue
+        if len(llenas) == 1 and _CUATRIMESTRE_UNAHUR.match(llenas[0]):
+            continue
+        codigo = celdas[columnas[0]] if columnas[0] < len(celdas) else ""
+        if not re.fullmatch(r"\d{1,2}", codigo):
+            break
+        nombre = celdas[columnas[1]] if columnas[1] < len(celdas) else ""
+        if not anios or not nombre:
+            return []
+        numeros.append(int(codigo))
+        _agregar(materias, nombre, anios[-1])
+    if not numeros or numeros != list(range(1, len(numeros) + 1)) or anios != list(range(1, len(anios) + 1)):
+        return []
+    return desde_el_primero(materias)
+
+
+def plan_unahur_tablas(ruta: str) -> list[tuple[str, int]]:
+    """The rows of a PDF's drawn tables (``pdfplumber``), page after page,
+    for ``plan_unahur_celdas``: each cell's text read from its own box, the
+    words parted where pdfplumber's table text runs them together."""
+    import pdfplumber
+
+    filas: list[list[str]] = []
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.find_tables():
+                for fila in tabla.rows:
+                    filas.append([pagina.crop(celda).extract_text(x_tolerance=1) if celda else ""
+                                  for celda in fila.cells])
+    return plan_unahur_celdas(filas)
+
+
+def plan_unahur_documento(ruta: str) -> list[tuple[str, int]]:
+    """UNAHUR's documents: the readers of its layouts' text
+    (``plan_unahur_todos``), else of a table drawn cell by cell."""
+    import subprocess
+
+    texto = subprocess.run(["pdftotext", "-layout", ruta, "-"], capture_output=True, text=True, timeout=60).stdout
+    return plan_unahur_todos(texto) or plan_unahur_tablas(ruta)
+
+
+plan_unahur_documento.ruta = True  # type: ignore[attr-defined]
+
+
+_CUATRIMESTRE_UNAHUR = re.compile(r"(?i)^\s*(\d{1,2})\s*(?:er|do|ro|to|vo|mo|no|°|º)?\.?\s*cuatrimestre\s*$")
+_ANIO_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(\d)\s*[°º]\s*año\s*$")
+# "7   Análisis matemático I   cuatrimestral   6   96 ...", "3  Anatomo-Fisiología I  C  4  64",
+# or the number alone when the name wraps around the row ("3   cuatrimestral  2  32",
+# "29   20 (6)   100 ..."); or the field first ("1   Introducción al   CFE   4   64").
+_FILA_UNAHUR_NUMERADA = re.compile(r"(?i)^\s*(\d{1,2})\s+(?:(\S.*?)\s{2,})?(?:cuatrimestral\b|anual\b|C\s|(?-i:C[A-Z]{2})\s|\d)")
+# (Also the credits the plan counts apart: "40 créditos externos (160 horas)".)
+_FIN_UNAHUR_NUMERADO = re.compile(r"(?i)^\s*(?:cr[ée]ditos|carga horaria total|total\b|\d+ cr[ée]ditos\b)")
+# Between the rows: a cycle's heading, or the intermediate title and its
+# hours ("Enfermero/a Universitario/a   1977   1356 ...").
+_ENTRE_FILAS_UNAHUR = re.compile(r"(?i)^\s*(?:(?:primer|segundo|tercer)\s+ciclo\s*$|\S+/a\b)")
+
+
+def plan_unahur_numerado(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's tables numbered row by row (the tecnicaturas' brochures,
+    Energía Eléctrica and Metalurgia; Enfermería's RCS 385/2024): under term
+    headings ("1er. cuatrimestre", two to a year) or year headings ("1°
+    Año"). A name too long for its cell is centred on its row, as many lines
+    above as below it ("Nuevos Entornos y Lenguajes: la" / "3
+    cuatrimestral 2 32" / "producción del conocimiento ..."; "Deontología y
+    aspectos legales" / "27 del ejercicio profesional de la C 2 32" /
+    "Enfermería"); of a wrapped line, the first column is the name's
+    ("Práctica pre- Profesional   Mensual"). A line no row takes, one
+    starting in lower case above a row, or a number out of order gives
+    nothing; the plan ends at its "Créditos", "Carga horaria total" or
+    "TOTAL" (or "40 créditos externos"). Credit slots ("Créditos ACA") are
+    not subjects. A Roman figure typed as lower-case Ls ("Metalurgia ll")
+    is the figure. A name may instead start on its row and go on below it,
+    in lower case and with no blank line between (Viverismo: "1
+    Introducción al  CFE  4  64" / "viverismo"). The page's motto
+    ("“75 avo aniversario de la gratuidad ...”") is not part of the table."""
+    filas: list[dict[str, Any]] = []
+    anio = None
+    arriba: list[str] = []
+    abierta = None
+    for linea in (texto_con_columnas or "").splitlines():
+        # (A blank line ends a row's cell; a page's number or motto does not.)
+        if not linea.strip():
+            abierta = None
+            continue
+        if re.fullmatch(r"\s*\d{1,3}\s*", linea) or re.fullmatch(r"\s*“[^”]*”\s*", linea):
+            continue
+        termino, anual = _CUATRIMESTRE_UNAHUR.match(linea), _ANIO_UNAHUR_NUMERADO.match(linea)
+        if termino or anual:
+            if arriba:
+                return []
+            anio = (int(termino.group(1)) + 1) // 2 if termino else int(anual.group(1))
+            abierta = None
+            continue
+        if anio is None:
+            continue
+        if _FIN_UNAHUR_NUMERADO.match(linea):
+            break
+        if _ENTRE_FILAS_UNAHUR.match(linea) and not _FILA_UNAHUR_NUMERADA.match(linea):
+            if arriba:
+                return []
+            abierta = None
+            continue
+        fila = _FILA_UNAHUR_NUMERADA.match(linea)
+        if fila:
+            if arriba and arriba[0][:1].islower():
+                return []
+            nombre = clean_text(fila.group(2) or "")
+            # (Of a row whose cell is empty, what was read is its length or hours.)
+            if re.fullmatch(r"(?i)c|anual|mensual|cuatrimestral|\d.*", nombre):
+                nombre = ""
+            filas.append({"n": int(fila.group(1)), "anio": anio, "debajo": len(arriba),
+                          "partes": arriba + ([nombre] if nombre else []), "sigue": not arriba and bool(nombre)})
+            abierta = filas[-1] if arriba or nombre else None
+            arriba = []
+            continue
+        parte = clean_text(re.split(r"\s{2,}", linea.strip())[0])
+        if abierta is not None and abierta["debajo"]:
+            abierta["partes"].append(parte)
+            abierta["debajo"] -= 1
+        elif abierta is not None and abierta["sigue"] and parte[:1].islower():
+            abierta["partes"].append(parte)
+        else:
+            arriba.append(parte)
+    numeros = [f["n"] for f in filas]
+    if arriba or not filas or numeros != list(range(1, len(numeros) + 1)) or not all(f["partes"] for f in filas):
+        return []
+    materias: list[tuple[str, int]] = []
+    for f in filas:
+        nombre = re.sub(r"\s(l{1,3})$", lambda m: " " + "I" * len(m.group(1)), " ".join(f["partes"]))
+        if not re.match(r"(?i)cr[ée]ditos\b", nombre):
+            _agregar(materias, nombre, f["anio"])
+    return desde_el_primero(materias)
+
+
+_ANIO_UNAHUR_CAMPOS = re.compile(r"^\s*(PRIMER|SEGUNDO|TERCER|CUARTO|QUINTO|SEXTO)\s+A[ÑN]O\b(?:\s*\(.*\))?\s*$")
+# "Zoología   C   CFE   6   96 ..." (the profesorados of 2024) or
+# "Física   CFB   Cuatr.   64 ..." (Mantenimiento Hospitalario): the name,
+# its length and its field, either way round, then the hours.
+# (The length may read "C." or "C1": Geografía's and Chino's.)
+_FILA_UNAHUR_CAMPOS = re.compile(r"^\s*(?:(\S.*?)\s{2,})?(?:[CA][.\d]?\s+C[A-Z]{1,3}|C[A-Z]{1,3}\s+(?:Cuatr\.|Anual|[CA]))\s+\d")
+
+
+def plan_unahur_campos(texto_con_columnas: str) -> list[tuple[str, int]]:
+    """UNAHUR's plans whose table has no subject numbers ("UNIDAD
+    CURRICULAR  D  CP  HIS ...", the profesorados' resolutions of 2024):
+    "PRIMER AÑO" alone over rows "Zoología  C  CFE  6  96 ...". A name too
+    long for its cell is centred on its row, as many lines above as below
+    ("Aprendizajes y prácticas" / "C CFB 4 64 ..." / "educativas"; with three,
+    the middle one beside the data). A year's total, the intermediate
+    title's line and a page's number are not subjects; the plan ends at
+    "TOTAL CARRERA" or where the first year starts again."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    arriba: list[str] = []
+    abajo: list[str] = []
+    debe_abajo = 0
+    vistos: set[int] = set()
+    for linea in texto_con_columnas.splitlines():
+        texto = clean_text(linea).replace("\xa0", " ").strip()
+        cabeza = _ANIO_UNAHUR_CAMPOS.match(linea)
+        if cabeza:
+            nuevo = _ORDINALES[cabeza.group(1).lower()]
+            if nuevo in vistos:
+                break
+            vistos.add(nuevo)
+            anio, arriba, debe_abajo = nuevo, [], 0
+            continue
+        if anio is None or not texto:
+            continue
+        if re.match(r"(?i)total (?:de la )?carrera|titulaci[óo]n final", texto.translate(_LIGADURAS)):
+            break
+        fila = _FILA_UNAHUR_CAMPOS.match(linea)
+        if fila:
+            nombre = [*arriba, *([clean_text(fila.group(1))] if fila.group(1) else [])]
+            if not nombre:
+                return []
+            abajo = nombre
+            materias.append((" ".join(nombre), anio))
+            # (A name on its row that stops on a connector goes on below,
+            # past a page break: "Historia de la Nación Argentina y sus" /
+            # "13" / "proyectos educativos".)
+            debe_abajo, arriba = len(arriba) or int(bool(_SIGUE.search(nombre[-1]) or nombre[-1].endswith(" sus"))), []
+            continue
+        # A row split over lines ("C" here, its field and hours on the next):
+        # a row this does not read, so not the whole plan.
+        if re.search(r"(?:^|\s{2,})(?:[CA][.\d]?|C[A-Z]{1,3})(?:\s{2,}|$)", linea.strip()):
+            return []
+        # A page's number: the name may go on after it.
+        if re.fullmatch(r"\d{1,3}", texto):
+            continue
+        # A name beside hours that are not a row's ("Activos   64   61"):
+        # the rest of a row split over lines.
+        if (re.match(r"[^\W\d_][^\d]*?\s{2,}\d", linea.strip())
+                and not re.match(r"(?i)total|actividades|cr[ée]ditos|t[íi]tulaci|t[ée]cnic", texto)):
+            return []
+        # A total, the intermediate title's hours.
+        if re.search(r"\d", texto) or re.match(r"(?i)total|actividades curriculares", texto):
+            arriba, debe_abajo = [], 0
+            continue
+        if debe_abajo:
+            abajo.append(texto)
+            materias[-1] = (" ".join(abajo), anio)
+            debe_abajo -= 1
+        else:
+            arriba.append(texto)
+    resultado: list[tuple[str, int]] = []
+    for nombre, anio in materias:
+        _agregar(resultado, nombre, anio)
+    return desde_el_primero(resultado)
 
 
 def plan_ffyb_uba(texto: str) -> list[tuple[str, int]]:
@@ -5488,10 +6223,18 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                         lineas[-1].append(p)
                     else:
                         lineas.append([p])
+                # A name the cell wrapped sits closer under its first line
+                # than the next subject does: Psicología's "Metodología de la
+                # Investigación" / "Cuantitativa" 8 points apart, subjects 10.
+                saltos = [b[0]["top"] - a[0]["top"] for a, b in zip(lineas, lineas[1:])]
+                paso = sorted(saltos)[len(saltos) // 2] if len(saltos) >= 4 else None
                 items: list[list] = []
                 margen = None
                 tras_vineta = False
+                anterior = None
                 for linea in lineas:
+                    pegada = bool(paso and anterior is not None and linea[0]["top"] - anterior < 0.85 * paso)
+                    anterior = linea[0]["top"]
                     # A wide gap leaves the name: what follows is a legend beside it ("Cursada").
                     linea = sorted(linea, key=lambda p: p["x0"])
                     corte = next((k for k in range(1, len(linea)) if linea[k]["x0"] - linea[k - 1]["x1"] > 40), len(linea))
@@ -5500,6 +6243,11 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                     if not texto or _ETIQUETA_DE_FOLLETO.match(texto):
                         # (What a bullet wraps onto the next line is the bullet's.)
                         tras_vineta = bool(texto) and texto[0] in "-–•·"
+                        continue
+                    # "Optativa" alone is a choice's place, not a subject; a
+                    # remark below it ("y adaptarse según...") is not its name.
+                    if re.match(r"(?i)^optativas?(?:\s+(?:[IVX]+|\d+))?$", texto):
+                        tras_vineta = True
                         continue
                     letras = [c for c in texto if c.isalpha()]
                     # A heading in capitals ("DOBLE TITULACIÓN ...") or the brochure's own matter ends the year.
@@ -5513,10 +6261,10 @@ def plan_folleto_columnas(ruta: str) -> list[tuple[str, int]]:
                     if margen is not None and x > margen + 40:
                         continue
                     sigue = _CONTINUA.match(texto) or (margen is not None and x > margen + 4)
-                    if tras_vineta and sigue:
+                    if tras_vineta and (sigue or pegada):
                         continue
                     tras_vineta = False
-                    if items and (sigue or _CORTADO_EN.search(items[-1][0])):
+                    if items and (sigue or pegada or _CORTADO_EN.search(items[-1][0])):
                         items[-1][0] += " " + texto
                         continue
                     margen = x if margen is None else min(margen, x)
@@ -5543,7 +6291,9 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
     follow ("(*) Asignaturas optativas") or another bold heading once the
     subjects began ("Temáticas ofrecidas para el seminario optativo") end
     it; an optional subject ("(optativa)") is a choice, and the alternative
-    formative paths (TFA) are activities, not subjects."""
+    formative paths (TFA) are activities, not subjects. A block with no
+    dash nor list (Instrumentación Quirúrgica's) has a paragraph per
+    subject under each term, up to "OTROS REQUERIMIENTOS"."""
     soup = BeautifulSoup(html or "", "html.parser")
     bloque = next((g for g in soup.select("div.carreras-grid")
                    if re.match(r"(?i)plan de estudios?$", _texto(g.select_one(".carreras-tit")) or "")), None)
@@ -5557,7 +6307,9 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
             return
         _agregar(materias, re.sub(r"\s*\(\*+\)\s*$", "", nombre), anio)
 
-    for elemento in contenido.find_all(["p", "div", "ul"], recursive=False) if contenido else []:
+    elementos = contenido.find_all(["p", "div", "ul"], recursive=False) if contenido else []
+    sin_guiones = not any(e.name == "ul" or re.match(r"^[-–•]\s", _texto(e) or "") for e in elementos)
+    for elemento in elementos:
         texto = _texto(elemento)
         if elemento.name == "ul":
             for item in elemento.find_all("li"):
@@ -5577,9 +6329,108 @@ def plan_untref(html: str) -> list[tuple[str, int]]:
         if re.match(r"^[-–•]\s", texto):
             agregar(texto)
             continue
+        if re.match(r"(?i)otros requ(?:isitos|erimientos)\b", texto):
+            break
+        # (A plain paragraph is a subject only in a block of plain paragraphs,
+        # and not a bold heading nor a sentence.)
+        if sin_guiones and anio and not elemento.find(["b", "strong"]) and len(texto) < 120 \
+                and not texto.endswith("."):
+            agregar(texto)
+            continue
         if materias:
             break
     return materias
+
+
+_PALABRA_CON_CAJA = re.compile(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]+)</word>')
+_FIN_DEL_ANEXO_UNTREF = re.compile(r"(?i)^(?:otros requisitos|observaciones)\b")
+
+
+def plan_untref_anexo(cajas: str) -> list[tuple[str, int]]:
+    """UNTREF's plans as the Ministry's annex prints them (``-bbox-layout``):
+    a table "COD  ASIGNATURA  REGIMEN ..." under "PRIMER CUATRIMESTRE" ...
+    headings, each row's name centred on its row and wrapped over as many
+    lines as it needs, above and below the line of its code and its
+    "Cuatrimestral" ("Introducción a la" / "592 Problemática del Mundo" /
+    "Contemporáneo"). Nearness cannot tell whose a line is ("Introducción a
+    la" sits as near the row above), so each row takes, in order, the next
+    lines whose middle is the row's own; the last row of a page may end on
+    its own line, its cell going on over the page, and a page's first rows
+    are of the term the page before ended in. The lines under a page's last
+    row, one below the other, start the name of the next page's first row
+    ("Seminario de Investigación" / "167 Integrada", Geografía's
+    complementation). Any other line no row takes gives nothing. "OTROS REQUISITOS" (the languages, of no term) ends it;
+    choices and the formative paths (TFA) are not subjects."""
+    materias: list[tuple[str, int]] = []
+    # (A term goes on over the page, and so may a name.)
+    anterior = None
+    arrastre: list[tuple[float, str]] = []
+    for contenido in re.findall(r"<page\b.*?</page>", cajas or "", re.S):
+        palabras = [(float(x0), float(y0), float(x1), float(y1), clean_text(unescape(t)))
+                    for x0, y0, x1, y1, t in _PALABRA_CON_CAJA.findall(contenido)]
+        cabeza, techo = next(((x0, y1) for x0, _, _, y1, t in palabras if t == "ASIGNATURA"), (None, None))
+        regimenes = [(x0, (y0 + y1) / 2) for x0, y0, _, y1, t in palabras if t in ("Cuatrimestral", "Anual")]
+        if cabeza is None or not regimenes:
+            continue
+        regimen = min(x for x, _ in regimenes)
+        lineas: dict[float, list[tuple[float, str]]] = {}
+        enteras: dict[float, list[tuple[float, str]]] = {}
+        for x0, y0, x1, y1, t in palabras:
+            enteras.setdefault(round((y0 + y1) / 2, 1), []).append((x0, t))
+            # The name's column: left of the term, and not the code ("217/25" / "9").
+            if x1 <= regimen + 1 and not (x0 < cabeza - 10 and re.fullmatch(r"[\d/]+", t)):
+                lineas.setdefault(round((y0 + y1) / 2, 1), []).append((x0, t))
+        # A term's heading may run past the names' column (a table without
+        # codes, Resolución de Conflictos'): it is read on its whole line.
+        for y, l in enteras.items():
+            if y in lineas and _CUATRIMESTRE_UNTREF.match(" ".join(t for _, t in sorted(l))):
+                lineas[y] = l
+        textos = sorted((y, " ".join(t for _, t in sorted(l))) for y, l in lineas.items())
+        fin = next((y for y, t in textos if _FIN_DEL_ANEXO_UNTREF.match(t)), math.inf)
+        filas = sorted(y for _, y in regimenes if y < fin)
+        if not filas:
+            return [] if arrastre else materias
+        titulos, nombres = [], []
+        for y, texto in textos:
+            cuatrimestre = _CUATRIMESTRE_UNTREF.match(texto)
+            if cuatrimestre:
+                titulos.append((y, (_NUMERO_DEL_CUATRIMESTRE[cuatrimestre.group(1).lower()] + 1) // 2))
+            # (The header above the first row -- near it on a page that goes on
+            # with the term before, UNAHUR's -- and the degree a part leads to.)
+            elif max(filas[0] - 30, techo) < y < fin and not re.match(r"(?i)t[íi]tulos?:|carga horaria", texto):
+                nombres.append((y, texto))
+        for fila in filas:
+            anio = next((a for y, a in reversed(titulos) if y < fila), anterior)
+            if anio is None:
+                return []
+            # Lines one below the other, from the first not taken.
+            seguidas = 1
+            while seguidas < len(nombres) and 10 < nombres[seguidas][0] - nombres[seguidas - 1][0] < 13:
+                seguidas += 1
+            n = next((n for n in range(1, seguidas + 1)
+                      if abs(sum(y for y, _ in nombres[:n]) / n - fila) < 1.5), None) if nombres else None
+            if n is None and nombres and fila == filas[-1]:
+                n = next((n for n in range(1, seguidas + 1) if abs(nombres[n - 1][0] - fila) < 1.5), None)
+            if n is None:
+                return []
+            tomadas = arrastre + nombres[:n]
+            arrastre = []
+            del nombres[:n]
+            nombre = " ".join(t for _, t in tomadas)
+            if not re.match(r"(?i)trayectos? formativos? alternativos?|seminario electivo", nombre):
+                _agregar(materias, nombre, anio)
+        if nombres and fin == math.inf and nombres[0][0] > filas[-1] + 1.5 \
+                and all(10 < b[0] - a[0] < 13 for a, b in zip(nombres, nombres[1:])):
+            arrastre, nombres = nombres, []
+        if nombres:
+            return []
+        if fin < math.inf:
+            break
+        anterior = titulos[-1][1] if titulos else anterior
+    return [] if arrastre else materias
+
+
+plan_untref_anexo.cajas = True  # type: ignore[attr-defined]
 
 
 _FILA_FCV = re.compile(r"^(?P<antes>.*?)\s{2,}(?:Obligatoria|Optativa)\s+(?:Cuatrimestral|Anual|Bimestral)\s+\d+\s*horas")
@@ -6028,3 +6879,121 @@ def plan_unvime(html: str) -> list[tuple[str, int]]:
         if materias:
             return desde_el_primero(materias)
     return []
+
+
+_COLUMNA_DE_CURSOS = re.compile(r"(?i)^(?:cursos?|asignaturas?|materias?)$")
+# A row that holds a place for a choice: "Curso Electivo 1", "Electiva 2",
+# "Créditos en Historia de la Música", the "Complementaria" of an orientation.
+_LUGAR_A_ELEGIR = re.compile(r"(?i)^(?:(?:curso|asignatura|materia)s?\s+)?(?:electiv|optativ)|^cr[ée]ditos\s+en\b"
+                             r"|^complementaria$")
+
+
+def _lo_que_la_precede(tabla: Tag) -> str:
+    """The words between a table and the one before it: its heading."""
+    partes: list[str] = []
+    for texto in tabla.find_all_previous(string=True):
+        if texto.find_parent("table") not in (None, tabla):
+            break
+        partes.append(texto.strip())
+        if sum(map(len, partes)) > 300:
+            break
+    return " ".join(reversed([p for p in partes if p]))
+
+
+def plan_unq_cursos(html: str) -> list[tuple[str, None]]:
+    """UNQ's plans by cycles and núcleos, without years: a table per núcleo
+    ("Cursos Básicos del Ciclo Inicial", "Otros requisitos curriculares")
+    with a column of courses and one of credits, and its total row. The
+    obligatory tables are the plan; a table, or the rows after a heading
+    inside one ("Asignaturas Electivas"), of electives is a pool to choose
+    from and is left out, and so are the rows that hold a choice's place
+    ("Curso Electivo 1").
+
+    Nothing is read when the page cannot be taken whole: a table whose
+    rows' credits do not add up to its total is a pool presented as a list
+    (Arquitectura Naval's complementary courses: 108 credits listed, 48
+    taken); a page with an orientation has its own pool or alternatives
+    (Comunicación Social's two); and a table without its heading row is the
+    plan going on where the columns are not known (Informática's from the
+    sixth term)."""
+    leidas: list[tuple[str, int]] = []
+    for tabla in BeautifulSoup(html or "", "html.parser").find_all("table"):
+        filas = [[_texto(c) for c in fila.find_all(["td", "th"])] for fila in tabla.find_all("tr")]
+        filas = [celdas for celdas in filas if any(celdas)]
+        if not filas:
+            continue
+        encabezado = [c.replace("A signatura", "Asignatura") for c in filas[0]]
+        if re.search(r"(?i)\borientaci[óo]n\b", _lo_que_la_precede(tabla)[-150:]):
+            return []
+        cursos = next((i for i, c in enumerate(encabezado) if _COLUMNA_DE_CURSOS.match(c)), None)
+        creditos = next((i for i, c in enumerate(encabezado) if re.match(r"(?i)cr[ée]ditos", c)), None)
+        if cursos is None or creditos is None:
+            if re.search(r"\d", " ".join(encabezado)) and not re.search(r"(?i)total|cr[ée]ditos", encabezado[0]) \
+                    or re.fullmatch(r"(?i)\S+\s+(?:cuatrimestre|semestre|a[ñn]o)", encabezado[0]):
+                return []
+            continue
+        # ("Tres cursos, a elegir de las áreas listadas a continuación".)
+        if re.search(r"(?i)electiv|optativ|a elegir", _lo_que_la_precede(tabla)[-150:]):
+            continue
+        suma, nombres, total, electivas = 0, [], None, False
+        for celdas in filas[1:]:
+            if any(re.match(r"(?i)(?:sub)?total(?:es)?\b", c) for c in celdas):
+                total = [int(re.sub(r"\s", "", c)) for c in celdas if re.fullmatch(r"\d[\d\s]{0,3}", c)]
+                continue
+            llenas = [c for c in celdas if c]
+            # A row of one cell is a heading inside the table; the electives
+            # after "Núcleo Electivo" run past its "Mención: ..." headings to
+            # the next obligatory one ("Otros requisitos").
+            if len(llenas) == 1:
+                if re.search(r"(?i)electiv|optativ", llenas[0]):
+                    electivas = True
+                elif re.search(r"(?i)obligatori|requisito|b[áa]sic|orientad|formaci[óo]n general", llenas[0]):
+                    electivas = False
+                continue
+            if electivas or not celdas[cursos]:
+                continue
+            if len(celdas) != len(encabezado) or not re.fullmatch(r"\d{1,2}", celdas[creditos]):
+                return []
+            suma += int(celdas[creditos])
+            nombres.append(celdas[cursos])
+        if total is not None and suma not in total:
+            return []
+        for nombre in nombres:
+            if not _LUGAR_A_ELEGIR.search(nombre):
+                # (_agregar keeps a subject with its year; these have none.)
+                _agregar(leidas, nombre, -1)
+    return [(nombre, None) for nombre, _ in leidas]
+
+
+_ENCABEZADO_PERIO = re.compile(r"(?i)^(materias?\b|(primer|segundo|tercer)\s+(bimestre|cuatrimestre)$|optativa\b)")
+
+
+def plan_perio_unlp(html: str) -> list[tuple[str, int]]:
+    """UNLP Periodismo's "Asignaturas ..." page of a tecnicatura: a heading
+    per year ("Primer año"), its term headings ("Primer cuatrimestre",
+    "Materias Obligatorias de cursada cuatrimestral") and a subject per line,
+    up to the share links. The "Tramo inicial" (an entry workshop outside the
+    years) and the optatives to choose ("Optativa 1", "Optativa I: A/B") are
+    not taken; a plan with a ciclo in place of a year is not read."""
+    soup = BeautifulSoup(html or "", "html.parser")
+    contenido = soup.select_one("article") or soup
+    lineas = [clean_text(l) for l in contenido.get_text("\n").split("\n") if clean_text(l)]
+    inicio = next((i for i, l in enumerate(lineas) if re.match(r"(?i)^asignaturas\b", l)), None)
+    if inicio is None:
+        return []
+    materias: list[tuple[str, int]] = []
+    anio = None
+    for linea in lineas[inicio:]:
+        if linea.lower() == "facebook":
+            break
+        if re.match(r"(?i)^(tramo inicial|primer ciclo|segundo ciclo|tercer ciclo)$", linea):
+            if "ciclo" in linea.lower():
+                return []
+            anio = None
+            continue
+        nuevo = anio_de(linea)
+        if nuevo:
+            anio = nuevo
+        elif anio and not _ENCABEZADO_PERIO.match(linea):
+            _agregar(materias, linea, anio)
+    return desde_el_primero(materias)

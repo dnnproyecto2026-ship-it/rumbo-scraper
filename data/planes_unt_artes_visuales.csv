@@ -1,0 +1,27 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Licenciatura en Artes Visuales;5;;;https://www.artes.unt.edu.ar/carreras/licenciatura-en-artes-visuales/;"1 | Taller I
+1 | Historia general del Arte
+1 | Introducción a la filosofía
+1 | Historia general de la cultura
+1 | Lenguaje visual I
+1 | Sistemas de representación en Artes visuales
+2 | Taller II
+2 | Lenguaje Visual II
+2 | Historia del Arte Precolombino y Latinoamericano
+2 | Historia de la Cultura Precolombina y Latinoamericana
+2 | Estética
+3 | Taller III
+3 | Teoría General del Arte
+3 | Arte y Psicología
+3 | Historia del Arte Antiguo
+3 | Taller experimental en fotografía
+4 | Taller IV
+4 | Historia del Arte Medieval y Moderno
+4 | Taller de Nuevas Tecnologías
+4 | Seminario de Investigación I
+4 | Lengua Extranjera: Inglés – Francés
+5 | Taller V
+5 | Historia del Arte Contemporáneo
+5 | Historia del Arte Argentino y Regional (Siglo XX)
+5 | Arte y diseño arquitectónico
+5 | Seminario de investigación II";lector html (máquina fija);;;;14c529de-9337-47b5-80b8-2f31fdcb35d3

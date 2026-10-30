@@ -1,0 +1,24 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNO;Tecnicatura Universitaria en Gestión y Administración Contable;3;;;http://www.uno.edu.ar/images/documentos/escuelas/Tec%20Univ%20en%20Gestion%20y%20Administracion%20Contable-%20Plan%20de%20Estudios.pdf;"1 | Sistemas Contables
+1 | Matemática I
+1 | Administración I
+1 | Historia Económica
+1 | Seminario Universidad Ciencia y Sociedad
+1 | Seminario de Problemática Regional
+1 | Seminario de Análisis y Producción del Discurso
+1 | Estadística
+1 | Economía I
+2 | Matemática II
+2 | Administración II
+2 | Contabilidad I
+2 | Instituciones del Derecho Público
+2 | Instituciones del Derecho Privado
+2 | Contabilidad II
+2 | Economía II
+3 | Contabilidad III
+3 | Matemática III
+3 | Derecho Laboral
+3 | Práctica profesional Supervisada
+3 | Economía III
+3 | Derecho Administrativo
+3 | Tecnología de la Información";"IA Claude (copiado del PDF oficial; cada nombre lo verifica el código)";;Plan de estudios de la tecnicatura (3 años, Ciclo Inicial 1.º-2.º y Ciclo Superior 3.º). Año = el de la sección del cuadro (cuatrimestres 1-2 = 1.º, 3-4 = 2.º, 5-6 = 3.º). Afuera: Electiva (cuatr. 2, de otra escuela) y Optativa I (cuatr. 4).;Universidad Nacional del Oeste;ad4bffcc-f62e-428b-8bf6-928293609498

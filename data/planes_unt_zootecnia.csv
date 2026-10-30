@@ -1,0 +1,43 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNT;Ingeniería Zootecnista;5;;;https://faz.unt.edu.ar/idehost/wp-content/uploads/2024/03/Res-2436-2011-Zootecnia.pdf;"1 | Matemática
+1 | Botánica
+1 | Sistemas de Producción Agropecuaria I
+1 | Química General, Inorgánica y Agrícola
+1 | Física General
+1 | Inglés Técnico
+2 | Físico Química
+2 | Química Orgánica
+2 | Biometría y Técnica Experimental
+2 | Ecología General
+2 | Sistemas de Producción Agropecuaria II
+2 | Bioquímica Agrícola
+2 | Climatología y Fenología Agrícola
+2 | Mecanización Agropecuaria
+2 | Sociología Agraria
+3 | Fisiología Vegetal
+3 | Biología del Desarrollo e Histofisiología
+3 | Economía Agraria
+3 | Zootecnia General
+3 | Epistemología
+3 | Sistemas de Producción Agropecuaria III
+3 | Microbiología Agrícola
+3 | Anatomía y Fisiología Animal
+3 | Genética
+3 | Política Agraria
+4 | Sanidad Animal
+4 | Reproducción Animal
+4 | Nutrición Animal
+4 | Edafología
+4 | Forrajicultura
+4 | Mejoramiento Animal
+4 | Protección Vegetal
+4 | Manejo de Suelos y Agua
+4 | Nutrición Animal Aplicada
+4 | Legislación Agraria
+5 | Producción de Bovinos para Carne
+5 | Producción de Bovinos para Leche
+5 | Producción Equina
+5 | Gestión de la Empresa Agropecuaria
+5 | Producción Porcina
+5 | Producción de Animales de Granja
+5 | Producción de Ovinos y Caprinos";lector OCR (máquina fija);;"Res. 2436/2011, Contenidos Mínimos por año y cuatrimestre (42 asignaturas numeradas); PDF escaneado leído por OCR. Afuera prácticas, optativas y trabajo final, que el documento no numera.";Universidad Nacional de Tucumán;699e841e-6430-477c-a171-732e9216011b

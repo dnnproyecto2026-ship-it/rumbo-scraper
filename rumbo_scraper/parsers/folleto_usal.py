@@ -24,6 +24,11 @@ series that comes out with a number twice or a gap is numbered again in
 the order the brochure lists it, which is the order it is taken: I, II,
 III. A series with a name in it twice after that is not read.
 
+The degree's name drawn large ("Actuario", "Ingeniero Agrónomo") may stand
+between two years of a column; its words are three or four times as tall
+as a subject's and are left out. Tesseract loses the accent of a capital
+"É" ("Etica profesional"), which Spanish spelling puts back.
+
 The plan is kept only if it has every year from the first and at least
 fifteen subjects: a brochure that reads worse than that is skipped, never
 guessed.
@@ -42,6 +47,7 @@ from rumbo_scraper.normalizers.text import clean_text, comparison_key
 from rumbo_scraper.parsers.planes_sitios import anio_de, desde_el_primero
 
 MINIMO = 15
+ALTO_DEL_TITULO = 2.5
 _CONECTORES = {"y", "e", "de", "del", "la", "las", "los", "el", "en", "a", "para", "con", "o"}
 _TRAZOS = "|l!1Iíi"
 _ROMANO = re.compile(r"^(?:[VX]?[" + re.escape(_TRAZOS) + r"]{1,4}|[VX]|I?[VX]|[" + re.escape(_TRAZOS) + r"]?[VX][" + re.escape(_TRAZOS) + r"]{0,3})$")
@@ -66,7 +72,13 @@ def leer(imagen: Path) -> str:
 
 def _palabras(tsv: str) -> list[dict]:
     filas = csv.DictReader(io.StringIO(tsv), delimiter="\t", quoting=csv.QUOTE_NONE)
-    return [f for f in filas if f.get("level") == "5" and (f.get("text") or "").strip()]
+    palabras = [f for f in filas if f.get("level") == "5" and (f.get("text") or "").strip()]
+    if not palabras:
+        return []
+    # The degree's name is drawn three or four times as tall as a subject.
+    alturas = sorted(int(p["height"]) for p in palabras)
+    mediana = alturas[len(alturas) // 2]
+    return [p for p in palabras if int(p["height"]) <= mediana * ALTO_DEL_TITULO]
 
 
 def _lineas(palabras: list[dict]) -> list[str]:
@@ -102,13 +114,17 @@ def _romano(ficha: str) -> str | None:
     return "IV" if romano == "IIII" else romano
 
 
-_DURACION_AL_FINAL = re.compile(r"\s+(?:[ACac€e¡\[_]{1,2}[aceACE]?|al|el|Cuatrimestral|Anual|_)$")
+_DURACION_AL_FINAL = re.compile(r"\s+(?:[ACac€e¡\[_<]{1,2}[aceACE]?[\]l]?|al|el|Cuatrimestral|Anual|_)$")
+# A numeral inside parentheses: "Idioma (Optativa 11)".
+_ROMANO_ENTRE_PARENTESIS = re.compile(r"\((\w+) ([^\s()]{1,4})\)$")
+# A capital "É" read without its accent: no Spanish word starts "Etic".
+_E_SIN_TILDE = re.compile(r"\bEtic(?=[aoe]s?\b)")
 
 
 def _sin_duracion(linea: str) -> str:
     """The duration's letter, read on either side of the name: "C", "Cc",
-    "€", "¡a", "[a", "_C", and "al", "el" (a letter and a stroke beside it:
-    no subject's name ends on "al" or "el")."""
+    "€", "¡a", "[a", "_C", "e]", "[el", "<", and "al", "el" (a letter and a
+    stroke beside it: no subject's name ends on "al" or "el")."""
     linea = re.sub(r"^(?:[ACac€e¡\[_]{1,2}\s+)(?=[A-ZÁÉÍÓÚÑ])", "", linea.strip())
     anterior = None
     while anterior != linea:
@@ -173,7 +189,10 @@ def plan_del_folleto(tsv: str, carrera: str = "") -> list[tuple[str, int]]:
         if _ES_PROSA.search(linea):
             break
         abre = linea.rstrip().endswith(":")
-        linea = _sin_duracion(linea)
+        linea = _E_SIN_TILDE.sub("Étic", _sin_duracion(linea))
+        entre = _ROMANO_ENTRE_PARENTESIS.search(linea)
+        if entre and _romano(entre.group(2)):
+            linea = f"{linea[:entre.start()]}({entre.group(1)} {_romano(entre.group(2))})"
         if _RUIDO.match(linea):
             continue
         if pendiente:
@@ -190,8 +209,9 @@ def plan_del_folleto(tsv: str, carrera: str = "") -> list[tuple[str, int]]:
         numero = _romano(fichas[-1]) if len(fichas) > 1 else None
         base = " ".join(fichas[:-1]) if numero else linea
         # A name has words, not strokes: "Arq U Iitecto" (the degree drawn
-        # at the bottom) has a word of one letter in the middle.
-        sueltas = [f for f in base.split() if len(f) == 1 and f.lower() not in ("y", "e", "o", "a")]
+        # at the bottom) has a word of one letter in the middle; a dash
+        # ("Trabajo Integrador Final - TIF") is no letter.
+        sueltas = [f for f in base.split() if len(f) == 1 and f.lower() not in ("y", "e", "o", "a", "-", "–")]
         # A word cut in two ("Ind ustrial") leaves a piece that starts in
         # lower case and is no connecting word.
         partidas = [f for f in base.split()[1:] if f[0].islower() and f.lower() not in _CONECTORES
