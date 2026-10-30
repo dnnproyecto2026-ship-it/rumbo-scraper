@@ -248,6 +248,11 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Física": (_CBA + "D_CURRICULAR_FINAL_DE_ED_FISICA_2013.pdf",
                                             functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN FÍSICA")),
     },
+    "Entre Ríos": {
+        "Profesorado de Educación Primaria": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Primaria_Solene_Borja_141015_final_v3.pdf",
+            planes_sitios.plan_formato_de_unidad),
+    },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
     },

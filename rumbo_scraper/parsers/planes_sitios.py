@@ -3033,6 +3033,32 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
     return unicas
 
 
+def plan_formato_de_unidad(texto: str) -> list[tuple[str, int]]:
+    """Entre Ríos's design of a profesorado (Res. 4170/14): each unit is a page that
+    opens with its year ("Primer Año"), its name (wrapped over lines when long)
+    and "Formato: Asignatura". The Práctica docente units add a second line, the
+    unit's theme ("Sujetos y Contextos: ..."): the unit is the "Práctica Docente I"."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    anio = 0
+    materias: list[tuple[str, int]] = []
+    for i, linea in enumerate(lineas):
+        ano = re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", linea)
+        if ano:
+            anio = _ANIO_INDICE[ano.group(1).lower()]
+        elif anio and re.match(r"(?i)^formato\s*:", linea):
+            bloque: list[str] = []
+            j = i - 1
+            while j >= 0 and lineas[j] and not re.match(r"^\d+$", lineas[j]) \
+                    and not re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", lineas[j]):
+                bloque.insert(0, lineas[j])
+                j -= 1
+            practica = next((b for b in bloque if re.match(r"(?i)^pr[áa]ctica docente\s+[IV]+\b", b)), None)
+            titulo = practica or " ".join(bloque)
+            if titulo and len(titulo.split()) <= 16:
+                materias.append((titulo, anio))
+    return materias
+
+
 def plan_carga_horaria(texto: str, solo_numeradas: bool = False) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of a tecnicatura superior (Enfermería,
     Tiempo Libre y Recreación): each unit a heading in capitals over its

@@ -977,6 +977,30 @@ Recreativos - Carga horaria: 4 horas
         self.assertEqual(p.plan_carga_horaria(texto), [("Psicología", 1), ("Salud pública II", 2),
                                                         ("Sujetos de la recreación", 2)])
 
+    def test_formato_de_unidad_con_titulo_partido_y_practica(self):
+        texto = """Primer Año
+Pedagogía
+Formato: Asignatura
+Carga horaria: 3 horas cátedra semanales
+\fSegundo Año
+Historia Social y Política Argentina
+y Latinoamericana
+Formato: Asignatura
+101
+Cuarto Año
+Análisis y organización de las instituciones
+educativas
+Formato: Seminario - taller
+Primer Año
+Práctica Docente I
+Sujetos y Contextos: Aproximación a la Práctica
+Educativa
+Formato: Seminario-taller
+"""
+        self.assertEqual(p.plan_formato_de_unidad(texto), [
+            ("Pedagogía", 1), ("Historia Social y Política Argentina y Latinoamericana", 2),
+            ("Análisis y organización de las instituciones educativas", 4), ("Práctica Docente I", 1)])
+
     def test_unidades_numeradas_y_titulo_partido_en_dos_lineas(self):
         texto = """PRIMER AÑO
 1. Física para Seguridad 1 - Carga horaria: 2 (dos) módulos por semana.
