@@ -1296,3 +1296,9 @@
 ## 2026-10-26 (214) — Verificación del ciclo 209 sigue corriendo; nada nuevo
 - Cadena 209 (PID 2173141, `verificar_catalogo` PID 2173975) activa tras 45 min; `verificaciones.json` se sigue escribiendo (01:26). No lancé otra exportación/verificación ni cambié código.
 - Pendiente: confirmar `Archivo: ...` de la cadena 209; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (215) — Institutos: Tiempo Libre y Recreación (PBA) registrada, lector corregido
+- Arranque: `entregables/avance/sondeo_universidades.csv` no existe en el repo (se hace desde producción, que esta máquina no lee), así que la prioridad 1 queda bloqueada hasta que la Mac lo suba. Pasé a `disenos_a_buscar.csv`.
+- `plan_carga_horaria` no leía las Prácticas Profesionalizantes II y III del diseño de Tiempo Libre y Recreación (título partido en dos líneas, en mayúsculas). Lector corregido con su prueba; el diseño (ISFD 72, 20 materias: 7/6/7 por año, cotejado contra las líneas "Carga horaria" del PDF) quedó en `planes_disenos.DISENOS["Buenos Aires"]`.
+- Vista previa: 0 institutos lo reciben (el diseño está en el dominio de un solo instituto; la regla exige el dominio propio de cada uno). Nada escrito en la base. Pendiente: buscar el mismo diseño en abc.gob.ar para que llegue a las ~80 ofertas, y seguir con Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA.
+- Sin credenciales de producción ni de GitHub.

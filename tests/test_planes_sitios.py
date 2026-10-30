@@ -991,6 +991,23 @@ TERCER AÑO
             ("Práctica profesionalizante 2: intervenciones en el campo profesional", 2),
             ("Comunicación, tecnología y sociedad", 3)])
 
+    def test_unidad_en_mayusculas_partida_antes_o_dentro_del_titulo(self):
+        texto = """PRIMER AÑO
+SUJETOS DE LA RECREACIÓN - Carga horaria: 2 horas reloj por semana
+SEGUNDO AÑO
+EDUCACIÓN AMBIENTAL - Carga horaria: 2 horas reloj por semana.
+PRÁCTICAS PROFESIONALIZANTES II: Planificación de Proyectos Recreativos - Carga
+horaria: 4 horas reloj por semana.
+TERCER AÑO
+PRÁCTICAS PROFESIONALIZANTES III: Diseño e Implementación de Proyectos
+Recreativos - Carga horaria: 4 horas reloj por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [
+            ("Sujetos de la recreación", 1),
+            ("Educación ambiental", 2),
+            ("Prácticas profesionalizantes II: planificación de proyectos recreativos", 2),
+            ("Prácticas profesionalizantes III: diseño e implementación de proyectos recreativos", 3)])
+
 
 class PlanUcasalCorrelatividades(unittest.TestCase):
     def test_nombres_partidos_en_varias_lineas_y_correlativas_a_la_derecha(self):

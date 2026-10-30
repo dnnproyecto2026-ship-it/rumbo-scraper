@@ -3046,6 +3046,15 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         if re.match(r"^\d{1,2}\.\s", lineas[i]) and not re.search(r"(?i)carga horaria\s*:", lineas[i]) \
                 and re.search(r"(?i)^horaria\s*:|^[^.]{0,60}[-–]\s*carga horaria\s*:", lineas[i + 1]):
             lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
+    # ... or an upper-case one that breaks before "- Carga" ("PRÁCTICAS PROFESIONALIZANTES II: Planificación
+    # de Proyectos Recreativos - Carga" / "horaria: 4 horas") or inside its title ("... Implementación de
+    # Proyectos" / "Recreativos - Carga horaria: 4").
+    for i in range(len(lineas) - 1):
+        if re.match(r"^[A-ZÁÉÍÓÚÑ]{4,}\b[^:]{0,40}:", lineas[i]) and not re.search(r"(?i)carga", lineas[i]) \
+                and re.match(r"(?i)^\S+(?:\s\S+){0,3}\s*-\s*carga horaria\s*:", lineas[i + 1]):
+            lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
+        elif re.match(r"^[A-ZÁÉÍÓÚÑ]{4,}\b.*\s-\s*carga$", lineas[i], re.I) and re.match(r"(?i)^horaria\s*:", lineas[i + 1]):
+            lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
     materias: list[tuple[str, int]] = []
     anio = 0
     for i, linea in enumerate(lineas):
