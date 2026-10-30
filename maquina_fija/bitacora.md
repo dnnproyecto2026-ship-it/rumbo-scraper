@@ -1477,3 +1477,8 @@
 - El visitante devolvió 0 bytes para el PDF de Lengua (la lectura de los tres con todos los lectores se pasó del tiempo y se cortó): sitio caído o sin respuesta, no bloqueo. Además `dgescorrientes.net` no es dominio de ningún instituto ni está en `DOMINIOS_DE_LA_EDUCACION`, así que `es_oficial` rechazaría la fuente; agregarlo es decisión de una persona (es el sitio de la DGES de Corrientes).
 - Razón registrada: pendiente (sitio sin respuesta + decisión de dominio). Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
 - Siguiente: reintentar dgescorrientes.net otro día; Santiago del Estero Primaria Rural, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (251) — Santiago del Estero Primaria con orientación Rural (15): sin diseño propio ubicado
+- La caché INFoD de los institutos santiagueños solo lista la oferta "con orientación en Educación Rural"; ninguna página enlaza un diseño o estructura propia de esa orientación. El diseño registrado en `DISENOS["Santiago del Estero"]` (ISJEM) es el de la Primaria común: asignarlo a la orientación Rural sería un plan malo (no se sabe si cambia el trayecto de orientación).
+- Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial) hasta que aparezca un documento de la orientación. Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
+- Siguiente: Santa Fe Lengua/Historia/Biología (necesitan lector de tablas con nombres partidos), `institutos_faltantes.csv`; reintentar dgescorrientes.net. Sin credenciales de producción ni de GitHub.
