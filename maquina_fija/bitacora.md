@@ -1514,3 +1514,6 @@
 
 ## 2026-10-30 (259) — Sin trabajo accionable
 - Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (260) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
