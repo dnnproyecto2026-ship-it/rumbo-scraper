@@ -1482,3 +1482,8 @@
 - La caché INFoD de los institutos santiagueños solo lista la oferta "con orientación en Educación Rural"; ninguna página enlaza un diseño o estructura propia de esa orientación. El diseño registrado en `DISENOS["Santiago del Estero"]` (ISJEM) es el de la Primaria común: asignarlo a la orientación Rural sería un plan malo (no se sabe si cambia el trayecto de orientación).
 - Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial) hasta que aparezca un documento de la orientación. Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
 - Siguiente: Santa Fe Lengua/Historia/Biología (necesitan lector de tablas con nombres partidos), `institutos_faltantes.csv`; reintentar dgescorrientes.net. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (252) — Entre Ríos: Filosofía, Economía, Ciencias de la Educación, Psicología y Ciencia Política son PDF escaneados
+- Los cinco diseños restantes de des-ers.infd.edu.ar (`wp-admin/upload/4793-15`, `4795-15`, `4796-15`, `4797-15`, `4800-15`, 7-9 MB cada uno) se bajaron con el visitante del repo: `pdftotext` devuelve ~150 caracteres por archivo y `plan_formato_de_unidad` lee 0 unidades. Sin texto no se puede comprobar ninguna materia: NO cargables (pdf_escaneado). No se hizo OCR.
+- Con esto Entre Ríos queda cerrado para los diseños del sitio de la DES: cargados los de texto (ciclos 234-235), el resto con su motivo (ciclos 236, 243, 252). Nada cargado ni cambiado en código. Tests 962 OK.
+- Siguiente: Santa Fe Lengua/Historia/Biología (lector de tablas con nombres partidos), `institutos_faltantes.csv`; reintentar dgescorrientes.net y santafe.gob.ar. Sin credenciales de producción ni de GitHub.
