@@ -1571,3 +1571,8 @@
 
 ## 2026-10-30 (278) — Sin trabajo accionable
 - Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 277 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (279) — UCASAL: 14 planes leídos de PDF con el lector general
+- `carreras_de_guias UCASAL` (79 iguales, 0 nuevas) → `planes_documentos UCASAL` vista previa → `--apply`: 14 planes, 621 materias (Ing. Informática, Traductorado, RRPP, Criminología, Gestión Eficiente de la Energía, Imagen y Sonido, Trabajo Social, Prod. Animal, RRHH, Criminalística, Diseño Industrial, Tec. Bancos, Diseño Gráfico, Adm. de Empresas).
+- `verificar_catalogo UCASAL`: ofertas 122/122, materias 760/760. Exportación completa (`Archivo: data/catalogo_depurado.json`).
+- Listo para cargar a producción (UCASAL, lote de 1) cuando haya credenciales. Pendiente: resto de `pdf_con_texto` de UCASAL (~47 sin leer por el lector general), luego UCH, UNC, UNL, UNLP.
