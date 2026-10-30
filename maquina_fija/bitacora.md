@@ -1623,3 +1623,7 @@
 ## 2026-10-30 (289) — UNR: vista previa de `planes_documentos` sin planes
 - Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
 - Pendiente: UNDAV de a una; UNC y UNR necesitan lector propio por PDF, de a uno.
+
+## 2026-10-30 (290) — UNDAV: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
+- Pendiente: UNDAV (7 `pdf_con_texto`, 2 `plan_en_otra_pagina` en .docx) necesita lector propio por documento, de a uno; igual que UNC, UNR y UNLu (lector por posición de palabras).
