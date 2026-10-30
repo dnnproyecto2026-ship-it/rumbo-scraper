@@ -1499,3 +1499,6 @@
 - `institutos_faltantes.csv` (833 filas del padrón): solo nombre/domicilio, sin oferta ni plan legible por código; cargarlos vacíos no aporta. Sin cambios.
 - Vigilancia (corridas del lanzador del 30/10): CAYÓ en austral (materias 1375→843), ub (carreras 37→25), uba (materias 336→124, posgrados 592→441), udesa (sedes 4→3). Son sitios que cambiaron o fallaron: revisar antes de confiar en esas lecturas; nada cargado desde `data/vigilancia/`.
 - Nada cargado ni cambiado en código; sin commit. Tests 963 OK.
+
+## 2026-10-30 (255) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. La cola sigue como en el ciclo 254: Santa Fe y Corrientes esperan decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible. Vigilancia sin corridas nuevas desde la entrada 254 (CAYÓ en austral, ub, uba, udesa por revisar). Nada cargado ni cambiado en código.
