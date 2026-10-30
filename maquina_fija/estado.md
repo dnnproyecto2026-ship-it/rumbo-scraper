@@ -69,3 +69,5 @@ Prioridad CABA/GBA, Córdoba, Rosario, Salta:
 
 - UADER FCyT (ciclo 204): sitio volvió. Prof. Educación Tecnológica cargado en la base del scraper (40 materias). Lic. Producción Agropecuaria y Lic. Automatización y Control rechazadas por plan incompleto. `verificar_catalogo` (PID 2120443) + `exportar_catalogo` en curso desde 2026-10-25 ~19:50; confirmar que termine con `Archivo:` (log `/tmp/export_uader2.log`) y si no, re-correr exportar → verificar → exportar. Listo para cargar a producción cuando haya credenciales (UADER).
 - PBA diseños (ciclo 217): Acompañamiento Terapéutico (78) NO cargable, diseño Res. 1221/15 escaneado sin texto. Enfermería ya registrada. Siguiente: Higiene y Seguridad en el Trabajo, Radiología (isfd147-bue DC Servicios de Salud con especialización en Radiología).
+
+- UNLu (ciclo 291): Lic. en Sistemas de Información cargada en la base del scraper (37 materias, lector `plan_unlu_cuatrimestres`). Listo para cargar a producción (UNLu, lote de 1). Educación (Prof. y Lic.) NO cargables: electivas de orientaciones en 5.º año. Siguiente: otros PDF de UNLu (Física, Geografía, Matemática, Historia), luego UNaM/UNDAV.

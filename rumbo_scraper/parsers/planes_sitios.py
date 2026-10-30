@@ -7251,3 +7251,55 @@ def plan_unam_codigos(texto: str) -> list[tuple[str, int]]:
         else:
             tramo.append((clean_text(linea) if not _CODIGO_UNAM.match(linea) else linea, _CODIGO_UNAM.match(linea)))
     return materias if cerrar() else []
+
+
+_ROMANOS_UNLU = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
+
+
+def plan_unlu_cuatrimestres(ruta: str) -> list[tuple[str, int]]:
+    """UNLu's plan resolutions: "ESTRUCTURA CURRICULAR", a bordered table
+    "CUAT. / CÓDIGO / ACTIVIDADES ACADÉMICAS" with a five-digit code per row
+    and the term in roman numerals in a cell on the left that spans the rows
+    of its term (a text read cannot tell where it ends: the numeral is
+    centred on them). The cells are read by their borders: the row's term is
+    the numeral of the cell that holds the row, its name the text of its
+    name cell (wrapped over lines, as it is). Rows of a cell with no numeral
+    ("-": the entry competencies) and rows with no code (the practices, the
+    electives, the thesis) are not read, nor are tables with other first
+    cells (the equivalences with the old plan). A term's cell cut by a page
+    break leaves its last rows with no numeral at the top of the next page:
+    they are the last numeral's. The year is the term's: term n is year
+    ceil(n / 2)."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    anterior = ""
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.find_tables():
+                columnas: dict[float, list[tuple[float, float, float, float]]] = {}
+                for celda in tabla.cells:
+                    columnas.setdefault(round(celda[0]), []).append(celda)
+                if len(columnas) < 3:
+                    continue
+                izquierda, codigos, nombres = (sorted(columnas[x], key=lambda c: c[1]) for x in sorted(columnas)[:3])
+
+                def texto(celda: tuple[float, float, float, float]) -> str:
+                    return clean_text(pagina.crop(celda).extract_text() or "")
+
+                trimestres = [(c[1], c[3], texto(c)) for c in izquierda]
+                if trimestres and not trimestres[0][2]:
+                    trimestres[0] = (*trimestres[0][:2], anterior)
+                anterior = trimestres[-1][2] if trimestres and re.fullmatch(r"[IVX-]+", trimestres[-1][2]) else ""
+                for celda_codigo, celda_nombre in zip(codigos, nombres):
+                    if not re.fullmatch(r"\d{5}", texto(celda_codigo)):
+                        continue
+                    centro = (celda_codigo[1] + celda_codigo[3]) / 2
+                    numeral = next((t for a, b, t in trimestres if a <= centro <= b), "")
+                    if numeral in _ROMANOS_UNLU:
+                        _agregar(materias, texto(celda_nombre), (_ROMANOS_UNLU[numeral] + 1) // 2)
+    return desde_el_primero(materias)
+
+
+plan_unlu_cuatrimestres.ruta = True  # type: ignore[attr-defined]
+plan_unlu_cuatrimestres.respaldo = True  # the site's other layouts go to the general reader

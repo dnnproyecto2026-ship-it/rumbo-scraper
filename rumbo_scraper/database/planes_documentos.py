@@ -415,6 +415,9 @@ _DOCUMENTOS_PROPIOS += (("cemic.edu.ar", planes_sitios.plan_cemic),)
 _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
 # UNaM Artes y Diseño's plan PDFs: rows numbered "year.order" under each year, names wrapped around the number.
 _DOCUMENTOS_PROPIOS += (("fayd.unam.edu.ar", planes_sitios.plan_unam_codigos),)
+# UNLu's plan resolutions: a bordered table, the term's numeral in a cell that spans its rows
+# (other documents of its site to the general reader).
+_DOCUMENTOS_PROPIOS += (("unlu.edu.ar", planes_sitios.plan_unlu_cuatrimestres),)
 # UNSAdA's plan sheets: a coded row per subject, as many compulsory ones as the sheet states
 # (other documents of its site to the general reader).
 _DOCUMENTOS_PROPIOS += (("unsada.edu.ar", planes_sitios.plan_unsada),)
@@ -457,9 +460,12 @@ def _leer_documento(archivo: Path, documento: str, carrera: str = "") -> list[tu
             # A reader of the PDF's own tables takes the file.
             if getattr(lector, "ruta", False):
                 try:
-                    return [m for m in lector(str(archivo)) if not _FUERA_DEL_PLAN.search(m[0])]
+                    leidas = [m for m in lector(str(archivo)) if not _FUERA_DEL_PLAN.search(m[0])]
                 except Exception:
                     return []
+                if leidas or not getattr(lector, "respaldo", False):
+                    return leidas
+                continue
             # A reader of a table's cells takes the text's boxes (``-bbox-layout``).
             modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
             try:

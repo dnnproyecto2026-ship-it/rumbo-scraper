@@ -1627,3 +1627,9 @@
 ## 2026-10-30 (290) — UNDAV: vista previa de `planes_documentos` sin planes
 - Corrida sola, en segundo plano: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
 - Pendiente: UNDAV (7 `pdf_con_texto`, 2 `plan_en_otra_pagina` en .docx) necesita lector propio por documento, de a uno; igual que UNC, UNR y UNLu (lector por posición de palabras).
+
+## 2026-10-30 (291) — UNLu: Lic. en Sistemas de Información (37 materias) con lector nuevo
+- `plan_unlu_cuatrimestres` (+ `tests/test_planes_unlu.py`, registrado para `unlu.edu.ar` con respaldo al lector general): lee la tabla con bordes del PDF por celdas (pdfplumber); el cuatrimestre es el numeral de la celda que abarca las filas (por texto era ambiguo), con la celda cortada por el salto de página. Se leen 37 (Analista + Licenciatura); no se cargan las filas con "-" (Competencias Básicas, Inglés, Taller Introductorio: ingreso). Cotejada contra el texto del PDF cuatrimestre por cuatrimestre.
+- Profesorado y Lic. en Cs. de la Educación (UNLu) también salieron de la vista previa, pero el 5.º año mezcla las electivas de las orientaciones (17-19 materias): NO cargadas, las saqué de la vista previa.
+- `planes_documentos UNLu --apply`; `verificar_catalogo UNLu`; exportación completa. Listo para cargar a producción (UNLu, lote de 1). Tests: 971 OK.
+- Pendiente: los otros PDF de UNLu `pdf_con_texto` (Física, Geografía, Matemática, Historia, Prof. Adultos, Educación Inicial) con el mismo lector: no dieron plan, hay que ver su formato de a uno.
