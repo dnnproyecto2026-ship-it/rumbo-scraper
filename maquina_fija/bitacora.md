@@ -1493,3 +1493,9 @@
 - Lector nuevo `plan_mapa_curricular_numerado` (mapa "NN- Nombre", año según los conteos del resumen; si no cuadran, no lee) con su prueba: 39 unidades (9/10/11/9), cada una igual a la fila del PDF. Registrado en `DISENOS["Mendoza"]` con el PDF del Bicentenario, único instituto cuyo dominio lo aloja (`es_oficial`).
 - Listo para cargar con `planes_disenos --apply` desde la Mac (1 instituto). Las demás ofertas de Mendoza Inicial quedan sin plan hasta que su sitio enlace el diseño (ENS 9001 tiene el mismo PDF en su dominio: registrar su URL es posible si `DISENOS` admite varias fuentes). Tests 963 OK.
 - Siguiente: Santa Fe Lengua/Historia/Biología, `institutos_faltantes.csv`; reintentar dgescorrientes.net y santafe.gob.ar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (254) — Revisión de la cola: nada accionable sin decisión humana
+- Santa Fe Lengua/Historia/Biología/Matemática: la caché INFoD no enlaza ningún diseño de Santa Fe fuera del de Primaria/Inicial (ENS 35, ya registrado); los PDF están en `santafe.gob.ar`, que `es_oficial` rechaza, y no se sabe qué instituto usa cada plan. Santa Fe Enfermería: mismo bloqueo de dominio. Pendiente de decisión de una persona (agregar `santafe.gob.ar` y `dgescorrientes.net` a `DOMINIOS_DE_LA_EDUCACION`).
+- `institutos_faltantes.csv` (833 filas del padrón): solo nombre/domicilio, sin oferta ni plan legible por código; cargarlos vacíos no aporta. Sin cambios.
+- Vigilancia (corridas del lanzador del 30/10): CAYÓ en austral (materias 1375→843), ub (carreras 37→25), uba (materias 336→124, posgrados 592→441), udesa (sedes 4→3). Son sitios que cambiaron o fallaron: revisar antes de confiar en esas lecturas; nada cargado desde `data/vigilancia/`.
+- Nada cargado ni cambiado en código; sin commit. Tests 963 OK.
