@@ -1556,3 +1556,6 @@
 
 ## 2026-10-30 (273) — Sin trabajo accionable
 - Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 272 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (274) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45 (los 15 spiders corrieron en las últimas 24 h). Misma cola que el ciclo 273 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
