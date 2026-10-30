@@ -1638,3 +1638,8 @@
 - Probé `plan_unlu_cuatrimestres` sobre el PDF (Lic. en Educación Física, complementación, 4 cuatrimestres): lee 12 de ~16 materias. Pierde las del idioma optativo en filas "Inglés I o Francés I o Portugués I" (toma solo una alternativa), "Teorías de la Educación y la Educación Física" y "Planeamiento y Gestión…" (nombre partido con la nota "(1)" en la columna de código). Ensanchar el código a `\d{5}(\(n\))*` suma 2 materias pero no arregla las alternativas. Revertí el cambio de prueba; sin cambios en código ni datos.
 - Un plan incompleto es peor que ninguno: pendiente. Posible salida: `planes_manuales` con chequeo literal (idioma como una sola materia "Inglés/Francés/Portugués" no corresponde: decidir con una persona), o lector por celdas que parta las alternativas.
 - Siguiente: otro PDF de UNLu (Geografía res hcs 531-25, Matemática 248-24) o UNaM/UNM `pdf_con_texto`.
+
+## 2026-10-30 (293) — UNLu Geografía y Matemática: los PDF enlazados no contienen el plan
+- Descargué `res hcs 531-25.pdf` (Geografía) y `RES HCS 248-24.pdf` (Matemática): son resoluciones del Consejo Superior (corrección de un reglamento de tesis; observaciones de la DNGU sobre requisitos de ingreso), sin cuadro de materias. Razón registrada: el enlace de `sondeo_universidades.csv` no es el plan (sin_plan_publicado en ese enlace); sin cambios en datos ni código.
+- Observación: `plan_unlu_cuatrimestres` lanza ValueError si una celda cae fuera de la página (visto en el PDF de Geografía); no afecta datos, endurecerlo si aparece en un plan real.
+- Siguiente: UNLu Historia/Prof. Adultos/Educación Inicial (`unlu.edu.ar/doc/*.pdf`), UNaM/UNM `pdf_con_texto`.
