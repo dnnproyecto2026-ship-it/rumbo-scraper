@@ -418,6 +418,7 @@ _DOCUMENTOS_PROPIOS += (("fayd.unam.edu.ar", planes_sitios.plan_unam_codigos),)
 # UNLu's plan resolutions: a bordered table, the term's numeral in a cell that spans its rows
 # (other documents of its site to the general reader).
 _DOCUMENTOS_PROPIOS += (("unlu.edu.ar", planes_sitios.plan_unlu_cuatrimestres),)
+_DOCUMENTOS_PROPIOS += (("fceqyn.unam.edu.ar", planes_sitios.plan_fceqyn_unam),)
 # UNM's plan sheets: a row per subject with year, term and four-digit code.
 _DOCUMENTOS_PROPIOS += (("unm.edu.ar", planes_sitios.plan_unm),)
 # UNSAdA's plan sheets: a coded row per subject, as many compulsory ones as the sheet states

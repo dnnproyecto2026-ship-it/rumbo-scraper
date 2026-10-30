@@ -7348,3 +7348,96 @@ def plan_unm(texto: str) -> list[tuple[str, int]]:
         anio_previo = anio
         _agregar(materias, nombre, anio)
     return materias if len(materias) == len(codigos) else []
+
+
+_CIERRA_FRASE = re.compile(r"(?i)(?:^|\s)(?:de|del|de la|de los|y|en|la|los|el|e)$")
+
+
+def plan_fceqyn_unam(ruta: str) -> list[tuple[str, int]]:
+    """UNaM Exactas, Químicas y Naturales' plan grids (DNGU annex layout):
+    a bordered table "COD / ASIGNATURA / REGIMEN ...", a heading row per year
+    ("PRIMER AÑO") and a row per subject with its code. A name too long for
+    its cell wraps over the rows above and below the code's row, centred on
+    it, so a code has as many fragments above as below; where rows follow
+    each other without a blank row, a run of fragments between two codes is
+    split by that rule. A page break may cut a name: the first fragment at the
+    top of a page goes on the last name of the page before if that one ends
+    in a connector ("Fundamentos de"). The table ends at "OTRO REQUISITO" (the
+    final practice) or the title and total hours footer. A repeated name (the three "Curso de Orientación
+    Regional") or a thesis is not a subject; a year heading out of order, or
+    a code with no name, gives nothing."""
+    import pdfplumber
+
+    # Each block: (year, rows of (code, text), whether it opens a page).
+    bloques: list[tuple[int, list[tuple[str, str]], bool]] = []
+    anio = 0
+    filas: list[tuple[str, str]] = []
+    abre_pagina = True
+
+    def cerrar() -> None:
+        nonlocal filas, abre_pagina
+        if filas:
+            bloques.append((anio, filas, abre_pagina))
+            abre_pagina = False
+        filas = []
+
+    with pdfplumber.open(ruta) as pdf:
+        fin = False
+        for pagina in pdf.pages:
+            for tabla in pagina.extract_tables():
+                if fin or not tabla or len(tabla[0]) < 3 or not any(
+                        "ASIGNATURA" in (c or "") for fila in tabla[:6] for c in fila):
+                    continue
+                for celdas in tabla:
+                    codigo, nombre = clean_text(celdas[0] or ""), clean_text(celdas[1] or "")
+                    titulo = _ANIO_UNAM.match(codigo)
+                    if re.match(r"(?i)(?:otro requisito|t[íi]tulo:|carga horaria total)", codigo):
+                        cerrar()
+                        fin = True
+                        break
+                    if titulo:
+                        cerrar()
+                        if _ORDINALES[titulo.group(1).lower()] != anio + 1:
+                            return []
+                        anio += 1
+                    elif codigo == "COD" or not anio:
+                        continue
+                    elif not codigo and not nombre:
+                        cerrar()
+                    elif not codigo or re.fullmatch(r"\d{1,2}(?:\.\d{1,2})?\.?", codigo):
+                        filas.append((codigo, nombre))
+                    else:
+                        return []
+                cerrar()
+            abre_pagina = True
+    materias: list[tuple[str, int, list[str]]] = []
+    for anio_del_bloque, filas, abre in bloques:
+        indices = [i for i, (c, _) in enumerate(filas) if c]
+        if not indices:
+            continue
+        inicio = 0
+        if abre and indices[0] and materias and _CIERRA_FRASE.search(materias[-1][2][-1]):
+            materias[-1][2].append(filas[0][1])
+            inicio = 1
+        arriba = indices[0] - inicio
+        for k, i in enumerate(indices):
+            corrido = (indices[k + 1] if k + 1 < len(indices) else len(filas)) - i - 1
+            abajo = corrido if k + 1 == len(indices) else min(arriba, corrido)
+            partes = [t for _, t in filas[i - arriba:i]] + [filas[i][1]] + [t for _, t in filas[i + 1:i + 1 + abajo]]
+            materias.append((anio_del_bloque, i, [p for p in partes if p]))
+            arriba = corrido - abajo
+    vistas: set[str] = set()
+    resultado: list[tuple[str, int]] = []
+    for anio_de_la_materia, _, partes in materias:
+        nombre = clean_text(" ".join(partes))
+        if not nombre:
+            return []
+        if re.search(r"(?i)orientaci[oó]n regional|^tesis\b", nombre) or nombre in vistas:
+            continue
+        vistas.add(nombre)
+        resultado.append((nombre, anio_de_la_materia))
+    return resultado
+
+
+plan_fceqyn_unam.ruta = True  # type: ignore[attr-defined]
+plan_fceqyn_unam.respaldo = True
