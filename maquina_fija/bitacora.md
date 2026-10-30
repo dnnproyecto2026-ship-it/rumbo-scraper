@@ -1611,3 +1611,7 @@
 - `plan_unam_codigos` (+ `tests/test_planes_unam.py`, registrado para `fayd.unam.edu.ar`) lee el PDF de FAyD: filas "año.orden" con el nombre partido arriba/abajo del número. 28 materias (14 + 14), cotejadas una a una con el PDF. `planes_documentos UNaM --apply`; `verificar_catalogo UNaM`: la oferta verificada; exportación completa.
 - Listo para cargar a producción (UNaM, lote de 1).
 - Pendiente: los PDF de `fceqyn.unam.edu.ar` (Grilla-IA, Grilla-LG, plan_tucyp) dieron timeout de conexión: caída, reintentar otro día. Intérprete de LSA (fhycs): PDF narrativo, por revisar.
+
+## 2026-10-30 (287) — UNC y UNR: vista previa de `planes_documentos` sin resultado (tiempo agotado)
+- Corrí la vista previa de UNC y UNR en un solo proceso en segundo plano; cada una consumió su límite y no imprimió planes ni errores. UNDAV no llegó a correr. Nada cargado ni cambiado en código.
+- Pendiente: reintentar de a una universidad, con tiempo largo y salida a archivo, empezando por UNC (18 `pdf_con_texto`), luego UNR y UNDAV.
