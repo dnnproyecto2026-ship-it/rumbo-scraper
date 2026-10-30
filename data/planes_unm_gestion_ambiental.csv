@@ -1,0 +1,26 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNM;Tecnicatura Universitaria en Gestión Ambiental;3;;;https://www.unm.edu.ar/files/LICENCIATURA_EN_GESTION_AMBIENTAL_UNM_2015_versin_difusin_20240404.pdf;"1 | Matemática I
+1 | Física
+1 | Desarrollo Sustentable y Derechos Humanos
+1 | Inglés I
+1 | Ecología y Recursos Naturales
+1 | Química Ambiental I
+1 | Sociología y Ambiente
+1 | Inglés II
+2 | Geología Ambiental
+2 | Matemática II
+2 | Derecho Ambiental
+2 | Economía I
+2 | Inglés III
+2 | Química Ambiental II
+2 | Indicadores e Índices Ambientales
+2 | Población y Movimientos Migratorios
+2 | Modelos de Desarrollo y Ambiente
+3 | Sistemas Urbanos
+3 | Economía II
+3 | Cartografía y Catastro
+3 | Evaluación de Impacto Ambiental I
+3 | Sistemas de Información Geográfica
+3 | Gestión de Recursos Naturales
+3 | Evaluación de Impacto Ambiental II
+3 | Uso del Suelo y Planificación Territorial";lector plan_unm;;Título intermedio de la Licenciatura: filas del plan hasta 'Título Intermedio';;f7d4ea41-0b43-4655-a86e-041673a3becc

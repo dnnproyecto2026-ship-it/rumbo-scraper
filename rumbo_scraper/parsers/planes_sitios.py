@@ -7303,3 +7303,28 @@ def plan_unlu_cuatrimestres(ruta: str) -> list[tuple[str, int]]:
 
 plan_unlu_cuatrimestres.ruta = True  # type: ignore[attr-defined]
 plan_unlu_cuatrimestres.respaldo = True  # the site's other layouts go to the general reader
+
+
+# UNM's plan sheets: "year  term  code  name  correlatives  hours".
+_FILA_UNM = re.compile(r"^\s*([1-7])\s+(\d{1,2}(?:\s*-\s*\d{1,2})?)\s+(\d{4})\s+(\S.*?)(?:\s{2,}|$)", re.M)
+_NO_NOMBRADA_UNM = re.compile(r"(?i)optativ|espec[íi]fica|a elecci[óo]n|electiv")
+
+
+def plan_unm(texto: str) -> list[tuple[str, int]]:
+    """UNM's plan PDFs (``-layout``, "Organización curricular"): a row per
+    subject with its year, term, four-digit code and name, then correlatives
+    and hours. The organisation table is the first place the codes appear;
+    the later syllabus lists repeat them without the year and term. Nothing if
+    a row stands for subjects chosen later ("Asignatura Optativa"), a code
+    repeats, or the years go back: the plan would be incomplete."""
+    materias: list[tuple[str, int]] = []
+    codigos: set[str] = set()
+    anio_previo = 1
+    for m in _FILA_UNM.finditer(texto):
+        anio, codigo, nombre = int(m.group(1)), m.group(3), " ".join(m.group(4).split())
+        if codigo in codigos or anio < anio_previo or _NO_NOMBRADA_UNM.search(nombre):
+            return []
+        codigos.add(codigo)
+        anio_previo = anio
+        _agregar(materias, nombre, anio)
+    return materias if len(materias) == len(codigos) else []
