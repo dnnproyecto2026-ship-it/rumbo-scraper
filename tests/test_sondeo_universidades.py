@@ -43,3 +43,15 @@ class TextoDelPdf(unittest.TestCase):
             vacio.write_bytes(b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
                               b"3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 100 100]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF")
             self.assertLess(texto_del_pdf(vacio.read_bytes()), 300)
+
+
+class PonerAlDia(unittest.TestCase):
+    def test_quita_las_paginas_que_ya_tienen_plan_y_actualiza_la_cuenta(self):
+        from rumbo_scraper.database.sondeo_universidades import poner_al_dia
+
+        filas = [["UCH", "https://a", "pdf_con_texto", "x.pdf", "3"], ["UCH", "https://b", "js", "", "2"],
+                 ["UNR", "https://c", "caida", "", "1"]]
+        vigentes, quitadas = poner_al_dia(filas, [("UCH", "https://a", 1), ("UNR", "https://c", 1)])
+        self.assertEqual(vigentes, [["UCH", "https://a", "pdf_con_texto", "x.pdf", "1"],
+                                    ["UNR", "https://c", "caida", "", "1"]])
+        self.assertEqual(quitadas, 1)

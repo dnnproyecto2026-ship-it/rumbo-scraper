@@ -1,6 +1,6 @@
 """Where each university's missing plans are, offer page by offer page.
 
-    python -m rumbo_scraper.database.sondeo_universidades UCP UNLP ... [--todas]
+    python -m rumbo_scraper.database.sondeo_universidades UCP UNLP ... [--todas] [--actualizar]
 
 Production (read-only) lists the published offers of the universities with no
 plan, and the page of each. Every distinct page is read once, politely, and
@@ -126,6 +126,18 @@ def ofertas_sin_plan(conexion: Any, siglas: list[str]) -> list[tuple[str, str, i
         return [(a, b, n) for a, b, n in cursor.fetchall()]
 
 
+def poner_al_dia(filas: list[list[str]], pendientes: list[tuple[str, str, int]]) -> tuple[list[list[str]], int]:
+    """The survey's rows for the pages that still have offers without a plan, with today's count of them, and how
+    many rows were dropped because every offer of the page has its plan now."""
+    cuantas = {(universidad, url): n for universidad, url, n in pendientes}
+    vigentes = []
+    for fila in filas:
+        n = cuantas.get((fila[0], fila[1]))
+        if n:
+            vigentes.append(fila[:4] + [str(n)])
+    return vigentes, len(filas) - len(vigentes)
+
+
 def main() -> None:
     from rumbo_scraper.database.avance_produccion import url_de_la_base
     from rumbo_scraper.spiders.visitante import Visitante
@@ -134,6 +146,7 @@ def main() -> None:
     if "--pdfs" in sys.argv:
         return revisar_pdfs()
     siglas = [a for a in sys.argv[1:] if not a.startswith("--")]
+    # (``--actualizar``: first drops the pages whose offers all have a plan now and refreshes the counts.)
     hechas: dict[str, list[str]] = {}
     if SALIDA.exists():
         with SALIDA.open(encoding="utf-8-sig") as archivo:
@@ -141,6 +154,14 @@ def main() -> None:
     with psycopg.connect(url_de_la_base(), autocommit=True) as conexion:
         conexion.execute("set statement_timeout = 120000")
         pendientes = ofertas_sin_plan(conexion, siglas)
+    if "--actualizar" in sys.argv and hechas:
+        vigentes, quitadas = poner_al_dia([[*f] for f in hechas.values()], pendientes)
+        with SALIDA.open("w", newline="", encoding="utf-8-sig") as archivo:
+            escritor = csv.writer(archivo, delimiter=";")
+            escritor.writerow(CAMPOS)
+            escritor.writerows(vigentes)
+        hechas = {fila[1]: fila for fila in vigentes}
+        print(f"{quitadas} páginas quitadas (ya tienen plan), {len(vigentes)} siguen")
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
     nuevo = not SALIDA.exists()
     with SALIDA.open("a", newline="", encoding="utf-8-sig") as archivo, Visitante(timeout=30) as visitante:
