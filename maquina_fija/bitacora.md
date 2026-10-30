@@ -1602,3 +1602,7 @@
 ## 2026-10-30 (284) — UNNE Lic. Cs. Físicas contrastada con la página oficial
 - Las 28 materias cargadas coinciden con el plan de `exa.unne.edu.ar/r/?page_id=8372`, año por año. El 5.º año tiene de verdad solo el Seminario (más Trabajo Final anual y optativas, que no se cargan como materia). El nombre "Física Experimental ?II?" es literal de la página oficial (errata de ellos); no lo corregí a mano. Sin cambios en datos.
 - UNNE sigue lista para cargar (lote de 1). Siguiente: lector por posición de palabras para UNLu, UNaM `pdf_con_texto`.
+
+## 2026-10-30 (285) — UNO, UNTREF, UCSE, UNMdP, UNJu: el lector general da 0 planes
+- `planes_documentos` vista previa: 0 planes en UNO, UNTREF y UCSE (`pdf_con_texto`). UNMdP y UNJu también dieron 0. Nada cargado ni cambiado en código.
+- Siguiente: lector por posición de palabras para UNLu (cuadro con cuatrimestre centrado), UNaM `pdf_con_texto`.
