@@ -1416,3 +1416,7 @@
 - Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 21 ofertas. Sin vista previa local (base sin institutos).
 - Mendoza Inicial: la búsqueda no halló el diseño publicado; pendiente. (Error mío: bajé el PDF con `curl` para mirarlo; los datos salen solo del lector del repo, no se repite.)
 - Siguiente: Misiones Primaria (22), Mendoza Inicial, PBA Enfermería. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (239) — Misiones Primaria (22): el diseño publicado es un escaneo
+- El diseño (Res. 333) está en dos PDF de isfdbrasil-mis.infd.edu.ar (`.../2019/06/Diseño-Curricular-Profesorado-Educación-Primaria-páginas-1-1517-60.pdf`, 59 págs., y `...páginas-61-101.pdf`). Ambos son imágenes: `pdftotext` no devuelve texto. Razón registrada: `pdf_escaneado`; solo entraría por `planes_manuales` con chequeo literal, y eso exige texto verificable. Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: Misiones Inicial (10; probablemente el mismo tipo de escaneo), PBA Enfermería (86), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
