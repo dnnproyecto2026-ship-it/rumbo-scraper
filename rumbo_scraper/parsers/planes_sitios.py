@@ -3048,6 +3048,9 @@ def plan_formato_de_unidad(texto: str) -> list[tuple[str, int]]:
         elif anio and re.match(r"(?i)^formato\s*:", linea):
             bloque: list[str] = []
             j = i - 1
+            # (A name can sit a blank line above its "Formato:".)
+            if j > 0 and not lineas[j] and not re.match(r"^\d+$", lineas[j - 1]):
+                j -= 1
             while j >= 0 and lineas[j] and not re.match(r"^\d+$", lineas[j]) \
                     and not re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", lineas[j]):
                 bloque.insert(0, lineas[j])

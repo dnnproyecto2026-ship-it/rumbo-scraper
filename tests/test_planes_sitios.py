@@ -1001,6 +1001,19 @@ Formato: Seminario-taller
             ("Pedagogía", 1), ("Historia Social y Política Argentina y Latinoamericana", 2),
             ("Análisis y organización de las instituciones educativas", 4), ("Práctica Docente I", 1)])
 
+    def test_formato_de_unidad_con_renglon_en_blanco_antes_del_formato(self):
+        texto = """Segundo Año
+Educación física y su didáctica
+Formato: Asignatura
+                  142
+Sujetos de la educación inicial
+
+Formato: Seminario
+Carga horaria: 4 hs cátedra semanales
+"""
+        self.assertEqual(p.plan_formato_de_unidad(texto), [
+            ("Educación física y su didáctica", 2), ("Sujetos de la educación inicial", 2)])
+
     def test_unidades_numeradas_y_titulo_partido_en_dos_lineas(self):
         texto = """PRIMER AÑO
 1. Física para Seguridad 1 - Carga horaria: 2 (dos) módulos por semana.

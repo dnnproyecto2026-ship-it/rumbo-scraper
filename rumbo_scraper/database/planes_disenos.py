@@ -252,6 +252,24 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Primaria": (
             "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Primaria_Solene_Borja_141015_final_v3.pdf",
             planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Educación Inicial": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Inicial_Solene_Borja131015_final_v2.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Matemática": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/matematica_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Lengua y Literatura": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Lengua_y_L_solene_borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Historia": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Historia_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Biología": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Biologi769a_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Inglés": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Ingles_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
     },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
