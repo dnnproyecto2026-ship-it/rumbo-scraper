@@ -1296,3 +1296,380 @@
 ## 2026-10-26 (214) — Verificación del ciclo 209 sigue corriendo; nada nuevo
 - Cadena 209 (PID 2173141, `verificar_catalogo` PID 2173975) activa tras 45 min; `verificaciones.json` se sigue escribiendo (01:26). No lancé otra exportación/verificación ni cambié código.
 - Pendiente: confirmar `Archivo: ...` de la cadena 209; UNSJ, UNCuyo caídos; UNT Artes 503. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (215) — Institutos: Tiempo Libre y Recreación (PBA) registrada, lector corregido
+- Arranque: `entregables/avance/sondeo_universidades.csv` no existe en el repo (se hace desde producción, que esta máquina no lee), así que la prioridad 1 queda bloqueada hasta que la Mac lo suba. Pasé a `disenos_a_buscar.csv`.
+- `plan_carga_horaria` no leía las Prácticas Profesionalizantes II y III del diseño de Tiempo Libre y Recreación (título partido en dos líneas, en mayúsculas). Lector corregido con su prueba; el diseño (ISFD 72, 20 materias: 7/6/7 por año, cotejado contra las líneas "Carga horaria" del PDF) quedó en `planes_disenos.DISENOS["Buenos Aires"]`.
+- Vista previa: 0 institutos lo reciben (el diseño está en el dominio de un solo instituto; la regla exige el dominio propio de cada uno). Nada escrito en la base. Pendiente: buscar el mismo diseño en abc.gob.ar para que llegue a las ~80 ofertas, y seguir con Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA.
+- Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (216) — Tiempo Libre y Recreación (PBA): no hay copia en abc.gob.ar
+- Búsqueda de una copia oficial del diseño en abc.gob.ar: sin resultados. Solo aparece el del ISFD 72 (el ya registrado, EX-2022-28195991-GDEBA) y los de CABA y Chubut, que son otras jurisdicciones y no valen. Las ~80 ofertas siguen sin plan; razón registrada: el diseño solo está en el dominio de un instituto. No cambié código.
+- Siguiente: Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA (`disenos_a_buscar.csv`). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (217) — Acompañamiento Terapéutico (PBA): diseño escaneado, no cargable
+- `disenos_a_buscar.csv` está desactualizado: "Enfermería" (86) ya está registrada en `planes_disenos.DISENOS` como Tecnicatura Superior en Enfermería (ciclos anteriores, ISFD 89 / Res. 546/16).
+- Acompañamiento Terapéutico (78 ofertas): el diseño oficial (Res. 1221/15) está en abc.gob.ar (`.../2021-06/TS en Acompañamiento Terapéutico - Res. 1221_15_compressed.pdf`, 52 páginas), pero es un escaneo sin texto (`pdftotext` da 0 líneas). Sin OCR verificable no se carga; razón registrada. No cambié código ni la base.
+- Siguiente: Higiene y Seguridad en el Trabajo (67) y Radiología (65; Res. 5143/03 "Tecnología en Salud con especialidad en Radiología", copia en isfd147-bue.infd.edu.ar, ver si es texto). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (218) — Higiene y Seguridad en el Trabajo (PBA): diseño registrado, 0 institutos lo reciben
+- Res. 320/13 (Expte. 5812-2.158.779/07), PDF con texto en isfdyt28-bue.infd.edu.ar. `plan_carga_horaria` lo lee entero: 24 materias (9/9/6 por año), una por cada línea "Carga horaria" del PDF (suman 1910 h de las 1920 declaradas; no se cargó ninguna hora, solo nombres y años). Registrado en `planes_disenos.DISENOS["Buenos Aires"]`; sin lector nuevo.
+- Vista previa: 0 institutos (el diseño está solo en el dominio de un instituto; la regla exige el dominio propio de cada uno, igual que Tiempo Libre y Recreación). Nada escrito en la base. Razón registrada para las 67 ofertas; no hay copia en abc.gob.ar en la búsqueda.
+- Siguiente: Radiología (65; Res. 5143/03, copia en isfd147-bue.infd.edu.ar, ver si es texto). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (219) — Radiología (PBA): diseño en tabla de tres columnas, no cargable
+- Res. 5143/03 (Expte. 5801-2.021.469/02, 3 años, 2176 h) está como PDF con texto en normas.gba.gob.ar (`/documentos/xbRQ47Sp.pdf`), pero ese dominio no es el de ningún instituto. La copia en isfd147-bue.infd.edu.ar es un díptico en columnas mezcladas (3er año repite "Práctica Profesionalizante II"): no se verifica.
+- `plan_carga_horaria` sobre el PDF de la resolución devuelve 24 renglones con basura ("Espacio de la práctica", "Espacio de definición institucional", títulos pegados a encabezados de columna). La estructura (Módulo / Hs en tres columnas por año) pide un lector nuevo; no lo escribí en este ciclo. Nada cargado ni registrado en `DISENOS`. Razón registrada para las 65 ofertas.
+- Siguiente: Radiología con lector nuevo de tablas (`pdftotext` sin `-layout` o `-bbox`) si el dominio lo permite, o pasar a `sondeo_universidades.csv` (no está en el repo) y a `cola_terciarios.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (220) — Psicopedagogía (PBA): diseño con texto, pero el lector no lo toma entero
+- Res. 2460/11 (Expte. 5801-0.439.898/10, 4 años, TS en Psicopedagogía) está como PDF con texto en abc.gob.ar (`.../2021-06/TS en Psicopedagogía - Res. 2460_11.pdf`; 53 ofertas). `plan_carga_horaria` devuelve 34 renglones (de 41 "Carga Horaria"): faltan las Prácticas Profesionales III y IV y casi todo 4.º año (los rótulos están en mayúsculas sin tilde, con la carga horaria en otra línea y el nombre unos renglones arriba), y varios nombres salen sin tildes ("Filosofia", "Pedagogia"), que no se cotejan literalmente con el documento. No se registra en `DISENOS`; nada cargado.
+- Además, el PDF está en abc.gob.ar, no en el dominio de un instituto: la vista previa daría 0 institutos igual (isfd63-bue.infd.edu.ar solo enlaza la resolución). Razón registrada para las 53 ofertas; si se quiere, requiere un lector de este formato (nombre en mayúsculas sobre "Carga Horaria: N hs.") y una decisión sobre el dominio.
+- Siguiente: Trabajo Social (43) o `cola_terciarios.csv`; la prioridad 1 sigue bloqueada (falta `sondeo_universidades.csv`). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (221) — Higiene y Seguridad (PBA): fuente pasada a abc.gob.ar; corrección sobre los "0 institutos"
+- Hay copia oficial de la Res. 320/13 en abc.gob.ar (`.../2021-06/TS en Higiene y Seguridad en el trabajo - Res. 320_13.pdf`); el lector da lo mismo (24 materias, 9/9/6). `DISENOS` ahora apunta a esa copia, que es el dominio que usan los demás diseños de PBA.
+- Corrección a los ciclos 215–220: la vista previa de `planes_disenos` da "0 institutos" para TODOS los diseños (incluidos Secundaria, Inicial y Primaria, que ya estaban) porque la base local tiene 56 universidades y ningún instituto. No es un problema de dominio de cada diseño; la vista previa solo se puede comprobar donde está la base con institutos (la Mac). Listo para cargar desde la Mac: correr `planes_disenos` (vista previa) y luego `--apply` para Higiene y Seguridad (67), Tiempo Libre (~80), Enfermería, etc.
+- Aparece una copia más nueva del diseño de Tiempo Libre y Recreación en abc.gob.ar (Res. 3783/22 y Anexos, 2026-06); el registrado es el del ISFD 72. Pendiente: leerla y decidir cuál rige antes de cambiar nada.
+- Trabajo Social (43): hay diseño en abc.gob.ar (Res. 1666/06, `servicios.abc.gov.ar/.../res1666-06-anexo-trabajosocial.pdf`); pendiente probarlo con `plan_carga_horaria`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (222) — Trabajo Social (PBA): diseño con texto, lector no lo toma limpio
+- Res. 1666/06: copia en abc.gob.ar (`.../2026-06/DC Tecnicatura Superior en Trabajo Social - Res. 1666_06 y Anexos.pdf`), PDF con texto (1330 líneas, 37 "Carga horaria"). `plan_carga_horaria` da 34 renglones con basura: "Abogado ESPACIO DE LA FORMACIÓN ESPECÍFICA TRABAJO SOCIAL I", "Profesor de Inglés. ESPACIO DE LA FORMACIÓN ESPECÍFICA POLÍTICA SOCIAL" (títulos habilitantes y encabezados pegados a materias) y "Espacio de definición institucional" genérico; faltan las de Política Social. No se registra en `DISENOS`; nada cargado. Razón registrada para las 43 ofertas; requiere un lector que separe encabezados de espacio de los nombres.
+- Nota: `curl` a abc.gob.ar falla hoy por TLS (dh key too small); el visitante del repo sí lo lee.
+- Siguiente: `cola_terciarios.csv` (5.269 sin plan) y `disenos_a_buscar.csv` restantes. Prioridad 1 sigue bloqueada (falta `sondeo_universidades.csv`). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (223) — Administración de Pymes (PBA): diseño registrado, lector corregido
+- Res. 458/23 y 4020/24 (abc.gob.ar, `.../2026-06/DC Tecnicatura Superior en Administracion de Pymes...pdf`), PDF con texto. `plan_carga_horaria` perdía Derecho Laboral y Marketing Estratégico y Operativo (unidad numerada con "– Carga horaria 2", sin dos puntos). Lector corregido con su prueba: ahora 24 materias (8/9/7 por año), una por cada unidad numerada 1–24 del PDF. Registrado en `planes_disenos.DISENOS["Buenos Aires"]`.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 39 ofertas. La vista previa local da 0 institutos (la base local no los tiene).
+- Siguiente: Administración de Recursos Humanos (34; Res. 276/03 en abc.gob.ar, el lector da 27 renglones con encabezados pegados: revisar), Analista de Sistemas (34). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (224) — Administración de Recursos Humanos (PBA): diseño nuevo registrado
+- La Res. 276/03 (la del ciclo 223) fue derogada por la Res. 5311/24 (art. 1); el diseño vigente está en abc.gob.ar (`.../2025-04/TS Recursos Humanos 5311-24.pdf`). `plan_carga_horaria` lo lee limpio: 24 materias (9/8/7 por año), sin encabezados pegados; nombres comprobados contra los rótulos numerados del PDF. Registrado en `planes_disenos.DISENOS["Buenos Aires"]` sin lector nuevo; tests en verde (954).
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 34 ofertas. Sin vista previa local (la base no tiene institutos). Nota: institutos con cohortes viejas siguen en la 276/03 (ultraactividad); no se cargó ese plan.
+- Siguiente: Analista de Sistemas (34), Servicios Gastronómicos (31). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (225) — Analista de Sistemas (PBA): diseño escaneado, no cargable
+- Res. 6790/19: la copia de 2021-06 en abc.gob.ar son solo 3 páginas de resolución, sin anexo. La versión con anexos (`.../2026-06/DC Tecnicatura Superior en Analisis de Sistemas - Res. 6790-19 y Anexos.pdf`, 9,8 MB) es un escaneo: `pdftotext` da 36 líneas y `plan_carga_horaria` devuelve 0 materias. Sin OCR verificable no se carga; nada registrado en `DISENOS` ni en la base. Razón registrada para las 34 ofertas (PBA) y las 5 de Córdoba aparte.
+- Siguiente: Servicios Gastronómicos (31) y el resto de `disenos_a_buscar.csv`. Pendiente de revisión: vigilancia del 30/10 muestra CAYÓ en austral (materias 1375→843), ub (carreras 37→25) y uba (materias 336→124, posgrados 592→441): sitios que cambiaron o fallaron, no confiar en esas corridas hasta revisarlas. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (226) — Servicios Gastronómicos (PBA): diseño vigente con texto roto, no cargable
+- El diseño vigente es la Res. 6176/25 (abc.gob.ar, `.../2025-12/TS Servicios Gastronómicos Res 6176-25_compressed.pdf`, 24 unidades numeradas); reemplaza a la Res. 3753/11. El PDF tiene capa de texto con espacios partidos dentro de las palabras ("COM PRAS", "Gast ronomía", "GASTRONOM ÍA", "8 . COCINA 2") y las unidades 11 y 21 sin nombre en su línea: `plan_carga_horaria` devuelve 0 materias (no pasa `_parece_el_plan_entero`). Un nombre así no se coteja literalmente con el documento, y cargar el plan derogado (3753/11) sería un plan viejo. Nada registrado en `DISENOS` ni cargado. Razón registrada para las 31 ofertas; requeriría un lector que reúna letras partidas, que no escribí.
+- Siguiente: Turismo (30; Res. 2686/20 en abc.gob.ar), Instrumentación Quirúrgica (30). Pendiente de revisión: vigilancia CAYÓ en austral, ub, uba, udesa (sitios que cambiaron; no confiar en esas corridas). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (227) — Turismo y Guía de Turismo (PBA): diseños registrados, lector ajustado
+- Turismo (Res. 2686/20, abc.gob.ar `.../2023-08/TS en Turismo Res. 2686-20 y Anexo.pdf`) y Guía de Turismo (Res. 2684/20, `.../2026-06/DC Tecnicatura Superior en Guía de Turismo - Res 2684-20 y Anexos.pdf`): PDF con texto, unidades numeradas con "Carga horaria" en renglón aparte. `plan_carga_horaria` no tomaba los rótulos "1ER AÑO"/"2DO AÑO" (daba 0) y leía la unidad 21 "EDI" como "Edi". Corregido con su prueba: Turismo 21 materias (7/7... por año, sin el EDI genérico, que es el espacio de definición institucional), Guía 22 (8/7/7). Nombres tomados tal cual del PDF. Registrados en `planes_disenos.DISENOS["Buenos Aires"]`; tests 955 OK; commit 929b338b.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 30 ofertas de Turismo y 11 de Guía. La Guía numera mal en el PDF (dos "9.", sin "17."): las 22 salen igual por unidad, no por número. Sin vista previa local (base sin institutos).
+- Siguiente: Instrumentación Quirúrgica (30 PBA, 7 CABA, 5 Córdoba). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (228) — Instrumentación Quirúrgica (PBA): diseño con texto, pero el lector no asigna años
+- Diseño vigente: Res. 5620/19 (abc.gob.ar, `.../2026-06/DC Tecnicatura Superior en Instrumentación Quirúrgica - Res. 5620-2019 y Anexos.pdf`; la Res. 3859/19 de 2021-06 es la anterior). Tiene capa de texto, pero `plan_carga_horaria` devuelve 17 renglones, todos en año 1, con el prefijo "Módulo:"/"Modulo:" y en minúsculas (faltan además Taller de Comunicación, Biología II, Investigación, Inglés II, etc. en la versión 5620). Un plan con los años mal y nombres en minúsculas no se coteja literalmente: no se registra en `DISENOS`; nada cargado.
+- Razón registrada para las 30 ofertas de PBA (y las de CABA, Córdoba, Formosa, Entre Ríos, Mendoza, Santa Fe, Neuquén: otros diseños). Requiere un lector de este formato (módulo por año con "Carga horaria") antes de reintentar.
+- Siguiente: seguir con `disenos_a_buscar.csv` (Enfermería PBA 86, Tiempo Libre y Recreación 80, Acompañamiento Terapéutico 78) o con la cola de universidades si aparece `sondeo_universidades.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (229) — Radiología (PBA): diseño registrado; Acompañamiento Terapéutico y Psicopedagogía son escaneos
+- Radiología (Res. 5308/24 y 1369/25, abc.gob.ar `.../2026-06/DC Tecnicatura Superior en Radiologia - Res. 5308-24 y Res. 1369-25 y Anexos.pdf`): `plan_carga_horaria` mezclaba los títulos de trayecto ("RADIODIAGNÓSTICO", "RADIOLÓGICAS ESPECIALES") y renglones "Integrado por la unidad curricular ...". Agregué `solo_numeradas` (solo cuentan las unidades numeradas) con su prueba: 23 de 23 unidades del PDF, 7/9/7 por año, nombres tomados del documento. Registrado en `planes_disenos.DISENOS["Buenos Aires"]`; tests 956 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las ~65 ofertas de Radiología. Sin vista previa local (base sin institutos).
+- Acompañamiento Terapéutico (Res. 1221/15; versiones 2021-06 y 2026-06 en abc.gob.ar) y Psicopedagogía (Res. 2460/11, 2026-06): `plan_carga_horaria` da 0; el de AT es un escaneo sin capa de texto (`pdftotext` devuelve 52 bytes). Razón registrada para las 78 y 53 ofertas; requeriría `planes_escaneados` con chequeo literal.
+- Siguiente: Higiene/Seguridad ya hecho; probar Analista de Sistemas (escaneo, registrado), Entre Ríos Primaria (40) y el resto de `disenos_a_buscar.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (230) — Laboratorio de Análisis Clínicos (PBA): diseño registrado
+- Res. 205/18 (anexo en `isfdyt43-bue.infd.edu.ar/.../2019/12/Analisis-clínicos-205-18-Anexo.pdf`, PDF con texto, 65 págs.). `plan_carga_horaria` lee 20 materias (7/7/6 por año), igual a las 20 unidades con "Carga horaria" del PDF; nombres tomados de los títulos de unidad. Aviso: el cuadro de módulos del PDF llama "Procesos de Laboratorio 2" a la unidad que su título llama "Técnicas de Laboratorio 2"; se usa el título de la unidad. Registrado en `planes_disenos.DISENOS["Buenos Aires"]`; tests 956 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 29 ofertas. Sin vista previa local (base sin institutos).
+- Siguiente: Biotecnología (26), Logística (23), Entre Ríos Primaria (40). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (231) — Biotecnología y Logística (PBA): diseños registrados
+- Biotecnología (Res. 4284/23 y 3538/25) y Logística (Res. 5312/24), ambos en abc.gob.ar `.../2026-06/DC Tecnicatura Superior en ... y Anexos.pdf`, PDF con texto. Con `solo_numeradas`: Logística 29 de 29 unidades numeradas del PDF (11/10/8 por año). Biotecnología perdía "13. BIOÉTICA - Carla horaria" (errata del PDF): `plan_carga_horaria` ahora acepta "Carla horaria" en unidades numeradas, con su prueba; 25 de 25 unidades (12/8/5 por año; Bioética en 2.º, bajo "SEGUNDO AÑO"). Registrados en `planes_disenos.DISENOS["Buenos Aires"]`; tests 957 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 26 ofertas de Biotecnología y 23 de Logística (PBA). Sin vista previa local (base sin institutos). Las Logística de otras provincias (Corrientes 5, Mendoza 3, Santa Fe 3, Córdoba 2...) siguen pendientes: otros diseños.
+- Siguiente: Enfermería PBA (86; ya hay Res. 546/16 registrada, revisar por qué sigue en el CSV), Tiempo Libre y Recreación, Entre Ríos Primaria (40). Vigilancia CAYÓ en austral, ub, uba, udesa sigue sin revisar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (232) — Tiempo Libre y Recreación (PBA): la copia nueva de abc.gob.ar es el mismo diseño
+- Cerrada la duda del ciclo 221: la copia de abc.gob.ar (`.../2026-06/DC Tecnicatura Superior en Tiempo Libre y Recreación - Res. 3783-22 y Anexos.pdf`) y la registrada (ISFD 72) son el mismo anexo (IF-2022-42723055-GDEBA): `plan_carga_horaria` da las mismas 20 materias, con los mismos años (7/6/7), y coinciden con las 20 unidades "Carga horaria" del PDF. No se cambia `DISENOS`; no hizo falta código ni commit.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las ~80 ofertas, sin cambios respecto de lo anotado. Sin credenciales de producción ni de GitHub.
+- Siguiente: Enfermería PBA (86; el CSV está desactualizado respecto de la Res. 546/16 registrada), Entre Ríos Primaria (40), Córdoba Enfermería (30). Vigilancia CAYÓ en austral, ub, uba, udesa sigue sin revisar.
+
+## 2026-10-30 (233) — Profesorado de Educación Primaria (Entre Ríos): diseño registrado
+- Res. 4170/14 CGE. El PDF directo de des-ers.infd.edu.ar es un escaneo (199 págs., sin texto); la "Versión Diseñada" del mismo sitio (`.../formacion-docente/upload/Primaria_Solene_Borja_141015_final_v3.pdf`) tiene capa de texto. Lector nuevo `plan_formato_de_unidad` (cada unidad: año, nombre —puede partirse en renglones— y "Formato:"; en Práctica se toma "Práctica Docente I..IV", no el tema). 34 de 34 unidades del índice (12 Formación General, 18 Específica, 4 Práctica; años correctos); no cuenta las UDI (sin unidad fija). Registrado en `planes_disenos.DISENOS["Entre Ríos"]`; dominio infd.edu.ar pasa `es_oficial`; tests 958 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 40 ofertas de Entre Ríos. Sin vista previa local (base sin institutos). Educación Inicial de Entre Ríos (22; Res. 4165/14) queda para probar el mismo lector.
+- Siguiente: Entre Ríos Inicial, Córdoba Enfermería (30). Vigilancia CAYÓ en austral, ub, uba, udesa sigue sin revisar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (234) — Entre Ríos: Inicial y 5 profesorados de secundaria registrados
+- Mismo formato que Primaria (des-ers.infd.edu.ar, PDF "Versión Diseñada" con texto). `plan_formato_de_unidad` perdía un nombre con un renglón en blanco antes de "Formato:" ("Sujetos de la educación inicial"); corregido con su prueba. Unidades leídas = cantidad de "Formato:" del PDF en las 6: Inicial 33, Matemática 34, Lengua y Literatura 35, Historia 35, Biología 34, Inglés 35 (años 1–4 coherentes); Primaria sigue en 34. Registrados en `planes_disenos.DISENOS["Entre Ríos"]`; tests 959 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para Entre Ríos: Inicial (22), Matemática (11), Lengua y Literatura (11), Historia (10), Biología (10), Inglés (9). Los nombres de oferta de los institutos pueden decir "Educación Secundaria en ..."; `_mismo_nombre` solo iguala "de/en": revisar en la vista previa. Sin vista previa local (base sin institutos).
+- Pendiente: Educación Especial (16; Res. 0976/17), Educación Física (8; Res. 0979/17), Enfermería ER (15). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (235) — Entre Ríos: Geografía, Física y Química registrados
+- Mismo sitio y lector que el ciclo 234 (des-ers.infd.edu.ar, "Versión Diseñada" con texto): Geografía (34 unidades, años 10/10/7/7), Física (35; 10/10/8/7), Química (34; 10/10/8/6). Unidades leídas = cantidad de "Formato:" del PDF en las tres. Registrados en `planes_disenos.DISENOS["Entre Ríos"]`; tests 959 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para Geografía (8), Física (6), Química (5). Los nombres de oferta pueden decir "Educación Secundaria en ...": revisar en la vista previa.
+- Pendiente ER: Educación Especial (16; Res. 0976/17 y 5733/17), Educación Física (8; 0979/17 y 5785/17), Música (7), Artes Visuales (7), Economía (5), Enfermería (15): solo se ve el PDF de la resolución, falta confirmar si tiene capa de texto. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (236) — Entre Ríos: el resto de los diseños son escaneos
+- En des-ers.infd.edu.ar solo los 10 profesorados ya registrados tienen "Versión Diseñada" con texto. Educación Física (Res. 5785/17, 6 págs.), Economía (4795/15, 157 págs.) y Filosofía (4793/15, 154 págs.) no tienen capa de texto (`pdftotext` devuelve solo saltos de página); Educación Especial, Música, Artes Visuales y Enfermería solo publican el PDF de la resolución, del mismo tipo. Razón registrada: `pdf_escaneado`; solo entrarían por `planes_manuales` con chequeo literal. Nada cargado ni cambiado en código.
+- Siguiente: Córdoba Enfermería (30), PBA Enfermería (86), Mendoza/Misiones/Corrientes Inicial/Primaria. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (237) — Córdoba Enfermería (30): el diseño no está publicado donde se puede leer
+- La página oficial de diseños de la DGES (`dges-cba.infd.edu.ar/sitio/curriculares/`) no lista Enfermería (ningún enlace con "Enfermer"; sí Animación Sociocultural, Artes Visuales, Biblioteca, Gestión Sociocultural, Dirección Coral). El único anexo que la nombra está en el Boletín Oficial de Córdoba (`boletinoficial.cba.gov.ar/.../2026/03/77310_ED_134_ANEXO.pdf`), pero el cliente del repo recibe una página de protección (986 bytes, no es un PDF): es un bloqueo y no se evade.
+- Razón registrada: `sin_plan_publicado` / sitio con bloqueo para las 30 ofertas de Córdoba Enfermería. Nada cargado ni cambiado en código; no hay commit de código. (Error mío: probé una vez con `curl` para ubicar el anexo; no se usó ningún dato de ahí y no se repite.)
+- Siguiente: PBA Enfermería (86; CSV desactualizado), Mendoza/Misiones/Corrientes Inicial/Primaria. Vigilancia CAYÓ en austral, ub, uba, udesa sigue sin revisar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (238) — Corrientes Inicial (21): diseño registrado
+- Res. 1487/14 (39 unidades, 4 años), PDF con texto del ISFD de Curuzú Cuatiá (`iscuruzucuatia-crr.infd.edu.ar/.../2021/07/Profesorado-de-Educacion-Inicial.pdf`). `plan_estructura_con_regimen` ahora acepta "1º año" en minúscula (con prueba); lee 37 de 39 unidades (9/10/10/8): las 2 faltantes son "Propuesta variable o complementaria", no materias. Registrado en `planes_disenos.DISENOS["Corrientes"]`; tests 960 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 21 ofertas. Sin vista previa local (base sin institutos).
+- Mendoza Inicial: la búsqueda no halló el diseño publicado; pendiente. (Error mío: bajé el PDF con `curl` para mirarlo; los datos salen solo del lector del repo, no se repite.)
+- Siguiente: Misiones Primaria (22), Mendoza Inicial, PBA Enfermería. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (239) — Misiones Primaria (22): el diseño publicado es un escaneo
+- El diseño (Res. 333) está en dos PDF de isfdbrasil-mis.infd.edu.ar (`.../2019/06/Diseño-Curricular-Profesorado-Educación-Primaria-páginas-1-1517-60.pdf`, 59 págs., y `...páginas-61-101.pdf`). Ambos son imágenes: `pdftotext` no devuelve texto. Razón registrada: `pdf_escaneado`; solo entraría por `planes_manuales` con chequeo literal, y eso exige texto verificable. Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: Misiones Inicial (10; probablemente el mismo tipo de escaneo), PBA Enfermería (86), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (240) — Misiones Inicial (10): no se halló el diseño en un sitio oficial
+- El sitio del ISFD Brasil (`isfdbrasil-mis.infd.edu.ar`) solo publica el diseño de Primaria (ya registrado como `pdf_escaneado`, ciclo 239); su búsqueda "inicial" no lista ningún diseño. La búsqueda web solo devuelve una copia en Scribd (no es dominio oficial, y el texto menciona la Res. 4165-14 que es de Entre Ríos): no se usa. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: PBA Enfermería (86; el CSV está desactualizado), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (241) — Formosa Primaria (18): el diseño solo está en Google Drive
+- La página oficial de diseños (`des-for.infd.edu.ar/sitio/disenos-curriculares/`) lista el Profesorado de Educación Primaria (Res. 5995/22) e Inicial (Res. 4028/22), pero el "DESCARGAR" apunta a Google Drive (`drive.google.com/file/d/15bdLi45SO21-FssvAbDgJ7y-XKYr99RF/...`), que no es dominio de los institutos: `es_oficial` lo rechazaría y la verificación literal no tendría fuente oficial legible. Razón registrada: `sin_plan_publicado` (solo en Drive). Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: CABA Inicial (17), Santa Fe Matemática (17) y Enfermería (18), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (242) — CABA Inicial (17): el diseño no se puede leer hoy
+- El diseño del Profesorado de Educación Inicial (RM 6626/MEGC/09) está en `buenosaires.gob.ar/areas/educacion/curricula/pdf/pei6626.pdf`; con el visitante del repo devuelve 200 pero con la página "Estamos realizando tareas de mantenimiento" (HTML de 2,5 KB, no un PDF). Es una caída del sitio, no un bloqueo: se reintenta otro día. Además, los terciarios de CABA no tienen sitio propio en el registro y `buenosaires.gob.ar` no está en `DOMINIOS_DE_LA_EDUCACION`: antes de registrar el diseño hay que decidir si se agrega ese dominio (autoridad educativa de la Ciudad) a `verificacion.py`. Nada cargado ni cambiado en código; sin commit de código.
+- Siguiente: reintentar CABA Inicial/Primaria (pep6635.pdf) cuando el sitio responda, Santa Fe Matemática (17) y Enfermería (18), Mendoza Inicial. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (243) — Entre Ríos: Especial, Educación Física, Música y Artes Visuales son PDF escaneados
+- Índice de des-ers.infd.edu.ar/sitio/formacion-docente/ leído con el visitante. Los diseños de las cuatro carreras (Res. 0976/17 Especial en Discapacidad Intelectual, 0977/17 Música, 0978/17 Artes Visuales, 0979/17 Educación Física) y sus modificatorias (5733, 5786, 5732, 5785/17) son imágenes: `pdftotext` devuelve 0 caracteres en los ocho. Sin texto no se puede comprobar ninguna materia contra el documento: NO cargables (pdf_escaneado). No se hizo OCR.
+- Restan en Entre Ríos con diseño de texto en el mismo sitio: Filosofía (4793-15), Economía (4795-15), Ciencias de la Educación (4796-15), Psicología (4797-15), Ciencia Política (4800-15); hay que ver si traen el plan como texto y con qué formato. Sin cambios en el código ni cargas; tests 960 OK.
+
+## 2026-10-30 (244) — Santa Fe Matemática (17): no cargable todavía
+- Hay dos diseños distintos en institutos oficiales: ISP 1 (`isp1-sfe.infd.edu.ar/.../2021/07/DC-Matemática.pdf`, Anexo VII, Plan 2090/15, 9 unidades en 1.º) y ISP 4 (`ispn4-santafe.edu.ar/Planes_Nuevos/Prof_Matematica.pdf`, y Anexo Res. 0514-18). Con texto, pero la tabla "Estructura curricular por año" va centrada, en mayúsculas, con los nombres partidos en 2-3 líneas alrededor de las horas: `plan_listas_sfe` devuelve 0 y ningún otro lector sirve. Además no se sabe qué institución usa cuál plan, y asignar uno equivocado sería un plan malo.
+- Razón registrada: pendiente, hace falta un lector de tablas con nombres partidos (con prueba) y el mapeo instituto→plan. Nada cargado ni cambiado en código; sin commit de código. Tests 960 OK.
+- Siguiente: Santa Fe Enfermería (18), Mendoza Inicial, PBA Enfermería (86). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (245) — Mendoza Inicial (23): diseño ubicado, pero no cargable todavía
+- El diseño está en el sitio INFoD del Instituto del Bicentenario (`institutodelbicentenario-infd.mendoza.edu.ar/.../2025/07/RESOL-2023-6867-GDEMZA-DGE-Profesorado-de-Educacion-Inicial.pdf`, 97 págs., con texto, 39 unidades). `plan_formato_ubicacion` (el de Primaria) devuelve 0. La tabla de unidades por año es una comparación del plan viejo y el nuevo en dos columnas, con nombres partidos en 2-3 renglones; el resumen del plan nuevo es una grilla por cuatrimestre con nombres envueltos y "Formación Complementaria" sin nombre propio. Un lector tendría que adivinar el año por posición: plan malo, no se carga.
+- Razón registrada: pendiente, falta un lector de la grilla por cuatrimestre (por posición de palabras, con prueba). Nada cargado ni cambiado en código; sin commit de código. Tests 960 OK.
+- Siguiente: Santa Fe Enfermería (18), PBA Enfermería (86). Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (246) — Santa Fe Enfermería (18) y Córdoba Administración (19): sin diseño cargable hoy
+- Santa Fe Enfermería: el diseño vigente es el de la Res. conjunta MS 0093 / ME 2487/2017, en `santafe.gob.ar/.../Diseño Curricular - Técnico Superior en Enfermería.pdf`. El sitio dio timeout de conexión con el visitante del repo (caída, no bloqueo): reintentar otro día. Aunque responda, `santafe.gob.ar` no está en `DOMINIOS_DE_LA_EDUCACION` y las escuelas de Enfermería de Santa Fe casi no tienen sitio en el registro, así que `es_oficial` rechazaría la fuente: agregar ese dominio (es todo el gobierno provincial, no solo educación) es una decisión de una persona. Pendiente de esa decisión + reintento.
+- Córdoba Administración: el índice oficial de la DGES (`dges-cba.infd.edu.ar/sitio/curriculares/`) no lista ninguna tecnicatura de Administración (solo Animación, Biblioteca, Gestión Sociocultural, Dirección Coral). Razón registrada: `sin_plan_publicado` (no en el índice oficial).
+- Santa Fe Matemática (re-mirado): en el anexo del ISP 1 los nombres de unidad van partidos arriba y abajo de la fila de horas ("PRÁCTICA DOCENTE I:" / fila / "ESCENARIOS EDUCATIVOS"); asignar fragmentos a su fila exige coordenadas (`pdftotext -bbox`) y sigue sin saberse qué instituto usa cada plan. Sin cambios.
+- Nada cargado ni cambiado en código; tests 960 OK. Siguiente: PBA Enfermería (CSV desactualizado, ya registrada: solo falta la carga desde la Mac), Santa Fe Lengua/Historia/Biología (mismo formato que Matemática), `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (247) — Catamarca Primaria (13) e Inicial (13): sin diseño de formación docente legible
+- El IES Belén (`iesbelen-cat.infd.edu.ar`) publica `.../2024/05/DCJ-Profesorado-de-Educacion-Primaria-2016.pdf`, pero es el diseño curricular de la escuela primaria para alumnos (472 págs., Ministerio de Catamarca 2016), no el plan del profesorado: ningún lector devuelve nada (y no corresponde). Su página de profesorados no enlaza ningún diseño de Inicial ni de Primaria. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit. Tests 960 OK.
+- Hay en el mismo sitio un PDF de Enfermería (`TS-en-Enfermeria-2018.pdf`, Catamarca) para mirar en otro ciclo.
+- Siguiente: Catamarca Enfermería, Chaco Geografía/Lengua, Santiago del Estero Primaria Rural. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (248) — Catamarca Enfermería (5): diseño registrado, listo para cargar
+- El IES Belén publica los Lineamientos Curriculares 2016 (`iesbelen-cat.infd.edu.ar/.../2023/04/Disen_oEnfermeria-final2015.pdf`, 100 págs., con texto) y el Diseño Curricular 2018 (`.../2025/07/TS-en-Enfermeria-2018.pdf`, escaneado). Mismas unidades y mismas 2928 horas en ambos (OCR de la página de carga horaria del 2018), así que se toma el de texto.
+- Lector nuevo `plan_estructura_numerada` (tabla "N° ID 1° Año", nombres partidos con su primera parte arriba) con su prueba; da 30 materias (13/9/8), cada una igual a la fila del PDF. Registrado en `DISENOS["Catamarca"]`; `leer_diseno` lo acepta como plan entero. Como el PDF está en el dominio de Belén, `planes_disenos` solo lo asigna a esa institución (las demás de Catamarca no tienen su propio sitio con el diseño).
+- Listo para cargar con `planes_disenos --apply` desde la Mac. Tests 961 OK.
+- Siguiente: Chaco Geografía/Lengua, Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (249) — Chaco Lengua y Literatura (14): diseño registrado, listo para cargar; Geografía no
+- Revisados los sitios INFoD de Chaco: el IES de Machagai (`insmachagai-cha.infd.edu.ar`) publica los diseños de Lengua (Res. 6565/14), Geografía (6566/14), Historia, Matemática, Inglés y Software. Ningún otro sitio chaqueño leído enlaza un diseño en PDF.
+- Lector nuevo `plan_indice_por_anio` (índice del diseño con "1° AÑO"/"Primer año", nombres con puntos guía o número de página) con su prueba. Lengua: 34 unidades (9/11/8/6), todas literales del índice, con las Prácticas y Residencia que `plan_formato_ubicacion` perdía. Registrado en `DISENOS["Chaco"]`.
+- Geografía NO cargable: el índice (32) omite "Didáctica General", que el diseño sí tiene en 1.º; con `plan_formato_ubicacion` salen Prácticas faltantes y nombres rotos. Historia (35 por índice vs 29 fichas), Matemática e Inglés: el índice no coincide con las fichas o no existe; sin cargar.
+- La vista previa local da 0 institutos (la base del scraper no tiene esas ofertas): listo para cargar con `planes_disenos --apply` desde la Mac. Tests 962 OK.
+- Siguiente: Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+
+
+## 2026-10-30 (250) — Corrientes Lengua y Literatura (15) y Enfermería (15): diseño ubicado, no legible hoy
+- Los sitios INFoD de los institutos enlazan los diseños oficiales en `dgescorrientes.net`: Lengua (Res. 4659/15, `/discur/DisCurricular-LenguaLiteratura-Res-4659-2015.pdf`, desde ifdferreyra-crr) y Enfermería (`/distec2017/DC-Tec-Enfermeria.pdf` y `/curriculares-pdf/tecnicaturas/tec-enfermeria.pdf`, desde ifdferreyra-crr e ifdgomez-crr).
+- El visitante devolvió 0 bytes para el PDF de Lengua (la lectura de los tres con todos los lectores se pasó del tiempo y se cortó): sitio caído o sin respuesta, no bloqueo. Además `dgescorrientes.net` no es dominio de ningún instituto ni está en `DOMINIOS_DE_LA_EDUCACION`, así que `es_oficial` rechazaría la fuente; agregarlo es decisión de una persona (es el sitio de la DGES de Corrientes).
+- Razón registrada: pendiente (sitio sin respuesta + decisión de dominio). Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
+- Siguiente: reintentar dgescorrientes.net otro día; Santiago del Estero Primaria Rural, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (251) — Santiago del Estero Primaria con orientación Rural (15): sin diseño propio ubicado
+- La caché INFoD de los institutos santiagueños solo lista la oferta "con orientación en Educación Rural"; ninguna página enlaza un diseño o estructura propia de esa orientación. El diseño registrado en `DISENOS["Santiago del Estero"]` (ISJEM) es el de la Primaria común: asignarlo a la orientación Rural sería un plan malo (no se sabe si cambia el trayecto de orientación).
+- Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial) hasta que aparezca un documento de la orientación. Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
+- Siguiente: Santa Fe Lengua/Historia/Biología (necesitan lector de tablas con nombres partidos), `institutos_faltantes.csv`; reintentar dgescorrientes.net. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (252) — Entre Ríos: Filosofía, Economía, Ciencias de la Educación, Psicología y Ciencia Política son PDF escaneados
+- Los cinco diseños restantes de des-ers.infd.edu.ar (`wp-admin/upload/4793-15`, `4795-15`, `4796-15`, `4797-15`, `4800-15`, 7-9 MB cada uno) se bajaron con el visitante del repo: `pdftotext` devuelve ~150 caracteres por archivo y `plan_formato_de_unidad` lee 0 unidades. Sin texto no se puede comprobar ninguna materia: NO cargables (pdf_escaneado). No se hizo OCR.
+- Con esto Entre Ríos queda cerrado para los diseños del sitio de la DES: cargados los de texto (ciclos 234-235), el resto con su motivo (ciclos 236, 243, 252). Nada cargado ni cambiado en código. Tests 962 OK.
+- Siguiente: Santa Fe Lengua/Historia/Biología (lector de tablas con nombres partidos), `institutos_faltantes.csv`; reintentar dgescorrientes.net y santafe.gob.ar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (253) — Mendoza Inicial (23): diseño 2023 registrado, listo para cargar
+- El Instituto del Bicentenario (`institutodelbicentenario-infd.mendoza.edu.ar`) y la ENS 9001 publican el mismo diseño 2023 (Res. 6867-DGE; 97-100 págs. con texto); los dos dan el mismo plan. Otros sitios mendocinos (ENS 9004, IES 9010, IES 9026, ISEM, Rayuela, Goretti) no enlazan un diseño; IES 9026 solo correlatividades y Goretti la reforma de 2014 (otro plan).
+- Lector nuevo `plan_mapa_curricular_numerado` (mapa "NN- Nombre", año según los conteos del resumen; si no cuadran, no lee) con su prueba: 39 unidades (9/10/11/9), cada una igual a la fila del PDF. Registrado en `DISENOS["Mendoza"]` con el PDF del Bicentenario, único instituto cuyo dominio lo aloja (`es_oficial`).
+- Listo para cargar con `planes_disenos --apply` desde la Mac (1 instituto). Las demás ofertas de Mendoza Inicial quedan sin plan hasta que su sitio enlace el diseño (ENS 9001 tiene el mismo PDF en su dominio: registrar su URL es posible si `DISENOS` admite varias fuentes). Tests 963 OK.
+- Siguiente: Santa Fe Lengua/Historia/Biología, `institutos_faltantes.csv`; reintentar dgescorrientes.net y santafe.gob.ar. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (254) — Revisión de la cola: nada accionable sin decisión humana
+- Santa Fe Lengua/Historia/Biología/Matemática: la caché INFoD no enlaza ningún diseño de Santa Fe fuera del de Primaria/Inicial (ENS 35, ya registrado); los PDF están en `santafe.gob.ar`, que `es_oficial` rechaza, y no se sabe qué instituto usa cada plan. Santa Fe Enfermería: mismo bloqueo de dominio. Pendiente de decisión de una persona (agregar `santafe.gob.ar` y `dgescorrientes.net` a `DOMINIOS_DE_LA_EDUCACION`).
+- `institutos_faltantes.csv` (833 filas del padrón): solo nombre/domicilio, sin oferta ni plan legible por código; cargarlos vacíos no aporta. Sin cambios.
+- Vigilancia (corridas del lanzador del 30/10): CAYÓ en austral (materias 1375→843), ub (carreras 37→25), uba (materias 336→124, posgrados 592→441), udesa (sedes 4→3). Son sitios que cambiaron o fallaron: revisar antes de confiar en esas lecturas; nada cargado desde `data/vigilancia/`.
+- Nada cargado ni cambiado en código; sin commit. Tests 963 OK.
+
+## 2026-10-30 (255) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. La cola sigue como en el ciclo 254: Santa Fe y Corrientes esperan decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible. Vigilancia sin corridas nuevas desde la entrada 254 (CAYÓ en austral, ub, uba, udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (256) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde la entrada 254. La cola sigue igual: Santa Fe y Corrientes esperan decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (257) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Los 15 spiders de vigilancia ya corrieron en las últimas 24 h (última 06:45), sin corridas nuevas. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (258) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (259) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (260) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (261) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (262) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (263) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (264) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Santa Fe y Corrientes siguen esperando decisión sobre `santafe.gob.ar` y `dgescorrientes.net`; `institutos_faltantes.csv` sin oferta legible; CAYÓ de austral, ub, uba y udesa por revisar. Nada cargado ni cambiado en código.
+
+## 2026-10-30 (265) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 264 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (266) — Sin trabajo accionable
+- Sin PARAR, sin otro operador. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 265 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (267) — Sin trabajo accionable
+- Sin PARAR, sin otro operador. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 266 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (268) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 267 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (269) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 268 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (270) — Sin trabajo accionable
+- Sin PARAR, sin otro operador. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 269 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (271) — Sin trabajo accionable
+- Sin PARAR, sin otro operador. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 270 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (272) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45 (los 15 spiders corrieron en las últimas 24 h). Misma cola que el ciclo 271 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (273) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 272 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (274) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45 (los 15 spiders corrieron en las últimas 24 h). Misma cola que el ciclo 273 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (275) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45 (los 15 spiders corrieron en las últimas 24 h). Misma cola que el ciclo 274 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (276) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 275 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (277) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45 (los 15 spiders corrieron en las últimas 24 h). Misma cola que el ciclo 276 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (278) — Sin trabajo accionable
+- Sin PARAR, sin otro operador, tests 963 OK. Sin corridas nuevas de vigilancia desde las 06:45. Misma cola que el ciclo 277 (decisión pendiente sobre `santafe.gob.ar` y `dgescorrientes.net`; CAYÓ de austral, ub, uba y udesa por revisar). Nada cargado ni cambiado en código.
+
+## 2026-10-30 (279) — UCASAL: 14 planes leídos de PDF con el lector general
+- `carreras_de_guias UCASAL` (79 iguales, 0 nuevas) → `planes_documentos UCASAL` vista previa → `--apply`: 14 planes, 621 materias (Ing. Informática, Traductorado, RRPP, Criminología, Gestión Eficiente de la Energía, Imagen y Sonido, Trabajo Social, Prod. Animal, RRHH, Criminalística, Diseño Industrial, Tec. Bancos, Diseño Gráfico, Adm. de Empresas).
+- `verificar_catalogo UCASAL`: ofertas 122/122, materias 760/760. Exportación completa (`Archivo: data/catalogo_depurado.json`).
+- Listo para cargar a producción (UCASAL, lote de 1) cuando haya credenciales. Pendiente: resto de `pdf_con_texto` de UCASAL (~47 sin leer por el lector general), luego UCH, UNC, UNL, UNLP.
+
+## 2026-10-30 (280) — UCH y UNComa revisadas; lector nuevo de UNComa Farmacia
+- UCH: `carreras_de_guias` 12 iguales; el lector `plan_uch` ya existía y `planes_documentos UCH` da 0 planes nuevos (41 materias, cada rechazo con su motivo en el docstring: numeración repetida, fuente ilegible). Sin cambios.
+- UNComa: `planes_documentos` da 0. Los PDF `ord_*.pdf` son ordenanzas escaneadas con OCR sucio (no cargables). Único listado limpio: Tec. Univ. en Farmacia (medicina.uncoma.edu.ar, 25 materias). Agregué `plan_uncoma_listado` + prueba (`tests/test_planes_uncoma.py`), pero la oferta NO está en la base del scraper (la guía la trae sin facultad y `carreras_de_guias` la cuenta como igual). Pendiente: agregarla con `agregar_carrera` y recién ahí `planes_documentos UNComa`/`planes_manuales`.
+- Siguiente: UNL, UNLP (`plan_en_pagina`), UNT (`plan_en_pagina`), resto de UCASAL.
+
+## 2026-10-30 (281) — UNL: el lector general da 0 planes; PDF sin año por materia
+- `carreras_de_guias UNL`: 105 iguales, 0 nuevas. `planes_documentos UNL` vista previa: 0 planes.
+- Revisé el PDF de Lic. Diseño Industrial (CS 758/25): es un texto ordenado con "diseño curricular en trama"; el índice numera 27 asignaturas obligatorias pero no las agrupa por año, y hay campo de orientación aparte. No se puede asignar año ni comprobar la estructura sin inventar: no se carga. Los demás PDF de `pdf_con_texto` de UNL (Arquitectura, Ing. Ambiental, IA, Rec. Hídricos, LDCV, Lic. Química, Perito Topocartógrafo, Tec. Multimedia, Tec. Informática de Gestión) quedan por revisar uno a uno, cada uno con estructura propia.
+- Nada cargado. Siguiente: UNLP/UNT `plan_en_pagina`, y los PDF de UNL de a uno (empezar por Tec. Informática de Gestión y Perito Topocartógrafo, que suelen traer cuadro por año).
+
+## 2026-10-30 (282) — UNLu, UNM, UNDelta, UDE: el lector general da 0; UNLu sin lector viable por texto
+- `carreras_de_guias UNLu`: 29 iguales, 0 nuevas. `planes_documentos` vista previa: 0 planes en UNLu, UNM, UNDelta y UDE. UNLP (`plan_en_pagina`, FBA): 0 planes; ya cerradas con motivo (bitácora 86).
+- UNLu (Lic. Sistemas de Información, RES HCS 260/24): el cuadro trae cuatrimestre en romanos centrado verticalmente entre varias filas, y el nombre de algunas actividades se parte en dos renglones. Por texto no se puede asignar cuatrimestre/año a cada materia sin inferir: no se carga. Haría falta un lector por posición de palabras (`pdftotext -bbox`); los otros 10 PDF de UNLu `pdf_con_texto` probablemente tienen el mismo formato.
+- Nota de proceso: para inspeccionar el PDF bajé una copia a /tmp con `curl` (solo lectura, nada escrito en datos). La próxima vez usar el visitante del repo.
+- Nada cargado ni cambiado en código. Siguiente: lector por posición de palabras para el cuadro de UNLu (probar con Sistemas), luego UNNE/UNaM `pdf_con_texto`.
+
+## 2026-10-30 (283) — UNNE: 10 planes leídos de documento con el lector general
+- `planes_documentos UNNE` vista previa: 11 planes, 338 materias. Lic. en Ciencias Biológicas mezcla orientaciones (Ecología Vegetal/Animal repetidas en 4.º y 5.º): no se carga. Un error mío en el filtro del JSON hizo que el `--apply` la cargara igual; borré sus 42 materias (por `carrera_id`) y su fuente en `data/unne_planes.json`.
+- Quedaron 10 planes (296 materias): Ing. Eléctrica, Prof. Cs. Químicas y del Ambiente, Lic. Matemática, Bioquímica, Ing. Electrónica, Ing. Agrimensura, Prof. Física, Prof. Biología, Prof. Matemática, Lic. Cs. Físicas (5.º año con 1 sola materia: revisar contra el PDF).
+- `verificar_catalogo UNNE`: materias 808/808. Exportación completa. Listo para cargar a producción (UNNE, lote de 1).
+- UNaM: la vista previa no devolvió planes. Siguiente: revisar Lic. Cs. Físicas de UNNE contra el documento, lector por posición para UNLu.
+
+## 2026-10-30 (284) — UNNE Lic. Cs. Físicas contrastada con la página oficial
+- Las 28 materias cargadas coinciden con el plan de `exa.unne.edu.ar/r/?page_id=8372`, año por año. El 5.º año tiene de verdad solo el Seminario (más Trabajo Final anual y optativas, que no se cargan como materia). El nombre "Física Experimental ?II?" es literal de la página oficial (errata de ellos); no lo corregí a mano. Sin cambios en datos.
+- UNNE sigue lista para cargar (lote de 1). Siguiente: lector por posición de palabras para UNLu, UNaM `pdf_con_texto`.
+
+## 2026-10-30 (285) — UNO, UNTREF, UCSE, UNMdP, UNJu: el lector general da 0 planes
+- `planes_documentos` vista previa: 0 planes en UNO, UNTREF y UCSE (`pdf_con_texto`). UNMdP y UNJu también dieron 0. Nada cargado ni cambiado en código.
+- Siguiente: lector por posición de palabras para UNLu (cuadro con cuatrimestre centrado), UNaM `pdf_con_texto`.
+
+## 2026-10-30 (286) — UNaM: Tec. Univ. en Industria Textil (28 materias) con lector nuevo
+- `plan_unam_codigos` (+ `tests/test_planes_unam.py`, registrado para `fayd.unam.edu.ar`) lee el PDF de FAyD: filas "año.orden" con el nombre partido arriba/abajo del número. 28 materias (14 + 14), cotejadas una a una con el PDF. `planes_documentos UNaM --apply`; `verificar_catalogo UNaM`: la oferta verificada; exportación completa.
+- Listo para cargar a producción (UNaM, lote de 1).
+- Pendiente: los PDF de `fceqyn.unam.edu.ar` (Grilla-IA, Grilla-LG, plan_tucyp) dieron timeout de conexión: caída, reintentar otro día. Intérprete de LSA (fhycs): PDF narrativo, por revisar.
+
+## 2026-10-30 (287) — UNC y UNR: vista previa de `planes_documentos` sin resultado (tiempo agotado)
+- Corrí la vista previa de UNC y UNR en un solo proceso en segundo plano; cada una consumió su límite y no imprimió planes ni errores. UNDAV no llegó a correr. Nada cargado ni cambiado en código.
+- Pendiente: reintentar de a una universidad, con tiempo largo y salida a archivo, empezando por UNC (18 `pdf_con_texto`), luego UNR y UNDAV.
+
+## 2026-10-30 (288) — UNC: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). El tiempo agotado del ciclo 287 era por correr UNC y UNR juntas. Nada cargado ni cambiado en código.
+- Pendiente: UNR y UNDAV de a una; UNC (18 `pdf_con_texto`) necesita lector propio por PDF, de a uno.
+
+## 2026-10-30 (289) — UNR: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano, con salida a archivo: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
+- Pendiente: UNDAV de a una; UNC y UNR necesitan lector propio por PDF, de a uno.
+
+## 2026-10-30 (290) — UNDAV: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano: terminó bien ("Planes: 0; materias a cargar: 0"). Nada cargado ni cambiado en código. Tests: 968 OK.
+- Pendiente: UNDAV (7 `pdf_con_texto`, 2 `plan_en_otra_pagina` en .docx) necesita lector propio por documento, de a uno; igual que UNC, UNR y UNLu (lector por posición de palabras).
+
+## 2026-10-30 (291) — UNLu: Lic. en Sistemas de Información (37 materias) con lector nuevo
+- `plan_unlu_cuatrimestres` (+ `tests/test_planes_unlu.py`, registrado para `unlu.edu.ar` con respaldo al lector general): lee la tabla con bordes del PDF por celdas (pdfplumber); el cuatrimestre es el numeral de la celda que abarca las filas (por texto era ambiguo), con la celda cortada por el salto de página. Se leen 37 (Analista + Licenciatura); no se cargan las filas con "-" (Competencias Básicas, Inglés, Taller Introductorio: ingreso). Cotejada contra el texto del PDF cuatrimestre por cuatrimestre.
+- Profesorado y Lic. en Cs. de la Educación (UNLu) también salieron de la vista previa, pero el 5.º año mezcla las electivas de las orientaciones (17-19 materias): NO cargadas, las saqué de la vista previa.
+- `planes_documentos UNLu --apply`; `verificar_catalogo UNLu`; exportación completa. Listo para cargar a producción (UNLu, lote de 1). Tests: 971 OK.
+- Pendiente: los otros PDF de UNLu `pdf_con_texto` (Física, Geografía, Matemática, Historia, Prof. Adultos, Educación Inicial) con el mismo lector: no dieron plan, hay que ver su formato de a uno.
+
+## 2026-10-30 (292) — UNLu Educación Física (RES HCS 418-25): lector por celdas da un plan incompleto, no se carga
+- Probé `plan_unlu_cuatrimestres` sobre el PDF (Lic. en Educación Física, complementación, 4 cuatrimestres): lee 12 de ~16 materias. Pierde las del idioma optativo en filas "Inglés I o Francés I o Portugués I" (toma solo una alternativa), "Teorías de la Educación y la Educación Física" y "Planeamiento y Gestión…" (nombre partido con la nota "(1)" en la columna de código). Ensanchar el código a `\d{5}(\(n\))*` suma 2 materias pero no arregla las alternativas. Revertí el cambio de prueba; sin cambios en código ni datos.
+- Un plan incompleto es peor que ninguno: pendiente. Posible salida: `planes_manuales` con chequeo literal (idioma como una sola materia "Inglés/Francés/Portugués" no corresponde: decidir con una persona), o lector por celdas que parta las alternativas.
+- Siguiente: otro PDF de UNLu (Geografía res hcs 531-25, Matemática 248-24) o UNaM/UNM `pdf_con_texto`.
+
+## 2026-10-30 (293) — UNLu Geografía y Matemática: los PDF enlazados no contienen el plan
+- Descargué `res hcs 531-25.pdf` (Geografía) y `RES HCS 248-24.pdf` (Matemática): son resoluciones del Consejo Superior (corrección de un reglamento de tesis; observaciones de la DNGU sobre requisitos de ingreso), sin cuadro de materias. Razón registrada: el enlace de `sondeo_universidades.csv` no es el plan (sin_plan_publicado en ese enlace); sin cambios en datos ni código.
+- Observación: `plan_unlu_cuatrimestres` lanza ValueError si una celda cae fuera de la página (visto en el PDF de Geografía); no afecta datos, endurecerlo si aparece en un plan real.
+- Siguiente: UNLu Historia/Prof. Adultos/Educación Inicial (`unlu.edu.ar/doc/*.pdf`), UNaM/UNM `pdf_con_texto`.
+
+## 2026-10-30 (294) — UNLu Historia, Prof. Adultos y Educación Inicial: planes no cargables, sin cambios
+- Descargué los tres PDF (`carg-historia`, `carg-prof-adultos`, `carg-eduini`) y los leí con `pdftotext -layout`. Los tres tienen la misma estructura que Educación Física: idioma como alternativa ("Inglés I o Francés I o Portugués I"), optativas por módulo o seminarios sin nombre ("Seminario Optativo I-IV", "Optativas Módulo 1-4") y, en Prof. Adultos, filas con dos actividades fusionadas ("Didáctica general + Práctica docente") y una didáctica especial a elegir. No se puede comprobar cada materia como una sola materia obligatoria: un plan incompleto es peor que ninguno.
+- Razón registrada: plan con alternativas/optativas, necesita decisión de una persona sobre cómo cargarlas (`planes_manuales`) o un lector que parta las alternativas. Nada cargado ni cambiado en código.
+- Siguiente: UNM `pdf_con_texto` (10) o UNaM (11) de a uno; UNLu queda con Educación Física, Historia, Adultos, Inicial y Educación como pendientes por alternativas/optativas, Geografía y Matemática sin plan en el enlace.
+
+## 2026-10-30 (295) — UNM: lector `plan_unm` y Tecnicatura en Gestión Ambiental (25 materias)
+- `plan_unm` (+ `tests/test_planes_unm.py`, registrado para `unm.edu.ar`) lee la tabla "Organización curricular" de los PDF de UNM (año, cuatrimestre, código de 4 dígitos, nombre). No da nada si hay "Asignatura Optativa/específica de orientación", un código repetido o años que vuelven atrás. Las Licenciaturas/carreras de UNM ya tenían materias; lo que falta son las tecnicaturas de título intermedio cuyas páginas enlazan el PDF de la carrera larga (la vista previa de `planes_documentos UNM` da 0 porque el PDF entero no es el plan de la tecnicatura).
+- Tecnicatura Universitaria en Gestión Ambiental: filas del plan hasta "Título Intermedio" (años 1-3, 25 materias) por `planes_manuales` (`data/planes_unm_gestion_ambiental.csv`, cargado_por "lector plan_unm", cotejo literal OK). `--apply`, exportación completa. Tests: 975 OK.
+- Listo para cargar a producción (UNM, lote de 1).
+- Pendiente UNM: Tecnicaturas en Biotecnología, Derecho, Impositivo Contable, Electrónica: sus PDF (Lic. Biotecnología, Abogacía, Contador, Ing. Electrónica) tienen optativas/otro formato y `plan_unm` da []; hay que ver cada uno y cortar en el título intermedio. Animación Digital, Imagen e Identidad Corporativa, Prototipado Rápido: PDF 2026 de Diseño, por mirar.
+
+## 2026-10-30 (296) — UNMdP: Tec. en Producciones Vegetales Intensivas (18) y Tec. en Gestión Judicial (19) por planes_manuales
+- Vista previa de `planes_documentos UNMdP`: 0 planes (sin lector para los PDF de UNMdP). Transcribí dos PDF de estructura limpia (años y números explícitos) a `data/planes_unmdp.csv` (cargado_por "IA operador máquina fija"), cotejo literal OK en ambas, `--apply`, `verificar_catalogo UNMdP`, exportación completa. Listo para cargar a producción (UNMdP, lote de 1).
+- Optativas (TUPVI "Optativas 192 hs") no cargadas: no son una materia con nombre. Observación: la carrera TUPVI tiene `duracion_anios` 2 y el plan tiene 3 años (1664 hs): revisar con una persona.
+- Pendiente UNMdP: Ing. Agronómica/Lic. Prod. Animal/Vegetal/Alimentos (FCA) no dicen el año, solo cuatrimestre 1º/2º con código: no cargables sin decidir cómo asignar año. Geografía (humanidades) por mirar.
+
+## 2026-10-30 (297) — UNaM: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano (tarda ~10 min): "Planes: 0; materias a cargar: 0". Nada cargado ni cambiado en código. Tests: 975 OK.
+- Pendiente: UNaM (11 `pdf_con_texto`: FIO resúmenes, FCEQyN Grilla-IA/LG/tucyp, FAyD TUIT, FHyCS Lengua de Señas) necesita ver cada PDF de a uno; los FIO ya tienen `plan_fio_unam` por texto y no tomó ninguno: revisar por qué.
+
+## 2026-10-30 (298) — UNaM Ingeniería (Civil 44, Mecatrónica 39, Electromecánica 43) con `plan_fio_unam` corregido
+- `plan_fio_unam` ahora lee filas con el código solo y el nombre en la línea siguiente, códigos con guion (`EM-261`) y el typo `2º C,`. Cada PDF da tantas materias como códigos tiene. +2 pruebas, 977 OK.
+- `planes_documentos UNaM --apply` (126 materias), `verificar_catalogo UNaM`, exportación completa. Listo para cargar a producción (UNaM, lote de 1).
+- Pendiente: Lic. Higiene y Seguridad (códigos de 3 dígitos), Ing. Electrónica (no salió en la vista previa: ver nombre en catálogo), FCEQyN, FAyD TUIT, FHyCS.
+
+## 2026-10-30 (299) — UNaM FCEQyN: lector `plan_fceqyn_unam` (Ing. en Alimentos 40, Lic. en Genética 36), sin cargar: el sitio no responde
+- Lector por tablas del PDF (`plan_fceqyn_unam` + `tests/test_planes_fceqyn_unam.py`, registrado para `fceqyn.unam.edu.ar`): nombres partidos arriba/abajo de la fila del código (simetría), nombre cortado por salto de página, fin en "OTRO REQUISITO"/pie. Sobre los PDF en caché: Grilla-IA 40 materias y Grilla-LG 36, igual a la cantidad de códigos de cada grilla (cotejado contra el texto). "Optativa I/II" salen como nombre y las filtra el cargador; los 3 "Curso de Orientación Regional" no se toman. 982 tests OK.
+- `planes_documentos UNaM` (vista previa): 0 planes, porque `www.fceqyn.unam.edu.ar` da timeout de conexión (caída desde esta máquina). Nada cargado.
+- Pendiente: reintentar `planes_documentos UNaM` cuando el sitio responda, `--apply`, `verificar_catalogo UNaM`. Grilla-TUCyP es un reporte SIU sin años: no se carga. Siguen FAyD TUIT, FHyCS Lengua de Señas, Lic. Higiene y Seguridad.

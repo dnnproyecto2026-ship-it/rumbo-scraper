@@ -101,6 +101,21 @@ TERCER AÑO
         self.assertEqual(p._plan_fio_unam(texto), [("Álgebra y Geometría Analítica", 1),
                                                    ("Sistemas Digitales", 1), ("Probabilidad y Estadística 1", 3)])
 
+    def test_unam_ingenieria_el_nombre_en_la_linea_siguiente_al_codigo(self):
+        texto = """SEGUNDO AÑO
+    CI212
+                    2º C.          MATEMÁTICA APLICADA                      CI211-CI221
+    EM-261           2º C.          INGENIERÍA E INDUSTRIAS                  EM131-EM161
+    EM466           2º C,          HIGIENE, SEGURIDAD Y MEDIO AMBIENTE      EM231-EM331"""
+        self.assertEqual(p._plan_fio_unam(texto), [("Matemática Aplicada", 2), ("Ingeniería e Industrias", 2),
+                                                   ("Higiene, Seguridad y Medio Ambiente", 2)])
+
+    def test_unam_ingenieria_codigo_solo_sin_nombre_debajo_no_se_lee(self):
+        texto = """SEGUNDO AÑO
+    CI212
+    CI222           2º C.          MECÁNICA RACIONAL                        CI211"""
+        self.assertEqual(p._plan_fio_unam(texto), [])
+
     def test_unam_ingenieria_sin_el_nombre_en_su_fila_no_se_lee(self):
         texto = """PRIMER AÑO
      EM211           1º C.       EM111-EM112          -"""
@@ -489,6 +504,18 @@ class PlanEstructuraConRegimen(unittest.TestCase):
             ("Pedagogía", 1),
             ("Práctica Docente I: Métodos y Técnicas de Recolección / Instituciones Educativas", 1),
             ("Práctica Docente II: Programación de la Enseñanza/ Curriculum y Organizaciones Escolares", 2)])
+
+
+class PlanEstructuraConRegimenAnioEnMinuscula(unittest.TestCase):
+    def test_encabezado_con_anio_en_minuscula(self):
+        texto = """
+                          1º año
+ 1     Pedagogía                      Cuatrimestral     Materia     6 horas
+
+                          2º año
+10     Filosofía                      Cuatrimestral     Materia     4 horas
+"""
+        self.assertEqual(p.plan_estructura_con_regimen(texto), [("Pedagogía", 1), ("Filosofía", 2)])
 
 
 class PlanFormatoUbicacionMendoza(unittest.TestCase):
@@ -977,6 +1004,115 @@ Recreativos - Carga horaria: 4 horas
         self.assertEqual(p.plan_carga_horaria(texto), [("Psicología", 1), ("Salud pública II", 2),
                                                         ("Sujetos de la recreación", 2)])
 
+    def test_plan_estructura_numerada_catamarca(self):
+        texto = (
+            "4.- Plan de Estudios\n\n        Estructura Curricular:\n\n"
+            "                                                                                   Hs.\n"
+            "N° ID 1° Año                                                1° Cuat.   2° Cuat.    Catedra\n"
+            "1       Fundamentos de la Enfermería                        5          5           160\n"
+            "2       Lectura y Escritura Académica                       3                      48\n"
+            "        Práctica Hospitalaria en         Fundamentos   de\n"
+            "3       Enfermería y Comunitaria                            6          6           192\n"
+            "        Horas Semanales                                     36         33\n\n"
+            "N° ID 2° Año                                                1° Cuat    2° Cuat.\n"
+            "4       Historia de la Enfermería                           3                      48\n"
+            "Tecnicatura Superior en Enfermería                                          Pág. 9 de 100\n"
+            "        Horas Semanales                                       28             23\n\n"
+            "Régimen de correlatividades:\n"
+            "N° ID 1° Año                                                Cursado Correlativas\n"
+            "5       Otra Cosa                                           Anual       1\n")
+        self.assertEqual(p.plan_estructura_numerada(texto), [
+            ("Fundamentos de la Enfermería", 1), ("Lectura y Escritura Académica", 1),
+            ("Práctica Hospitalaria en Fundamentos de Enfermería y Comunitaria", 1),
+            ("Historia de la Enfermería", 2)])
+        self.assertEqual(p.plan_estructura_numerada("sin tabla"), [])
+
+    def test_plan_mapa_curricular_numerado_mendoza(self):
+        texto = (
+            "Año         CFG        CFE\n"
+            "            Anuale  Cuatri.  Anuale  Cuatri.  Anuale  Cuatri.  Total\n"
+            "1°     1     1     0     0     0     0     02\n"
+            "2°     0     1     1     0     1     0     03\n"
+            "Total  1     2     1     0     1     0     6\n\n"
+            "3.3. Mapa curricular\n"
+            "         Campo   N° y Nombre de la UC       Formato  Régimen  Cuatri  Semanal Total\n"
+            "                        01- Pensamiento Filosófico     Módulo   C     1ro   5   80\n"
+            "                 FG     02-Comprensión y Producción\n"
+            "                        de textos académicos\n"
+            "                                                       Taller   A     ---   4   128\n"
+            "       1°\n"
+            "       2°       03-Didáctica                           Módulo   C     1ro   5   80\n"
+            "                04-Psicología Educacional\n"
+            "                                  Módulo-\n"
+            "                                  Seminari   C   2do   5   80\n"
+            "                                  o\n"
+            "          05-Práctica Profesional\n"
+            "     PP                                  Taller  A  ---  6  192\n"
+            "                Docente II\n"
+            "                    Cant.   Carga\n"
+            "         Unidad Curricular\n")
+        self.assertEqual(p.plan_mapa_curricular_numerado(texto), [
+            ("Pensamiento Filosófico", 1), ("Comprensión y Producción de textos académicos", 1),
+            ("Didáctica", 2), ("Psicología Educacional", 2), ("Práctica Profesional Docente II", 2)])
+        # Units that are not the ones counted: nothing is read.
+        self.assertEqual(p.plan_mapa_curricular_numerado(texto.replace("05-Práctica", "Práctica")), [])
+        self.assertEqual(p.plan_mapa_curricular_numerado("sin mapa"), [])
+
+    def test_plan_indice_por_anio_chaco(self):
+        texto = (
+            "ÍNDICE\n Estructura Curricular   18\n\n1° AÑO\n"
+            "Pedagogía...................................................   20\n.\n"
+            "Literatura Clásica II……………………………………………………………………..\n"
+            "                                                          27\n"
+            "Práctica Docente I.........................................   33\n\n"
+            "2°AÑO\n"
+            "Psicología Educacional.....................................   36\n"
+            "Geografía Económica                                    3   63\n\n"
+            "                                  6\n"
+            "INTRODUCCIÓN\n"
+            "Pedagogía...................................................   20\n")
+        self.assertEqual(p.plan_indice_por_anio(texto), [
+            ("Pedagogía", 1), ("Literatura Clásica II", 1), ("Práctica Docente I", 1),
+            ("Psicología Educacional", 2), ("Geografía Económica", 2)])
+        self.assertEqual(p.plan_indice_por_anio("sin índice"), [])
+
+    def test_formato_de_unidad_con_titulo_partido_y_practica(self):
+        texto = """Primer Año
+Pedagogía
+Formato: Asignatura
+Carga horaria: 3 horas cátedra semanales
+\fSegundo Año
+Historia Social y Política Argentina
+y Latinoamericana
+Formato: Asignatura
+101
+Cuarto Año
+Análisis y organización de las instituciones
+educativas
+Formato: Seminario - taller
+Primer Año
+Práctica Docente I
+Sujetos y Contextos: Aproximación a la Práctica
+Educativa
+Formato: Seminario-taller
+"""
+        self.assertEqual(p.plan_formato_de_unidad(texto), [
+            ("Pedagogía", 1), ("Historia Social y Política Argentina y Latinoamericana", 2),
+            ("Análisis y organización de las instituciones educativas", 4), ("Práctica Docente I", 1)])
+
+    def test_formato_de_unidad_con_renglon_en_blanco_antes_del_formato(self):
+        texto = """Segundo Año
+Educación física y su didáctica
+Formato: Asignatura
+                  142
+Sujetos de la educación inicial
+
+Formato: Seminario
+Carga horaria: 4 hs cátedra semanales
+"""
+        self.assertEqual(p.plan_formato_de_unidad(texto), [
+            ("Educación física y su didáctica", 2), ("Sujetos de la educación inicial", 2)])
+
     def test_unidades_numeradas_y_titulo_partido_en_dos_lineas(self):
         texto = """PRIMER AÑO
 1. Física para Seguridad 1 - Carga horaria: 2 (dos) módulos por semana.
@@ -990,6 +1126,75 @@ TERCER AÑO
             ("Física para seguridad 1", 1),
             ("Práctica profesionalizante 2: intervenciones en el campo profesional", 2),
             ("Comunicación, tecnología y sociedad", 3)])
+
+    def test_unidad_en_mayusculas_partida_antes_o_dentro_del_titulo(self):
+        texto = """PRIMER AÑO
+SUJETOS DE LA RECREACIÓN - Carga horaria: 2 horas reloj por semana
+SEGUNDO AÑO
+EDUCACIÓN AMBIENTAL - Carga horaria: 2 horas reloj por semana.
+PRÁCTICAS PROFESIONALIZANTES II: Planificación de Proyectos Recreativos - Carga
+horaria: 4 horas reloj por semana.
+TERCER AÑO
+PRÁCTICAS PROFESIONALIZANTES III: Diseño e Implementación de Proyectos
+Recreativos - Carga horaria: 4 horas reloj por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [
+            ("Sujetos de la recreación", 1),
+            ("Educación ambiental", 2),
+            ("Prácticas profesionalizantes II: planificación de proyectos recreativos", 2),
+            ("Prácticas profesionalizantes III: diseño e implementación de proyectos recreativos", 3)])
+
+    def test_anios_1er_2do_y_edi_generico(self):
+        texto = """Carga horaria: 1952 Horas
+1ER AÑO
+1. Inglés 1
+
+                                   Carga horaria: 64 horas
+2DO AÑO
+9. Inglés 2 (aplicado)
+
+                                   Carga horaria: 64 horas
+TERCER AÑO
+21. EDI
+
+                                   Carga horaria: 64 horas
+22. Prácticas Profesionales 3
+
+                                   Carga horaria: 288 horas
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [
+            ("Inglés 1", 1), ("Inglés 2 (aplicado)", 2), ("Prácticas Profesionales 3", 3)])
+
+    def test_unidad_numerada_sin_dos_puntos(self):
+        texto = """Primer año
+1. Derecho - Carga horaria: 2 (dos) módulos por semana
+Segundo año
+12. Derecho Laboral – Carga horaria 2 (dos) módulos por semana
+La carga horaria total de la Tecnicatura es de 1824 horas
+"""
+        self.assertEqual(p.plan_carga_horaria(texto), [("Derecho", 1), ("Derecho laboral", 2)])
+
+    def test_unidad_numerada_con_carga_mal_escrita(self):
+        texto = """PRIMER AÑO
+12. PRÁCTICAS PROFESIONALIZANTES 1 - Carga horaria: 3 (módulos) por semana
+SEGUNDO AÑO
+13. BIOÉTICA - Carla horaria: 2 (dos) módulos por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto, solo_numeradas=True),
+                         [("Prácticas profesionalizantes 1", 1), ("Bioética", 2)])
+
+    def test_solo_numeradas_deja_los_trayectos(self):
+        texto = """PRIMER AÑO
+Integrado por la unidad curricular SALUD PÚBLICA 1 -
+Carga Horaria: 64 horas reloj anuales.
+1. Salud Pública 1 - Carga horaria: 2 (dos) módulos por semana
+SEGUNDO AÑO
+RADIODIAGNÓSTICO - Carga Horaria: 96 horas reloj anuales.
+2. Tecnologías Radiográficas - Carga horaria: 3 (tres) módulos por semana
+"""
+        self.assertEqual(p.plan_carga_horaria(texto, solo_numeradas=True),
+                         [("Salud pública 1", 1), ("Tecnologías radiográficas", 2)])
+        self.assertIn(("Radiodiagnóstico", 2), p.plan_carga_horaria(texto))
 
 
 class PlanUcasalCorrelatividades(unittest.TestCase):

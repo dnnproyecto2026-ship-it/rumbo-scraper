@@ -1,0 +1,38 @@
+﻿universidad;carrera;duracion_anios;donde_buscar;pista;link_del_plan_usado;materias (una por renglón: año | nombre);cargado_por;revisado_por;notas;nombre_universidad;carrera_id
+UNMdP;Tecnicatura Universitaria en Producciones Vegetales Intensivas;3;;;https://fca.mdp.edu.ar/wp-content/uploads/2024/05/Plan-de-estudios-de-la-TUPVI-2024.pdf;"1 | Botánica Agrícola
+1 | Química
+1 | Agrometeorología
+1 | Fisiología Vegetal
+1 | Infraestructura de la Producción
+1 | Suelos y Sustratos
+2 | Protección Vegetal
+2 | Ecofisiología de Cultivos Intensivos
+2 | Riego y Fertilizantes
+2 | Práctica de Intervención Profesional I
+2 | Horticultura 1 (cultivos para la producción de hojas)
+2 | Horticultura 2 (cultivos para la producción de flores y frutos)
+2 | Horticultura 3 (cultivos para la producción de bulbos, raíces y tallos)
+2 | Fruticultura
+3 | Economía y Administración
+3 | Mercados y Comercialización
+3 | Producción de Especies Ornamentales
+3 | Práctica de Intervención Profesional II";IA operador máquina fija (cotejo literal);;;;40e13a1d-7303-4fe7-865c-431d28a29876
+UNMdP;Tecnicatura Universitaria en Gestión Judicial;2;;;https://derecho.mdp.edu.ar/wp-content/uploads/plan_estudios_tec_gestion_judicional.pdf;"1 | Introducción al Derecho
+1 | Historia del Derecho y Constitucional Argentina
+1 | Teoría Constitucional
+1 | Teoría Gral. Del Proceso
+1 | Filosofía del Derecho
+1 | Informática aplicada a la gestión
+1 | Derecho Procesal Civil y Comercial
+1 | Derecho Procesal Penal
+1 | Redacción de Instrumentos Judiciales
+2 | Inteligencia Artificial, Tecnología y Derecho
+2 | Derecho del Consumidor y el Usuario
+2 | Relaciones Laborales en la Administración y Gestión de RRHH
+2 | Derecho Procesal de Familias
+2 | Práctica Profesional I
+2 | Taller de Métodos de Resolución de Conflictos
+2 | Práctica Profesional II
+2 | Práctica Profesional III
+2 | Técnicas de Investigación en el Ámbito Judicial
+2 | Prácticas Sociocomunitarias";IA operador máquina fija (cotejo literal);;;;c7f81523-50c3-4ae8-842d-a12568a9d157

@@ -81,6 +81,34 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Tecnicatura Superior en Higiene, Seguridad y Ambiente Laboral": (
             "https://iseta.edu.ar/iseta/wp-content/uploads/2025/12/Tec.-Sup-en-Higiene-Seguridad-y-ambiente-Laboral.pdf",
             planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Higiene y Seguridad en el Trabajo": (
+            _PBA + "2021-06/TS%20en%20Higiene%20y%20Seguridad%20en%20el%20trabajo%20-%20Res.%20320_13.pdf",
+            planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Administración de Pymes": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Administracion%20de%20Pymes%20-%20Res.%20458-23%20y%20Res.%204020-24%20y%20Anexos.pdf",
+            planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Administración de Recursos Humanos": (
+            _PBA + "2025-04/TS%20Recursos%20Humanos%205311-24.pdf", planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Radiología": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Radiologia%20-%20Res.%205308-24%20y%20Res.%201369-25%20y%20Anexos.pdf",
+            functools.partial(planes_sitios.plan_carga_horaria, solo_numeradas=True)),
+        "Tecnicatura Superior en Turismo": (
+            _PBA + "2023-08/TS%20en%20Turismo%20Res.%202686-20%20y%20Anexo.pdf", planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Guía de Turismo": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Gu%C3%ADa%20de%20Turismo%20-%20Res%202684-20%20y%20Anexos.pdf",
+            planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Biotecnología": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Biotecnologia%20-%20Res.%204284-23%20y%20Res.%203538-25%20y%20Anexos.pdf",
+            functools.partial(planes_sitios.plan_carga_horaria, solo_numeradas=True)),
+        "Tecnicatura Superior en Logística": (
+            _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Log%C3%ADstica%20-%20Res.%205312-24%20y%20Anexos.pdf",
+            functools.partial(planes_sitios.plan_carga_horaria, solo_numeradas=True)),
+        "Tecnicatura Superior en Laboratorio de Análisis Clínicos": (
+            "https://isfdyt43-bue.infd.edu.ar/sitio/wp-content/uploads/2019/12/Analisis-cl%C3%ADnicos-205-18-Anexo.pdf",
+            planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Tiempo Libre y Recreación": (
+            "https://isfd72-bue.infd.edu.ar/sitio/wp-content/uploads/2025/04/Tecnicatura-en-Tiempo-Libre-y-Recreacion.pdf",
+            planes_sitios.plan_carga_horaria),
         "Profesorado de Educación Inicial": (_INICIAL_Y_PRIMARIA,
                                              functools.partial(planes_sitios.plan_indice_pba, "Educación Inicial")),
         "Profesorado de Educación Primaria": (_INICIAL_Y_PRIMARIA,
@@ -147,6 +175,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
     "Chaco": {
         "Profesorado de Educación Inicial": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISENO_PROF._EDUC_INICIAL..pdf", planes_sitios.plan_formato_ubicacion),
         "Profesorado de Educación Primaria": ("https://ispmantovani-cha.infd.edu.ar/sitio/wp-content/uploads/sitio/DISEN_O_PRIMARIA2.pdf", planes_sitios.plan_formato_ubicacion),
+        # Its Lengua y Literatura (Res. 6565/14), as the IES de Machagai publishes it.
+        "Profesorado de Lengua y Literatura": (
+            "https://insmachagai-cha.infd.edu.ar/sitio/wp-content/uploads/2020/09/RESOLUCION-06565-14Dis%C3%B1o-Lengua-y-Lit.pdf",
+            planes_sitios.plan_indice_por_anio),
     },
     "Chubut": {
         "Profesorado de Educación Primaria": ("https://ies813pabloluppi-chu.infd.edu.ar/sitio/wp-content/uploads/sitio/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),
@@ -184,6 +216,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://isfdsabato-crr.infd.edu.ar/sitio/wp-content/uploads/2020/03/"
             "Dise%C3%B1o-Curricular-Jurisdiccional-%E2%80%93-Profesorado-de-primaria.pdf",
             planes_sitios.plan_estructura_con_regimen),
+        # Its Inicial (Res. 1487/14), as the ISFD de Curuzú Cuatiá publishes it.
+        "Profesorado de Educación Inicial": (
+            "https://iscuruzucuatia-crr.infd.edu.ar/sitio/wp-content/uploads/2021/07/Profesorado-de-Educacion-Inicial.pdf",
+            planes_sitios.plan_estructura_con_regimen),
     },
     # Mendoza's Primaria (its 2023 update), as the Instituto del Bicentenario
     # publishes it on its INFoD site (mendoza.edu.ar).
@@ -192,6 +228,10 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
             "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2024/09/"
             "Diseno-Curicular-Profesorado-de-Educacion-Primaria-2023.pdf",
             planes_sitios.plan_formato_ubicacion),
+        "Profesorado de Educación Inicial": (
+            "https://institutodelbicentenario-infd.mendoza.edu.ar/sitio/wp-content/uploads/2025/07/"
+            "RESOL-2023-6867-GDEMZA-DGE-Profesorado-de-Educacion-Inicial.pdf",
+            planes_sitios.plan_mapa_curricular_numerado),
     },
     # Córdoba's (the ones in force), as its Dirección General de Educación
     # Superior publishes them on its INFoD site, linked from its own.
@@ -219,6 +259,45 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
                                                  functools.partial(planes_sitios.plan_cordoba, "TECNOLÓGICA")),
         "Profesorado de Educación Física": (_CBA + "D_CURRICULAR_FINAL_DE_ED_FISICA_2013.pdf",
                                             functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN FÍSICA")),
+    },
+    "Catamarca": {
+        # The Lineamientos (2016) of the IES Belén's site; the Diseño Curricular 2018 on the same site is a
+        # scan with the same units and the same 2928 hours.
+        "Tecnicatura Superior en Enfermería": (
+            "https://iesbelen-cat.infd.edu.ar/sitio/wp-content/uploads/2023/04/Disen_oEnfermeria-final2015.pdf",
+            planes_sitios.plan_estructura_numerada),
+    },
+    "Entre Ríos": {
+        "Profesorado de Educación Primaria": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Primaria_Solene_Borja_141015_final_v3.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Educación Inicial": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Inicial_Solene_Borja131015_final_v2.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Matemática": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/matematica_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Lengua y Literatura": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Lengua_y_L_solene_borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Historia": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Historia_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Biología": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Biologi769a_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Inglés": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Ingles_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Geografía": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Geografia_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Física": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/fisica_Solene_Borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
+        "Profesorado de Química": (
+            "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Quimica_solene_borja_131015_final.pdf",
+            planes_sitios.plan_formato_de_unidad),
     },
     "Neuquén": {
         "Profesorado de Educación Primaria": ("https://ifd6-nqn.infd.edu.ar/sitio/wp-content/uploads/2021/05/Disen_o_Curricular_Profesorado_de_Educacion_Primaria.pdf", planes_sitios.plan_formato_ubicacion),

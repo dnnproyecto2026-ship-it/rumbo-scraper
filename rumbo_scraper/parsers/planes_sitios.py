@@ -1912,7 +1912,7 @@ def plan_iupa(texto_con_columnas: str) -> list[tuple[str, int]]:
                              _HORAS_IUPA, _RESTO_IUPA)
 
 
-_ANIO_CON_NUMERO = re.compile(r"^\s*(\d)\s*[º°]\s*A[ñn]o\s*$")
+_ANIO_CON_NUMERO = re.compile(r"^\s*(\d)\s*[º°]\s*[Aa][ñn]o\s*$")
 _REGIMEN_DE_FILA = r"(?:Anual|Cuatrimestral|Semestral)\b"
 _PIEZA_CON_REGIMEN_DE_FILA = re.compile(r"^\s{4,}([A-Za-zÁÉÍÓÚÑáéíóúñ(][^\d●]*?)\s*(?:\s{2,}(?:" + _REGIMEN_DE_FILA + r"|\d).*)?$")
 
@@ -2493,8 +2493,14 @@ def plan_fce_unam(html: str) -> list[tuple[str, int]]:
 
 # The term may be on the line above ("1ºC" over "IC411   SISTEMAS DIGITALES");
 # the code is in the first column (a code far right is a correlative).
+_CODIGO_FIO = r"[A-Z]{2,3}-?\d{3}"
 _FILA_CON_CODIGO = re.compile(
-    r"^\s{0,12}[A-Z]{2,3}\d{3}\s+(?:(?:ANUAL|\d\s*[º°o]\s*C\.?|\d\s*[º°o]\s*CUAT\S*)\s+)?([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
+    r"^\s{0,12}" + _CODIGO_FIO + r"\s+(?:(?:ANUAL|\d\s*[º°o]\s*C[.,]?|\d\s*[º°o]\s*CUAT\S*)\s+)?([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
+_CODIGO_SOLO = re.compile(r"^\s{0,12}" + _CODIGO_FIO + r"\b")
+# The row of a subject whose code is alone on a line and whose term and
+# name are on the next ("CI212" over "   2º C.   MATEMÁTICA APLICADA").
+_FILA_SIN_CODIGO = re.compile(
+    r"^\s{8,}(?:ANUAL|\d\s*[º°o]\s*C[.,]?)\s+([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
 
 
 def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
@@ -2504,20 +2510,34 @@ def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
     the year (Probabilidad, CI213, is in the third)."""
     materias: list[tuple[str, int]] = []
     anio = None
+    sin_nombre = False
     for linea in texto.split("\n"):
         limpia = clean_text(linea)
+        if not limpia:
+            continue
         if re.fullmatch(r"(?i)\w+\s+año", limpia):
             anio = anio_de(limpia)
+            sin_nombre = False
             continue
         if re.match(r"(?i)(asignaturas\s+)?(optativ|electiv)", limpia):
             anio = None
-        fila = _FILA_CON_CODIGO.match(linea)
-        if anio and fila:
-            # A row whose name went to another line leaves its correlatives
-            # ("EM111-EM112") where the name was: the plan read so would
-            # miss that subject, and is not read.
-            if re.match(r"[A-Z]{2,3}\d{3}\b", fila.group(1)):
+        if sin_nombre:
+            # The name is the row right after the lone code, without a code;
+            # anything else there and the plan is not read.
+            sin_nombre = False
+            fila = _FILA_SIN_CODIGO.match(linea)
+            if not fila:
                 return []
+            _agregar(materias, fila.group(1), anio)
+            continue
+        fila = _FILA_CON_CODIGO.match(linea)
+        if anio and _CODIGO_SOLO.match(linea):
+            # A row whose name went to another line leaves its correlatives
+            # ("EM111-EM112") where the name was, or nothing.
+            if not fila or re.match(_CODIGO_FIO + r"\b", fila.group(1)):
+                sin_nombre = True
+                continue
+        if anio and fila:
             _agregar(materias, fila.group(1), anio)
     return materias
 
@@ -3033,18 +3053,61 @@ def plan_marco_orientador(secciones: tuple[str, ...], texto: str) -> list[tuple[
     return unicas
 
 
-def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
+def plan_formato_de_unidad(texto: str) -> list[tuple[str, int]]:
+    """Entre Ríos's design of a profesorado (Res. 4170/14): each unit is a page that
+    opens with its year ("Primer Año"), its name (wrapped over lines when long)
+    and "Formato: Asignatura". The Práctica docente units add a second line, the
+    unit's theme ("Sujetos y Contextos: ..."): the unit is the "Práctica Docente I"."""
+    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    anio = 0
+    materias: list[tuple[str, int]] = []
+    for i, linea in enumerate(lineas):
+        ano = re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", linea)
+        if ano:
+            anio = _ANIO_INDICE[ano.group(1).lower()]
+        elif anio and re.match(r"(?i)^formato\s*:", linea):
+            bloque: list[str] = []
+            j = i - 1
+            # (A name can sit a blank line above its "Formato:".)
+            if j > 0 and not lineas[j] and not re.match(r"^\d+$", lineas[j - 1]):
+                j -= 1
+            while j >= 0 and lineas[j] and not re.match(r"^\d+$", lineas[j]) \
+                    and not re.match(r"(?i)^(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o$", lineas[j]):
+                bloque.insert(0, lineas[j])
+                j -= 1
+            practica = next((b for b in bloque if re.match(r"(?i)^pr[áa]ctica docente\s+[IV]+\b", b)), None)
+            titulo = practica or " ".join(bloque)
+            if titulo and len(titulo.split()) <= 16:
+                materias.append((titulo, anio))
+    return materias
+
+
+def plan_carga_horaria(texto: str, solo_numeradas: bool = False) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of a tecnicatura superior (Enfermería,
     Tiempo Libre y Recreación): each unit a heading in capitals over its
     "Carga horaria: 32 horas" (or "TIEMPO LIBRE Y RECREACIÓN - Carga horaria: 2
     horas"), under its year ("PRIMER AÑO"). The overview of the structure that
-    comes first has no such line, and the prose's "carga horaria total" no colon."""
-    lineas = [clean_text(l.replace("\f", "")) for l in texto.splitlines()]
+    comes first has no such line, and the prose's "carga horaria total" no colon.
+    With `solo_numeradas`, only the numbered units count: Radiología also heads each
+    "trayecto" ("RADIOLÓGICAS ESPECIALES - Carga Horaria: 128 horas") and says which
+    units make it up ("Integrado por la unidad curricular ..."), and neither is a unit."""
+    # (Biotecnología's "13. BIOÉTICA - Carla horaria: 2" misspells it.)
+    lineas = [re.sub(r"(?i)(\d\.\s.*?[-–]\s*)carla(\s+horaria)", r"\1carga\2", clean_text(l.replace("\f", "")))
+              for l in texto.splitlines()]
     # A numbered heading wrapped over two lines ("17. Práctica Profesionalizante 2: ... - Carga" /
     # "horaria: 3 (tres) módulos") is one.
     for i in range(len(lineas) - 1):
         if re.match(r"^\d{1,2}\.\s", lineas[i]) and not re.search(r"(?i)carga horaria\s*:", lineas[i]) \
                 and re.search(r"(?i)^horaria\s*:|^[^.]{0,60}[-–]\s*carga horaria\s*:", lineas[i + 1]):
+            lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
+    # ... or an upper-case one that breaks before "- Carga" ("PRÁCTICAS PROFESIONALIZANTES II: Planificación
+    # de Proyectos Recreativos - Carga" / "horaria: 4 horas") or inside its title ("... Implementación de
+    # Proyectos" / "Recreativos - Carga horaria: 4").
+    for i in range(len(lineas) - 1):
+        if re.match(r"^[A-ZÁÉÍÓÚÑ]{4,}\b[^:]{0,40}:", lineas[i]) and not re.search(r"(?i)carga", lineas[i]) \
+                and re.match(r"(?i)^\S+(?:\s\S+){0,3}\s*-\s*carga horaria\s*:", lineas[i + 1]):
+            lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
+        elif re.match(r"^[A-ZÁÉÍÓÚÑ]{4,}\b.*\s-\s*carga$", lineas[i], re.I) and re.match(r"(?i)^horaria\s*:", lineas[i + 1]):
             lineas[i], lineas[i + 1] = f"{lineas[i]} {lineas[i + 1]}", ""
     materias: list[tuple[str, int]] = []
     anio = 0
@@ -3053,7 +3116,15 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         if ano:
             anio = _ANIO_INDICE[ano.group(1).lower()]
             continue
+        # (Turismo heads its years "1ER AÑO", "2DO AÑO".)
+        ano = re.match(r"(?i)^([1-5])\s*(?:er|do|ro|to)\s+a[ñn]o$", linea)
+        if ano:
+            anio = int(ano.group(1))
+            continue
         mismo = re.match(r"^(.+?)\s*[-–.]\s*carga horaria\s*:", linea, re.I)
+        if not mismo:
+            # (A numbered unit may drop the colon: "13. Derecho Comercial – Carga horaria 2 (dos) módulos".)
+            mismo = re.match(r"^(\d{1,2}\.\s+.+?)\s*[-–]\s*carga horaria\s+\d", linea, re.I)
         if not anio or not (mismo or re.match(r"(?i)^carga horaria\s*:\s*\d+\s*horas?\b", linea)):
             continue
         # (A heading wrapped over two lines leaves its tail, "Recreativos - Carga horaria: 4", alone.)
@@ -3061,12 +3132,14 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
         numerada = mismo and re.match(r"^\d{1,2}\.\s+\S", mismo.group(1))
         if mismo and not numerada and not mismo.group(1).split()[0].isupper():
             continue
+        if solo_numeradas and not numerada:
+            continue
         titulo = mismo.group(1) if mismo else _titulo_de_unidad(lineas, i)
         titulo = re.sub(r"^\d{1,2}\.\s+", "", titulo)
         if titulo.isupper() or mismo:
             titulo = _ROMANO_FINAL.sub(lambda m: m.group(1).upper(), titulo[:1] + titulo[1:].lower())
         if titulo and not titulo.endswith(":") and len(titulo.split()) <= 16 \
-                and not re.match(r"(?i)^(campos? de|total)", titulo):
+                and not re.match(r"(?i)^(campos? de|total|edi$)", titulo):
             _agregar(materias, titulo, anio)
     vistas: set[str] = set()
     unicas = []
@@ -3075,6 +3148,111 @@ def plan_carga_horaria(texto: str) -> list[tuple[str, int]]:
             vistas.add(comparison_key(nombre))
             unicas.append((nombre, a))
     return desde_el_primero(unicas)
+
+
+def plan_estructura_numerada(texto: str) -> list[tuple[str, int]]:
+    """A Catamarca design of a tecnicatura superior (``pdftotext -layout``): its
+    "Estructura Curricular" a table per year headed "N° ID 1° Año", a row per
+    unit: its number, its name, then its hours by term. A name wrapped over two
+    lines has its first part alone above the numbered row ("Práctica Hospitalaria
+    en  Fundamentos de" / "13  Enfermería y Comunitaria  6  6  192"). The table
+    ends at "Régimen de correlatividades", whose tables repeat the units."""
+    materias: list[tuple[str, int]] = []
+    anio, previa = 0, ""
+    fin = re.search(r"(?i)^\s*r[ée]gimen\s+de\s+correlatividades", texto or "", re.M)
+    for linea in (texto or "")[:fin.start() if fin else None].splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        cabecera = re.match(r"^\s*N[°º]\s+ID\s+([1-5])[°º]\s*A[ñn]o\b", linea)
+        if cabecera:
+            anio, previa = int(cabecera.group(1)), ""
+            continue
+        if not anio:
+            continue
+        fila = re.match(r"^\s*(\d{1,2})\s+(\S.*?)(?:\s{2,}\d+)*\s*$", linea)
+        if fila:
+            nombre = f"{previa} {fila.group(2)}".strip() if previa else fila.group(2)
+            _agregar(materias, nombre, anio)
+            previa = ""
+        elif linea.strip() and not re.match(r"(?i)^\s*(horas semanales|tecnicatura superior)", linea):
+            previa = clean_text(linea)
+    return desde_el_primero(materias)
+
+
+def plan_mapa_curricular_numerado(texto: str) -> list[tuple[str, int]]:
+    """A Mendoza design of 2023 (``pdftotext -layout``): its "Resumen de
+    cantidad de Unidades Curriculares" gives the units of each year (the six
+    counts of the row, not its "Total", which the design mistypes) and its
+    "Mapa curricular" lists them, in order, as "NN- Name" with the format,
+    term and hours to the right and a wrapped name on the next lines. The year
+    of a unit is where it falls in that count; if the units listed are not
+    those counted, nothing is read."""
+    texto = texto or ""
+    cuentas = [sum(int(n) for n in fila.group(2).split())
+               for fila in re.finditer(r"(?m)^\s*([1-5])[°º]\s+((?:\d+\s+){6})\S+\s*$", texto)]
+    inicio = re.search(r"(?im)^\s*3\.3\.?\s*Mapa curricular", texto)
+    if not cuentas or not inicio:
+        return []
+    formatos = {"módulo", "módulo-", "taller", "seminario", "seminari", "o", "taller-", "módulo-taller",
+                "taller-módulo", "seminario-taller", "módulo - taller"}
+    unidades: list[str] = []
+    abierta = False
+    for linea in texto[inicio.end():].splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        if re.search(r"Unidad Curricular|^\s*Cant\.|^\s*\d+\.\s+[A-ZÁÉÍÓÚ]{3}", linea):
+            break
+        linea = re.sub(r"^\s*(?:(?:FG|FE|PP|[1-5][°º])\s+)*(?:FG|FE|PP|[1-5][°º])?(?=\s|$)", "", linea)
+        fila = re.match(r"^\s*(\d{1,2})\s*[-–]\s*(\S.*)$", linea)
+        resto = fila.group(2) if fila else linea
+        trozo = re.split(r"\s{2,}", resto.strip())[0]
+        if fila:
+            unidades.append(trozo)
+            abierta = True
+        elif abierta and trozo and trozo.lower() not in formatos and not re.fullmatch(r"[\d\W]+|[ACac]", trozo):
+            unidades[-1] = f"{unidades[-1]} {trozo}"
+        elif abierta and trozo.lower() in formatos | {""}:
+            continue
+    if sum(cuentas) != len(unidades):
+        return []
+    materias: list[tuple[str, int]] = []
+    desde = 0
+    for anio, cantidad in enumerate(cuentas, 1):
+        for nombre in unidades[desde:desde + cantidad]:
+            _agregar(materias, clean_text(nombre), anio)
+        desde += cantidad
+    return desde_el_primero(materias)
+
+
+def plan_indice_por_anio(texto: str) -> list[tuple[str, int]]:
+    """A Chaco design (``pdftotext -layout``) whose index lists the units by
+    year: a heading ("1° AÑO", "Segundo año"), then a line per unit, its name
+    and its page ("Pedagogía ........ 20"; the page may be missing). The index ends at the first line
+    that is none of those (the next section's title); a stray number in the
+    page column ("Geografía Económica   3   63") is not part of the name."""
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for linea in (texto or "").splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        if not re.search(r"\w", linea):
+            continue
+        cabecera = re.match(r"(?i)^\s*(?:\d[°º]|primer|segundo|tercer|cuarto|quinto)\s*a[ñn]o\s*$", linea)
+        if cabecera:
+            if materias and anio_de(linea) != anio + 1 and anio_de(linea) != anio:
+                break
+            anio = anio_de(linea) or 0
+            continue
+        if not anio:
+            continue
+        # A name over dotted leaders (its page may fall on a line of its own),
+        # or a name and its page.
+        fila = (re.match(r"^\s*(\S.*?)\s*[.…]{3,}", linea)
+                or re.match(r"^\s*(\S.*?)(?:\s+\d{1,2})?\s{2,}\d{1,3}\s*$", linea))
+        if fila and re.search(r"[^\W\d_]{3}", fila.group(1)):
+            _agregar(materias, clean_text(fila.group(1)), anio)
+        elif re.match(r"^\s*\d{1,3}\s*$", linea) or (anio == 1 and not materias):
+            continue
+        else:
+            break
+    return desde_el_primero(materias)
 
 
 def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
@@ -4442,6 +4620,29 @@ def plan_uch(texto: str) -> list[tuple[str, int]]:
     if any(re.search(r"[^\w\s.,;:()/'\"-]|[^\x00-\xff]", nombre) for nombre, _ in materias):
         return []
     return [(nombre, anio) for nombre, anio in materias]
+
+
+def plan_uncoma_listado(texto: str) -> list[tuple[str, int]]:
+    """UNComa's "Listado de Asignaturas" sheets (``-layout`` text): a header
+    per year ("Primer año"), then a row per subject: its term ("1 cuatrimestre"),
+    its order number, its name and its kind ("cuatrimestral" / "anual"). The
+    order numbers must run 1, 2, 3... without a gap: a sheet that skips one
+    lost a row, and is not taken."""
+    anios = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for linea in texto.splitlines():
+        cuerpo = linea.strip()
+        titulo = re.fullmatch(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+año", cuerpo)
+        if titulo:
+            anio = anios[titulo.group(1).lower()]
+            continue
+        fila = re.match(r"(?i)[12]\s+cuatrimestre\s+(\d{1,2})\s+(.+?)\s{2,}(?:cuatrimestral|anual|semestral)\s*$", cuerpo)
+        if fila and anio:
+            if int(fila.group(1)) != len(materias) + 1:
+                return []
+            materias.append((clean_text(fila.group(2)), anio))
+    return materias
 
 
 def plan_unab(cajas: str) -> list[tuple[str, int]]:
@@ -6997,3 +7198,246 @@ def plan_perio_unlp(html: str) -> list[tuple[str, int]]:
         elif anio and not _ENCABEZADO_PERIO.match(linea):
             _agregar(materias, linea, anio)
     return desde_el_primero(materias)
+
+
+_ANIO_UNAM = re.compile(r"(?i)^\s*(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\s*$")
+_CODIGO_UNAM = re.compile(r"^\s*(\d)\.(\d{1,2})\b\s*(.*)$")
+_DATOS_UNAM = re.compile(r"(?:^|\s{2,})[LRP](?:-[LRP])*\s{2,}.*$")
+
+
+def plan_unam_codigos(texto: str) -> list[tuple[str, int]]:
+    """UNaM's plan PDFs (Tecnicatura en Industria Textil, ``-layout``): a
+    heading per year ("PRIMER AÑO") and a row per subject numbered
+    "year.order" ("1.14") with its condition ("L-R-P"), hours and term. A
+    name too long for its cell wraps above and below the line with the
+    number, and the rows may follow each other without a blank line, so each
+    fragment between two numbers is the nearest number's; a fragment as
+    near two numbers gives nothing. The area headings ("Área Diseño") close
+    a stretch of rows, the table's headings and totals are not subjects. A
+    number out of order, or from another year, gives nothing."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    siguiente = 1
+    tramo: list[tuple[str, "re.Match | None"]] = []
+
+    def cerrar() -> bool:
+        nonlocal tramo, siguiente
+        codigos = [i for i, (_, m) in enumerate(tramo) if m]
+        if not codigos:
+            tramo = []
+            return True
+        dueno: dict[int, list[int]] = {j: [] for j in codigos}
+        for i, (linea, m) in enumerate(tramo):
+            if m:
+                continue
+            cerca = sorted((abs(i - j), j) for j in codigos)
+            if len(cerca) > 1 and cerca[0][0] == cerca[1][0]:
+                # As near the number above as the one below: a name starts in
+                # capitals, so a fragment in lower case goes on the number
+                # above; one in capitals opens the number below unless that
+                # one has a name of its own on its line.
+                if not cerca[0][1] < i < cerca[1][1]:
+                    return False
+                debajo = _DATOS_UNAM.sub("", tramo[cerca[1][1]][1].group(3)).strip()
+                cerca = [cerca[1] if linea[:1].isupper() and (not debajo or debajo[:1].islower()) else cerca[0]]
+            dueno[cerca[0][1]].append(i)
+        for j in codigos:
+            m = tramo[j][1]
+            if int(m.group(1)) != anio or int(m.group(2)) != siguiente:
+                return False
+            partes = [tramo[i][0] for i in dueno[j] if i < j]
+            partes.append(_DATOS_UNAM.sub("", m.group(3)))
+            partes += [tramo[i][0] for i in dueno[j] if i > j]
+            nombre = clean_text(" ".join(partes))
+            if not nombre:
+                return False
+            materias.append((nombre, anio))
+            siguiente += 1
+        tramo = []
+        return True
+
+    for linea in (texto or "").splitlines():
+        titulo = _ANIO_UNAM.match(linea)
+        if titulo:
+            if not cerrar():
+                return []
+            anio = _ORDINALES[titulo.group(1).lower()]
+            siguiente = 1
+        elif anio is None or not linea.strip():
+            continue
+        elif re.match(r"(?i)^\s*(?:[áa]rea\b|total horas)", linea):
+            if not cerrar():
+                return []
+        else:
+            tramo.append((clean_text(linea) if not _CODIGO_UNAM.match(linea) else linea, _CODIGO_UNAM.match(linea)))
+    return materias if cerrar() else []
+
+
+_ROMANOS_UNLU = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
+
+
+def plan_unlu_cuatrimestres(ruta: str) -> list[tuple[str, int]]:
+    """UNLu's plan resolutions: "ESTRUCTURA CURRICULAR", a bordered table
+    "CUAT. / CÓDIGO / ACTIVIDADES ACADÉMICAS" with a five-digit code per row
+    and the term in roman numerals in a cell on the left that spans the rows
+    of its term (a text read cannot tell where it ends: the numeral is
+    centred on them). The cells are read by their borders: the row's term is
+    the numeral of the cell that holds the row, its name the text of its
+    name cell (wrapped over lines, as it is). Rows of a cell with no numeral
+    ("-": the entry competencies) and rows with no code (the practices, the
+    electives, the thesis) are not read, nor are tables with other first
+    cells (the equivalences with the old plan). A term's cell cut by a page
+    break leaves its last rows with no numeral at the top of the next page:
+    they are the last numeral's. The year is the term's: term n is year
+    ceil(n / 2)."""
+    import pdfplumber
+
+    materias: list[tuple[str, int]] = []
+    anterior = ""
+    with pdfplumber.open(ruta) as pdf:
+        for pagina in pdf.pages:
+            for tabla in pagina.find_tables():
+                columnas: dict[float, list[tuple[float, float, float, float]]] = {}
+                for celda in tabla.cells:
+                    columnas.setdefault(round(celda[0]), []).append(celda)
+                if len(columnas) < 3:
+                    continue
+                izquierda, codigos, nombres = (sorted(columnas[x], key=lambda c: c[1]) for x in sorted(columnas)[:3])
+
+                def texto(celda: tuple[float, float, float, float]) -> str:
+                    return clean_text(pagina.crop(celda).extract_text() or "")
+
+                trimestres = [(c[1], c[3], texto(c)) for c in izquierda]
+                if trimestres and not trimestres[0][2]:
+                    trimestres[0] = (*trimestres[0][:2], anterior)
+                anterior = trimestres[-1][2] if trimestres and re.fullmatch(r"[IVX-]+", trimestres[-1][2]) else ""
+                for celda_codigo, celda_nombre in zip(codigos, nombres):
+                    if not re.fullmatch(r"\d{5}", texto(celda_codigo)):
+                        continue
+                    centro = (celda_codigo[1] + celda_codigo[3]) / 2
+                    numeral = next((t for a, b, t in trimestres if a <= centro <= b), "")
+                    if numeral in _ROMANOS_UNLU:
+                        _agregar(materias, texto(celda_nombre), (_ROMANOS_UNLU[numeral] + 1) // 2)
+    return desde_el_primero(materias)
+
+
+plan_unlu_cuatrimestres.ruta = True  # type: ignore[attr-defined]
+plan_unlu_cuatrimestres.respaldo = True  # the site's other layouts go to the general reader
+
+
+# UNM's plan sheets: "year  term  code  name  correlatives  hours".
+_FILA_UNM = re.compile(r"^\s*([1-7])\s+(\d{1,2}(?:\s*-\s*\d{1,2})?)\s+(\d{4})\s+(\S.*?)(?:\s{2,}|$)", re.M)
+_NO_NOMBRADA_UNM = re.compile(r"(?i)optativ|espec[íi]fica|a elecci[óo]n|electiv")
+
+
+def plan_unm(texto: str) -> list[tuple[str, int]]:
+    """UNM's plan PDFs (``-layout``, "Organización curricular"): a row per
+    subject with its year, term, four-digit code and name, then correlatives
+    and hours. The organisation table is the first place the codes appear;
+    the later syllabus lists repeat them without the year and term. Nothing if
+    a row stands for subjects chosen later ("Asignatura Optativa"), a code
+    repeats, or the years go back: the plan would be incomplete."""
+    materias: list[tuple[str, int]] = []
+    codigos: set[str] = set()
+    anio_previo = 1
+    for m in _FILA_UNM.finditer(texto):
+        anio, codigo, nombre = int(m.group(1)), m.group(3), " ".join(m.group(4).split())
+        if codigo in codigos or anio < anio_previo or _NO_NOMBRADA_UNM.search(nombre):
+            return []
+        codigos.add(codigo)
+        anio_previo = anio
+        _agregar(materias, nombre, anio)
+    return materias if len(materias) == len(codigos) else []
+
+
+_CIERRA_FRASE = re.compile(r"(?i)(?:^|\s)(?:de|del|de la|de los|y|en|la|los|el|e)$")
+
+
+def plan_fceqyn_unam(ruta: str) -> list[tuple[str, int]]:
+    """UNaM Exactas, Químicas y Naturales' plan grids (DNGU annex layout):
+    a bordered table "COD / ASIGNATURA / REGIMEN ...", a heading row per year
+    ("PRIMER AÑO") and a row per subject with its code. A name too long for
+    its cell wraps over the rows above and below the code's row, centred on
+    it, so a code has as many fragments above as below; where rows follow
+    each other without a blank row, a run of fragments between two codes is
+    split by that rule. A page break may cut a name: the first fragment at the
+    top of a page goes on the last name of the page before if that one ends
+    in a connector ("Fundamentos de"). The table ends at "OTRO REQUISITO" (the
+    final practice) or the title and total hours footer. A repeated name (the three "Curso de Orientación
+    Regional") or a thesis is not a subject; a year heading out of order, or
+    a code with no name, gives nothing."""
+    import pdfplumber
+
+    # Each block: (year, rows of (code, text), whether it opens a page).
+    bloques: list[tuple[int, list[tuple[str, str]], bool]] = []
+    anio = 0
+    filas: list[tuple[str, str]] = []
+    abre_pagina = True
+
+    def cerrar() -> None:
+        nonlocal filas, abre_pagina
+        if filas:
+            bloques.append((anio, filas, abre_pagina))
+            abre_pagina = False
+        filas = []
+
+    with pdfplumber.open(ruta) as pdf:
+        fin = False
+        for pagina in pdf.pages:
+            for tabla in pagina.extract_tables():
+                if fin or not tabla or len(tabla[0]) < 3 or not any(
+                        "ASIGNATURA" in (c or "") for fila in tabla[:6] for c in fila):
+                    continue
+                for celdas in tabla:
+                    codigo, nombre = clean_text(celdas[0] or ""), clean_text(celdas[1] or "")
+                    titulo = _ANIO_UNAM.match(codigo)
+                    if re.match(r"(?i)(?:otro requisito|t[íi]tulo:|carga horaria total)", codigo):
+                        cerrar()
+                        fin = True
+                        break
+                    if titulo:
+                        cerrar()
+                        if _ORDINALES[titulo.group(1).lower()] != anio + 1:
+                            return []
+                        anio += 1
+                    elif codigo == "COD" or not anio:
+                        continue
+                    elif not codigo and not nombre:
+                        cerrar()
+                    elif not codigo or re.fullmatch(r"\d{1,2}(?:\.\d{1,2})?\.?", codigo):
+                        filas.append((codigo, nombre))
+                    else:
+                        return []
+                cerrar()
+            abre_pagina = True
+    materias: list[tuple[str, int, list[str]]] = []
+    for anio_del_bloque, filas, abre in bloques:
+        indices = [i for i, (c, _) in enumerate(filas) if c]
+        if not indices:
+            continue
+        inicio = 0
+        if abre and indices[0] and materias and _CIERRA_FRASE.search(materias[-1][2][-1]):
+            materias[-1][2].append(filas[0][1])
+            inicio = 1
+        arriba = indices[0] - inicio
+        for k, i in enumerate(indices):
+            corrido = (indices[k + 1] if k + 1 < len(indices) else len(filas)) - i - 1
+            abajo = corrido if k + 1 == len(indices) else min(arriba, corrido)
+            partes = [t for _, t in filas[i - arriba:i]] + [filas[i][1]] + [t for _, t in filas[i + 1:i + 1 + abajo]]
+            materias.append((anio_del_bloque, i, [p for p in partes if p]))
+            arriba = corrido - abajo
+    vistas: set[str] = set()
+    resultado: list[tuple[str, int]] = []
+    for anio_de_la_materia, _, partes in materias:
+        nombre = clean_text(" ".join(partes))
+        if not nombre:
+            return []
+        if re.search(r"(?i)orientaci[oó]n regional|^tesis\b", nombre) or nombre in vistas:
+            continue
+        vistas.add(nombre)
+        resultado.append((nombre, anio_de_la_materia))
+    return resultado
+
+
+plan_fceqyn_unam.ruta = True  # type: ignore[attr-defined]
+plan_fceqyn_unam.respaldo = True

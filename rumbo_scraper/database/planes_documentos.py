@@ -348,7 +348,7 @@ def _plan_del_menu(visitante: Any, html: str, url: str, host: str) -> tuple[list
 # Universities whose plan documents are laid out their own way, read from
 # the text as ``pdftotext -layout`` gives it.
 _DOCUMENTOS_PROPIOS = (("fmed.uba.ar", planes_sitios.plan_fmed_uba), ("dch.unne.edu.ar", planes_sitios.plan_bloques_numerados), ("ffyb.uba.ar", planes_sitios.plan_ffyb_uba), ("unahur.edu.ar", planes_sitios.plan_unahur_documento), ("ucse.edu.ar", planes_sitios.plan_ucse), ("fio.unam.edu.ar", planes_sitios.plan_fio_unam),
-                       ("ucasal.edu.ar", planes_sitios.plan_ucasal), ("uch.edu.ar", planes_sitios.plan_uch), ("unab.edu.ar", planes_sitios.plan_unab), ("ub.edu.ar", planes_sitios.plan_ub_documento), ("um.edu.ar", planes_sitios.plan_umendoza_todos), ("fca.unju.edu.ar", planes_sitios.plan_fca_unju),
+                       ("ucasal.edu.ar", planes_sitios.plan_ucasal), ("uch.edu.ar", planes_sitios.plan_uch), ("medicina.uncoma.edu.ar", planes_sitios.plan_uncoma_listado), ("unab.edu.ar", planes_sitios.plan_unab), ("ub.edu.ar", planes_sitios.plan_ub_documento), ("um.edu.ar", planes_sitios.plan_umendoza_todos), ("fca.unju.edu.ar", planes_sitios.plan_fca_unju),
                        ("fodonto.unr.edu.ar", planes_sitios.plan_por_codigo_en_texto),
                        # UNSJ's Filosofía: SIU Guaraní's plan report.
                        ("ffha.unsj.edu.ar", planes_sitios.plan_siu_guarani),
@@ -413,6 +413,14 @@ _DOCUMENTOS_PROPIOS += (("cemic.edu.ar", planes_sitios.plan_cemic),)
 # Sites whose one page lists every career's plan, each document named for
 # its career (CEMIC's "Plan de estudios_Enfermeria.pdf"): that one first.
 _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
+# UNaM Artes y Diseño's plan PDFs: rows numbered "year.order" under each year, names wrapped around the number.
+_DOCUMENTOS_PROPIOS += (("fayd.unam.edu.ar", planes_sitios.plan_unam_codigos),)
+# UNLu's plan resolutions: a bordered table, the term's numeral in a cell that spans its rows
+# (other documents of its site to the general reader).
+_DOCUMENTOS_PROPIOS += (("unlu.edu.ar", planes_sitios.plan_unlu_cuatrimestres),)
+_DOCUMENTOS_PROPIOS += (("fceqyn.unam.edu.ar", planes_sitios.plan_fceqyn_unam),)
+# UNM's plan sheets: a row per subject with year, term and four-digit code.
+_DOCUMENTOS_PROPIOS += (("unm.edu.ar", planes_sitios.plan_unm),)
 # UNSAdA's plan sheets: a coded row per subject, as many compulsory ones as the sheet states
 # (other documents of its site to the general reader).
 _DOCUMENTOS_PROPIOS += (("unsada.edu.ar", planes_sitios.plan_unsada),)
@@ -455,9 +463,12 @@ def _leer_documento(archivo: Path, documento: str, carrera: str = "") -> list[tu
             # A reader of the PDF's own tables takes the file.
             if getattr(lector, "ruta", False):
                 try:
-                    return [m for m in lector(str(archivo)) if not _FUERA_DEL_PLAN.search(m[0])]
+                    leidas = [m for m in lector(str(archivo)) if not _FUERA_DEL_PLAN.search(m[0])]
                 except Exception:
                     return []
+                if leidas or not getattr(lector, "respaldo", False):
+                    return leidas
+                continue
             # A reader of a table's cells takes the text's boxes (``-bbox-layout``).
             modo = "-bbox-layout" if getattr(lector, "cajas", False) else "-layout"
             try:
