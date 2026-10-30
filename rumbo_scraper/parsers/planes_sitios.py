@@ -2493,8 +2493,14 @@ def plan_fce_unam(html: str) -> list[tuple[str, int]]:
 
 # The term may be on the line above ("1ºC" over "IC411   SISTEMAS DIGITALES");
 # the code is in the first column (a code far right is a correlative).
+_CODIGO_FIO = r"[A-Z]{2,3}-?\d{3}"
 _FILA_CON_CODIGO = re.compile(
-    r"^\s{0,12}[A-Z]{2,3}\d{3}\s+(?:(?:ANUAL|\d\s*[º°o]\s*C\.?|\d\s*[º°o]\s*CUAT\S*)\s+)?([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
+    r"^\s{0,12}" + _CODIGO_FIO + r"\s+(?:(?:ANUAL|\d\s*[º°o]\s*C[.,]?|\d\s*[º°o]\s*CUAT\S*)\s+)?([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
+_CODIGO_SOLO = re.compile(r"^\s{0,12}" + _CODIGO_FIO + r"\b")
+# The row of a subject whose code is alone on a line and whose term and
+# name are on the next ("CI212" over "   2º C.   MATEMÁTICA APLICADA").
+_FILA_SIN_CODIGO = re.compile(
+    r"^\s{8,}(?:ANUAL|\d\s*[º°o]\s*C[.,]?)\s+([A-ZÁÉÍÓÚÑ]\S*.*?)(?:\s{2,}|$)")
 
 
 def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
@@ -2504,20 +2510,34 @@ def _plan_fio_unam(texto: str) -> list[tuple[str, int]]:
     the year (Probabilidad, CI213, is in the third)."""
     materias: list[tuple[str, int]] = []
     anio = None
+    sin_nombre = False
     for linea in texto.split("\n"):
         limpia = clean_text(linea)
+        if not limpia:
+            continue
         if re.fullmatch(r"(?i)\w+\s+año", limpia):
             anio = anio_de(limpia)
+            sin_nombre = False
             continue
         if re.match(r"(?i)(asignaturas\s+)?(optativ|electiv)", limpia):
             anio = None
-        fila = _FILA_CON_CODIGO.match(linea)
-        if anio and fila:
-            # A row whose name went to another line leaves its correlatives
-            # ("EM111-EM112") where the name was: the plan read so would
-            # miss that subject, and is not read.
-            if re.match(r"[A-Z]{2,3}\d{3}\b", fila.group(1)):
+        if sin_nombre:
+            # The name is the row right after the lone code, without a code;
+            # anything else there and the plan is not read.
+            sin_nombre = False
+            fila = _FILA_SIN_CODIGO.match(linea)
+            if not fila:
                 return []
+            _agregar(materias, fila.group(1), anio)
+            continue
+        fila = _FILA_CON_CODIGO.match(linea)
+        if anio and _CODIGO_SOLO.match(linea):
+            # A row whose name went to another line leaves its correlatives
+            # ("EM111-EM112") where the name was, or nothing.
+            if not fila or re.match(_CODIGO_FIO + r"\b", fila.group(1)):
+                sin_nombre = True
+                continue
+        if anio and fila:
             _agregar(materias, fila.group(1), anio)
     return materias
 

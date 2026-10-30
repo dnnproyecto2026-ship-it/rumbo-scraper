@@ -101,6 +101,21 @@ TERCER AÑO
         self.assertEqual(p._plan_fio_unam(texto), [("Álgebra y Geometría Analítica", 1),
                                                    ("Sistemas Digitales", 1), ("Probabilidad y Estadística 1", 3)])
 
+    def test_unam_ingenieria_el_nombre_en_la_linea_siguiente_al_codigo(self):
+        texto = """SEGUNDO AÑO
+    CI212
+                    2º C.          MATEMÁTICA APLICADA                      CI211-CI221
+    EM-261           2º C.          INGENIERÍA E INDUSTRIAS                  EM131-EM161
+    EM466           2º C,          HIGIENE, SEGURIDAD Y MEDIO AMBIENTE      EM231-EM331"""
+        self.assertEqual(p._plan_fio_unam(texto), [("Matemática Aplicada", 2), ("Ingeniería e Industrias", 2),
+                                                   ("Higiene, Seguridad y Medio Ambiente", 2)])
+
+    def test_unam_ingenieria_codigo_solo_sin_nombre_debajo_no_se_lee(self):
+        texto = """SEGUNDO AÑO
+    CI212
+    CI222           2º C.          MECÁNICA RACIONAL                        CI211"""
+        self.assertEqual(p._plan_fio_unam(texto), [])
+
     def test_unam_ingenieria_sin_el_nombre_en_su_fila_no_se_lee(self):
         texto = """PRIMER AÑO
      EM211           1º C.       EM111-EM112          -"""

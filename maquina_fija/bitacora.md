@@ -1663,3 +1663,8 @@
 ## 2026-10-30 (297) — UNaM: vista previa de `planes_documentos` sin planes
 - Corrida sola, en segundo plano (tarda ~10 min): "Planes: 0; materias a cargar: 0". Nada cargado ni cambiado en código. Tests: 975 OK.
 - Pendiente: UNaM (11 `pdf_con_texto`: FIO resúmenes, FCEQyN Grilla-IA/LG/tucyp, FAyD TUIT, FHyCS Lengua de Señas) necesita ver cada PDF de a uno; los FIO ya tienen `plan_fio_unam` por texto y no tomó ninguno: revisar por qué.
+
+## 2026-10-30 (298) — UNaM Ingeniería (Civil 44, Mecatrónica 39, Electromecánica 43) con `plan_fio_unam` corregido
+- `plan_fio_unam` ahora lee filas con el código solo y el nombre en la línea siguiente, códigos con guion (`EM-261`) y el typo `2º C,`. Cada PDF da tantas materias como códigos tiene. +2 pruebas, 977 OK.
+- `planes_documentos UNaM --apply` (126 materias), `verificar_catalogo UNaM`, exportación completa. Listo para cargar a producción (UNaM, lote de 1).
+- Pendiente: Lic. Higiene y Seguridad (códigos de 3 dígitos), Ing. Electrónica (no salió en la vista previa: ver nombre en catálogo), FCEQyN, FAyD TUIT, FHyCS.
