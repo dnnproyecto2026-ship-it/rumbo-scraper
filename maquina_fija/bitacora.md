@@ -1302,3 +1302,7 @@
 - `plan_carga_horaria` no leía las Prácticas Profesionalizantes II y III del diseño de Tiempo Libre y Recreación (título partido en dos líneas, en mayúsculas). Lector corregido con su prueba; el diseño (ISFD 72, 20 materias: 7/6/7 por año, cotejado contra las líneas "Carga horaria" del PDF) quedó en `planes_disenos.DISENOS["Buenos Aires"]`.
 - Vista previa: 0 institutos lo reciben (el diseño está en el dominio de un solo instituto; la regla exige el dominio propio de cada uno). Nada escrito en la base. Pendiente: buscar el mismo diseño en abc.gob.ar para que llegue a las ~80 ofertas, y seguir con Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA.
 - Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (216) — Tiempo Libre y Recreación (PBA): no hay copia en abc.gob.ar
+- Búsqueda de una copia oficial del diseño en abc.gob.ar: sin resultados. Solo aparece el del ISFD 72 (el ya registrado, EX-2022-28195991-GDEBA) y los de CABA y Chubut, que son otras jurisdicciones y no valen. Las ~80 ofertas siguen sin plan; razón registrada: el diseño solo está en el dominio de un instituto. No cambié código.
+- Siguiente: Enfermería / Acompañamiento Terapéutico / Higiene y Seguridad de PBA (`disenos_a_buscar.csv`). Sin credenciales de producción ni de GitHub.
