@@ -1659,3 +1659,7 @@
 - Vista previa de `planes_documentos UNMdP`: 0 planes (sin lector para los PDF de UNMdP). Transcribí dos PDF de estructura limpia (años y números explícitos) a `data/planes_unmdp.csv` (cargado_por "IA operador máquina fija"), cotejo literal OK en ambas, `--apply`, `verificar_catalogo UNMdP`, exportación completa. Listo para cargar a producción (UNMdP, lote de 1).
 - Optativas (TUPVI "Optativas 192 hs") no cargadas: no son una materia con nombre. Observación: la carrera TUPVI tiene `duracion_anios` 2 y el plan tiene 3 años (1664 hs): revisar con una persona.
 - Pendiente UNMdP: Ing. Agronómica/Lic. Prod. Animal/Vegetal/Alimentos (FCA) no dicen el año, solo cuatrimestre 1º/2º con código: no cargables sin decidir cómo asignar año. Geografía (humanidades) por mirar.
+
+## 2026-10-30 (297) — UNaM: vista previa de `planes_documentos` sin planes
+- Corrida sola, en segundo plano (tarda ~10 min): "Planes: 0; materias a cargar: 0". Nada cargado ni cambiado en código. Tests: 975 OK.
+- Pendiente: UNaM (11 `pdf_con_texto`: FIO resúmenes, FCEQyN Grilla-IA/LG/tucyp, FAyD TUIT, FHyCS Lengua de Señas) necesita ver cada PDF de a uno; los FIO ya tienen `plan_fio_unam` por texto y no tomó ninguno: revisar por qué.
