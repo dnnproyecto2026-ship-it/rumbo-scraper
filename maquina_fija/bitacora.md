@@ -1371,3 +1371,8 @@
 - Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las ~65 ofertas de Radiología. Sin vista previa local (base sin institutos).
 - Acompañamiento Terapéutico (Res. 1221/15; versiones 2021-06 y 2026-06 en abc.gob.ar) y Psicopedagogía (Res. 2460/11, 2026-06): `plan_carga_horaria` da 0; el de AT es un escaneo sin capa de texto (`pdftotext` devuelve 52 bytes). Razón registrada para las 78 y 53 ofertas; requeriría `planes_escaneados` con chequeo literal.
 - Siguiente: Higiene/Seguridad ya hecho; probar Analista de Sistemas (escaneo, registrado), Entre Ríos Primaria (40) y el resto de `disenos_a_buscar.csv`. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (230) — Laboratorio de Análisis Clínicos (PBA): diseño registrado
+- Res. 205/18 (anexo en `isfdyt43-bue.infd.edu.ar/.../2019/12/Analisis-clínicos-205-18-Anexo.pdf`, PDF con texto, 65 págs.). `plan_carga_horaria` lee 20 materias (7/7/6 por año), igual a las 20 unidades con "Carga horaria" del PDF; nombres tomados de los títulos de unidad. Aviso: el cuadro de módulos del PDF llama "Procesos de Laboratorio 2" a la unidad que su título llama "Técnicas de Laboratorio 2"; se usa el título de la unidad. Registrado en `planes_disenos.DISENOS["Buenos Aires"]`; tests 956 OK.
+- Listo para cargar desde la Mac: `planes_disenos` (vista previa, luego `--apply`) para las 29 ofertas. Sin vista previa local (base sin institutos).
+- Siguiente: Biotecnología (26), Logística (23), Entre Ríos Primaria (40). Sin credenciales de producción ni de GitHub.

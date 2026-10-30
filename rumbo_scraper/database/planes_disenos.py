@@ -97,6 +97,9 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Tecnicatura Superior en Guía de Turismo": (
             _PBA + "2026-06/DC%20Tecnicatura%20Superior%20en%20Gu%C3%ADa%20de%20Turismo%20-%20Res%202684-20%20y%20Anexos.pdf",
             planes_sitios.plan_carga_horaria),
+        "Tecnicatura Superior en Laboratorio de Análisis Clínicos": (
+            "https://isfdyt43-bue.infd.edu.ar/sitio/wp-content/uploads/2019/12/Analisis-cl%C3%ADnicos-205-18-Anexo.pdf",
+            planes_sitios.plan_carga_horaria),
         "Tecnicatura Superior en Tiempo Libre y Recreación": (
             "https://isfd72-bue.infd.edu.ar/sitio/wp-content/uploads/2025/04/Tecnicatura-en-Tiempo-Libre-y-Recreacion.pdf",
             planes_sitios.plan_carga_horaria),
