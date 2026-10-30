@@ -1654,3 +1654,8 @@
 - Tecnicatura Universitaria en Gestión Ambiental: filas del plan hasta "Título Intermedio" (años 1-3, 25 materias) por `planes_manuales` (`data/planes_unm_gestion_ambiental.csv`, cargado_por "lector plan_unm", cotejo literal OK). `--apply`, exportación completa. Tests: 975 OK.
 - Listo para cargar a producción (UNM, lote de 1).
 - Pendiente UNM: Tecnicaturas en Biotecnología, Derecho, Impositivo Contable, Electrónica: sus PDF (Lic. Biotecnología, Abogacía, Contador, Ing. Electrónica) tienen optativas/otro formato y `plan_unm` da []; hay que ver cada uno y cortar en el título intermedio. Animación Digital, Imagen e Identidad Corporativa, Prototipado Rápido: PDF 2026 de Diseño, por mirar.
+
+## 2026-10-30 (296) — UNMdP: Tec. en Producciones Vegetales Intensivas (18) y Tec. en Gestión Judicial (19) por planes_manuales
+- Vista previa de `planes_documentos UNMdP`: 0 planes (sin lector para los PDF de UNMdP). Transcribí dos PDF de estructura limpia (años y números explícitos) a `data/planes_unmdp.csv` (cargado_por "IA operador máquina fija"), cotejo literal OK en ambas, `--apply`, `verificar_catalogo UNMdP`, exportación completa. Listo para cargar a producción (UNMdP, lote de 1).
+- Optativas (TUPVI "Optativas 192 hs") no cargadas: no son una materia con nombre. Observación: la carrera TUPVI tiene `duracion_anios` 2 y el plan tiene 3 años (1664 hs): revisar con una persona.
+- Pendiente UNMdP: Ing. Agronómica/Lic. Prod. Animal/Vegetal/Alimentos (FCA) no dicen el año, solo cuatrimestre 1º/2º con código: no cargables sin decidir cómo asignar año. Geografía (humanidades) por mirar.
