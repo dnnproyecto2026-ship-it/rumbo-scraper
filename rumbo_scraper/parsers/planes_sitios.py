@@ -3130,6 +3130,34 @@ def plan_carga_horaria(texto: str, solo_numeradas: bool = False) -> list[tuple[s
     return desde_el_primero(unicas)
 
 
+def plan_estructura_numerada(texto: str) -> list[tuple[str, int]]:
+    """A Catamarca design of a tecnicatura superior (``pdftotext -layout``): its
+    "Estructura Curricular" a table per year headed "N° ID 1° Año", a row per
+    unit: its number, its name, then its hours by term. A name wrapped over two
+    lines has its first part alone above the numbered row ("Práctica Hospitalaria
+    en  Fundamentos de" / "13  Enfermería y Comunitaria  6  6  192"). The table
+    ends at "Régimen de correlatividades", whose tables repeat the units."""
+    materias: list[tuple[str, int]] = []
+    anio, previa = 0, ""
+    fin = re.search(r"(?i)^\s*r[ée]gimen\s+de\s+correlatividades", texto or "", re.M)
+    for linea in (texto or "")[:fin.start() if fin else None].splitlines():
+        linea = linea.replace("\f", "").rstrip()
+        cabecera = re.match(r"^\s*N[°º]\s+ID\s+([1-5])[°º]\s*A[ñn]o\b", linea)
+        if cabecera:
+            anio, previa = int(cabecera.group(1)), ""
+            continue
+        if not anio:
+            continue
+        fila = re.match(r"^\s*(\d{1,2})\s+(\S.*?)(?:\s{2,}\d+)*\s*$", linea)
+        if fila:
+            nombre = f"{previa} {fila.group(2)}".strip() if previa else fila.group(2)
+            _agregar(materias, nombre, anio)
+            previa = ""
+        elif linea.strip() and not re.match(r"(?i)^\s*(horas semanales|tecnicatura superior)", linea):
+            previa = clean_text(linea)
+    return desde_el_primero(materias)
+
+
 def plan_formato_ubicacion(texto: str) -> list[tuple[str, int]]:
     """A Province of Buenos Aires design of 2017 on (Profesorado de Inglés;
     the Técnico Profesional ones of 2023): each unit a heading ("Pedagogía",

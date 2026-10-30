@@ -252,6 +252,13 @@ DISENOS: dict[str, dict[str, tuple[str, Any]]] = {
         "Profesorado de Educación Física": (_CBA + "D_CURRICULAR_FINAL_DE_ED_FISICA_2013.pdf",
                                             functools.partial(planes_sitios.plan_cordoba, "EDUCACIÓN FÍSICA")),
     },
+    "Catamarca": {
+        # The Lineamientos (2016) of the IES Belén's site; the Diseño Curricular 2018 on the same site is a
+        # scan with the same units and the same 2928 hours.
+        "Tecnicatura Superior en Enfermería": (
+            "https://iesbelen-cat.infd.edu.ar/sitio/wp-content/uploads/2023/04/Disen_oEnfermeria-final2015.pdf",
+            planes_sitios.plan_estructura_numerada),
+    },
     "Entre Ríos": {
         "Profesorado de Educación Primaria": (
             "https://des-ers.infd.edu.ar/sitio/formacion-docente/upload/Primaria_Solene_Borja_141015_final_v3.pdf",

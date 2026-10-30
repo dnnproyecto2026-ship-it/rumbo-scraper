@@ -989,6 +989,29 @@ Recreativos - Carga horaria: 4 horas
         self.assertEqual(p.plan_carga_horaria(texto), [("Psicología", 1), ("Salud pública II", 2),
                                                         ("Sujetos de la recreación", 2)])
 
+    def test_plan_estructura_numerada_catamarca(self):
+        texto = (
+            "4.- Plan de Estudios\n\n        Estructura Curricular:\n\n"
+            "                                                                                   Hs.\n"
+            "N° ID 1° Año                                                1° Cuat.   2° Cuat.    Catedra\n"
+            "1       Fundamentos de la Enfermería                        5          5           160\n"
+            "2       Lectura y Escritura Académica                       3                      48\n"
+            "        Práctica Hospitalaria en         Fundamentos   de\n"
+            "3       Enfermería y Comunitaria                            6          6           192\n"
+            "        Horas Semanales                                     36         33\n\n"
+            "N° ID 2° Año                                                1° Cuat    2° Cuat.\n"
+            "4       Historia de la Enfermería                           3                      48\n"
+            "Tecnicatura Superior en Enfermería                                          Pág. 9 de 100\n"
+            "        Horas Semanales                                       28             23\n\n"
+            "Régimen de correlatividades:\n"
+            "N° ID 1° Año                                                Cursado Correlativas\n"
+            "5       Otra Cosa                                           Anual       1\n")
+        self.assertEqual(p.plan_estructura_numerada(texto), [
+            ("Fundamentos de la Enfermería", 1), ("Lectura y Escritura Académica", 1),
+            ("Práctica Hospitalaria en Fundamentos de Enfermería y Comunitaria", 1),
+            ("Historia de la Enfermería", 2)])
+        self.assertEqual(p.plan_estructura_numerada("sin tabla"), [])
+
     def test_formato_de_unidad_con_titulo_partido_y_practica(self):
         texto = """Primer Año
 Pedagogía

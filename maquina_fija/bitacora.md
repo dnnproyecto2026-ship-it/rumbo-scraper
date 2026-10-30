@@ -1457,3 +1457,9 @@
 - El IES Belén (`iesbelen-cat.infd.edu.ar`) publica `.../2024/05/DCJ-Profesorado-de-Educacion-Primaria-2016.pdf`, pero es el diseño curricular de la escuela primaria para alumnos (472 págs., Ministerio de Catamarca 2016), no el plan del profesorado: ningún lector devuelve nada (y no corresponde). Su página de profesorados no enlaza ningún diseño de Inicial ni de Primaria. Razón registrada: `sin_plan_publicado` (no hallado en dominio oficial). Nada cargado ni cambiado en código; sin commit. Tests 960 OK.
 - Hay en el mismo sitio un PDF de Enfermería (`TS-en-Enfermeria-2018.pdf`, Catamarca) para mirar en otro ciclo.
 - Siguiente: Catamarca Enfermería, Chaco Geografía/Lengua, Santiago del Estero Primaria Rural. Sin credenciales de producción ni de GitHub.
+
+## 2026-10-30 (248) — Catamarca Enfermería (5): diseño registrado, listo para cargar
+- El IES Belén publica los Lineamientos Curriculares 2016 (`iesbelen-cat.infd.edu.ar/.../2023/04/Disen_oEnfermeria-final2015.pdf`, 100 págs., con texto) y el Diseño Curricular 2018 (`.../2025/07/TS-en-Enfermeria-2018.pdf`, escaneado). Mismas unidades y mismas 2928 horas en ambos (OCR de la página de carga horaria del 2018), así que se toma el de texto.
+- Lector nuevo `plan_estructura_numerada` (tabla "N° ID 1° Año", nombres partidos con su primera parte arriba) con su prueba; da 30 materias (13/9/8), cada una igual a la fila del PDF. Registrado en `DISENOS["Catamarca"]`; `leer_diseno` lo acepta como plan entero. Como el PDF está en el dominio de Belén, `planes_disenos` solo lo asigna a esa institución (las demás de Catamarca no tienen su propio sitio con el diseño).
+- Listo para cargar con `planes_disenos --apply` desde la Mac. Tests 961 OK.
+- Siguiente: Chaco Geografía/Lengua, Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología. Sin credenciales de producción ni de GitHub.
