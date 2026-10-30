@@ -1598,3 +1598,7 @@
 - Quedaron 10 planes (296 materias): Ing. Eléctrica, Prof. Cs. Químicas y del Ambiente, Lic. Matemática, Bioquímica, Ing. Electrónica, Ing. Agrimensura, Prof. Física, Prof. Biología, Prof. Matemática, Lic. Cs. Físicas (5.º año con 1 sola materia: revisar contra el PDF).
 - `verificar_catalogo UNNE`: materias 808/808. Exportación completa. Listo para cargar a producción (UNNE, lote de 1).
 - UNaM: la vista previa no devolvió planes. Siguiente: revisar Lic. Cs. Físicas de UNNE contra el documento, lector por posición para UNLu.
+
+## 2026-10-30 (284) — UNNE Lic. Cs. Físicas contrastada con la página oficial
+- Las 28 materias cargadas coinciden con el plan de `exa.unne.edu.ar/r/?page_id=8372`, año por año. El 5.º año tiene de verdad solo el Seminario (más Trabajo Final anual y optativas, que no se cargan como materia). El nombre "Física Experimental ?II?" es literal de la página oficial (errata de ellos); no lo corregí a mano. Sin cambios en datos.
+- UNNE sigue lista para cargar (lote de 1). Siguiente: lector por posición de palabras para UNLu, UNaM `pdf_con_texto`.
