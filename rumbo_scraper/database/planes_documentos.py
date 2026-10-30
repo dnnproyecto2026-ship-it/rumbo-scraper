@@ -413,6 +413,8 @@ _DOCUMENTOS_PROPIOS += (("cemic.edu.ar", planes_sitios.plan_cemic),)
 # Sites whose one page lists every career's plan, each document named for
 # its career (CEMIC's "Plan de estudios_Enfermeria.pdf"): that one first.
 _DOCUMENTO_POR_SU_NOMBRE = ("cemic.edu.ar",)
+# UNaM Artes y Diseño's plan PDFs: rows numbered "year.order" under each year, names wrapped around the number.
+_DOCUMENTOS_PROPIOS += (("fayd.unam.edu.ar", planes_sitios.plan_unam_codigos),)
 # UNSAdA's plan sheets: a coded row per subject, as many compulsory ones as the sheet states
 # (other documents of its site to the general reader).
 _DOCUMENTOS_PROPIOS += (("unsada.edu.ar", planes_sitios.plan_unsada),)

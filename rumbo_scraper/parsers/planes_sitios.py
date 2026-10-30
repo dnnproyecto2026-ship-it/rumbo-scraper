@@ -7178,3 +7178,76 @@ def plan_perio_unlp(html: str) -> list[tuple[str, int]]:
         elif anio and not _ENCABEZADO_PERIO.match(linea):
             _agregar(materias, linea, anio)
     return desde_el_primero(materias)
+
+
+_ANIO_UNAM = re.compile(r"(?i)^\s*(primer|segundo|tercer|cuarto|quinto)\s+a[ñn]o\s*$")
+_CODIGO_UNAM = re.compile(r"^\s*(\d)\.(\d{1,2})\b\s*(.*)$")
+_DATOS_UNAM = re.compile(r"(?:^|\s{2,})[LRP](?:-[LRP])*\s{2,}.*$")
+
+
+def plan_unam_codigos(texto: str) -> list[tuple[str, int]]:
+    """UNaM's plan PDFs (Tecnicatura en Industria Textil, ``-layout``): a
+    heading per year ("PRIMER AÑO") and a row per subject numbered
+    "year.order" ("1.14") with its condition ("L-R-P"), hours and term. A
+    name too long for its cell wraps above and below the line with the
+    number, and the rows may follow each other without a blank line, so each
+    fragment between two numbers is the nearest number's; a fragment as
+    near two numbers gives nothing. The area headings ("Área Diseño") close
+    a stretch of rows, the table's headings and totals are not subjects. A
+    number out of order, or from another year, gives nothing."""
+    materias: list[tuple[str, int]] = []
+    anio = None
+    siguiente = 1
+    tramo: list[tuple[str, "re.Match | None"]] = []
+
+    def cerrar() -> bool:
+        nonlocal tramo, siguiente
+        codigos = [i for i, (_, m) in enumerate(tramo) if m]
+        if not codigos:
+            tramo = []
+            return True
+        dueno: dict[int, list[int]] = {j: [] for j in codigos}
+        for i, (linea, m) in enumerate(tramo):
+            if m:
+                continue
+            cerca = sorted((abs(i - j), j) for j in codigos)
+            if len(cerca) > 1 and cerca[0][0] == cerca[1][0]:
+                # As near the number above as the one below: a name starts in
+                # capitals, so a fragment in lower case goes on the number
+                # above; one in capitals opens the number below unless that
+                # one has a name of its own on its line.
+                if not cerca[0][1] < i < cerca[1][1]:
+                    return False
+                debajo = _DATOS_UNAM.sub("", tramo[cerca[1][1]][1].group(3)).strip()
+                cerca = [cerca[1] if linea[:1].isupper() and (not debajo or debajo[:1].islower()) else cerca[0]]
+            dueno[cerca[0][1]].append(i)
+        for j in codigos:
+            m = tramo[j][1]
+            if int(m.group(1)) != anio or int(m.group(2)) != siguiente:
+                return False
+            partes = [tramo[i][0] for i in dueno[j] if i < j]
+            partes.append(_DATOS_UNAM.sub("", m.group(3)))
+            partes += [tramo[i][0] for i in dueno[j] if i > j]
+            nombre = clean_text(" ".join(partes))
+            if not nombre:
+                return False
+            materias.append((nombre, anio))
+            siguiente += 1
+        tramo = []
+        return True
+
+    for linea in (texto or "").splitlines():
+        titulo = _ANIO_UNAM.match(linea)
+        if titulo:
+            if not cerrar():
+                return []
+            anio = _ORDINALES[titulo.group(1).lower()]
+            siguiente = 1
+        elif anio is None or not linea.strip():
+            continue
+        elif re.match(r"(?i)^\s*(?:[áa]rea\b|total horas)", linea):
+            if not cerrar():
+                return []
+        else:
+            tramo.append((clean_text(linea) if not _CODIGO_UNAM.match(linea) else linea, _CODIGO_UNAM.match(linea)))
+    return materias if cerrar() else []

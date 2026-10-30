@@ -1606,3 +1606,8 @@
 ## 2026-10-30 (285) — UNO, UNTREF, UCSE, UNMdP, UNJu: el lector general da 0 planes
 - `planes_documentos` vista previa: 0 planes en UNO, UNTREF y UCSE (`pdf_con_texto`). UNMdP y UNJu también dieron 0. Nada cargado ni cambiado en código.
 - Siguiente: lector por posición de palabras para UNLu (cuadro con cuatrimestre centrado), UNaM `pdf_con_texto`.
+
+## 2026-10-30 (286) — UNaM: Tec. Univ. en Industria Textil (28 materias) con lector nuevo
+- `plan_unam_codigos` (+ `tests/test_planes_unam.py`, registrado para `fayd.unam.edu.ar`) lee el PDF de FAyD: filas "año.orden" con el nombre partido arriba/abajo del número. 28 materias (14 + 14), cotejadas una a una con el PDF. `planes_documentos UNaM --apply`; `verificar_catalogo UNaM`: la oferta verificada; exportación completa.
+- Listo para cargar a producción (UNaM, lote de 1).
+- Pendiente: los PDF de `fceqyn.unam.edu.ar` (Grilla-IA, Grilla-LG, plan_tucyp) dieron timeout de conexión: caída, reintentar otro día. Intérprete de LSA (fhycs): PDF narrativo, por revisar.
