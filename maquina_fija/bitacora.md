@@ -1576,3 +1576,8 @@
 - `carreras_de_guias UCASAL` (79 iguales, 0 nuevas) → `planes_documentos UCASAL` vista previa → `--apply`: 14 planes, 621 materias (Ing. Informática, Traductorado, RRPP, Criminología, Gestión Eficiente de la Energía, Imagen y Sonido, Trabajo Social, Prod. Animal, RRHH, Criminalística, Diseño Industrial, Tec. Bancos, Diseño Gráfico, Adm. de Empresas).
 - `verificar_catalogo UCASAL`: ofertas 122/122, materias 760/760. Exportación completa (`Archivo: data/catalogo_depurado.json`).
 - Listo para cargar a producción (UCASAL, lote de 1) cuando haya credenciales. Pendiente: resto de `pdf_con_texto` de UCASAL (~47 sin leer por el lector general), luego UCH, UNC, UNL, UNLP.
+
+## 2026-10-30 (280) — UCH y UNComa revisadas; lector nuevo de UNComa Farmacia
+- UCH: `carreras_de_guias` 12 iguales; el lector `plan_uch` ya existía y `planes_documentos UCH` da 0 planes nuevos (41 materias, cada rechazo con su motivo en el docstring: numeración repetida, fuente ilegible). Sin cambios.
+- UNComa: `planes_documentos` da 0. Los PDF `ord_*.pdf` son ordenanzas escaneadas con OCR sucio (no cargables). Único listado limpio: Tec. Univ. en Farmacia (medicina.uncoma.edu.ar, 25 materias). Agregué `plan_uncoma_listado` + prueba (`tests/test_planes_uncoma.py`), pero la oferta NO está en la base del scraper (la guía la trae sin facultad y `carreras_de_guias` la cuenta como igual). Pendiente: agregarla con `agregar_carrera` y recién ahí `planes_documentos UNComa`/`planes_manuales`.
+- Siguiente: UNL, UNLP (`plan_en_pagina`), UNT (`plan_en_pagina`), resto de UCASAL.

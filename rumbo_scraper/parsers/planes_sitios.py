@@ -4602,6 +4602,29 @@ def plan_uch(texto: str) -> list[tuple[str, int]]:
     return [(nombre, anio) for nombre, anio in materias]
 
 
+def plan_uncoma_listado(texto: str) -> list[tuple[str, int]]:
+    """UNComa's "Listado de Asignaturas" sheets (``-layout`` text): a header
+    per year ("Primer año"), then a row per subject: its term ("1 cuatrimestre"),
+    its order number, its name and its kind ("cuatrimestral" / "anual"). The
+    order numbers must run 1, 2, 3... without a gap: a sheet that skips one
+    lost a row, and is not taken."""
+    anios = {"primer": 1, "segundo": 2, "tercer": 3, "cuarto": 4, "quinto": 5, "sexto": 6}
+    materias: list[tuple[str, int]] = []
+    anio = 0
+    for linea in texto.splitlines():
+        cuerpo = linea.strip()
+        titulo = re.fullmatch(r"(?i)(primer|segundo|tercer|cuarto|quinto|sexto)\s+año", cuerpo)
+        if titulo:
+            anio = anios[titulo.group(1).lower()]
+            continue
+        fila = re.match(r"(?i)[12]\s+cuatrimestre\s+(\d{1,2})\s+(.+?)\s{2,}(?:cuatrimestral|anual|semestral)\s*$", cuerpo)
+        if fila and anio:
+            if int(fila.group(1)) != len(materias) + 1:
+                return []
+            materias.append((clean_text(fila.group(2)), anio))
+    return materias
+
+
 def plan_unab(cajas: str) -> list[tuple[str, int]]:
     """UNAB's plan sheets (``-bbox-layout``): two years to a column, a row
     per subject (its code, its name, its correlatives and hours), each term
