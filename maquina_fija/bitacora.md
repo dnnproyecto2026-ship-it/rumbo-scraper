@@ -1471,3 +1471,9 @@
 - La vista previa local da 0 institutos (la base del scraper no tiene esas ofertas): listo para cargar con `planes_disenos --apply` desde la Mac. Tests 962 OK.
 - Siguiente: Santiago del Estero Primaria Rural, Santa Fe Lengua/Historia/Biología, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
 
+
+## 2026-10-30 (250) — Corrientes Lengua y Literatura (15) y Enfermería (15): diseño ubicado, no legible hoy
+- Los sitios INFoD de los institutos enlazan los diseños oficiales en `dgescorrientes.net`: Lengua (Res. 4659/15, `/discur/DisCurricular-LenguaLiteratura-Res-4659-2015.pdf`, desde ifdferreyra-crr) y Enfermería (`/distec2017/DC-Tec-Enfermeria.pdf` y `/curriculares-pdf/tecnicaturas/tec-enfermeria.pdf`, desde ifdferreyra-crr e ifdgomez-crr).
+- El visitante devolvió 0 bytes para el PDF de Lengua (la lectura de los tres con todos los lectores se pasó del tiempo y se cortó): sitio caído o sin respuesta, no bloqueo. Además `dgescorrientes.net` no es dominio de ningún instituto ni está en `DOMINIOS_DE_LA_EDUCACION`, así que `es_oficial` rechazaría la fuente; agregarlo es decisión de una persona (es el sitio de la DGES de Corrientes).
+- Razón registrada: pendiente (sitio sin respuesta + decisión de dominio). Nada cargado ni cambiado en código; sin commit de código. Tests 962 OK.
+- Siguiente: reintentar dgescorrientes.net otro día; Santiago del Estero Primaria Rural, `institutos_faltantes.csv`. Sin credenciales de producción ni de GitHub.
