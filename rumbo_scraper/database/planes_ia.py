@@ -1,5 +1,6 @@
 """Plans proposed by an AI reader, in batch, for the careers the survey says have their plan in a document or a page.
 
+    python -m rumbo_scraper.database.planes_ia --preparar UNNE UNComa ...      (where production's data is read)
     python -m rumbo_scraper.database.planes_ia UNNE UNComa ... [--paralelo 3] [--limite 40]
 
 For each career of the given universities that has no subjects yet, the survey (``entregables/avance/
@@ -44,6 +45,62 @@ Respondé SOLO con un JSON, sin texto antes ni después:
 TEXTO:
 {texto}
 """
+
+
+TAREAS = Path("data/planes_ia_tareas.csv")
+
+
+def _clave(nombre: str) -> str:
+    import unicodedata
+
+    plano = unicodedata.normalize("NFKD", nombre).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", " ", plano).strip()
+
+
+def preparar(siglas: list[str]) -> None:
+    """The work list: the offers production publishes without a plan, the survey's place for each one's plan,
+    and the career of the scraper base with the same name (the base the subjects are written to)."""
+    import psycopg
+
+    from rumbo_scraper.database.avance_produccion import url_de_la_base
+    from rumbo_scraper.database.sondeo_universidades import ofertas_sin_plan
+    from rumbo_scraper.database.supabase import get_supabase_client, select_all
+
+    with SONDEO.open(encoding="utf-8-sig") as archivo:
+        sondeo = {f["url"]: f for f in csv.DictReader(archivo, delimiter=";")}
+    with psycopg.connect(url_de_la_base(), autocommit=True) as conexion:
+        conexion.execute("set statement_timeout = 120000")
+        sql = """select u.nombre_corto, c.nombre, o.url_oficial from ofertas_publicadas op join ofertas o on o.id = op.oferta_id
+            join carreras c on c.id = o.carrera_id join universidades u on u.id = o.universidad_id
+            where c.nivel in ('grado', 'pregrado') and u.nombre_corto = any(%s) and coalesce(o.url_oficial, '') <> ''
+              and not exists (select 1 from planes_estudio pe join planes_materias pm on pm.plan_id = pe.id
+                              where pe.oferta_id = o.id and pe.vigente)"""
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, (siglas,))
+            sin_plan = cursor.fetchall()
+    cliente = get_supabase_client()
+    universidades = {u["id"]: u for u in select_all(cliente.table("universidades").select("id,nombre_corto,nombre_oficial"))
+                     if u.get("nombre_corto") in set(siglas)}
+    por_nombre = {(universidades[c["universidad_id"]]["nombre_corto"], _clave(c["nombre_carrera"])): c
+                  for c in select_all(cliente.table("carreras").select("id,universidad_id,nombre_carrera,duracion_anios"))
+                  if c["universidad_id"] in universidades}
+    sitios = {u["nombre_corto"]: u for u in universidades.values()}
+    hechas, filas = set(), []
+    for sigla, carrera, url in sin_plan:
+        fila = sondeo.get(url)
+        enlace = enlace_candidato(fila["motivo"], url, fila["enlace"]) if fila else None
+        base = por_nombre.get((sigla, _clave(carrera)))
+        if not enlace or not base or base["id"] in hechas:
+            continue
+        hechas.add(base["id"])
+        filas.append({"universidad": sigla, "nombre_universidad": sitios[sigla]["nombre_oficial"], "carrera": base["nombre_carrera"],
+                      "carrera_id": base["id"], "duracion": base.get("duracion_anios") or "", "link": enlace})
+    with TAREAS.open("w", newline="", encoding="utf-8-sig") as archivo:
+        escritor = csv.DictWriter(archivo, fieldnames=["universidad", "nombre_universidad", "carrera", "carrera_id", "duracion", "link"],
+                                  delimiter=";")
+        escritor.writeheader()
+        escritor.writerows(filas)
+    print(f"{len(filas)} carreras de {len(set(f['universidad'] for f in filas))} universidades -> {TAREAS}")
 
 
 def respuesta_a_materias(salida: str) -> tuple[list[tuple[str, int | None]], str]:
@@ -98,37 +155,22 @@ def main() -> None:
     parser.add_argument("siglas", nargs="+")
     parser.add_argument("--paralelo", type=int, default=3)
     parser.add_argument("--limite", type=int, default=60)
+    parser.add_argument("--preparar", action="store_true", help="arma la lista de tareas desde producción")
     args = parser.parse_args()
+    if args.preparar:
+        return preparar(args.siglas)
 
     from rumbo_scraper.database.supabase import get_supabase_client, select_all
     from rumbo_scraper.database.verificar_catalogo import Fuentes
 
     cliente = get_supabase_client()
-    universidades = {u["id"]: u for u in select_all(cliente.table("universidades").select("id,nombre_corto,nombre_oficial,sitio_web"))
-                     if u.get("nombre_corto") in set(args.siglas)}
-    carreras = [c for c in select_all(cliente.table("carreras").select("id,universidad_id,nombre_carrera,nivel,duracion_anios"))
-                if c["universidad_id"] in universidades]
+    universidades = {u["nombre_corto"]: u for u in select_all(cliente.table("universidades").select("nombre_corto,sitio_web"))}
     con_materias = {m["carrera_id"] for m in select_all(cliente.table("materias").select("carrera_id")) if m["carrera_id"]}
-    urls: dict[str, list[str]] = {}
-    for o in select_all(cliente.table("ofertas_academicas").select("carrera_id,url_oficial")):
-        if o["url_oficial"]:
-            urls.setdefault(o["carrera_id"], []).append(o["url_oficial"])
-    with SONDEO.open(encoding="utf-8-sig") as archivo:
-        sondeo = {f["url"]: f for f in csv.DictReader(archivo, delimiter=";")}
-
-    tareas = []
-    for c in carreras:
-        if c["id"] in con_materias or len(tareas) >= args.limite:
-            continue
-        for url in urls.get(c["id"], []):
-            fila = sondeo.get(url)
-            enlace = enlace_candidato(fila["motivo"], url, fila["enlace"]) if fila else None
-            if enlace:
-                u = universidades[c["universidad_id"]]
-                tareas.append({"universidad": u["nombre_corto"], "nombre_universidad": u["nombre_oficial"], "carrera": c["nombre_carrera"],
-                               "carrera_id": c["id"], "duracion": c.get("duracion_anios"), "link": enlace,
-                               "sitio": u["sitio_web"]})
-                break
+    with TAREAS.open(encoding="utf-8-sig") as archivo:
+        tareas = [{**t, "duracion": float(t["duracion"]) if t["duracion"] else None, "sitio": universidades[t["universidad"]]["sitio_web"]}
+                  for t in csv.DictReader(archivo, delimiter=";")
+                  if t["universidad"] in set(args.siglas) and t["carrera_id"] not in con_materias
+                  and t["universidad"] in universidades][:args.limite]
     print(f"{len(tareas)} carreras con documento para leer", flush=True)
 
     fuentes: dict[str, Any] = {}
